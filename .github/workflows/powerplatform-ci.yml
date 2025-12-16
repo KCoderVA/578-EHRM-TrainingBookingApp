@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
@@ -12,9 +12,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Power Platform CLI
-        uses: microsoft/powerplatform-actions/setup@v1
+      - name: Install Power Platform Tools
+        uses: microsoft/powerplatform-actions/actions-install@v1
+
+      - name: Ensure dist/release exists
+        run: |
+          New-Item -ItemType Directory -Force -Path "${{ github.workspace }}\dist\release" | Out-Null
 
       - name: Pack Solution from src
         run: |
-          pac solution pack --folder ""${{ github.workspace }}\\src\\solutions\\EHRMTrainingBooking"" --zipfile ""${{ github.workspace }}\\dist\\release\\EHRMTrainingBooking_Solution.zip"" --packageType Unmanaged
+          pac solution pack --folder "${{ github.workspace }}\src\solutions\EHRMTrainingBooking" --zipfile "${{ github.workspace }}\dist\release\EHRMTrainingBooking_Solution.zip" --packageType Unmanaged
