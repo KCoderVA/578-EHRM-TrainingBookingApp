@@ -19,9 +19,27 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path "${{ github.workspace }}\dist\release" | Out-Null
 
+      - name: Check for unpacked solution files
+        id: solcheck
+        shell: pwsh
+        run: |
+          $file = Join-Path "${{ github.workspace }}" "src/solutions/EHRMTrainingBooking/Other/Customizations.xml"
+          if (Test-Path $file) {
+            echo "found=true" >> $env:GITHUB_OUTPUT
+          } else {
+            echo "found=false" >> $env:GITHUB_OUTPUT
+            Write-Host "No unpacked solution found at src/solutions/EHRMTrainingBooking. Skipping pack."
+          }
+
       - name: Pack Solution from src
+        if: steps.solcheck.outputs.found == 'true'
         uses: microsoft/powerplatform-actions/pack-solution@v1
         with:
           solution-folder: '${{ github.workspace }}\src\solutions\EHRMTrainingBooking'
           solution-file: '${{ github.workspace }}\dist\release\EHRMTrainingBooking_Solution.zip'
           solution-type: 'Unmanaged'
+
+      - name: Create empty artifact notice
+        if: steps.solcheck.outputs.found == 'false'
+        run: |
+          echo "Solution not packed: missing unpacked files." > '${{ github.workspace }}\dist\release\README.txt'
