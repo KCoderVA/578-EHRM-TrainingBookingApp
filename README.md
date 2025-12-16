@@ -4,6 +4,9 @@ This repository contains the source (unpacked) Microsoft Power Platform artifact
 
 ## Key folders
 - src/ — Unpacked, human-readable source for Power Apps (Canvas), Power Automate flows, SharePoint list schemas/formatting, SQL, scripts.
+- src/config/ — Environment templates and local-only settings (src/config/local/ is git-ignored).
+- src/tools/ — Helper scripts and utilities (e.g., PAC helpers).
+- src/tests/ — Test scaffolds (unit, script tests).
 - docs/ — User guides, changelogs, developer notes, architecture, runbooks.
 - dist/ — Exports/binaries used for import (kept local; not committed).
 - archive/ — Calendar-versioned historical snapshots (optional, public).

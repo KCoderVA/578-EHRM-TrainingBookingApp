@@ -8,3 +8,4 @@ Guide GitHub Copilot and Copilot Chat to help with ALM tasks, documentation, and
 - Propose docs/changeLogs/ entries.
 - Suggest semantic version tags and Release notes.
 - Assist with pac commands for export/unpack/pack.
+ - Keep root clean; prefer src/config, src/tools, src/tests.
