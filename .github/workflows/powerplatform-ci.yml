@@ -20,5 +20,8 @@ jobs:
           New-Item -ItemType Directory -Force -Path "${{ github.workspace }}\dist\release" | Out-Null
 
       - name: Pack Solution from src
-        run: |
-          pac solution pack --folder "${{ github.workspace }}\src\solutions\EHRMTrainingBooking" --zipfile "${{ github.workspace }}\dist\release\EHRMTrainingBooking_Solution.zip" --packageType Unmanaged
+        uses: microsoft/powerplatform-actions/pack-solution@v1
+        with:
+          solution-folder: '${{ github.workspace }}\src\solutions\EHRMTrainingBooking'
+          solution-file: '${{ github.workspace }}\dist\release\EHRMTrainingBooking_Solution.zip'
+          solution-type: 'Unmanaged'
