@@ -1,0 +1,30 @@
+﻿# Keep repo fast and clean: commit unpacked source, not binaries
+dist/
+tmp/
+logs/
+*.msapp
+*.zip
+
+# Power BI (choose whether to commit large files)
+# *.pbix
+# *.pbit
+
+# Local-only configs/secrets
+config/local/
+*.env
+*.env.*
+.secrets/
+secrets.*
+credentials.*
+
+# Dependencies and build artifacts
+node_modules/
+coverage/
+__pycache__/
+*.pyc
+*.pyo
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+desktop.ini

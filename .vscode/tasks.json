@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Canvas: Unpack .msapp to src",
+      "type": "shell",
+      "command": "pac canvas unpack --msapp \"${workspaceFolder}/dist/release/EHRMTrainingBookingApp.msapp\" --source \"${workspaceFolder}/src/powerApps/CanvasApps/EHRMTrainingBookingApp\" --force",
+      "problemMatcher": []
+    },
+    {
+      "label": "Canvas: Pack src to .msapp",
+      "type": "shell",
+      "command": "pac canvas pack --msapp \"${workspaceFolder}/dist/release/EHRMTrainingBookingApp.msapp\" --sources \"${workspaceFolder}/src/powerApps/CanvasApps/EHRMTrainingBookingApp\"",
+      "problemMatcher": []
+    },
+    {
+      "label": "Solution: Export (unmanaged) to dist",
+      "type": "shell",
+      "command": "pac solution export --name \"EHRMTrainingBooking\" --path \"${workspaceFolder}/dist/release/EHRMTrainingBooking_Solution.zip\" --managed false",
+      "problemMatcher": []
+    },
+    {
+      "label": "Solution: Unpack zip to src",
+      "type": "shell",
+      "command": "pac solution unpack --zipfile \"${workspaceFolder}/dist/release/EHRMTrainingBooking_Solution.zip\" --folder \"${workspaceFolder}/src/solutions/EHRMTrainingBooking\" --overwrite true",
+      "problemMatcher": []
+    }
+  ]
+}

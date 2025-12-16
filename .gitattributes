@@ -1,0 +1,12 @@
+﻿* text=auto eol=crlf
+*.ps1 text eol=crlf
+*.md text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# Binary files
+*.msapp binary
+*.zip binary
+*.pbix binary
+*.pbit binary

@@ -1,0 +1,20 @@
+﻿name: Power Platform CI
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  validate-and-pack:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Power Platform CLI
+        uses: microsoft/powerplatform-actions/setup@v1
+
+      - name: Pack Solution from src
+        run: |
+          pac solution pack --folder ""${{ github.workspace }}\\src\\solutions\\EHRMTrainingBooking"" --zipfile ""${{ github.workspace }}\\dist\\release\\EHRMTrainingBooking_Solution.zip"" --packageType Unmanaged

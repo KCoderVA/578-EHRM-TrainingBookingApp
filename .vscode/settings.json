@@ -1,0 +1,11 @@
+﻿{
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "editor.formatOnSave": true,
+  "powershell.codeFormatting.preset": "OTBS",
+  "files.exclude": {
+    "**/dist": true,
+    "**/tmp": true,
+    "**/.git": true
+  }
+}

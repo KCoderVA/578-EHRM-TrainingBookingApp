@@ -1,0 +1,9 @@
+﻿{
+  "recommendations": [
+    "ms-powerplatform.powerplatform-vscode",
+    "github.copilot",
+    "github.copilot-chat",
+    "ms-vscode.powershell",
+    "yzhang.markdown-all-in-one"
+  ]
+}
