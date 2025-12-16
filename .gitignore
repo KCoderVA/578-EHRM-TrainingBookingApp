@@ -29,3 +29,6 @@ __pycache__/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# TEMP: ignore Canvas unpacked artifacts (to be reverted)
+src/powerApp/unpacked/
