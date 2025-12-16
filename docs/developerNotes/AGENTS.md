@@ -11,3 +11,6 @@
 
 ## Git Hooks (optional)
 - Place managed hooks in src/scripts/hooks/ or git/hooks/.
+
+## Tooling Scripts
+- PAC helper scripts are under src/tools/pac/

@@ -10,7 +10,8 @@ logs/
 # *.pbit
 
 # Local-only configs/secrets
-config/local/
+src/config/local/
+docs/local/
 *.env
 *.env.*
 .secrets/
