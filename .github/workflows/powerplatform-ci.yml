@@ -37,7 +37,7 @@ jobs:
         with:
           solution-folder: '${{ github.workspace }}\src\solutions\EHRMTrainingBooking'
           solution-file: '${{ github.workspace }}\dist\release\EHRMTrainingBooking_Solution.zip'
-          solution-type: 'Unmanaged'
+          solution-type: "Unmanaged"
 
       - name: Create empty artifact notice
         if: steps.solcheck.outputs.found == 'false'

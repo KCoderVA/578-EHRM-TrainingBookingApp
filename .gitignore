@@ -1,8 +1,9 @@
-﻿# Keep repo fast and clean: commit unpacked source, not binaries
-dist/
-tmp/
-logs/
-*.msapp
+﻿# Developer notes, logs, temporary files
+*_temp*
+*temp_*
+docs/logs/*
+docs/local/*
+archive/*
 *.zip
 
 # Power BI (choose whether to commit large files)
@@ -11,7 +12,6 @@ logs/
 
 # Local-only configs/secrets
 src/config/local/
-docs/local/
 *.env
 *.env.*
 .secrets/
