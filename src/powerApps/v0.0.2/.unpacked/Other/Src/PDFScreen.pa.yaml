@@ -1,0 +1,29 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  PDFScreen:
+    Properties:
+      Height: =794
+      Width: =1123
+    Children:
+      - PdfViewer1:
+          Control: PDFViewer@2.5.0
+          Properties:
+            Document: =PDFPrint
+            Height: =794
+            Width: =1123
+      - Icon9:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            Height: =40
+            Icon: =Icon.BackArrow
+            OnSelect: =Back()
+            Width: =48
+            X: =20
+            Y: =10

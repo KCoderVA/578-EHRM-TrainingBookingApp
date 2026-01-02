@@ -1,0 +1,440 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  NewEditDesk:
+    Properties:
+      Fill: =RGBA(236, 236, 236, 1)
+      Height: =Max(App.Height, App.DesignHeight)
+      OnVisible: =UpdateContext({prevSelected:false});UpdateContext({upSelected:true});
+      Width: =Max(App.Width, App.DesignWidth)
+    Children:
+      - Image2_11:
+          Control: Image@2.2.3
+          Group: grpHeader_10
+          Properties:
+            Height: =150
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+      - Rectangle2_10:
+          Control: Rectangle@2.3.0
+          Group: grpHeader_10
+          Properties:
+            Fill: =RGBA(135, 78, 181, 0.65)
+            Height: =150
+            Width: =Parent.Width
+      - lblMyAppointments_4:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(255, 255, 255, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =115
+            Size: =32
+            Text: ="Manage Desks"
+            Width: =640
+            X: =272
+      - bgRounded_14:
+          Control: HtmlViewer@2.1.0
+          Properties:
+            DisabledBorderColor: =RGBA(56, 56, 56, 1)
+            Font: =Font.'Open Sans'
+            Height: =455
+            HtmlText: ="<div style='border:1px gray;border-radius:10%;height:870px;width:100%;background-color:#FCFCFC'></div>"
+            Size: =24
+            Width: =1121
+            X: =15
+            Y: =185
+      - lblNameDesk_2:
+          Control: Label@2.5.1
+          Properties:
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =38
+            Text: ="Name"
+            Width: =109
+            Y: =188
+      - tbNameDesk_2:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            AccessibleLabel: ="Desk Name Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            BorderThickness: =1
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.Title,Blank())
+            Font: =Font.'Segoe UI'
+            Height: =35
+            Size: =18
+            Width: =498
+            X: =92
+            Y: =191
+      - tbFloorDesk_2:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            AccessibleLabel: ="Floor Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            BorderThickness: =1
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.'Room Location',Blank())
+            Font: =Font.'Segoe UI'
+            Height: =35
+            Size: =18
+            Width: =498
+            X: =92
+            Y: =249
+      - lblMapDesk_2:
+          Control: Label@2.5.1
+          Properties:
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =42
+            Text: ="Map Link"
+            Width: =145
+            Y: =394
+      - tbMapDesk_2:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            AccessibleLabel: ="Map Link Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            BorderThickness: =1
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.'Map Link',Blank())
+            Font: =Font.'Segoe UI'
+            Height: =32
+            Size: =18
+            Width: =590
+            Y: =436
+      - lblDescrDesk_2:
+          Control: Label@2.5.1
+          Properties:
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =51
+            Text: ="Description"
+            Width: =440
+            X: =624
+            Y: =188
+      - tbDescrDesk_2:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            AccessibleLabel: ="Desk Description Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            BorderThickness: =1
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.Description,Blank())
+            Font: =Font.'Segoe UI'
+            Height: =256
+            Mode: =TextMode.MultiLine
+            Size: =18
+            Width: =459
+            X: =624
+            Y: =250
+      - btnBackDeskEdit_2:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Fill: =RGBA(128, 128, 128, 1)
+            Height: =35
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+              =Reset(tbFloorDesk_2);
+              Reset(tbNameDesk_2);
+              Reset(toggleActive_1);
+              Reset(tbDescrDesk_2);
+              Reset(tbMapDesk_2);
+              Reset(tbDeskLocation_2);
+              Reset(tbRoomPhoto_1);
+              Navigate(ManageDesks);
+            Text: ="Back"
+            Width: =200
+            X: =317
+            Y: =115
+      - iconViewMap_2:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            AccessibleLabel: ="View Map"
+            Color: =RGBA(128, 128, 128, 1)
+            Height: =40
+            Icon: =Icon.View
+            OnSelect: =UpdateContext({showMap:true})
+            TabIndex: =7
+            Width: =40
+            X: =311
+            Y: =393
+      - toggleActive_1:
+          Control: Classic/Toggle@2.1.0
+          Properties:
+            AccessibleLabel: ="Active or Inactive Toggle"
+            Default: =varManageSelectedDesk.Active
+            FalseFill: =RGBA(184, 0, 0, 1)
+            FalseText: ="INACTIVE"
+            Height: =35
+            TrueFill: =RGBA(54, 176, 75, 1)
+            TrueText: ="ACTIVE"
+            Width: =250
+            X: =886
+            Y: =150
+      - btnUpdate_4:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Fill: =RGBA(135, 78, 181, 1)
+            Height: =35
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: "=Set(\n    submitItem,\n    Patch(\n        Desks,\n        Coalesce(\n            varManageSelectedDesk,\n            Defaults(Desks)\n        ),\n        {\n            Title: tbNameDesk_2.Text,\n            Asset: ddAsset_1.SelectedText,\n            'Room Location': tbFloorDesk_2.Text,\n            Active: toggleActive_1.Value,\n            'Map Link': tbMapDesk_2.Text,\n            'Desk Location': tbDeskLocation_2.Text,\n            RoomPicture: tbRoomPhoto_1.Text,            \n            Description: tbDescrDesk_2.Text,\n            'Projector/TV':If(Checkbox1_5.Value = true,\"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/vtel.png\",Blank()),\n            VTel: If(Checkbox1_4.Value = true, \"https://dvagov.sharepoint.com/sites/vhaaugroom/SiteAssets/images/projector.png\",Blank()),\n            'Smart Board': If(Checkbox1_3.Value = true,\"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/smartboard.png\",Blank())\n            \n        }\n    )\n);\nIf(\n    IsBlankOrError(submitItem),\n    Notify(\n        \"Something went wrong. Your item has not been submitted.\" & Last(Errors(Desks)).Message,\n        NotificationType.Error,\n        10000\n    ),\n    Notify(\n        \"Your item has been submitted. (ID: \" & submitItem.ID & \")\",\n        NotificationType.Success,\n        5000\n    );\n    Set(\n        currentItem,\n        submitItem\n    )\n);\nReset(tbFloorDesk_2);\nReset(tbNameDesk_2);\nReset(toggleActive_1);\nReset(tbDescrDesk_2);\nReset(tbMapDesk_2);\nReset(tbDeskLocation_2);\nReset(tbRoomPhoto_1);\nNavigate(ManageDesks)\n"
+            Text: ="Update"
+            Width: =260
+            X: =571
+            Y: =115
+      - ddAsset_1:
+          Control: Classic/DropDown@2.3.1
+          Properties:
+            Default: =""
+            Height: =32
+            Items: =Choices([@Desks].Asset)
+            Items.Value: =Value
+            Width: =176
+            X: =448
+            Y: =154
+      - Label14_1:
+          Control: Label@2.5.1
+          Properties:
+            FontWeight: =FontWeight.Semibold
+            Height: =40
+            Text: ="Is this a Room,Desk or Item?"
+            Width: =415
+            Y: =151
+      - lblFloorDesk_3:
+          Control: Label@2.5.1
+          Properties:
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =43
+            Text: ="Room"
+            Width: =92
+            Y: =245
+      - lblMapDesk_5:
+          Control: Label@2.5.1
+          Properties:
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =38
+            Text: ="Room Photo Link"
+            Width: =293
+            Y: =506
+      - tbRoomPhoto_1:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            AccessibleLabel: ="RoomPicture Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            BorderThickness: =1
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomPicture,Blank())
+            Font: =Font.'Segoe UI'
+            Height: =30
+            HintText: ="Link to Room Picture"
+            Size: =18
+            Width: =590
+            Y: =555
+      - lblMapDesk_6:
+          Control: Label@2.5.1
+          Properties:
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =38
+            Text: ="Desk Location Link"
+            Visible: =false
+            Width: =293
+            Y: =483
+      - tbDeskLocation_2:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            AccessibleLabel: ="DeskLocation Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            BorderThickness: =1
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.'Desk Location',Blank())
+            Font: =Font.'Segoe UI'
+            Height: =30
+            HintText: ="Link to Room Picture"
+            Size: =18
+            Visible: =false
+            Width: =590
+            Y: =521
+      - Label15_1:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 0, 0, 1)
+            Height: =104
+            Size: =16
+            Text: |-
+              ="Note: Pictures need to be saved in a SharePoint folder. This is where you will obtain the links for the pictures."
+            Width: =460
+            X: =650
+            Y: =504
+      - Rectangle3_6:
+          Control: Rectangle@2.3.0
+          Group: grpMap_3
+          Properties:
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =640
+            Visible: =showMap
+            Width: =640
+      - Image5_3:
+          Control: Image@2.2.3
+          Group: grpMap_3
+          Properties:
+            Height: =579
+            Image: =varManageSelectedDesk.'Map Link'
+            ImagePosition: =ImagePosition.Fill
+            Visible: =showMap
+            Width: =575
+            X: =15
+            Y: =61
+      - Icon1_3:
+          Control: Classic/Icon@2.5.0
+          Group: grpMap_3
+          Properties:
+            AccessibleLabel: ="Close Map"
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =61
+            Icon: =Icon.Cancel
+            OnSelect: =UpdateContext({showMap:!showMap})
+            TabIndex: =11
+            Visible: =showMap
+            X: =571
+      - iconViewMap_5:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            AccessibleLabel: ="View Map"
+            Color: =RGBA(128, 128, 128, 1)
+            Height: =40
+            Icon: =Icon.View
+            OnSelect: =UpdateContext({showLocation:true})
+            TabIndex: =7
+            Visible: =false
+            Width: =40
+            X: =311
+            Y: =474
+      - iconViewMap_6:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            AccessibleLabel: ="View Map"
+            Color: =RGBA(128, 128, 128, 1)
+            Height: =40
+            Icon: =Icon.View
+            OnSelect: =UpdateContext({showRoom:true})
+            TabIndex: =7
+            Width: =40
+            X: =311
+            Y: =515
+      - Rectangle3_9:
+          Control: Rectangle@2.3.0
+          Group: grpMap_4
+          Properties:
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =640
+            Visible: =showLocation
+            Width: =640
+            X: =20
+      - Image5_6:
+          Control: Image@2.2.3
+          Group: grpMap_4
+          Properties:
+            Height: =579
+            Image: =varManageSelectedDesk.'Desk Location'
+            Visible: =showLocation
+            Width: =575
+            X: =35
+            Y: =61
+      - Icon1_6:
+          Control: Classic/Icon@2.5.0
+          Group: grpMap_4
+          Properties:
+            AccessibleLabel: ="Close Room"
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =61
+            Icon: =Icon.Cancel
+            OnSelect: =UpdateContext({showLocation:!showLocation})
+            TabIndex: =11
+            Visible: =showLocation
+            X: =591
+      - Rectangle3_10:
+          Control: Rectangle@2.3.0
+          Group: grpMap_5
+          Properties:
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =640
+            Visible: =showRoom
+            Width: =640
+            X: =40
+      - Checkbox1_3:
+          Control: Classic/CheckBox@2.1.0
+          Properties:
+            Default: |+
+              =If(
+                  varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.'Smart Board'),
+                  true,
+                  false
+              )
+            DisplayMode: =DisplayMode.View
+            Height: =58
+            OnSelect: =
+            Text: ="Smart Board"
+            X: =7
+            Y: =309
+      - Checkbox1_4:
+          Control: Classic/CheckBox@2.1.0
+          Properties:
+            Default: |+
+              =If(
+                  varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.VTel),
+                  true,
+                  false
+              )
+
+            DisplayMode: =DisplayMode.View
+            Height: =58
+            OnSelect: =
+            Text: ="VTel"
+            Width: =155
+            X: =250
+            Y: =309
+      - Checkbox1_5:
+          Control: Classic/CheckBox@2.1.0
+          Properties:
+            Default: |+
+              =If(
+                  varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.'Projector/TV'),
+                  true,
+                  false
+              )
+            DisplayMode: =DisplayMode.View
+            Height: =59
+            OnSelect: =
+            Text: ="Projector/TV"
+            Width: =196
+            X: =428
+            Y: =308
+      - Image5_7:
+          Control: Image@2.2.3
+          Group: grpMap_5
+          Properties:
+            Height: =579
+            Image: =varManageSelectedDesk.RoomPicture
+            ImagePosition: =ImagePosition.Fill
+            Visible: =showRoom
+            Width: =575
+            X: =55
+            Y: =61
+      - Icon1_7:
+          Control: Classic/Icon@2.5.0
+          Group: grpMap_5
+          Properties:
+            AccessibleLabel: ="Close Room"
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =61
+            Icon: =Icon.Cancel
+            OnSelect: =UpdateContext({showRoom:!showRoom})
+            TabIndex: =11
+            Visible: =showRoom
+            X: =611

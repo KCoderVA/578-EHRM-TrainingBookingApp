@@ -1,0 +1,423 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  scrn_MoCalendar:
+    Properties:
+      OnVisible: |-
+        =Set(
+            _dateSelected2,
+            _CurrentDate2
+        );
+        Set(
+            _firstDayOfMonth2,
+            DateAdd(
+                _dateSelected2,
+                1 - Day(_dateSelected2),
+                TimeUnit.Days
+            )
+        );
+        Set(
+            _FirstDayinView2,
+            DateAdd(
+                _firstDayOfMonth2,
+                -(Weekday(_firstDayOfMonth2) - 2 + 1),
+                TimeUnit.Days
+            )
+        );
+        Set(
+            _LastDayOfMonth2,
+            DateAdd(
+                DateAdd(
+                    _firstDayOfMonth2,
+                    1,
+                    TimeUnit.Months
+                ),
+                -1,
+                TimeUnit.Days
+            )
+        );
+        Set(
+            _MinDate2,
+            DateAdd(
+                _firstDayOfMonth2,
+                -(Weekday(_firstDayOfMonth2) - 2 + 1),
+                TimeUnit.Days
+            )
+        );
+        Set(
+            _MaxDate2,
+            DateAdd(
+                DateAdd(
+                    _firstDayOfMonth2,
+                    -(Weekday(_firstDayOfMonth2) - 2 + 1),
+                    TimeUnit.Days
+                ),
+                35,
+                TimeUnit.Days
+            )
+        );
+        // Items property of Dropdown2
+        ClearCollect(
+            colRoomFilter,
+            {Title: "All"}
+        );
+        Collect(
+            colRoomFilter,
+            ShowColumns(
+                Filter(
+                    Desks,
+                    Asset.Value = "Room"
+                ),
+                Title
+            )
+        );
+        colRoomFilter
+    Children:
+      - Rectangle7_3:
+          Control: Rectangle@2.3.0
+          Properties:
+            Height: =640
+            Width: =62
+      - Icon3_3:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            Height: =58
+            Icon: =Icon.Home
+            OnSelect: =Navigate(Dashboard)
+            Width: =62
+      - Label12_3:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =35
+            Text: =Text(_firstDayOfMonth2, "mmmm yyyy")
+            Width: =920
+            X: =126
+            Y: =23
+      - TextCanvas1_3:
+          Control: Text@0.0.51
+          Properties:
+            FontColor: =RGBA(255, 255, 255, 1)
+            Height: =26
+            Size: =16
+            Text: ="Select Calendar View"
+            Weight: ='TextCanvas.Weight'.Semibold
+            Width: =194
+            X: =800
+            Y: =27
+      - Container7:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Height: =640
+            Width: =1074
+            X: =62
+          Children:
+            - Label11_3:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  FontWeight: =FontWeight.Bold
+                  Height: =27
+                  Size: =20
+                  Text: ="Monthly Calendar"
+                  Width: =1045
+                  X: =1
+            - Rectangle8_3:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(102, 182, 227, 1)
+                  Height: =77
+                  Width: =1048
+                  X: =13
+                  Y: =27
+            - Label12_4:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  Color: =RGBA(255, 255, 255, 1)
+                  FontWeight: =FontWeight.Bold
+                  Height: =35
+                  Text: =Text(_firstDayOfMonth2, "mmmm yyyy")
+                  Width: =920
+                  X: =64
+                  Y: =27
+            - Icon7_3:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Icon: =Icon.ChevronLeft
+                  OnSelect: |-
+                    =Set(_firstDayOfMonth2, DateAdd(_firstDayOfMonth2, -1, TimeUnit.Months));
+                    Set(_FirstDayinView2, DateAdd(_firstDayOfMonth2, -(Weekday(_firstDayOfMonth2) - 2 + 1), TimeUnit.Days));
+                    Set(_LastDayOfMonth2, DateAdd(DateAdd(_firstDayOfMonth2, 1, TimeUnit.Months), -1, TimeUnit.Days));
+                    If(_MinDate > _firstDayOfMonth2, Set(_MinDate, _firstDayOfMonth2))
+                  Y: =27
+            - Icon5_3:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Height: =67
+                  Icon: =Icon.ChevronRight
+                  OnSelect: |-
+                    =Set(_firstDayOfMonth2, DateAdd(_firstDayOfMonth2, 1, TimeUnit.Months));
+                    Set(_FirstDayinView2, DateAdd(_firstDayOfMonth2, -(Weekday(_firstDayOfMonth2) - 2 + 1), TimeUnit.Days));
+                    Set(_LastDayOfMonth2, DateAdd(DateAdd(_firstDayOfMonth2, 1, TimeUnit.Months), -1, TimeUnit.Days));
+                    If(_LastDayOfMonth2 > _MaxDate, Set(_MaxDate,_LastDayOfMonth2));
+                  Width: =61
+                  X: =1011
+                  Y: =27
+            - TextCanvas1_4:
+                Control: Text@0.0.51
+                Properties:
+                  FontColor: =RGBA(255, 255, 255, 1)
+                  Height: =35
+                  Size: =16
+                  Text: ="Select Calendar View"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  Width: =194
+                  X: =737
+                  Y: =43
+            - Button1_2:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Height: =32
+                  OnSelect: =Navigate(scrn_WeeklyCal)
+                  Size: =16
+                  Text: ="Weekly"
+                  Width: =97
+                  X: =680
+                  Y: =67
+            - Button4_4:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Height: =33
+                  OnSelect: =Navigate(scrn_WeeklyCal_1)
+                  Size: =14
+                  Text: ="Daily"
+                  Width: =111
+                  X: =793
+                  Y: =67
+            - Icon4_3:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Icon: =Icon.Print
+                  OnSelect: |-
+                    =UpdateContext({hideForPDF: true});
+                    Set(
+                        PDFPrint,
+                        PDF(
+                            Container7,
+                            {
+                                PaperSize: PaperSize.A4,
+                                PaperOrientation: PaperOrientation.Landscape
+                            }
+                        )
+                    );
+                    UpdateContext({hideForPDF: false});
+                    Print();
+                    Navigate(PDFScreen);
+                  Visible: =!hideForPDF
+                  X: =931
+                  Y: =28
+            - Gallery2_2:
+                Control: Gallery@2.15.0
+                Variant: Horizontal
+                Properties:
+                  BorderThickness: =1
+                  DelayItemLoading: =false
+                  Height: =65
+                  Items: =Calendar.WeekdaysShort()
+                  LoadingSpinner: =LoadingSpinner.None
+                  TemplatePadding: =0
+                  TemplateSize: =150
+                  Width: =1048
+                  WrapCount: =0
+                  X: =13
+                  Y: =104
+                Children:
+                  - Label13_3:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderThickness: =1
+                        Fill: =If(ThisItem.Value="Sun" || ThisItem.Value="Sat", RGBA(204, 204, 204, 1), RGBA(0,0,0,0))
+                        FocusedBorderThickness: =1
+                        Height: =44
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =14
+                        Text: =ThisItem.Value
+                        Width: =150
+            - Gallery8_1:
+                Control: Gallery@2.15.0
+                Variant: Vertical
+                Properties:
+                  DelayItemLoading: =false
+                  Height: =469
+                  Items: |-
+                    =[
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        10,
+                        11,
+                        12,
+                        13,
+                        14,
+                        15,
+                        16,
+                        17,
+                        18,
+                        19,
+                        20,
+                        21,
+                        22,
+                        23,
+                        24,
+                        25,
+                        26,
+                        27,
+                        28,
+                        29,
+                        30,
+                        31,
+                        32,
+                        33,
+                        34
+                    ]
+                  LoadingSpinner: =LoadingSpinner.None
+                  TemplatePadding: =0
+                  TemplateSize: =105
+                  Width: =1061
+                  WrapCount: =7
+                  X: =13
+                  Y: =169
+                Children:
+                  - Circle1_1:
+                      Control: Circle@2.3.0
+                      Properties:
+                        Fill: =RGBA(0, 121, 187, 1)
+                        Height: =35
+                        OnSelect: =Set(_dateSelected2, DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                        Visible: =If(DateAdd(_FirstDayinView2, ThisItem.Value) = _CurrentDate2, true, false)
+                        Width: =35
+                  - Rectangle6_1:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderThickness: =If(DateAdd(_FirstDayinView2, ThisItem.Value) = _dateSelected2, 3, 1)
+                        Fill: =If(Abs(Label18_1.Text - ThisItem.Value) > 10 ,RGBA(241, 241, 241, 1), RGBA(0, 0, 0, 0))
+                        Height: =105
+                        OnSelect: =Set(_dateSelected2, DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                  - Label18_1:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        Color: |
+                          =If(DateAdd(_FirstDayinView2, ThisItem.Value) = _CurrentDate2, RGBA(255, 255, 255, 1), RGBA(0, 0, 0, 1))
+                        Height: =23
+                        OnSelect: =Set(_dateSelected2, DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                        Size: =12
+                        Text: =Day(DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                        Width: =35
+                  - Gallery10_2:
+                      Control: Gallery@2.15.0
+                      Variant: Vertical
+                      Properties:
+                        DelayItemLoading: =false
+                        Height: =105
+                        Items: |-
+                          =//SortByColumns(Filter('Desk Reservations',(DateValue(Text('Check Out From'))<= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
+                          //(DateValue(Text('Check Out To'))>= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))),"Title",SortOrder.Ascending)
+
+
+                          SortByColumns(
+                              Filter(
+                                  'Desk Reservations',
+                                  (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
+                                  (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
+                                  (
+                                      Dropdown2_2.Selected.Title = "All" ||
+                                      DeskFloor = Dropdown2_2.Selected.Title
+                                  )
+                              ),
+                              "Title",
+                              SortOrder.Ascending
+                          )
+                        LoadingSpinner: =LoadingSpinner.None
+                        TemplatePadding: =0
+                        TemplateSize: =63
+                        Visible: =If(Month(DateAdd(_firstDayOfMonth2, ThisItem.Value,TimeUnit.Days))= 1 ||Weekday(DateAdd(_firstDayOfMonth2, ThisItem.Value,TimeUnit.Days))= Today(),false, true)
+                        Width: =150
+                      Children:
+                        - Label21_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              DisplayMode: |-
+                                =If(
+                                    ThisItem.'Created By'.DisplayName = "Admin",
+                                    DisplayMode.Edit,
+                                    DisplayMode.View
+                                )
+                                //ThisItem.'Created By'.Email = varUser.Email || isUserAdminSPList &&
+                              FontWeight: =FontWeight.Bold
+                              Height: =43
+                              OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+                              Size: =8
+                              Text: |-
+                                =Concatenate(ThisItem.Title," " & "to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM"))
+
+                                //&& Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)
+                              Width: =150
+                              Y: =20
+                        - Button6_1:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              Color: =RGBA(0, 0, 0, 0)
+                              DisplayMode: |-
+                                =DisplayMode.Edit
+                                /*If(
+                                    User().Email = varUser.Email,
+                                    DisplayMode.Edit,
+                                    DisplayMode.View
+                                )*/
+
+                                /*If(
+                                    User().Email,
+                                    DisplayMode.View & If(User().Email, "Admin", DisplayMode.Edit
+                                ))*/
+                              Fill: =RGBA(0, 0, 0, 0)
+                              Height: =43
+                              HoverColor: =RGBA(0, 0, 0, 0)
+                              HoverFill: =ColorFade(RGBA(0, 0, 0, 0), -20%)
+                              OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+                              Text: =""
+                              Width: =150
+                              Y: =20
+            - Dropdown2_2:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  Height: =50
+                  Items: |-
+                    =colRoomFilter
+                    //'Desk Reservations'.TitlecolRoomFilter
+                  Items.Value: =Title
+                  Visible: =!hideForPDF
+                  Width: =229
+                  X: =95
+                  Y: =30

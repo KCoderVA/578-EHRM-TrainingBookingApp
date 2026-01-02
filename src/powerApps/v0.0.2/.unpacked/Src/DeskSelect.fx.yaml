@@ -1,0 +1,651 @@
+DeskSelect As screen:
+    Fill: =RGBA(236, 236, 236, 1)
+    Height: =Max(App.Height, App.DesignHeight)
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnVisible: |-
+        =UpdateContext({showMap:false});
+    Width: =Max(App.Width, App.DesignWidth)
+
+    "galleryAvailDesk As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
+        '#CopilotOverlayLabel': ="Filtered"
+        AccessibleLabel: ="Available Desks"
+        BorderColor: =App.Theme.Colors.Darker40
+        Height: =433
+        Items: |-
+            =SortByColumns(
+              Filter(
+                Desks,
+                Active = 1,
+                Asset.Value in ["Desk","Item","Room",],
+                // Exclude any title in the overlapped-reservation list:
+                Not(Title in colDeskChckRecur.DeskText),
+                // Honor the room selector:
+                If(
+                  Dropdown1.Selected.Result = "All Conference Rms",
+                  Asset.Value <> "Desk" && Asset.Value <> "Item",
+                  'Room Location' = Dropdown1.Selected.Result
+                )
+              ),
+              "Title",
+              SortOrder.Ascending
+              )
+        Layout: =Layout.Vertical
+        Selectable: =false
+        TabIndex: =2
+        TemplatePadding: =0
+        TemplateSize: =107
+        Width: =1136
+        Y: =207
+        ZIndex: =1
+
+        Separator4 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(135, 78, 181, 1)
+            Height: =1
+            OnSelect: =Select(Parent)
+            Width: =Parent.TemplateWidth
+            Y: =Parent.TemplateHeight - 1
+            ZIndex: =1
+
+        cbDeskSelect As checkbox:
+            BorderColor: =App.Theme.Colors.Darker40
+            CheckboxBorderColor: =RGBA(39, 113, 194, 1)
+            CheckmarkFill: =App.Theme.Colors.Primary
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |
+                =//CheckCheckbox
+                ThisItem.Title in colSelectedDesks.Title Or ThisItem.'Room Location' in colSelectedDesks.Title 
+                //ThisItem.ID = gv_item.ID 
+            DisplayMode: |-
+                =If(ThisItem.Asset.Value = "Desk" And ThisItem.'Room Location' in colSelectedDesks.Title, DisplayMode.Edit)
+                //If(gv_item.ID = ThisItem.ID, DisplayMode.Edit, DisplayMode.Disabled)
+            FocusedBorderThickness: =0
+            Font: =App.Theme.Font
+            Height: =54
+            HoverColor: =App.Theme.Colors.Darker30
+            OnCheck: |-
+                =If(ThisItem.Asset.Value = "Room", 
+                    Clear(colSelectedDesks); 
+                    RemoveIf(colSelectedDesks, 'Room Location' = ThisItem.'Room Location'); 
+                    Collect(colSelectedDesks,ThisItem),
+                    //Else
+                    Collect(colSelectedDesks,ThisItem);
+                )
+            OnSelect: =Set(gv_item, ThisItem)
+            OnUncheck: |+
+                =Remove(colSelectedDesks, ThisItem) 
+                
+            Size: =21
+            Text: =""
+            Visible: =If(Title4.Text = Dropdown1.Selected.Result,false,true)
+            Width: =64
+            X: =343
+            Y: =43
+            ZIndex: =2
+
+        Checkbox1_2 As checkbox:
+            BorderColor: =App.Theme.Colors.Darker40
+            CheckboxBorderColor: =App.Theme.Colors.Primary
+            CheckmarkFill: =App.Theme.Colors.Primary
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |
+                =If(!IsBlank(ThisItem.'Projector/TV'),true,false)
+            DisplayMode: =DisplayMode.View
+            FocusedBorderThickness: =0
+            Font: =App.Theme.Font
+            Height: =58
+            HoverColor: =App.Theme.Colors.Darker30
+            OnSelect: =Select(Parent)
+            Size: =21
+            Text: ="Projector/TV"
+            Visible: =false
+            Width: =243
+            X: =753
+            Y: =37
+            ZIndex: =3
+
+        Checkbox1_1 As checkbox:
+            BorderColor: =App.Theme.Colors.Darker40
+            CheckboxBorderColor: =App.Theme.Colors.Primary
+            CheckmarkFill: =App.Theme.Colors.Primary
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |
+                =If(!IsBlank(ThisItem.VTel),true,false)
+            DisplayMode: =DisplayMode.View
+            FocusedBorderThickness: =0
+            Font: =App.Theme.Font
+            Height: =58
+            HoverColor: =App.Theme.Colors.Darker30
+            OnSelect: =Select(Parent)
+            Size: =21
+            Text: ="VTel"
+            Visible: =false
+            Width: =155
+            X: =575
+            Y: =38
+            ZIndex: =4
+
+        Checkbox1 As checkbox:
+            BorderColor: =App.Theme.Colors.Darker40
+            CheckboxBorderColor: =App.Theme.Colors.Primary
+            CheckmarkFill: =App.Theme.Colors.Primary
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |
+                =If(!IsBlank(ThisItem.'Smart Board'),true,false)
+            DisplayMode: =DisplayMode.View
+            FocusedBorderThickness: =0
+            Font: =App.Theme.Font
+            Height: =58
+            HoverColor: =App.Theme.Colors.Darker30
+            OnSelect: =Select(Parent)
+            Size: =21
+            Text: ="Smart Board"
+            Visible: =false
+            Width: =280
+            X: =332
+            Y: =38
+            ZIndex: =5
+
+        TextCanvas4 As Text:
+            BorderColor: =
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            FontColor: =
+            Height: =35
+            Size: =18
+            Text: |-
+                ="Capacity: " & ThisItem.Capacity
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =128
+            X: =204
+            Y: =54
+            ZIndex: =6
+
+        NextArrow4 As icon.ChevronRight:
+            AccessibleLabel: =Self.Tooltip
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =App.Theme.Colors.Darker30
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =49
+            Icon: =Icon.Location
+            OnSelect: |-
+                =Select(Parent);UpdateContext({showMap:!showMap})
+            PaddingBottom: =10
+            PaddingLeft: =10
+            PaddingRight: =10
+            PaddingTop: =10
+            TabIndex: =0
+            Tooltip: ="View item details"
+            X: =111
+            Y: =46
+            ZIndex: =7
+
+        Label7 As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            Height: =20
+            OnSelect: =Select(Parent)
+            Size: =12
+            Text: ="Map"
+            Width: =51
+            X: =124
+            Y: =37
+            ZIndex: =8
+
+        NextArrow4_2 As icon.ChevronRight:
+            AccessibleLabel: =Self.Tooltip
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =App.Theme.Colors.Darker30
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =48
+            Icon: =Icon.PhotosPictures
+            OnSelect: |-
+                =Select(Parent);UpdateContext({showPhoto:!showPhoto})
+            PaddingBottom: =10
+            PaddingLeft: =10
+            PaddingRight: =10
+            PaddingTop: =10
+            TabIndex: =0
+            Tooltip: ="View item details"
+            Width: =77
+            Y: =48
+            ZIndex: =9
+
+        Label7_1 As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            Height: =20
+            OnSelect: =Select(Parent)
+            Size: =12
+            Text: ="Rm Photo"
+            Width: =94
+            Y: =37
+            ZIndex: =10
+
+        Title4 As label:
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =38
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =20
+            Text: =ThisItem.Title
+            VerticalAlign: =VerticalAlign.Top
+            Width: =525
+            ZIndex: =11
+
+    Dropdown1 As dropdown:
+        BorderColor: =App.Theme.Colors.Darker40
+        ChevronBackground: =App.Theme.Colors.Primary
+        ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+        ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+        ChevronFill: =App.Theme.Colors.PrimaryForeground
+        ChevronHoverBackground: =App.Theme.Colors.Darker10
+        ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+        Default: ="EHRM Training Rooms"
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Font: =App.Theme.Font
+        HoverColor: =RGBA(0, 0, 0, 1)
+        HoverFill: =App.Theme.Colors.Lighter70
+        Items: |
+            =//colRoomLocations//ForAll(Distinct(Desks,Title), {Result: ThisRecord.Value})
+            SortByColumns(ForAll(Distinct(Desks,'Room Location'), {Result: ThisRecord.Value}), "Result") 
+        OnChange: =colRoomLocations
+        PressedColor: =App.Theme.Colors.PrimaryForeground
+        PressedFill: =App.Theme.Colors.Darker30
+        Reset: =true
+        SelectionColor: =App.Theme.Colors.PrimaryForeground
+        SelectionFill: =App.Theme.Colors.Primary
+        Size: =21
+        Width: =339
+        X: =192
+        Y: =153
+        ZIndex: =2
+
+    Label9 As label:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        Size: =21
+        Text: ="Select Room"
+        Width: =174
+        Y: =150
+        ZIndex: =3
+
+    grpNoResults As group:
+        Height: =5
+        Width: =5
+        X: =60
+        Y: =60
+        ZIndex: =8
+
+        Label5 As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            Height: =46
+            Size: =21
+            Text: ="Uh oh, no openings found!"
+            Visible: =If(CountRows(galleryAvailDesk.AllItems) >= 1, false, true)
+            Width: =1078
+            X: =40
+            Y: =476
+            ZIndex: =4
+
+        Label5_1 As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            Height: =46
+            Size: =21
+            Text: ="Try selecting another date"
+            Visible: =If(CountRows(galleryAvailDesk.AllItems) >= 1, false, true)
+            Width: =1078
+            X: =40
+            Y: =515
+            ZIndex: =5
+
+    lblDateDesk As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        Height: =33
+        Size: =21
+        Text: =//startTime & " - " & endTime  //DateTimeValue(Text(selectedDate,DateTimeFormat.ShortDate)&" "&ddTimeFrom.Selected.Value)&" - "&DateTimeValue(Text(selectedEndDate,DateTimeFormat.ShortDate)&" "&ddTimeTo.Selected.Value)
+        Visible: =false
+        Width: =1136
+        Y: =117
+        ZIndex: =15
+
+    grpMap As group:
+        Height: =5
+        Width: =5
+        X: =60
+        Y: =60
+        ZIndex: =15
+
+        Rectangle3 As rectangle:
+            AccessibleLabel: ="Close Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =560
+            Visible: =showMap
+            Width: =640
+            Y: =77
+            ZIndex: =6
+
+        Image5 As image:
+            AccessibleLabel: ="Close Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Height: =560
+            Image: =galleryAvailDesk.Selected.'Map Link'
+            ImagePosition: =ImagePosition.Stretch
+            Visible: =showMap
+            Width: =1054
+            X: =40
+            Y: =77
+            ZIndex: =7
+
+        Icon1 As icon.Cancel:
+            AccessibleLabel: ="Close Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =40
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =UpdateContext({showMap:!showMap})
+            TabIndex: =5
+            Visible: =showMap
+            X: =1030
+            Y: =80
+            ZIndex: =8
+
+    Image2_2 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =150
+        Image: =abstractBackground
+        ImagePosition: =ImagePosition.Fill
+        Width: =Parent.Width
+        ZIndex: =16
+
+    btnContinueDesk_1 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(15, 108, 189, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =45
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =// 1) Pull in only the rows where your checkbox is ticked
+            ClearCollect(
+              colSelectedDesks,
+              Filter(
+                galleryAvailDesk.AllItems,
+                cbDeskSelect.Value    // ← your actual checkbox control name
+              )
+            );
+            
+            // 2) If they picked none, warn; otherwise go on
+            If(
+              IsEmpty(colSelectedDesks),
+              Notify(
+                "Please select at least one desk to continue",
+                NotificationType.Warning,
+                3000
+              )
+            );
+            
+              Navigate( Confirm, ScreenTransition.Fade )
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Size: =24
+        Text: ="ContinueREC"
+        Visible: =false
+        Width: =198
+        X: =920
+        Y: =70
+        ZIndex: =17
+
+    btnContinueDesk As button:
+        BorderColor: =App.Theme.Colors.Primary
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        DisplayMode: =If(CountRows(colSelectedDesks) > 0, DisplayMode.Edit, DisplayMode.Disabled)
+        Fill: =RGBA(15, 108, 189, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =45
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =If(IsEmpty(colSelectedDesks), 
+                Notify("Please select a desk to continue",NotificationType.Warning),
+                //Else
+                Set(varAccept3, true);
+                Set(varAccept4, false);
+                Navigate(Confirm)
+            )
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Size: =24
+        Text: ="Continue"
+        Width: =200
+        X: =btnBackDesk.X + btnBackDesk.Width + 20
+        Y: =btnBackDesk.Y
+        ZIndex: =18
+
+    grpMap_6 As group:
+        Height: =5
+        Width: =5
+        X: =20
+        Y: =3
+        ZIndex: =18
+
+        Rectangle3_11 As rectangle:
+            AccessibleLabel: ="Close Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =560
+            Visible: =showLocation
+            Width: =640
+            X: =20
+            Y: =80
+            ZIndex: =9
+
+        Image5_8 As image:
+            AccessibleLabel: ="Close Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Height: =560
+            Image: =galleryAvailDesk.Selected.'Desk Location'
+            ImagePosition: =ImagePosition.Stretch
+            Visible: =showLocation
+            Width: =1054
+            X: =60
+            Y: =80
+            ZIndex: =10
+
+        Icon1_8 As icon.Cancel:
+            AccessibleLabel: ="Close Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =40
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =UpdateContext({showLocation:!showLocation})
+            TabIndex: =5
+            Visible: =showLocation
+            X: =1050
+            Y: =80
+            ZIndex: =14
+
+    btnBackDesk As button:
+        BorderColor: =App.Theme.Colors.Primary
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(128, 128, 128, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =45
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: =Back()
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Size: =24
+        Text: ="Back"
+        Width: =200
+        X: =(Parent.Width - (Self.Width + 20 + btnContinueDesk.Width)) / 2
+        Y: =70
+        ZIndex: =19
+
+    lblSelectDesk As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Bold
+        Height: =50
+        Size: =32
+        Text: ="Select a Room"
+        Width: =400
+        X: =(Parent.Width - Self.Width) / 2
+        ZIndex: =20
+
+    lblSelectDesk_1 As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(106, 122, 127, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Bold
+        Height: =41
+        Size: =22
+        Text: ="Desks unavailable will not show up"
+        Width: =500
+        X: =636
+        Y: =112
+        ZIndex: =21
+
+    grpMap_7 As group:
+        Height: =5
+        Width: =5
+        X: =22
+        Y: =3
+        ZIndex: =21
+
+        Rectangle3_12 As rectangle:
+            AccessibleLabel: ="Close Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =560
+            Visible: =showPhoto
+            Width: =640
+            X: =42
+            Y: =80
+            ZIndex: =11
+
+        Icon1_9 As icon.Cancel:
+            AccessibleLabel: ="Close Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =40
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =UpdateContext({showPhoto:!showPhoto})
+            TabIndex: =5
+            Visible: =showPhoto
+            X: =1072
+            Y: =80
+            ZIndex: =12
+
+        Image5_9 As image:
+            AccessibleLabel: ="Close Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Height: =560
+            Image: =galleryAvailDesk.Selected.RoomPicture
+            ImagePosition: =ImagePosition.Stretch
+            Visible: =showPhoto
+            Width: =949
+            X: =81
+            Y: =77
+            ZIndex: =13
+
+    Radio3 As radio:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        Font: =App.Theme.Font
+        Height: =164
+        HoverColor: =App.Theme.Colors.Darker30
+        Items: |-
+            =SortByColumns(
+              Filter(
+                Desks,
+                Active = 1,
+                Asset.Value in ["Desks","Item", "Room"],
+                // Exclude any title in the overlapped-reservation list:
+                Not(Title in colDeskChckRecur.DeskText),
+                // Honor the room selector:
+                If(
+                  Dropdown1.Selected.Result = "All EHRM Training Rooms",
+                  Asset.Value <> "Desk" && Asset.Value <> "Item",
+                  'Room Location' = Dropdown1.Selected.Result
+                )
+              ),
+              "Title",
+              SortOrder.Ascending
+            )
+        RadioBorderColor: =App.Theme.Colors.Primary
+        RadioSelectionFill: =App.Theme.Colors.Primary
+        Size: =21
+        Width: =300
+        X: =778
+        Y: =169
+        ZIndex: =22
+

@@ -1,0 +1,25 @@
+"PDFScreen As screen.'printableLayout_A4Landscape_ver1.0'":
+    Fill: =Color.White
+    Height: =794
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    Width: =1123
+
+    PdfViewer1 As pdfViewer:
+        Document: =PDFPrint
+        Height: =794
+        Width: =1123
+        ZIndex: =3
+
+    Icon9 As icon.BackArrow:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =App.Theme.Colors.Darker30
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(244, 244, 244, 1)
+        Height: =40
+        Icon: =Icon.BackArrow
+        OnSelect: =Back()
+        Width: =48
+        X: =20
+        Y: =10
+        ZIndex: =4
+

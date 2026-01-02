@@ -1,0 +1,458 @@
+Confirm As screen:
+    Fill: =RGBA(236, 236, 236, 1)
+    Height: =Max(App.Height, App.DesignHeight)
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnVisible: |-
+        =ClearCollect(
+            colCombinedRecurrence,
+            AddColumns(
+                CollectionRecurrence,
+                Floor,
+                First(colSelectedDesks).Title
+            )
+        );
+        // Get the highest RecurrenceID in the list (returns blank if none exist)
+        Set(
+            varRecurrenceID,
+            Coalesce(
+                Max(
+                    'Desk Reservations',
+                    Value(RecurrenceID)
+                ) + 1,
+                1
+            )
+        )
+    Width: =Max(App.Width, App.DesignWidth)
+
+    Gallery3_1 As gallery.galleryVertical:
+        BorderColor: =App.Theme.Colors.Darker40
+        DelayItemLoading: =true
+        Fill: =RGBA(255, 255, 255, 1)
+        Height: =315
+        Items: |-
+            =//CollectionRecurrence
+            colCombinedRecurrence
+        Layout: =Layout.Vertical
+        LoadingSpinner: =LoadingSpinner.Data
+        TemplateSize: =22
+        Visible: =!varAccept3 And !varAccept4
+        Width: =507
+        X: =314
+        Y: =255
+        ZIndex: =1
+
+        Rectangle12 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =App.Theme.Colors.Primary
+            Height: =0
+            OnSelect: =Select(Parent)
+            Width: =537
+            Y: =Gallery3_1.TemplateHeight
+            ZIndex: =1
+
+        TextCanvas7_4 As Text:
+            BorderColor: =
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            FontColor: =
+            Height: =20
+            Text: =ThisItem.Floor
+            Width: =236
+            X: =261
+            Y: =2
+            ZIndex: =2
+
+        TextCanvas7_3 As Text:
+            BorderColor: =
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            FontColor: =
+            Height: =20
+            Text: =ThisItem.EndDateTime
+            Width: =113
+            X: =132
+            Y: =2
+            ZIndex: =3
+
+        TextCanvas7_2 As Text:
+            BorderColor: =
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            FontColor: =
+            Height: =20
+            Text: =ThisItem.StartDateTime
+            Width: =111
+            X: =0
+            Y: =2
+            ZIndex: =4
+
+    TextCanvas8_4 As Text:
+        Align: ="Start"
+        AutoHeight: =false
+        BorderColor: =
+        BorderStyle: =""
+        ContentLanguage: =""
+        DisplayMode: =DisplayMode.Edit
+        Fill: =RGBA(180, 214, 250, 1)
+        Font: =""
+        FontColor: =
+        FontItalic: =false
+        FontStrikethrough: =false
+        FontUnderline: =false
+        Height: =20
+        Size: =14
+        TabIndex: =0
+        Text: ="Room Location & Desk Assignment"
+        Tooltip: =""
+        VerticalAlign: =""
+        Visible: =!varAccept3 And !varAccept4
+        Weight: ='TextCanvas.Weight'.Bold
+        Width: =246
+        Wrap: =true
+        X: =575
+        Y: =235
+        ZIndex: =2
+
+    TextCanvas8_3 As Text:
+        Align: ="Start"
+        AutoHeight: =false
+        BorderColor: =
+        BorderStyle: =""
+        ContentLanguage: =""
+        DisplayMode: =DisplayMode.Edit
+        Fill: =RGBA(180, 214, 250, 1)
+        Font: =""
+        FontColor: =
+        FontItalic: =false
+        FontStrikethrough: =false
+        FontUnderline: =false
+        Height: =20
+        Size: =14
+        TabIndex: =0
+        Text: ="End Date/Time"
+        Tooltip: =""
+        VerticalAlign: =""
+        Visible: =!varAccept3 And !varAccept4
+        Weight: ='TextCanvas.Weight'.Bold
+        Width: =130
+        Wrap: =true
+        X: =445
+        Y: =235
+        ZIndex: =3
+
+    TextCanvas8_2 As Text:
+        Align: ="Start"
+        AutoHeight: =false
+        BorderColor: =
+        BorderStyle: =""
+        ContentLanguage: =""
+        DisplayMode: =DisplayMode.Edit
+        Fill: =RGBA(180, 214, 250, 1)
+        Font: =""
+        FontColor: =
+        FontItalic: =false
+        FontStrikethrough: =false
+        FontUnderline: =false
+        Height: =20
+        Size: =14
+        TabIndex: =0
+        Text: ="Start Date/Time"
+        Tooltip: =""
+        VerticalAlign: =""
+        Visible: =!varAccept3 And !varAccept4
+        Weight: ='TextCanvas.Weight'.Bold
+        Width: =131
+        Wrap: =true
+        X: =314
+        Y: =235
+        ZIndex: =4
+
+    lblReview As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =Font.'Segoe UI'
+        Height: =60
+        Italic: =true
+        LineHeight: =1
+        Size: =18
+        Text: ="Please review your desk reservation details and press Confirm to proceed with your reservation or press Back to make changes."
+        Visible: =!varAccept3 And !varAccept4
+        Width: =675
+        X: =(Parent.Width - Self.Width) / 2
+        Y: =150
+        ZIndex: =5
+
+    Container2 As groupContainer.manualLayoutContainer:
+        Height: =482
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =varAccept3 Or varAccept4 ///varAccept2
+        Width: =696
+        X: =(Parent.Width - Self.Width) / 2
+        Y: =158
+        ZIndex: =7
+
+        ButtonCanvas2 As Button:
+            BasePaletteColor: =RGBA(5, 102, 178, 1)
+            BorderColor: =
+            DisplayMode: =DisplayMode.Edit
+            Font: =Font.Arial
+            FontColor: =
+            FontSize: =32
+            Height: =90
+            OnSelect: |-
+                =//Set(varAccept2,false);Set(varAccept, true);
+                If(varAccept3,
+                    Set(varAccept3, false);
+                    Set(varAccept4, true),
+                    If(varAccept4,
+                        Set(varAccept4, false)
+                    )
+                )
+            Text: ="Accept"
+            Width: =696
+            X: =0
+            Y: =392
+            ZIndex: =2
+
+        HtmlText3 As htmlViewer:
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Font: =App.Theme.Font
+            Height: =392
+            HtmlText: |-
+                =If(varAccept3,
+                    "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:14px; border-radius:5px;'>
+                    <ul style='padding-left:20px;'>
+                        <li>The EHRM Training Room is intended solely for EHRM-related training, meetings, and activities. Any other use is prohibited unless expressly authorized.</li>
+                        <li>Contact Battle Creek Change Leadership Team (CLT) for Audio/Visual needs at extension 35268 or email <a href='mailto:vhabacclt@va.gov' style='color:#add8e6;'>vhabacclt@va.gov</a>.</li>
+                        <li>If you have any issues with EHRM equipment, please contact OI&amp;T at ext. 35480.</li>
+                        <li>Ensure that the room is left in an orderly condition.</li>
+                        <li>Ensure the room set up has been put back in the initial arrangement.</li>
+                        <li>Data Protection: Users must comply with VA policies on data protection, especially regarding PHI, PII, and VA sensitive data.</li>
+                        <li>Confidentiality: Do not leave sensitive information unattended. Log off computers and close documents when not in use.</li>
+                        <li>Capacity: Do not exceed the room’s maximum occupancy limit.</li>
+                        <li>Emergency Procedures: Familiarize yourself with emergency exits and procedures.</li>
+                    </ul>
+                    <p style='margin-top:15px;'>For questions contact <a href='mailto:vhabacclt@va.gov' style='color:#add8e6;'>vhabacclt@va.gov</a>.</p>
+                
+                <div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px; text-align: center'>
+                    By acknowledging this, you accept responsibility for the EHRM training workstation/Desk and ensuring the room is returned to its original state.
+                </div>",
+                    //Else
+                    "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:40px; border-radius:5px; text-align: center'>By acknowledging this, you accept responsibility for the EHRM VILT workstation and ensuring the desk is returned to its original state.</div>"
+                )
+            Size: =13
+            Width: =696
+            ZIndex: =5
+
+    Image2_4 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =150
+        Image: =abstractBackground
+        ImagePosition: =ImagePosition.Fill
+        Width: =Parent.Width
+        ZIndex: =8
+
+    btnConfirm_2 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(15, 108, 189, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =45
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |+
+            =// ——————————————————————————————————————————————
+            // 1) Save item(s) to Outlook
+            Office365Outlook.V4CalendarPostItem(
+                LookUp(Office365Outlook.CalendarGetTables().value, DisplayName = "Calendar").Name, // current user's Outlook Calendar
+                varTitle, // subject
+                varEventStartTime, // Start time,
+                varEventEndTime, // End time
+                "(UTC) Coordinated Universal Time",  // Time zone
+                {
+                    // Main properties
+                    requiredAttendees: varAttendees,
+                    //optionalAttendees: varOptionalAttendees,
+                    ///resourceAttendees: "room@yourdomain.com", // Update with your room/resource email or variable
+                    body: varEmailBody,
+                    categories: varMeetCat,       
+                    location: First(colCombinedRecurrence).Floor, // Need proper value
+                    importance: varImportance, // low, normal, high
+                    isAllDay: false, // true if all day
+                    recurrence: varRecurrence, // "weekly", "daily", etc.
+                    selectedDaysOfWeek: varWeekday,
+                    recurrenceEnd: Text(DateValue(varEndDate), "yyyy-mm-dd"), // "2025-06-08"
+                    numberOfOccurences: Value(recurPeriodTxt.Text), // integer
+                    reminderMinutesBeforeStart: varReminder, // integer
+                    isReminderOn: If(varReminder > 0, true, false), // or false
+                    showAs: "busy", // free, tentative, busy, oof, workingElsewhere, unknown
+                    responseRequested: true, // or true for RSVP
+                    sensitivity: "normal" // normal, personal, private, confidential
+                }
+            );
+            
+            // ——————————————————————————————————————————————
+            // 2) Patch to SharePoint list, For each recurrence date…
+            ForAll(
+                CollectionRecurrence As rec,
+                // …and each selected desk…
+                ForAll(
+                    colSelectedDesks As desk,
+                // ——— (Optional) send the invite ———
+                    
+                    // ——— Patch the SharePoint list ———
+                    Patch(
+                        'Desk Reservations',
+                        Defaults('Desk Reservations'),
+                        {
+                            // simple string concatenation for Title
+                            Title: DataCardValue3.Selected.DisplayName & " – " &  desk.Title & " @ " & Text(
+                                rec.StartDateTime,
+                                "[$-en-US]mm/dd/yyyy hh:mm AM/PM" 
+                            ),
+                            DeskText: desk.Title, 
+                            'Check Out From': rec.StartDateTime,
+                            'Check Out To': rec.EndDateTime,
+                            // use the people‐picker cards directly (they include Department, etc.)
+                            'Reserved By': DataCardValue3.Selected,
+                            Manager: DataCardValue7.Selected,
+                            Service: DataCardValue8.Text,
+                            'Reason for desk reservation': DataCardValue1.Text,
+                            Asset: desk.Asset,
+                            DeskFloor: If(
+                                desk.Asset.Value = "Desk",
+                                desk.RoomLocation,
+                                ""
+                            ),
+                            IsRecurring: If(varRecurrence = "None", false, true),
+                            //RecurrenceFrequency: varRecurrence,
+                            RecurrenceEndDate: DateValue(varEndDate),
+                            ///RecurrenceDayName: varFirstDayName,
+                            ///RecurrenceTimes: varRecurringtimes,
+                            RecurrenceID: varRecurrenceID,
+                            MeetingCategory: varMeetCat,
+                            Description: varDescription
+                            //OptionalAttendees: OptionAttendeesPP.Selected
+                        }
+                    )   
+                )
+            );
+            
+            // ——————————————————————————————————————————————
+            // 3) Clean up & navigate
+            Set(varScreenReset, true);
+            Set(varScreenReset, false);
+            
+            Concurrent(
+                ResetForm(Form1),
+                Reset(ddImportance),
+                Reset(ddRecurrenceFrequency),
+                Reset(Calendar_1),
+                Reset(Gallery6),
+                Reset(DatePickerCanvas2),
+                Reset(Gallery3_1);
+                Clear(colSelectedDesks),
+                Clear(CollectionRecurrence),
+                Clear(colDeskChckRecur),
+                Clear(colBookedDesks),
+                Clear(colCombinedRecurrence),
+                Clear(wkDays),
+                Clear(wkDaysTemp)
+            );
+            
+            Navigate(Success)
+            
+            
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Size: =24
+        Text: ="Confirm"
+        Underline: =true
+        Visible: =!varAccept3 And !varAccept4
+        Width: =200
+        X: =(Parent.Width - Self.Width) / 2
+        Y: =Gallery3_1.Y + Gallery3_1.Height + 15
+        ZIndex: =9
+
+    lblLookGood As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Bold
+        Height: =50
+        Size: =32
+        Text: |-
+            =If(varAccept3,
+                "Room Terms and Conditions",
+                //Else
+                If(varAccept4,
+                    "Setup/cleanup acknowledgement",
+                    //Else
+                    "Everything look good?"
+                )
+            )
+        Width: =1136
+        ZIndex: =10
+
+    btnBackConfirm As button:
+        BorderColor: =App.Theme.Colors.Primary
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(128, 128, 128, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =45
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: =Back();Set(varAccept,true)
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Size: =24
+        Text: ="Back"
+        Width: =200
+        X: =(Parent.Width - Self.Width) / 2
+        Y: =70
+        ZIndex: =11
+
+    lblReview_1 As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =Font.'Segoe UI'
+        Height: =20
+        Italic: =true
+        LineHeight: =1
+        Size: =12
+        Text: |-
+            =Switch(Gallery3_1.AllItemsCount,
+                0, " There are no events",
+                1, Gallery3_1.AllItemsCount & " event",
+                Gallery3_1.AllItemsCount & " events"
+            )
+        Visible: =!varAccept3 And !varAccept4
+        Width: =675
+        X: =lblReview.X
+        Y: =lblReview.Y + lblReview.Height
+        ZIndex: =12
+

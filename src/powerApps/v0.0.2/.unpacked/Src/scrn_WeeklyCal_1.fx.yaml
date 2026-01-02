@@ -1,0 +1,957 @@
+scrn_WeeklyCal_1 As screen:
+    Fill: =Color.White
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnVisible: |
+        =Set(
+            _dateSelected2,
+            _CurrentDate2
+        );
+        Set(
+            _firstDayofWeek2,
+            Switch(
+                Weekday(_dateSelected2),
+                7,
+                DateAdd(
+                    _dateSelected2,
+                    -6,
+                    TimeUnit.Days
+                ),
+                6,
+                DateAdd(
+                    _dateSelected2,
+                    -5,
+                    TimeUnit.Days
+                ),
+                5,
+                DateAdd(
+                    _dateSelected2,
+                    -4,
+                    TimeUnit.Days
+                ),
+                4,
+                DateAdd(
+                    _dateSelected2,
+                    -3,
+                    TimeUnit.Days
+                ),
+                3,
+                DateAdd(
+                    _dateSelected2,
+                    -2,
+                    TimeUnit.Days
+                ),
+                2,
+                DateAdd(
+                    _dateSelected2,
+                    -1,
+                    TimeUnit.Days
+                ),
+                1,
+                DateAdd(
+                    _dateSelected2,
+                    -0,
+                    TimeUnit.Days
+                ),
+                Today() // DateValue("01/01/2022")
+            )
+        );
+        // Items property of Dropdown2
+        ClearCollect(
+            colRoomFilter,
+            {Title: "All"}
+        );
+        Collect(
+            colRoomFilter,
+            ShowColumns(
+                Filter(
+                    Desks,
+                    Asset.Value = "Room"
+                ),
+                Title
+            )
+        );
+
+    Container1_1 As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Height: =617
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Width: =1061
+        X: =75
+        ZIndex: =1
+
+        Label11_2 As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Bold
+            Height: =25
+            Size: =20
+            Text: ="Daily Calendar List"
+            Width: =1045
+            Y: =1
+            ZIndex: =1
+
+        Rectangle8_2 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(102, 182, 227, 1)
+            Height: =63
+            Width: =1061
+            Y: =26
+            ZIndex: =2
+
+        Label12_2 As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Bold
+            Height: =64
+            Size: =21
+            Text: ="Daily Training Room List"//Text(_firstDayofWeek2, "mmmm yyyy")
+            Width: =769
+            X: =138
+            Y: =16
+            ZIndex: =3
+
+        Icon5_2 As icon.ChevronRight:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =App.Theme.Colors.Darker30
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =67
+            Icon: =Icon.ChevronRight
+            OnSelect: =Set(_firstDayofWeek2, DateAdd(_firstDayofWeek2, 7, TimeUnit.Days))
+            Visible: =false
+            Width: =61
+            X: =990
+            Y: =23
+            ZIndex: =4
+
+        Icon7_2 As icon.ChevronLeft:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =App.Theme.Colors.Darker30
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Icon: =Icon.ChevronLeft
+            OnSelect: =Set(_firstDayofWeek2, DateAdd(_firstDayofWeek2, -7, TimeUnit.Days));
+            Visible: =false
+            X: =7
+            Y: =22
+            ZIndex: =5
+
+        Button4_1 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =App.Theme.Colors.Primary
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =33
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =App.Theme.Colors.Darker10
+            OnSelect: =Navigate(scrn_MoCalendar)
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            Size: =14
+            Text: ="Monthly"
+            Visible: =!hideForPDF
+            Width: =111
+            X: =692
+            Y: =53
+            ZIndex: =6
+
+        Icon4_1 As icon.Print:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =App.Theme.Colors.Darker30
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Icon: =Icon.Print
+            OnSelect: |-
+                =UpdateContext({hideForPDF: true});
+                Set(
+                    PDFPrint,
+                    PDF(
+                        Container1_1,
+                        {
+                            PaperSize: PaperSize.A4,
+                            PaperOrientation: PaperOrientation.Landscape
+                        }
+                    )
+                );
+                UpdateContext({hideForPDF: false});
+                Print();
+                Navigate(PDFScreen);
+            Visible: =!hideForPDF
+            X: =926
+            Y: =26
+            ZIndex: =7
+
+        Dropdown2_1 As dropdown:
+            BorderColor: =App.Theme.Colors.Darker40
+            ChevronBackground: =App.Theme.Colors.Primary
+            ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+            ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+            ChevronFill: =App.Theme.Colors.PrimaryForeground
+            ChevronHoverBackground: =App.Theme.Colors.Darker10
+            ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Font: =App.Theme.Font
+            Height: =50
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Items: |-
+                =colRoomFilter
+                //'Desk Reservations'.TitlecolRoomFilter
+            PressedColor: =App.Theme.Colors.PrimaryForeground
+            PressedFill: =App.Theme.Colors.Darker30
+            SelectionColor: =App.Theme.Colors.PrimaryForeground
+            SelectionFill: =App.Theme.Colors.Primary
+            Size: =21
+            Visible: =!hideForPDF
+            Width: =229
+            X: =95
+            Y: =30
+            ZIndex: =8
+
+        "Gallery14 As gallery.'BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0'":
+            BorderColor: =App.Theme.Colors.Darker40
+            DelayItemLoading: =true
+            Height: =468
+            Items: |-
+                =Filter(
+                    'Desk Reservations',
+                    DateValue(RecurrenceEndDate) = Today() && 
+                    (Dropdown2_1.Selected.Title = "All" || DeskFloor = Dropdown2_1.Selected.Title)
+                )
+            Layout: =Layout.Vertical
+            LoadingSpinner: =LoadingSpinner.Data
+            TemplatePadding: =0
+            TemplateSize: =35
+            Width: =1061
+            Y: =130
+            ZIndex: =9
+
+            NextArrow2 As icon.ChevronRight:
+                AccessibleLabel: =Self.Tooltip
+                Color: =RGBA(166, 166, 166, 1)
+                DisplayMode: |
+                    =If(
+                        ThisItem.'Created By'.Email = varUser.Email || isUserAdminSPList && ThisItem.'Created By'.DisplayName = "Admin",
+                        DisplayMode.Edit,
+                        DisplayMode.Disabled
+                    )
+                    //DisplayMode.Edit
+                    //Admin.Email = varUser.Email
+                Height: =50
+                Icon: =Icon.ChevronRight
+                OnSelect: |
+                    =Set(varDaily, ThisItem.ID);
+                    Set(varSelectedReservation, ThisItem);
+                    Navigate(Reservation, ScreenTransition.Fade)
+                PaddingBottom: =16
+                PaddingLeft: =16
+                PaddingRight: =16
+                PaddingTop: =16
+                Tooltip: ="View item details"
+                Width: =65
+                X: =966
+                ZIndex: =2
+
+            Rectangle14 As rectangle:
+                BorderColor: =App.Theme.Colors.Darker40
+                Fill: =App.Theme.Colors.Darker30
+                Height: =//Parent.TemplateHeight - Separator8.Height
+                OnSelect: =Select(Parent)
+                Visible: =ThisItem.IsSelected
+                Width: =4
+                ZIndex: =4
+
+            Subtitle4_1 As label:
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =20
+                OnSelect: =Select(Parent)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =12
+                Text: =ThisItem.Description
+                VerticalAlign: =VerticalAlign.Top
+                Width: =151
+                X: =711
+                Y: =15
+                ZIndex: =5
+
+            Title8 As label:
+                Color: =RGBA(50, 49, 48, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =20
+                OnSelect: =Select(Parent)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =12
+                Text: =ThisItem.Title
+                VerticalAlign: =VerticalAlign.Top
+                Width: =589
+                X: =104
+                Y: =15
+                ZIndex: =6
+
+            Subtitle4 As label:
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =20
+                OnSelect: =Select(Parent)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =12
+                Text: =ThisItem.ID
+                VerticalAlign: =VerticalAlign.Top
+                Width: =58
+                X: =25
+                Y: =15
+                ZIndex: =7
+
+        Button1_1 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =App.Theme.Colors.Primary
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =32
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =App.Theme.Colors.Darker10
+            OnSelect: =Navigate(scrn_WeeklyCal)
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            Size: =16
+            Text: ="Weekly"
+            Width: =97
+            X: =814
+            Y: =54
+            ZIndex: =10
+
+        TextCanvas2 As Text:
+            BorderColor: =
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            FontColor: =
+            Height: =46
+            Size: =18
+            Text: |-
+                ="ID#"
+            Weight: ='TextCanvas.Weight'.Semibold
+            Width: =73
+            X: =22
+            Y: =107
+            ZIndex: =11
+
+        TextCanvas5_1 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =46
+            Size: =18
+            TabIndex: =0
+            Text: =" POC Comments"
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =true
+            Weight: ='TextCanvas.Weight'.Semibold
+            Width: =207
+            Wrap: =true
+            X: =704
+            Y: =107
+            ZIndex: =12
+
+        TextCanvas2_1 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =46
+            Size: =18
+            TabIndex: =0
+            Text: =" Desk Reservation Info"
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =true
+            Weight: ='TextCanvas.Weight'.Semibold
+            Width: =307
+            Wrap: =true
+            X: =95
+            Y: =107
+            ZIndex: =13
+
+    Rectangle7_2 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =App.Theme.Colors.Primary
+        Height: =595
+        Width: =62
+        Y: =22
+        ZIndex: =2
+
+    Icon3_2 As icon.Home:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =App.Theme.Colors.Darker30
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(244, 244, 244, 1)
+        Height: =58
+        Icon: =Icon.Home
+        OnSelect: =Navigate(Dashboard)
+        Width: =62
+        Y: =22
+        ZIndex: =3
+
+    TextCanvas1_2 As Text:
+        AutoHeight: =false
+        BorderColor: =
+        DisplayMode: =DisplayMode.Edit
+        Fill: =
+        FontColor: =RGBA(255, 255, 255, 1)
+        Height: =38
+        Size: =16
+        Text: ="Select Calendar View"
+        VerticalAlign: =VerticalAlign.Middle
+        Weight: ='TextCanvas.Weight'.Semibold
+        Width: =154
+        X: =838
+        Y: =22
+        ZIndex: =4
+
+    Container3_1 As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Fill: =RGBA(255, 255, 255, 1)
+        Height: =415
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =varCancelContainer
+        Width: =1022
+        X: =75
+        Y: =186
+        ZIndex: =7
+
+        bgRounded_18 As htmlViewer:
+            Height: =322
+            HtmlText: |-
+                ="<div style='border:1px gray;border-radius:10%;height:870px;width:100%;background-color:#FCFCFC'></div>"
+            Width: =1010
+            ZIndex: =18
+
+        grpMap_9 As group:
+            Height: =5
+            Width: =5
+            X: =60
+            Y: =-66
+            ZIndex: =20
+
+            Rectangle3_16 As rectangle:
+                BorderColor: =App.Theme.Colors.Darker40
+                Fill: =RGBA(116, 116, 116, 0.85)
+                Height: =415
+                Visible: =showMap
+                Width: =1022
+                ZIndex: =19
+
+            Image5_11 As image:
+                BorderColor: =App.Theme.Colors.Darker40
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                Height: =415
+                Image: =LookUp(Desks,Title = varSelectedReservation.DeskText).RoomPicture
+                ImagePosition: =ImagePosition.Stretch
+                Visible: =showMap
+                Width: =1022
+                ZIndex: =20
+
+            Icon1_11 As icon.Cancel:
+                AccessibleLabel: ="Close Map"
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(255, 255, 255, 1)
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(244, 244, 244, 1)
+                Height: =84
+                Icon: =Icon.Cancel
+                OnSelect: |-
+                    =UpdateContext({showMap:!showMap})
+                TabIndex: =11
+                Visible: =showMap
+                Width: =60
+                X: =962
+                ZIndex: =25
+
+        lblMapDesk_7 As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =70
+            Size: =21
+            Text: ="From"
+            Width: =250
+            X: =61
+            ZIndex: =21
+
+        tbMapDesk_4 As text:
+            AccessibleLabel: ="Map Link Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: =varSelectedReservation.'Check Out From'
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            DisplayMode: =DisplayMode.View
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            Height: =70
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =18
+            Width: =250
+            X: =130
+            ZIndex: =22
+
+        lblToRes_2 As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =70
+            Size: =21
+            Text: ="To"
+            Width: =250
+            X: =400
+            ZIndex: =23
+
+        tbTo_2 As text:
+            AccessibleLabel: ="Map Link Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: =varSelectedReservation.'Check Out To'
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            DisplayMode: =DisplayMode.View
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            Height: =70
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =18
+            Width: =250
+            X: =452
+            ZIndex: =24
+
+        lblReservedOn_2 As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =39
+            Size: =21
+            Text: ="Reserved On"
+            Width: =254
+            Y: =70
+            ZIndex: =26
+
+        tbReservedOn_2 As text:
+            AccessibleLabel: ="Map Link Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: =varSelectedReservation.Created
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            DisplayMode: =DisplayMode.View
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            Height: =38
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =18
+            Width: =250
+            X: =179
+            Y: =70
+            ZIndex: =27
+
+        tbFloorDesk_5 As text:
+            AccessibleLabel: ="Floor Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: =LookUp(Desks,Title = varSelectedReservation.DeskText).'Room Location'
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            DisplayMode: =DisplayMode.View
+            Fill: =RGBA(0, 0, 0, 0)
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            Height: =73
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =18
+            Width: =150
+            X: =229
+            Y: =95
+            ZIndex: =28
+
+        lblNameDesk_4 As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =70
+            Size: =21
+            Text: ="Conference Room"
+            Width: =560
+            Y: =98
+            ZIndex: =29
+
+        lblFloorDesk_5 As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =70
+            Size: =21
+            Text: ="Floor/Room"
+            Width: =290
+            Y: =156
+            ZIndex: =30
+
+        tbNameDesk_4 As text:
+            AccessibleLabel: ="Desk Name Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: =varSelectedReservation.DeskText
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            DisplayMode: =DisplayMode.View
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            Height: =70
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =18
+            Width: =331
+            X: =181
+            Y: =156
+            ZIndex: =31
+
+        lblDescrDesk_4 As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =55
+            Size: =21
+            Text: ="Description"
+            Width: =290
+            Y: =223
+            ZIndex: =32
+
+        tbDescrDesk_4 As text:
+            AccessibleLabel: ="Desk Description Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |-
+                =
+                
+                varSelectedReservation.'Reason for desk reservation'
+                //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            DisplayMode: =DisplayMode.View
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            Height: =111
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Mode: =TextMode.MultiLine
+            Size: =18
+            Width: =493
+            X: =181
+            Y: =234
+            ZIndex: =33
+
+        btnBackDeskEdit_4 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(128, 128, 128, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =70
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+                =Reset(tbDescrDesk_4);
+                Reset(tbFloorDesk_5);
+                Reset(tbMapDesk_4);
+                Reset(tbNameDesk_4);
+                Set(varCancelContainer, false)
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            Size: =24
+            Text: ="Back"
+            Width: =200
+            X: =130
+            Y: =345
+            ZIndex: =34
+
+        btnUpdate_3 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(184, 0, 0, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =70
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+                =UpdateContext({varConfirmCancel:true});Set(varCancelContainer, false)
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            Size: =24
+            Text: ="CANCEL"
+            Width: =260
+            X: =512
+            Y: =345
+            ZIndex: =35
+
+    RadioGroupCanvas1_1 As Radio.pcfdataset:
+        DisplayMode: =DisplayMode.Edit
+        Height: =80
+        Items: =["This Reservation", "Series"]
+        Visible: =varConfirmCancel
+        Width: =320
+        X: =436
+        Y: =343
+        ZIndex: =9
+
+    grpConfirmCancel_3 As group:
+        Height: =5
+        Width: =5
+        X: =40
+        Y: =40
+        ZIndex: =10
+
+        Rectangle3_15 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =292
+            Visible: =varConfirmCancel
+            Width: =804
+            Y: =118
+            ZIndex: =5
+
+        bgRounded_17 As htmlViewer:
+            Height: =490
+            HtmlText: |-
+                ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+            Visible: =varConfirmCancel
+            Width: =720
+            X: =236
+            Y: =150
+            ZIndex: =6
+
+        Label1_4 As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =93
+            Size: =24
+            Text: ="Confirm Cancellation"
+            Visible: =varConfirmCancel
+            Width: =688
+            X: =242
+            Y: =262
+            ZIndex: =8
+
+        btnConfirmCancel_4 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            BorderThickness: =0
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(128, 128, 128, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =72
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+                =UpdateContext({varConfirmCancel:false})
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: ="NEVERMIND"
+            Visible: =varConfirmCancel
+            Width: =234
+            X: =305
+            Y: =505
+            ZIndex: =10
+
+        btnConfirmDelete_4 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            BorderThickness: =0
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(184, 0, 0, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =72
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |
+                =//Remove('Desk Reservations',varSelectedReservation);UpdateContext({varConfirmCancel:false});Back()
+                // OnSelect property for the Confirm button
+                If(
+                    RadioGroupCanvas1_1.Selected.Value = "Series",
+                    RemoveIf(
+                        'Desk Reservations',
+                        RecurrenceID = varSelectedReservation.RecurrenceID
+                    ),
+                    Remove(
+                        'Desk Reservations',
+                        varSelectedReservation
+                    )
+                );
+                UpdateContext({varConfirmCancel: false});
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: ="CONFIRM"
+            Visible: =varConfirmCancel
+            Width: =258
+            X: =672
+            Y: =505
+            ZIndex: =11
+
+    Icon8 As icon.HorizontalLine:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =App.Theme.Colors.Darker30
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(244, 244, 244, 1)
+        Height: =0
+        Icon: =Icon.HorizontalLine
+        Width: =995
+        X: =82
+        Y: =137
+        ZIndex: =12
+
+    Rectangle18 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =App.Theme.Colors.Primary
+        Height: =0
+        Width: =982
+        X: =95
+        Y: =137
+        ZIndex: =13
+
+    Rectangle19 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =App.Theme.Colors.Primary
+        Height: =0
+        Width: =982
+        X: =95
+        Y: =137
+        ZIndex: =14
+
+    Rectangle20 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =App.Theme.Colors.Primary
+        Height: =2
+        Width: =982
+        X: =95
+        Y: =132
+        ZIndex: =15
+

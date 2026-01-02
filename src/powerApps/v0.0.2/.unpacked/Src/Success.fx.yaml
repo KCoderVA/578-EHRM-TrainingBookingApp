@@ -1,0 +1,131 @@
+"Success As screen.'phoneLayout_Success_ver3.0'":
+    Fill: =RGBA(236, 236, 236, 1)
+    Height: =Max(App.Height, App.DesignHeight)
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    Width: =Max(App.Width, App.DesignWidth)
+
+    Image2_3 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =150
+        Image: =abstractBackground
+        ImagePosition: =ImagePosition.Fill
+        Width: =Parent.Width
+        ZIndex: =1
+
+    iconCircle1 As circle.Circle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(15, 108, 189, 1)
+        X: =(Parent.Width - Self.Width) / 2
+        Y: =(Parent.Height/2 - Self.Height/2) * .7
+        ZIndex: =4
+
+    iconCheck1 As icon.Check:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(244, 244, 244, 1)
+        Height: =iconCircle1.Height
+        Icon: =Icon.Check
+        PaddingBottom: =Self.PaddingTop
+        PaddingLeft: =Self.PaddingTop
+        PaddingRight: =Self.PaddingTop
+        PaddingTop: =18
+        PressedFill: =RGBA(255, 255, 255, 0.3)
+        Width: =iconCircle1.Width
+        X: =(Parent.Width - Self.Width) / 2
+        Y: =(Parent.Height/2 - Self.Height/2) * .7
+        ZIndex: =5
+
+    LblSuccessMsg1 As label:
+        Align: =Align.Center
+        AutoHeight: =true
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        Height: =iconCircle1.Height
+        Size: =21
+        Text: ="You're booked!"
+        Width: =640
+        X: =(Parent.Width - Self.Width) / 2
+        Y: =382
+        ZIndex: =6
+
+    Timer1 As timer:
+        AutoStart: =true
+        BorderColor: =App.Theme.Colors.Primary
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Duration: =4000
+        Fill: =App.Theme.Colors.Primary
+        Font: =App.Theme.Font
+        Height: =70
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =App.Theme.Colors.Darker10
+        OnTimerEnd: |-
+            =Refresh('Desk Reservations');
+            Navigate(Dashboard)
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Visible: =false
+        Width: =280
+        X: =299
+        Y: =570
+        ZIndex: =7
+
+    lblSuccess As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Bold
+        Height: =113
+        Size: =32
+        Text: ="Success!"
+        Width: =640
+        X: =(Parent.Width - Self.Width) / 2
+        Y: =18
+        ZIndex: =8
+
+    Tabs_6 As Tabs:
+        Items: |-
+            =colMenu
+            /*
+            Table(
+                {
+                    Name: "Dashboard",
+                    Icon: Icon.DetailList,
+                    Page: Dashboard,        
+                    Visible:true
+                },
+                {
+                    Name: "My Appts",
+                    Icon: Icon.Person,
+                    Page: MyAppts,
+                    Visible:true
+                },
+                {
+                    Name: "Book",
+                    Icon: Icon.Add,
+                    Page: chkWeekDays,
+                    Visible:true
+                },
+                {
+                    Name: "Manage Desks",
+                    Icon: Icon.ComputerDesktop,
+                    Page: ManageDesks,
+                    Visible:true
+                }
+            )
+            */
+        X: =(Parent.Width - Self.Width) / 2
+        Y: =520
+        ZIndex: =9
+

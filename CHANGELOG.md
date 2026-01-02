@@ -18,6 +18,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.0.2] - 2026-01-02
+
+### Added
+- Added v0.0.2 Canvas app artifacts under `src/powerApps/v0.0.2/`:
+  - Export artifact `.zip/578EHRMTrainingApp.zip` (kept local; zip files are git-ignored)
+  - App package `.msapp/v0.0.2_578EHRMTrainingApp.msapp`
+  - Unpacked source `.unpacked/` generated via Power Platform CLI
+
+### Changed
+- Updated SharePoint list data source references to ensure imported connections bind correctly across the app.
+- Enhanced data-driven auto-population of dropdowns and text inputs (M365 directory + SharePoint lookups), with the largest changes on:
+  - `POCSUPERVISOR`
+  - `chkWeekDays`
+  - `MyAppts`
+  - `Dashboard` (minor)
+
+### Fixed
+- Resolved additional importation errors across remaining screens.
+
+### Validation
+- Tested by submitting booking requests and confirming they populate correctly into the SharePoint list and remain viewable/interactive after refresh.
+
 ## [0.0.1] - 2025-12-31
 
 ### Added - Initial Project Baseline

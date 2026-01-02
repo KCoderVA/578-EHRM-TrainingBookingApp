@@ -1,0 +1,588 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  MyAppts:
+    Properties:
+      Fill: =RGBA(236, 236, 236, 1)
+      Height: =Max(App.Height, App.DesignHeight)
+      OnVisible: =UpdateContext({prevSelected:false});UpdateContext({upSelected:true});
+      Width: =Max(App.Width, App.DesignWidth)
+    Children:
+      - gallPast:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_OneTextVariant_ver4.0
+          Properties:
+            AccessibleLabel: ="Upcoming Reservations"
+            Height: =372
+            Items: |
+              =// Show first N events
+              FirstN(
+                  SortByColumns(
+                      Filter(
+                          'Desk Reservations',
+                          (
+                              'Reserved By'.Email = currentUser.Email
+                              // || 'Created By'.Email = currentUser.Email
+                          )
+                          && 'Check Out From' <= Today(),DeskFloor
+                      ),
+                      "CheckOutFrom",
+                      SortOrder.Descending
+                  ),
+                  500
+              )
+
+
+              // TEMPLATE VERSION'S PREVIOUS FORMULA VALUE:
+              /*
+              SortByColumns(
+                  Filter(
+                      'Desk Reservations',
+                      'Reserved By'.Email = currentUser.Email && 'Check Out From Number' < Value(
+                          Text(
+                              Today(),
+                              "yyyymmddhmm"
+                          )
+                      )
+                  ),
+                  "CheckOutFromNumber",
+                  SortOrder.Descending
+              )
+              */
+            OnSelect: =
+            ShowNavigation: =true
+            TabIndex: =3
+            TemplateSize: =50
+            Visible: =prevSelected
+            Width: =1055
+            X: =33
+            Y: =rectSeperator.Y + rectSeperator.Height + 5
+          Children:
+            - Separator2_2:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(135, 78, 181, 1)
+                  Height: =1
+                  OnSelect: =Select(Parent)
+                  Width: =Parent.TemplateWidth
+                  Y: =Parent.TemplateHeight - 1
+            - Title2_8:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =16
+                  Text: |-
+                    =Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM")
+                    //Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)ThisItem.'Check Out From'
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =314
+                  X: =524
+                  Y: =10
+            - Icon2_1:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Color: =RGBA(39, 113, 194, 1)
+                  Height: =40
+                  Icon: =Icon.OpenInNewWindow
+                  OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+                  Width: =45
+                  X: =450
+                  Y: =5
+            - Title2_9:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =ThisItem.DeskText
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =236
+                  X: =202
+                  Y: =10
+            - Title2_16:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(135, 78, 181, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Visible: =Title2_18.Visible
+                  Width: =54
+                  X: =172
+                  Y: =10
+            - Title2_18:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]mmm"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Visible: =If(Upper(Text(DateTimeValue(ThisItem.'Check Out From Text'),"[$-en-US]dd")) = Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd")), false, true)
+                  Width: =58
+                  X: =127
+                  Y: =10
+            - Label2_2:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  Size: =16
+                  Text: =" to "
+                  Visible: =Title2_18.Visible
+                  Width: =43
+                  X: =98
+                  Y: =10
+            - Title2_10:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(39, 113, 194, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]dd"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =40
+                  X: =Title2_11.X + Title2_11.Width
+                  Y: =10
+            - Title2_11:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]mmm"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =60
+                  Y: =10
+      - gallUpcoming:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_OneTextVariant_ver4.0
+          Properties:
+            AccessibleLabel: ="Upcoming Reservations"
+            Height: =372
+            Items: |+
+              =// Show first N events
+              FirstN(
+                  SortByColumns(
+                      Filter(
+                          'Desk Reservations',
+                          (
+                              'Reserved By'.Email = currentUser.Email
+                              // || 'Created By'.Email = currentUser.Email
+                          )
+                          && 'Check Out From' >= Today(),DeskFloor
+                      ),
+                      "CheckOutFrom",
+                      SortOrder.Ascending
+                  ),
+                  500
+              )
+
+
+            OnSelect: =
+            ShowNavigation: =true
+            TabIndex: =3
+            TemplateSize: =91
+            Visible: =upSelected
+            Width: =1068
+            X: =33
+            Y: =rectSeperator.Y + rectSeperator.Height + 5
+          Children:
+            - Separator2_1:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(135, 78, 181, 1)
+                  Height: =1
+                  OnSelect: =Select(Parent)
+                  Width: =Parent.TemplateWidth
+                  Y: =Parent.TemplateHeight - 1
+            - Button3:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderThickness: =0
+                  Fill: =RGBA(184, 0, 0, 1)
+                  Height: =40
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =16
+                  Text: ="CANCEL"
+                  Width: =142
+                  X: =878
+                  Y: =10
+            - Title2_7:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =16
+                  Text: |-
+                    =Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM")
+                    //Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)ThisItem.'Check Out From'
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =314
+                  X: =582
+                  Y: =15
+            - Icon2:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Color: =RGBA(39, 113, 194, 1)
+                  Height: =40
+                  Icon: =Icon.OpenInNewWindow
+                  OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+                  Visible: =false
+                  Width: =45
+                  X: =547
+                  Y: =10
+            - Title2_5:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =80
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =ThisItem.Title
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =383
+                  X: =127
+                  Y: =10
+            - Title2_13:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(135, 78, 181, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Visible: =Title2_12.Visible
+                  Width: =54
+                  X: =172
+                  Y: =10
+            - Title2_12:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =14
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]mmm"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Visible: =If(Upper(Text(DateTimeValue(ThisItem.'Check Out From Text'),"[$-en-US]dd")) = Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd")), false, true)
+                  Width: =58
+                  X: =127
+                  Y: =10
+            - Label2:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  Size: =16
+                  Text: =" to "
+                  Visible: =Title2_12.Visible
+                  Width: =43
+                  X: =98
+                  Y: =10
+            - Title2_6:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]dd"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =40
+                  X: =Title2_4.X + Title2_4.Width
+                  Y: =10
+            - Title2_4:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]mmm"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =60
+                  Y: =10
+      - rectSeperator:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(204, 204, 204, 1)
+            Height: =1
+            Width: =590
+            X: =34
+            Y: =235
+      - rectPrevSel:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(135, 78, 181, 1)
+            Height: =5
+            Visible: =prevSelected
+            Width: =160
+            X: =294
+            Y: =233
+      - lblPrev:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            FocusedBorderThickness: =.5
+            FontWeight: =FontWeight.Lighter
+            Height: =55
+            OnSelect: =UpdateContext({prevSelected:!prevSelected});UpdateContext({upSelected:!upSelected});
+            Size: =18
+            TabIndex: =2
+            Text: ="PREVIOUS (" & CountRows(gallPast.AllItems) &")"
+            Visible: =true // false
+            Width: =220
+            X: =264
+            Y: =187
+      - rectUpSel:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(135, 78, 181, 1)
+            Height: =5
+            Visible: =upSelected
+            Width: =160
+            X: =81
+            Y: =233
+      - lblUpcoming:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            FocusedBorderThickness: =.5
+            FontWeight: =FontWeight.Lighter
+            Height: =55
+            OnSelect: |-
+              =UpdateContext({upSelected:!upSelected});
+              UpdateContext({prevSelected:!prevSelected})
+            Size: =18
+            TabIndex: =1
+            Text: ="UPCOMING (" & CountRows(gallUpcoming.AllItems) & ")"
+            Width: =220
+            X: =51
+            Y: =189
+      - lblNoRes:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            Text: ="No upcoming reservations"
+            Visible: =If(CountRows(gallUpcoming.AllItems) >=1, false, true)
+            Width: =640
+            X: =240
+            Y: =169
+      - Rectangle3_3:
+          Control: Rectangle@2.3.0
+          Group: grpConfirmCancel
+          Properties:
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =66
+            Visible: =varConfirmCancel
+            Width: =640
+            X: =271
+            Y: =353
+      - bgRounded_10:
+          Control: HtmlViewer@2.1.0
+          Group: grpConfirmCancel
+          Properties:
+            DisabledBorderColor: =RGBA(56, 56, 56, 1)
+            Font: =Font.'Open Sans'
+            Height: =189
+            HtmlText: ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+            Size: =24
+            Visible: =varConfirmCancel
+            Width: =610
+            X: =285
+            Y: =229
+      - Label1_1:
+          Control: Label@2.5.1
+          Group: grpConfirmCancel
+          Properties:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Semibold
+            Height: =119
+            Size: =24
+            Text: ="Confirm Cancellation"
+            Visible: =varConfirmCancel
+            Width: =557
+            X: =311
+            Y: =258
+      - btnConfirmCancel_1:
+          Control: Classic/Button@2.2.0
+          Group: grpConfirmCancel
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(128, 128, 128, 1)
+            Height: =66
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: =UpdateContext({varConfirmCancel:false})
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: ="NEVERMIND"
+            Visible: =varConfirmCancel
+            Width: =160
+            X: =412
+            Y: =394
+      - btnConfirmDelete_1:
+          Control: Classic/Button@2.2.0
+          Group: grpConfirmCancel
+          Properties:
+            BorderThickness: =0
+            Fill: =RGBA(184, 0, 0, 1)
+            Height: =66
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: =Remove('Desk Reservations',varReservationToCancel);UpdateContext({varConfirmCancel:false})
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: ="CONFIRM"
+            Visible: =varConfirmCancel
+            Width: =160
+            X: =612
+            Y: =394
+      - Image2_5:
+          Control: Image@2.2.3
+          Properties:
+            Height: =169
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+      - lblMyAppointments:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(255, 255, 255, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =60
+            Size: =32
+            Text: ="My Reservations"
+            Width: =1136
+      - Tabs_2:
+          Control: CanvasComponent
+          ComponentName: Tabs
+          Properties:
+            Height: =109
+            HomePage: =App.ActiveScreen
+            Items: =colMenu
+            Width: =608
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =60

@@ -1,0 +1,88 @@
+{
+  "53a5fcc1-732a-4b48-86ac-e8017ff78b5e": {
+    "appActions": [
+      "CalendarGetTables",
+      "V4CalendarPostItem",
+      "V2CalendarPostItem",
+      "FindMeetingTimes",
+      "GetRoomLists",
+      "GetRooms",
+      "GetRoomsInRoomList",
+      "CalendarGetTables_V2",
+      "V4CalendarGetItems"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Office 365 Outlook",
+      "iconUri": "https://connectorsiconsfairfax.z5.web.core.usgovcloudapi.net/v1.0.1763/1.0.1763.4311/office365/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_office365",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {},
+    "dataSources": [
+      "Office365Outlook"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "53a5fcc1-732a-4b48-86ac-e8017ff78b5e"
+  },
+  "64852b16-4509-4d34-be4c-adfa1f496b3a": {
+    "appActions": [
+      "SearchUser"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Office 365 Users",
+      "iconUri": "https://connectorsiconsfairfax.z5.web.core.usgovcloudapi.net/v1.0.1767/1.0.1767.4341/office365users/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_office365users",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {},
+    "dataSources": [
+      "Office365Users"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "64852b16-4509-4d34-be4c-adfa1f496b3a"
+  },
+  "e1e90847-05cc-4859-b740-0434a0b9b618": {
+    "appActions": [
+      "providers/PowerPlatform.Governance/Operations/Read",
+      "providers/PowerPlatform.Governance/Operations/Write",
+      "providers/PowerPlatform.Governance/Operations/Delete"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "SharePoint",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/releases/v1.0.1732/1.0.1732.4070/sharepointonline/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_sharepointonline",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {
+      "https://dvagov.sharepoint.com/sites/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp": {
+        "dataSources": {
+          "Desk Reservations": {
+            "tableName": "b7c9bc66-7839-49a4-a55d-5e45dd6870d2"
+          },
+          "DeskAccessControl": {
+            "tableName": "bef22a0b-4da8-4784-badc-b72c9f4457e1"
+          },
+          "Desks": {
+            "tableName": "f7451f42-cc26-4df2-9a8d-8fec25ff916a"
+          }
+        }
+      }
+    },
+    "dataSources": [
+      "Desk Reservations",
+      "DeskAccessControl",
+      "Desks"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "e1e90847-05cc-4859-b740-0434a0b9b618"
+  }
+}

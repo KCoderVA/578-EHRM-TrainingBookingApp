@@ -1,0 +1,666 @@
+MyAppts As screen:
+    Fill: =RGBA(236, 236, 236, 1)
+    Height: =Max(App.Height, App.DesignHeight)
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnVisible: |-
+        =UpdateContext({prevSelected:false});UpdateContext({upSelected:true});
+    Width: =Max(App.Width, App.DesignWidth)
+
+    "gallPast As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
+        '#CopilotOverlayLabel': ="Filtered"
+        AccessibleLabel: ="Upcoming Reservations"
+        BorderColor: =App.Theme.Colors.Darker40
+        Height: =372
+        Items: |
+            =// Show first N events
+            FirstN(
+                SortByColumns(
+                    Filter(
+                        'Desk Reservations',
+                        (
+                            'Reserved By'.Email = currentUser.Email
+                            // || 'Created By'.Email = currentUser.Email
+                        )
+                        && 'Check Out From' <= Today(),DeskFloor
+                    ),
+                    "CheckOutFrom",
+                    SortOrder.Descending
+                ),
+                500
+            )
+            
+            
+            // TEMPLATE VERSION'S PREVIOUS FORMULA VALUE:
+            /*
+            SortByColumns(
+                Filter(
+                    'Desk Reservations',
+                    'Reserved By'.Email = currentUser.Email && 'Check Out From Number' < Value(
+                        Text(
+                            Today(),
+                            "yyyymmddhmm"
+                        )
+                    )
+                ),
+                "CheckOutFromNumber",
+                SortOrder.Descending
+            )
+            */
+        Layout: =Layout.Vertical
+        OnSelect: =
+        ShowNavigation: =true
+        TabIndex: =3
+        TemplatePadding: =0
+        TemplateSize: =50
+        Visible: =prevSelected
+        Width: =1055
+        X: =33
+        Y: =rectSeperator.Y + rectSeperator.Height + 5
+        ZIndex: =1
+
+        Separator2_2 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(135, 78, 181, 1)
+            Height: =1
+            OnSelect: =Select(Parent)
+            Width: =Parent.TemplateWidth
+            Y: =Parent.TemplateHeight - 1
+            ZIndex: =1
+
+        Title2_8 As label:
+            Align: =Align.Center
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =10
+            PaddingRight: =10
+            PaddingTop: =0
+            Size: =16
+            Text: |-
+                =Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM")
+                //Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)ThisItem.'Check Out From'
+            VerticalAlign: =VerticalAlign.Top
+            Width: =314
+            X: =524
+            Y: =10
+            ZIndex: =3
+
+        Icon2_1 As icon:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(39, 113, 194, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =40
+            Icon: =Icon.OpenInNewWindow
+            OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+            Width: =45
+            X: =450
+            Y: =5
+            ZIndex: =4
+
+        Title2_9 As label:
+            Align: =Align.Center
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =10
+            PaddingRight: =10
+            PaddingTop: =0
+            Size: =16
+            Text: =ThisItem.DeskText
+            VerticalAlign: =VerticalAlign.Top
+            Width: =236
+            X: =202
+            Y: =10
+            ZIndex: =5
+
+        Title2_16 As label:
+            Align: =Align.Center
+            Color: =RGBA(135, 78, 181, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =16
+            Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd"))
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =Title2_18.Visible
+            Width: =54
+            X: =172
+            Y: =10
+            ZIndex: =6
+
+        Title2_18 As label:
+            Align: =Align.Center
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]mmm"))
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =If(Upper(Text(DateTimeValue(ThisItem.'Check Out From Text'),"[$-en-US]dd")) = Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd")), false, true)
+            Width: =58
+            X: =127
+            Y: =10
+            ZIndex: =7
+
+        Label2_2 As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            Size: =16
+            Text: =" to "
+            Visible: =Title2_18.Visible
+            Width: =43
+            X: =98
+            Y: =10
+            ZIndex: =8
+
+        Title2_10 As label:
+            Align: =Align.Center
+            Color: =RGBA(39, 113, 194, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =16
+            Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]dd"))
+            VerticalAlign: =VerticalAlign.Top
+            Width: =40
+            X: =Title2_11.X + Title2_11.Width
+            Y: =10
+            ZIndex: =9
+
+        Title2_11 As label:
+            Align: =Align.Center
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =16
+            Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]mmm"))
+            VerticalAlign: =VerticalAlign.Top
+            Width: =60
+            Y: =10
+            ZIndex: =10
+
+    "gallUpcoming As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
+        '#CopilotOverlayLabel': ="Filtered"
+        AccessibleLabel: ="Upcoming Reservations"
+        BorderColor: =App.Theme.Colors.Darker40
+        Height: =372
+        Items: |+
+            =// Show first N events
+            FirstN(
+                SortByColumns(
+                    Filter(
+                        'Desk Reservations',
+                        (
+                            'Reserved By'.Email = currentUser.Email
+                            // || 'Created By'.Email = currentUser.Email
+                        )
+                        && 'Check Out From' >= Today(),DeskFloor
+                    ),
+                    "CheckOutFrom",
+                    SortOrder.Ascending
+                ),
+                500
+            )
+            
+            
+        Layout: =Layout.Vertical
+        OnSelect: =
+        ShowNavigation: =true
+        TabIndex: =3
+        TemplatePadding: =0
+        TemplateSize: =91
+        Visible: =upSelected
+        Width: =1068
+        X: =33
+        Y: =rectSeperator.Y + rectSeperator.Height + 5
+        ZIndex: =2
+
+        Separator2_1 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(135, 78, 181, 1)
+            Height: =1
+            OnSelect: =Select(Parent)
+            Width: =Parent.TemplateWidth
+            Y: =Parent.TemplateHeight - 1
+            ZIndex: =1
+
+        Button3 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            BorderThickness: =0
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(184, 0, 0, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+                =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =16
+            Text: ="CANCEL"
+            Width: =142
+            X: =878
+            Y: =10
+            ZIndex: =2
+
+        Title2_7 As label:
+            Align: =Align.Center
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =10
+            PaddingRight: =10
+            PaddingTop: =0
+            Size: =16
+            Text: |-
+                =Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM")
+                //Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)ThisItem.'Check Out From'
+            VerticalAlign: =VerticalAlign.Top
+            Width: =314
+            X: =582
+            Y: =15
+            ZIndex: =3
+
+        Icon2 As icon.OpenInNewWindow:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(39, 113, 194, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =40
+            Icon: =Icon.OpenInNewWindow
+            OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+            Visible: =false
+            Width: =45
+            X: =547
+            Y: =10
+            ZIndex: =4
+
+        Title2_5 As label:
+            Align: =Align.Center
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =80
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =10
+            PaddingRight: =10
+            PaddingTop: =0
+            Size: =16
+            Text: =ThisItem.Title
+            VerticalAlign: =VerticalAlign.Top
+            Width: =383
+            X: =127
+            Y: =10
+            ZIndex: =5
+
+        Title2_13 As label:
+            Align: =Align.Center
+            Color: =RGBA(135, 78, 181, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =16
+            Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd"))
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =Title2_12.Visible
+            Width: =54
+            X: =172
+            Y: =10
+            ZIndex: =6
+
+        Title2_12 As label:
+            Align: =Align.Center
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]mmm"))
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =If(Upper(Text(DateTimeValue(ThisItem.'Check Out From Text'),"[$-en-US]dd")) = Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd")), false, true)
+            Width: =58
+            X: =127
+            Y: =10
+            ZIndex: =7
+
+        Label2 As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            Size: =16
+            Text: =" to "
+            Visible: =Title2_12.Visible
+            Width: =43
+            X: =98
+            Y: =10
+            ZIndex: =8
+
+        Title2_6 As label:
+            Align: =Align.Center
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =16
+            Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]dd"))
+            VerticalAlign: =VerticalAlign.Top
+            Width: =40
+            X: =Title2_4.X + Title2_4.Width
+            Y: =10
+            ZIndex: =9
+
+        Title2_4 As label:
+            Align: =Align.Center
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =16
+            Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]mmm"))
+            VerticalAlign: =VerticalAlign.Top
+            Width: =60
+            Y: =10
+            ZIndex: =10
+
+    rectSeperator As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(204, 204, 204, 1)
+        Height: =1
+        Width: =590
+        X: =34
+        Y: =235
+        ZIndex: =3
+
+    rectPrevSel As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(135, 78, 181, 1)
+        Height: =5
+        Visible: =prevSelected
+        Width: =160
+        X: =294
+        Y: =233
+        ZIndex: =4
+
+    lblPrev As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        FocusedBorderThickness: =.5
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Lighter
+        Height: =55
+        OnSelect: |-
+            =UpdateContext({prevSelected:!prevSelected});UpdateContext({upSelected:!upSelected});
+        Size: =18
+        TabIndex: =2
+        Text: ="PREVIOUS (" & CountRows(gallPast.AllItems) &")"
+        Visible: =true // false
+        Width: =220
+        X: =264
+        Y: =187
+        ZIndex: =5
+
+    rectUpSel As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(135, 78, 181, 1)
+        Height: =5
+        Visible: =upSelected
+        Width: =160
+        X: =81
+        Y: =233
+        ZIndex: =6
+
+    lblUpcoming As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        FocusedBorderThickness: =.5
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Lighter
+        Height: =55
+        OnSelect: |-
+            =UpdateContext({upSelected:!upSelected});
+            UpdateContext({prevSelected:!prevSelected})
+        Size: =18
+        TabIndex: =1
+        Text: ="UPCOMING (" & CountRows(gallUpcoming.AllItems) & ")"
+        Width: =220
+        X: =51
+        Y: =189
+        ZIndex: =7
+
+    lblNoRes As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Bold
+        Height: =32
+        Size: =21
+        Text: ="No upcoming reservations"
+        Visible: =If(CountRows(gallUpcoming.AllItems) >=1, false, true)
+        Width: =640
+        X: =240
+        Y: =169
+        ZIndex: =8
+
+    Image2_5 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =169
+        Image: =abstractBackground
+        ImagePosition: =ImagePosition.Fill
+        Width: =Parent.Width
+        ZIndex: =14
+
+    lblMyAppointments As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =Font.'Segoe UI'
+        FontWeight: =FontWeight.Bold
+        Height: =60
+        Size: =32
+        Text: ="My Reservations"
+        Width: =1136
+        ZIndex: =15
+
+    Tabs_2 As Tabs:
+        Height: =109
+        Items: =colMenu
+        Width: =608
+        X: =(Parent.Width - Self.Width) / 2
+        Y: =60
+        ZIndex: =16
+
+    grpConfirmCancel As group:
+        Height: =5
+        Width: =5
+        X: =40
+        Y: =40
+        ZIndex: =20
+
+        Rectangle3_3 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =66
+            Visible: =varConfirmCancel
+            Width: =640
+            X: =271
+            Y: =353
+            ZIndex: =9
+
+        bgRounded_10 As htmlViewer:
+            Height: =189
+            HtmlText: |-
+                ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+            Visible: =varConfirmCancel
+            Width: =610
+            X: =285
+            Y: =229
+            ZIndex: =10
+
+        Label1_1 As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =119
+            Size: =24
+            Text: ="Confirm Cancellation"
+            Visible: =varConfirmCancel
+            Width: =557
+            X: =311
+            Y: =258
+            ZIndex: =11
+
+        btnConfirmCancel_1 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            BorderThickness: =0
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(128, 128, 128, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =66
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+                =UpdateContext({varConfirmCancel:false})
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: ="NEVERMIND"
+            Visible: =varConfirmCancel
+            X: =412
+            Y: =394
+            ZIndex: =12
+
+        btnConfirmDelete_1 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            BorderThickness: =0
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(184, 0, 0, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =66
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+                =Remove('Desk Reservations',varReservationToCancel);UpdateContext({varConfirmCancel:false})
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: ="CONFIRM"
+            Visible: =varConfirmCancel
+            X: =612
+            Y: =394
+            ZIndex: =13
+

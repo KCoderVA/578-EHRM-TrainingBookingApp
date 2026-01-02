@@ -1,0 +1,725 @@
+POCSUPERVISOR As screen:
+    Fill: =RGBA(236, 236, 236, 1)
+    Height: =Max(App.Height, App.DesignHeight)
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnVisible: =
+    Width: =Max(App.Width, App.DesignWidth)
+
+    Label16 As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Fill: =RGBA(168, 0, 0, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Bold
+        Height: =104
+        Size: =21
+        Text: |-
+            ="Fields marked with an asterisk ( * ) are required to be filled out.
+            You may not proceed until you provide an answer to all required questions!"
+        Visible: |-
+            =If(
+                btnContinueDate_1.DisplayMode = DisplayMode.Disabled,
+                true,
+                false
+            )
+        Width: =1136
+        Y: =536
+        ZIndex: =1
+
+    Form1 As form:
+        BorderColor: =App.Theme.Colors.Darker40
+        DataSource: ='Desk Reservations'
+        DefaultMode: =FormMode.New
+        Height: =373
+        NumberOfColumns: =2
+        Width: =1136
+        Y: =165
+        ZIndex: =2
+
+        Manager_DataCard1 As typedDataCard.comboBoxEditCard:
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="Manager"
+            Default: =ThisItem.Manager
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Manager)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =95
+            Required: =true
+            Update: =DataCardValue7.Selected
+            Width: =568
+            X: =1
+            Y: =0
+            ZIndex: =1
+
+            DataCardKey9 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =16
+                Text: |-
+                    ="The selected employee's SUPERVISOR is:"
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =21
+                ZIndex: =1
+
+            DataCardValue7 As combobox:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                DefaultSelectedItems: |-
+                    =With(
+                        {
+                            // Step 1: Get the manager profile based on the email of the user selected in the first dropdown.
+                            managerProfile: Office365Users.ManagerV2(DataCardValue3.Selected.Email)
+                        },
+                        // Step 2: If a manager is found, build the record in the format your combobox expects.
+                        If(
+                            !IsBlank(managerProfile.id),
+                            {
+                                Claims: "i:0#.f|membership|" & managerProfile.mail,
+                                DisplayName: managerProfile.displayName,
+                                Email: managerProfile.mail
+                            }
+                        )
+                    )
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayFields: =["DisplayName","Email","Picture"]
+                DisplayMode: =Parent.DisplayMode
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =DataCardValue3.Height
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                InputTextPlaceholder: ="Last Name, First Name "
+                Items: =Choices([@'Desk Reservations'].Manager)
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SearchFields: =["DisplayName"]
+                SearchItems: =Choices('Desk Reservations'.Manager,DataCardValue7.SearchText)
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                SelectMultiple: =false
+                Size: =14
+                Template: =ListItemTemplate.Person
+                Tooltip: =Parent.DisplayName
+                Width: =DataCardValue3.Width
+                X: =35
+                Y: =DataCardKey9.Y + DataCardKey9.Height + 5
+                ZIndex: =2
+
+            ErrorMessage9 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardValue7.Y + DataCardValue7.Height
+                ZIndex: =3
+
+            StarVisible9 As label:
+                Align: =Align.Center
+                Color: =Color.Red // App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =DataCardKey9.Height
+                Size: =30
+                Text: ="*"
+                Visible: |-
+                    =If(
+                        And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, IsBlank(DataCardValue7)),
+                        true,
+                        false
+                    )
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey9.Y
+                ZIndex: =4
+
+        Service_DataCard1 As typedDataCard.textualEditCard:
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="Service"
+            Default: =ThisItem.Service
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Service)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =93
+            MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Service)
+            Required: =true
+            Update: =DataCardValue8.Text
+            Width: =568
+            X: =0
+            Y: =1
+            ZIndex: =1
+
+            DataCardKey10 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =16
+                Text: |-
+                    ="The selected employee's SERVICE LINE/TEAM is:"
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =28
+                ZIndex: =1
+
+            DataCardValue8 As text:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                BorderThickness: =2
+                Color: =RGBA(0, 0, 0, 1)
+                Default: |-
+                    =If(
+                        !IsBlank(DataCardValue3),
+                            If(
+                                IsBlank(Office365Users.UserProfileV2(DataCardValue3.Selected.Email).department),
+                                "",
+                                Office365Users.UserProfileV2(DataCardValue3.Selected.Email).department & ", "
+                                )
+                            & If(
+                                IsBlank(Office365Users.UserProfileV2(DataCardValue3.Selected.Email).officeLocation),
+                                "",
+                                Office365Users.UserProfileV2(DataCardValue3.Selected.Email).officeLocation & ", "
+                                )
+                        & If(
+                                IsBlank(Office365Users.UserProfileV2(DataCardValue3.Selected.Email).companyName),
+                                "",
+                                Office365Users.UserProfileV2(DataCardValue3.Selected.Email).companyName & ";"
+                            ),
+                        // DataCardValue3.Selected.Department,
+                        Parent.Default
+                    )
+                DelayOutput: =true
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =Parent.DisplayMode
+                FocusedBorderThickness: =4
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: |-
+                    =If(
+                        Len(Self.Text) > 30,
+                        DataCardValue3.Height * 1.3,
+                        DataCardValue3.Height 
+                    )
+                HintText: ="Required"
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                MaxLength: =Parent.MaxLength * 2
+                Mode: =TextMode.MultiLine
+                PaddingLeft: =5
+                RadiusBottomLeft: =0
+                RadiusBottomRight: =0
+                RadiusTopLeft: =0
+                RadiusTopRight: =0
+                Tooltip: =Parent.DisplayName
+                Width: =DataCardValue3.Width
+                X: =35
+                Y: =DataCardKey10.Y + DataCardKey10.Height + 5
+                ZIndex: =2
+
+            ErrorMessage10 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardValue8.Y + DataCardValue8.Height
+                ZIndex: =3
+
+            StarVisible10 As label:
+                Align: =Align.Center
+                Color: =Color.Red // App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =DataCardKey10.Height
+                Size: =30
+                Text: ="*"
+                Visible: |-
+                    =If(
+                        And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, IsBlank(DataCardValue8)),
+                        true,
+                        false
+                    )
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey10.Y
+                ZIndex: =4
+
+        "'Meeting Catagory_DataCard1' As typedDataCard.comboBoxEditCard":
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="MeetingCatagory"
+            Default: =
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =85
+            Required: =true
+            Update: =DropdownCanvas1.Selected
+            Width: =568
+            X: =1
+            Y: =1
+            ZIndex: =1
+
+            DataCardKey13 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =16
+                Text: |-
+                    ="The TRAINING the selected employee needs is:"
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =21
+                ZIndex: =1
+
+            ErrorMessage13 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DropdownCanvas1.Y + DropdownCanvas1.Height
+                ZIndex: =3
+
+            StarVisible13 As label:
+                Align: =Align.Center
+                Color: =Color.Red // App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =DataCardKey13.Height
+                Size: =30
+                Text: ="*"
+                Visible: |-
+                    =If(
+                        And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, !IsBlank(DropdownCanvas1)),
+                        true,
+                        false
+                    )
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey13.Y
+                ZIndex: =4
+
+            DropdownCanvas1 As combobox:
+                BorderColor: =App.Theme.Colors.Darker40
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayFields: =["Value"]
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =DataCardValue3.Height
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                IsSearchable: =false
+                Items: =["Super User Training", "End User Training"]
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SearchFields: =["Value"]
+                SearchItems: =Search(["Super User Training","End User Training"],DropdownCanvas1.SearchText,Value)
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                SelectMultiple: =false
+                Size: =14
+                Width: =DataCardValue3.Width
+                X: =35
+                Y: =DataCardKey13.Y + DataCardKey13.Height + 5
+                ZIndex: =6
+
+        "'Reason for desk reservation_DataCard1' As typedDataCard.textualEditCard":
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="Reasonfordeskreservation"
+            Default: =ThisItem.'Reason for desk reservation'
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Reason for desk reservation')
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =127
+            MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, 'Reason for desk reservation')
+            Required: =false
+            Update: =DataCardValue1.Text
+            Width: |-
+                =Parent.Width
+                // 568
+            X: =0
+            Y: =2
+            ZIndex: =1
+
+            DataCardKey1 As label:
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =38
+                Italic: =true
+                LineHeight: =1
+                PaddingRight: =25
+                Size: =12
+                Text: |-
+                    ="OPTIONAL:    
+                         Free-text any additional comments, concerns, learning accommodations, or any other relavant information about this reservation in the box below:"
+                Width: =DataCardValue1.Width
+                X: =30
+                ZIndex: =1
+
+            DataCardValue1 As text:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                BorderThickness: =2
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =Parent.Default
+                DelayOutput: =true
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =Parent.DisplayMode
+                EnableSpellCheck: =true
+                FocusedBorderThickness: =4
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =88
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                MaxLength: =Parent.MaxLength
+                Mode: =TextMode.MultiLine
+                PaddingLeft: =5
+                RadiusBottomLeft: =0
+                RadiusBottomRight: =0
+                RadiusTopLeft: =0
+                RadiusTopRight: =0
+                Tooltip: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                X: =35
+                Y: =DataCardKey1.Y + DataCardKey1.Height + 5
+                ZIndex: =2
+
+            ErrorMessage1 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardValue1.Y + DataCardValue1.Height
+                ZIndex: =3
+
+            StarVisible1 As label:
+                Align: =Align.Center
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =DataCardKey1.Height
+                Size: =21
+                Text: ="*"
+                Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey1.Y
+                ZIndex: =4
+
+        "'Reserved By_DataCard1' As typedDataCard.comboBoxEditCard":
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="ReservedBy"
+            Default: =ThisItem.'Reserved By'
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Reserved By')
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =95
+            Required: =true
+            Update: =DataCardValue3.Selected
+            Width: =568
+            X: =0
+            Y: =0
+            ZIndex: =14
+
+            DataCardKey3 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =16
+                Text: |-
+                    ="The EMPLOYEE I am creating a reservation for is:"
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =21
+                ZIndex: =1
+
+            ErrorMessage3 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardValue3.Y + DataCardValue3.Height
+                ZIndex: =3
+
+            StarVisible3 As label:
+                Align: =Align.Center
+                Color: =Color.Red // App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =DataCardKey3.Height
+                Size: =30
+                Text: ="*"
+                Visible: |-
+                    =If(
+                        And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, IsBlank(DataCardValue3)),
+                        true,
+                        false
+                    )
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey3.Y
+                ZIndex: =4
+
+            DataCardValue3 As combobox:
+                BorderColor: =App.Theme.Colors.Darker40
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                DefaultSelectedItems: |-
+                    ={
+                        Claims: "i:0#.f|membership|" & Office365Users.MyProfileV2().userPrincipalName,
+                        DisplayName: Office365Users.MyProfileV2().displayName,
+                        Email: Office365Users.MyProfileV2().mail
+                    }
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayFields: =["DisplayName","Email","Picture"]
+                DisplayMode: =Parent.DisplayMode
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =45
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                InputTextPlaceholder: ="Find people..."
+                Items: =Choices([@'Desk Reservations'].'Reserved By')
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SearchFields: =["Claims"]
+                SearchItems: =Choices('Desk Reservations'.'Reserved By',DataCardValue3.SearchText)
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                SelectMultiple: =false
+                Size: =14
+                Template: =ListItemTemplate.Person
+                Tooltip: =Parent.DisplayName
+                Width: =508
+                X: =35
+                Y: =DataCardKey3.Y + DataCardKey3.Height + 5
+                ZIndex: =5
+
+    btnContinueDate_1 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        DisplayMode: =If(Form1.Valid, DisplayMode.Edit,DisplayMode.Disabled)
+        Fill: =RGBA(15, 108, 189, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =45
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =// 1. Set global variables
+            Set(varAttendees, Concat(DataCardValue3.SelectedItems, Email, ";")); // CBPeoplepicker
+            //Set(varOptionalAttendees, Concat(OptionAttendeesPP.SelectedItems, Email, ";"));
+            Set(varMeetCat, DropdownCanvas1.Selected.Value);
+            Set(varReservePOC, DataCardValue7.Selected.Email); // CBMPeoplepicker
+            Set(varTitle, "BCVAMC EHRM Training Room & Desk Reservation"); //DataCardValue8.Text); // TBService
+            Set(varDescription, DataCardValue1.Text); // RDReason 
+            Set(varEmailBody, "***PLEASE DISREGARD THE COORDINATED UNIVERSAL TIME SHOWN ABOVE***<br><br> Please follow this Link to view your Desk Reservations: <br> https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/81adf8d2-7dfd-4915-9999-f28857d14a9c?tenantId=e95f1b23-abaf-45ee-821d-b7ab251ab3bf&hint=f71f21b7-125c-4ce7-ae22-e8815c50196f&sourcetime=1758755444988&source=portal <br> <br> ***FOLLOW THE LINK ABOVE and then Click on My Bookings or Click the BLUE button to see your Training Calander for your EHRM DESK RESERVATIONS THAT HAVE BEEN BOOKED*** <br>"); //DataCardValue1.Text); // RDReason
+            //Set(varURL,"https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/81adf8d2-7dfd-4915-9999-f28857d14a9c?tenantId=e95f1b23-abaf-45ee-821d-b7ab251ab3bf&hint=f71f21b7-125c-4ce7-ae22-e8815c50196f&sourcetime=1758755444988&source=portal#");
+            //Set(varURLName, "BCVAMC EHRM Training Desk Booking");
+            
+            Navigate(chkWeekDays)
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Size: |-
+            =If(
+                btnContinueDate_1.DisplayMode = DisplayMode.Disabled,
+                16,
+                24
+            )
+        Text: |-
+            =If(
+                btnContinueDate_1.DisplayMode = DisplayMode.Disabled,
+                "Response Missing",
+                "CONTINUE"
+            )
+        Tooltip: =If(Self.DisplayMode = DisplayMode.Disabled, "You have not completed all required fields.")
+        Width: =200
+        X: =btnBackDate_1.X + btnBackDate_1.Width + 20
+        Y: =btnBackDate_1.Y
+        ZIndex: =5
+
+    btnBackDate_1 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(128, 128, 128, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =45
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =/*
+            Reset(tbFloorDesk);
+            Reset(tbNameDesk);
+            Reset(toggleActive);
+            Reset(tbDescrDesk);
+            Reset(tbMapDesk);
+            Reset(tbDeskLocation_2);
+            Reset(tbRoomPhoto);
+            Reset(ddAsset) ;Back()
+            */
+            ResetForm(Form1);
+            Back()
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Size: =24
+        Text: ="Back"
+        Width: =200
+        X: =(Parent.Width - (Self.Width + 20 + btnContinueDate_1.Width)) / 2
+        Y: =70
+        ZIndex: =6
+
+    lblSelectDate_1 As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Bold
+        Height: =50
+        Size: =32
+        Text: ="Create a new reservation..."
+        Width: =600
+        X: =(Parent.Width - Self.Width) / 2
+        ZIndex: =7
+
+    grpHeader_11 As group:
+        Height: =5
+        Width: =5
+        X: =40
+        Y: =40
+        ZIndex: =13
+
+        Rectangle2_11 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(135, 78, 181, 0.65)
+            Height: =150
+            Width: =Parent.Width
+            ZIndex: =3
+
+        Image2_12 As image:
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Height: =150
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+            ZIndex: =4
+

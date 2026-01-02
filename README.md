@@ -44,3 +44,7 @@ Before publishing changes broadly, review the unpacked sources for values like t
 4. Use Copilot Agent to summarize changes, update docs, propose commit message.
 5. Commit src/ and docs/, tag release (semantic version).
 6. Create a GitHub Release and optionally attach the export.
+
+## Current canvas app version
+- Current tracked Canvas app source is under `src/powerApps/v0.0.2/`.
+- Baseline v0.0.1 provenance is kept for attribution and historical context.
