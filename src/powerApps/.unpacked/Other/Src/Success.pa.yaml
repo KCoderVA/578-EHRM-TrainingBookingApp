@@ -1,0 +1,113 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  Success:
+    Properties:
+      Fill: =RGBA(236, 236, 236, 1)
+      Height: =Max(App.Height, App.DesignHeight)
+      Width: =Max(App.Width, App.DesignWidth)
+    Children:
+      - Image2_3:
+          Control: Image@2.2.3
+          Properties:
+            Height: =150
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+      - iconCircle1:
+          Control: Circle@2.3.0
+          Properties:
+            Fill: =RGBA(15, 108, 189, 1)
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =(Parent.Height/2 - Self.Height/2) * .7
+      - iconCheck1:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =iconCircle1.Height
+            Icon: =Icon.Check
+            PaddingBottom: =Self.PaddingTop
+            PaddingLeft: =Self.PaddingTop
+            PaddingRight: =Self.PaddingTop
+            PaddingTop: =18
+            PressedFill: =RGBA(255, 255, 255, 0.3)
+            Width: =iconCircle1.Width
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =(Parent.Height/2 - Self.Height/2) * .7
+      - LblSuccessMsg1:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            AutoHeight: =true
+            Height: =iconCircle1.Height
+            Text: ="You're booked!"
+            Width: =640
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =382
+      - Timer1:
+          Control: Timer@2.1.0
+          Properties:
+            AutoStart: =true
+            Duration: =4000
+            OnTimerEnd: |-
+              =Refresh('Desk Reservations');
+              Navigate(Dashboard)
+            Visible: =false
+            X: =299
+            Y: =570
+      - lblSuccess:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =113
+            Size: =32
+            Text: ="Success!"
+            Width: =640
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =18
+      - Tabs_6:
+          Control: CanvasComponent
+          ComponentName: Tabs
+          Properties:
+            Height: =120
+            HomePage: =App.ActiveScreen
+            Items: |-
+              =colMenu
+              /*
+              Table(
+                  {
+                      Name: "Dashboard",
+                      Icon: Icon.DetailList,
+                      Page: Dashboard,        
+                      Visible:true
+                  },
+                  {
+                      Name: "My Appts",
+                      Icon: Icon.Person,
+                      Page: MyAppts,
+                      Visible:true
+                  },
+                  {
+                      Name: "Book",
+                      Icon: Icon.Add,
+                      Page: chkWeekDays,
+                      Visible:true
+                  },
+                  {
+                      Name: "Manage Desks",
+                      Icon: Icon.ComputerDesktop,
+                      Page: ManageDesks,
+                      Visible:true
+                  }
+              )
+              */
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =520

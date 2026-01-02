@@ -3,7 +3,8 @@
 *temp_*
 docs/logs/*
 docs/local/*
-archive/*
+/archive/
+/archive/**
 *.zip
 
 # Power BI (choose whether to commit large files)
@@ -29,6 +30,3 @@ __pycache__/
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# TEMP: ignore Canvas unpacked artifacts (to be reverted)
-src/powerApp/unpacked/

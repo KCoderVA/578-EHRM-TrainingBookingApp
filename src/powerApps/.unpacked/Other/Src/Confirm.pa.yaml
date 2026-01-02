@@ -1,0 +1,255 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  Confirm:
+    Properties:
+      Fill: =RGBA(236, 236, 236, 1)
+      Height: =Max(App.Height, App.DesignHeight)
+      OnVisible: |-
+        =ClearCollect(
+            colCombinedRecurrence,
+            AddColumns(
+                CollectionRecurrence,
+                Floor,
+                First(colSelectedDesks).Title
+            )
+        );
+        // Get the highest RecurrenceID in the list (returns blank if none exist)
+        Set(
+            varRecurrenceID,
+            Coalesce(
+                Max(
+                    'Desk Reservations',
+                    Value(RecurrenceID)
+                ) + 1,
+                1
+            )
+        )
+      Width: =Max(App.Width, App.DesignWidth)
+    Children:
+      - Gallery3_1:
+          Control: Gallery@2.15.0
+          Variant: Vertical
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =315
+            Items: |-
+              =//CollectionRecurrence
+              colCombinedRecurrence
+            TemplateSize: =22
+            Visible: =!varAccept3 And !varAccept4
+            Width: =507
+            X: =314
+            Y: =255
+          Children:
+            - Rectangle12:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Height: =0
+                  OnSelect: =Select(Parent)
+                  Width: =537
+                  Y: =Gallery3_1.TemplateHeight
+            - TextCanvas7_4:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =20
+                  Text: =ThisItem.Floor
+                  Width: =236
+                  X: =261
+                  Y: =2
+            - TextCanvas7_3:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =20
+                  Text: =ThisItem.EndDateTime
+                  Width: =113
+                  X: =132
+                  Y: =2
+            - TextCanvas7_2:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =20
+                  Text: =ThisItem.StartDateTime
+                  Width: =111
+                  Y: =2
+      - TextCanvas8_4:
+          Control: Text@0.0.51
+          Properties:
+            Fill: =RGBA(180, 214, 250, 1)
+            Height: =20
+            Text: ="Room Location & Desk Assignment"
+            Visible: =!varAccept3 And !varAccept4
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =246
+            X: =575
+            Y: =235
+      - TextCanvas8_3:
+          Control: Text@0.0.51
+          Properties:
+            Fill: =RGBA(180, 214, 250, 1)
+            Height: =20
+            Text: ="End Date/Time"
+            Visible: =!varAccept3 And !varAccept4
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =130
+            X: =445
+            Y: =235
+      - TextCanvas8_2:
+          Control: Text@0.0.51
+          Properties:
+            Fill: =RGBA(180, 214, 250, 1)
+            Height: =20
+            Text: ="Start Date/Time"
+            Visible: =!varAccept3 And !varAccept4
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =131
+            X: =314
+            Y: =235
+      - lblReview:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Font: =Font.'Segoe UI'
+            Height: =60
+            Italic: =true
+            LineHeight: =1
+            Size: =18
+            Text: ="Please review your desk reservation details and press Confirm to proceed with your reservation or press Back to make changes."
+            Visible: =!varAccept3 And !varAccept4
+            Width: =675
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =150
+      - Container2:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Height: =482
+            Visible: =varAccept3 Or varAccept4 ///varAccept2
+            Width: =696
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =158
+          Children:
+            - ButtonCanvas2:
+                Control: Button@0.0.45
+                Properties:
+                  BasePaletteColor: =RGBA(5, 102, 178, 1)
+                  Font: =Font.Arial
+                  FontSize: =32
+                  Height: =90
+                  OnSelect: |-
+                    =//Set(varAccept2,false);Set(varAccept, true);
+                    If(varAccept3,
+                        Set(varAccept3, false);
+                        Set(varAccept4, true),
+                        If(varAccept4,
+                            Set(varAccept4, false)
+                        )
+                    )
+                  Text: ="Accept"
+                  Width: =696
+                  Y: =392
+            - HtmlText3:
+                Control: HtmlViewer@2.1.0
+                Properties:
+                  Fill: =RGBA(0, 0, 0, 0)
+                  Height: =392
+                  HtmlText: |-
+                    =If(varAccept3,
+                        "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:14px; border-radius:5px;'>
+                        <ul style='padding-left:20px;'>
+                            <li>The EHRM Training Room is intended solely for EHRM-related training, meetings, and activities. Any other use is prohibited unless expressly authorized.</li>
+                            <li>Contact Battle Creek Change Leadership Team (CLT) for Audio/Visual needs at extension 35268 or email <a href='mailto:vhabacclt@va.gov' style='color:#add8e6;'>vhabacclt@va.gov</a>.</li>
+                            <li>If you have any issues with EHRM equipment, please contact OI&amp;T at ext. 35480.</li>
+                            <li>Ensure that the room is left in an orderly condition.</li>
+                            <li>Ensure the room set up has been put back in the initial arrangement.</li>
+                            <li>Data Protection: Users must comply with VA policies on data protection, especially regarding PHI, PII, and VA sensitive data.</li>
+                            <li>Confidentiality: Do not leave sensitive information unattended. Log off computers and close documents when not in use.</li>
+                            <li>Capacity: Do not exceed the room’s maximum occupancy limit.</li>
+                            <li>Emergency Procedures: Familiarize yourself with emergency exits and procedures.</li>
+                        </ul>
+                        <p style='margin-top:15px;'>For questions contact <a href='mailto:vhabacclt@va.gov' style='color:#add8e6;'>vhabacclt@va.gov</a>.</p>
+
+                    <div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px; text-align: center'>
+                        By acknowledging this, you accept responsibility for the EHRM training workstation/Desk and ensuring the room is returned to its original state.
+                    </div>",
+                        //Else
+                        "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:40px; border-radius:5px; text-align: center'>By acknowledging this, you accept responsibility for the EHRM VILT workstation and ensuring the desk is returned to its original state.</div>"
+                    )
+                  Size: =13
+                  Width: =696
+      - Image2_4:
+          Control: Image@2.2.3
+          Properties:
+            Height: =150
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+      - btnConfirm_2:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Fill: =RGBA(15, 108, 189, 1)
+            Height: =45
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: "=// ——————————————————————————————————————————————\n// 1) Save item(s) to Outlook\nOffice365Outlook.V4CalendarPostItem(\n    LookUp(Office365Outlook.CalendarGetTables().value, DisplayName = \"Calendar\").Name, // current user's Outlook Calendar\n    varTitle, // subject\n    varEventStartTime, // Start time,\n    varEventEndTime, // End time\n    \"(UTC) Coordinated Universal Time\",  // Time zone\n    {\n        // Main properties\n        requiredAttendees: varAttendees,\n        //optionalAttendees: varOptionalAttendees,\n        ///resourceAttendees: \"room@yourdomain.com\", // Update with your room/resource email or variable\n        body: varEmailBody,\n        categories: varMeetCat,       \n        location: First(colCombinedRecurrence).Floor, // Need proper value\n        importance: varImportance, // low, normal, high\n        isAllDay: false, // true if all day\n        recurrence: varRecurrence, // \"weekly\", \"daily\", etc.\n        selectedDaysOfWeek: varWeekday,\n        recurrenceEnd: Text(DateValue(varEndDate), \"yyyy-mm-dd\"), // \"2025-06-08\"\n        numberOfOccurences: Value(recurPeriodTxt.Text), // integer\n        reminderMinutesBeforeStart: varReminder, // integer\n        isReminderOn: If(varReminder > 0, true, false), // or false\n        showAs: \"busy\", // free, tentative, busy, oof, workingElsewhere, unknown\n        responseRequested: true, // or true for RSVP\n        sensitivity: \"normal\" // normal, personal, private, confidential\n    }\n);\n\n// ——————————————————————————————————————————————\n// 2) Patch to SharePoint list, For each recurrence date…\nForAll(\n    CollectionRecurrence As rec,\n    // …and each selected desk…\n    ForAll(\n        colSelectedDesks As desk,\n    // ——— (Optional) send the invite ———\n        \n        // ——— Patch the SharePoint list ———\n        Patch(\n            'Desk Reservations',\n            Defaults('Desk Reservations'),\n            {\n                // simple string concatenation for Title\n                Title: DataCardValue3.Selected.DisplayName & \" – \" &  desk.Title & \" @ \" & Text(\n                    rec.StartDateTime,\n                    \"[$-en-US]mm/dd/yyyy hh:mm AM/PM\" \n                ),\n                DeskText: desk.Title, \n                'Check Out From': rec.StartDateTime,\n                'Check Out To': rec.EndDateTime,\n                // use the people‐picker cards directly (they include Department, etc.)\n                'Reserved By': DataCardValue3.Selected,\n                Manager: DataCardValue7.Selected,\n                Service: DataCardValue8.Text,\n                'Reason for desk reservation': DataCardValue1.Text,\n                Asset: desk.Asset,\n                DeskFloor: If(\n                    desk.Asset.Value = \"Desk\",\n                    desk.RoomLocation,\n                    \"\"\n                ),\n                IsRecurring: If(varRecurrence = \"None\", false, true),\n                //RecurrenceFrequency: varRecurrence,\n                RecurrenceEndDate: DateValue(varEndDate),\n                ///RecurrenceDayName: varFirstDayName,\n                ///RecurrenceTimes: varRecurringtimes,\n                RecurrenceID: varRecurrenceID,\n                MeetingCategory: varMeetCat,\n                Description: varDescription\n                //OptionalAttendees: OptionAttendeesPP.Selected\n            }\n        )   \n    )\n);\n\n// ——————————————————————————————————————————————\n// 3) Clean up & navigate\nSet(varScreenReset, true);\nSet(varScreenReset, false);\n\nConcurrent(\n    ResetForm(Form1),\n    Reset(ddImportance),\n    Reset(ddRecurrenceFrequency),\n    Reset(Calendar_1),\n    Reset(Gallery6),\n    Reset(DatePickerCanvas2),\n    Reset(Gallery3_1);\n    Clear(colSelectedDesks),\n    Clear(CollectionRecurrence),\n    Clear(colDeskChckRecur),\n    Clear(colBookedDesks),\n    Clear(colCombinedRecurrence),\n    Clear(wkDays),\n    Clear(wkDaysTemp)\n);\n\nNavigate(Success)\n\n\n"
+            Text: ="Confirm"
+            Underline: =true
+            Visible: =!varAccept3 And !varAccept4
+            Width: =200
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =Gallery3_1.Y + Gallery3_1.Height + 15
+      - lblLookGood:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =50
+            Size: =32
+            Text: |-
+              =If(varAccept3,
+                  "Room Terms and Conditions",
+                  //Else
+                  If(varAccept4,
+                      "Setup/cleanup acknowledgement",
+                      //Else
+                      "Everything look good?"
+                  )
+              )
+            Width: =1136
+      - btnBackConfirm:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Fill: =RGBA(128, 128, 128, 1)
+            Height: =45
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: =Back();Set(varAccept,true)
+            Text: ="Back"
+            Width: =200
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =70
+      - lblReview_1:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Font: =Font.'Segoe UI'
+            Height: =20
+            Italic: =true
+            LineHeight: =1
+            Size: =12
+            Text: |-
+              =Switch(Gallery3_1.AllItemsCount,
+                  0, " There are no events",
+                  1, Gallery3_1.AllItemsCount & " event",
+                  Gallery3_1.AllItemsCount & " events"
+              )
+            Visible: =!varAccept3 And !varAccept4
+            Width: =675
+            X: =lblReview.X
+            Y: =lblReview.Y + lblReview.Height

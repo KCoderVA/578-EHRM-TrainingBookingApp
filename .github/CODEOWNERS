@@ -1,0 +1,10 @@
+# CODEOWNERS
+# Default owner for all files
+* @KCoderVA
+
+# Path-specific ownership (adjust as teams grow)
+/src/powerApps/ @KCoderVA
+/src/powerAutomate/ @KCoderVA
+/src/sharePoint/ @KCoderVA
+/src/config/ @KCoderVA
+/docs/ @KCoderVA
