@@ -4,7 +4,7 @@
 
 ## Purpose
 
-This flow watches for new or updated entries in the access-control SharePoint list (local sanitized sample: `src/sharePoint/lists/DeskAccessControl/DeskAccessControl.csv`).
+This flow watches for new or updated entries in the access-control SharePoint list (local sanitized sample: `src/sharePoint/DeskAccessControl/DeskAccessControl.csv`).
 
 When a user’s email and access level are added/changed by an admin, the flow populates other list columns using Microsoft 365 (Azure AD) user profile data (ex: display name, manager). The Canvas app uses the SharePoint column `AccessLevel_Choice` to dynamically enable/disable app functionality and views.
 
@@ -25,7 +25,7 @@ When a user’s email and access level are added/changed by an admin, the flow p
 
 ## Provenance / archived baseline
 
-- The original baseline/template version (v0.0.1) is preserved as a frozen snapshot under `archive/src/powerAutomate/AppUserList/v0.0.1/`.
+- The original baseline/template version (v0.0.1) is retained by maintainers as a local-only snapshot under `archive/` (git-ignored) and is not present in the public repository.
 
 ## Important note (public repo)
 

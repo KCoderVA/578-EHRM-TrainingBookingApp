@@ -3,9 +3,16 @@
 *temp_*
 docs/logs/*
 docs/local/*
+/dist/
+/tmp/
 /archive/
 /archive/**
 *.zip
+
+# Power Platform export artifacts
+*.msapp
+src/**/.msapp/
+src/**/.zip/
 
 # Power BI (choose whether to commit large files)
 # *.pbix
@@ -13,11 +20,15 @@ docs/local/*
 
 # Local-only configs/secrets
 src/config/local/
+config/local/
+config/logs/
 *.env
 *.env.*
 .secrets/
 secrets.*
 credentials.*
+.gitattributes
+.editorconfig
 
 # Dependencies and build artifacts
 node_modules/
@@ -27,6 +38,7 @@ __pycache__/
 *.pyo
 
 # OS/editor files
+.vs/
 .DS_Store
 Thumbs.db
 desktop.ini

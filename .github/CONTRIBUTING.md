@@ -1,51 +1,61 @@
-﻿# Contributing
-
-## Branches
-- main — stable branch.
-- Feature branches: feature/<short-description>.
-
-## Commits
-- Commit only unpacked source under src/, docs under docs/.
-- Use clear, action-oriented commit messages.
-
 # Contributing
 
-Thank you for contributing to the EHRM Training & Booking App.
+Thanks for your interest in contributing to the **EHRM Training & Booking App**.
 
-## Workflow Overview
-- Use feature branches: `feature/<short-topic>` or `fix/<issue>`
-- Keep changes small and focused; update tests/docs with code changes
-- Open a Pull Request (PR) targeting `main`, with a clear summary and checklist
+This repository contains **unpacked (source-controlled)** Microsoft Power Platform artifacts (Canvas app + Power Automate), along with documentation and ALM runbooks.
 
-## Versioning & Changelog
-- Follow Semantic Versioning (MAJOR.MINOR.PATCH)
-- Maintain the root [CHANGELOG.md](../CHANGELOG.md) using "Keep a Changelog"
-- Add entries under **[Unreleased]** during development; move to a new version section at release
+## Before you start
 
-## Commit Messages
-- Prefer clear verbs and scope (optionally use Conventional Commits)
-	- Examples: `feat(powerApps): add reservation validation`, `fix(flow): correct email subject`
+- Read the project overview in [README.md](../README.md).
+- Review the security policy in [SECURITY.md](SECURITY.md).
+- If you are unsure whether a change is appropriate for this repo, open an Issue first.
 
-## Power Platform ALM
-- Canvas App: pack/unpack via VS Code tasks (PAC CLI)
-	- Unpack: "Canvas: Unpack .msapp to src"
-	- Pack: "Canvas: Pack src to .msapp"
-- Solutions: export/unpack tasks are available for unmanaged workflows
-- Review unpacked sources for environment-specific IDs/URLs/emails before public release
+## Repository layout
 
-## Code Style
-- See repository `.editorconfig` for standard formatting across languages
-- Avoid unrelated formatting churn; keep diffs minimal
+- [src/](../src/) — unpacked Power Platform artifacts (Canvas app, flows, SharePoint samples, scripts)
+- [config/](../config/) — architecture/runbooks + environment templates + helper tooling
+- [docs/](../docs/) — public documentation (status, release drafts/templates, contributors)
+- [assets/](../assets/) — branding/images used by docs
 
-## PR Checklist
-- [ ] Code compiles/tests pass (where applicable)
-- [ ] Docs updated (README/CHANGELOG/user guides)
-- [ ] Environment-specific values reviewed/sanitized
-- [ ] Tasks/scripts updated if ALM steps changed
+Local-only (git-ignored): `dist/`, `tmp/`, `archive/`, and `docs/local/`.
 
-## Security & Privacy
-- Do not commit secrets, credentials, or PII
-- Use sanitized sample data in `src/sharePoint/lists`
+## Development workflow (Power Platform)
 
-## Questions
-- Open a discussion or issue on GitHub.
+Because the Power Platform authoring experience is environment-backed, the repo workflow typically looks like:
+
+1. Make changes in your Dev environment (preferably inside a Solution).
+2. Export artifacts locally to `dist/release/` (git-ignored).
+3. Unpack into reviewable source:
+   - Canvas app → `src/powerApps/.unpacked/`
+   - Solution zip → `config/solutions/EHRMTrainingBooking/`
+4. Review diffs and sanitize environment-specific values.
+5. Update documentation and release notes.
+6. Open a Pull Request.
+
+VS Code tasks for the export/unpack workflow are defined in [.vscode/tasks.json](../.vscode/tasks.json).
+
+## What not to commit
+
+Do **not** commit:
+
+- Secrets, credentials, tokens, connection strings, or PII
+- Export artifacts (`.msapp`, Solution `.zip`) — keep under `dist/` (git-ignored)
+- Local notes/snapshots under `docs/local/` and `archive/` (git-ignored)
+- Local environment configuration under `config/local/` (git-ignored)
+
+## Versioning
+
+- **Project release version** uses SemVer (`MAJOR.MINOR.PATCH`) and is tracked in [CHANGELOG.md](../CHANGELOG.md).
+- **Component versions** (Canvas app, each flow) are tracked in the component README files under `src/`.
+
+## Pull requests
+
+- Use the PR template (see [PULL_REQUEST_TEMPLATE.md](PULL_REQUEST_TEMPLATE.md)).
+- Include validation steps and note whether you ran `pac` export/unpack.
+- Confirm you reviewed unpacked sources for environment-specific IDs/URLs/emails.
+- Update [CHANGELOG.md](../CHANGELOG.md) and relevant docs when appropriate.
+
+## Reporting security issues
+
+Please do not open public issues for security vulnerabilities.
+Use a GitHub Security Advisory (see [SECURITY.md](SECURITY.md)).

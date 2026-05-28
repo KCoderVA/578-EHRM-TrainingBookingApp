@@ -6,7 +6,7 @@
 ## Provenance / credits (v0.0.1 baseline)
 
 - The initial `.msapp` used as the starting point for this project (v0.0.1) was shared by **Hiram A. Zayas** (Hiram.Zayas@va.gov), Health Informatics Service, Battle Creek VA Medical Center.
-- The connected SharePoint list sample data (sanitized) is stored locally under `src/sharePoint/lists/`.
+- The connected SharePoint list sample data (sanitized) is stored locally under `src/sharePoint/`.
 
 ## What changed in v0.0.2
 

@@ -1,23 +1,75 @@
 # Changelog
 
-All notable changes to the EHRM Training & Booking App project will be documented in this file.
+All notable changes to the **EHRM Training & Booking App** repository are documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for the **project-wide release version** (`MAJOR.MINOR.PATCH`).
+
+Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked in each component README under [src/](src/).
 
 ## [Unreleased]
 
 ### Added
+- (Add changes here before the next release.)
 
-- (Future changes will be tracked here before being released)
+### Changed
+- (Add changes here before the next release.)
+
+### Fixed
+- (Add fixes here before the next release.)
+
+---
+
+## [0.1.1] - 2026-05-28
+
+### Added
+
+- Release readiness and public-facing documentation:
+  - [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md)
+  - v0.1.1 release drafts: [docs/release-notes/v0.1.x/v0.1.1/](docs/release-notes/v0.1.x/v0.1.1/)
+- Canonical runbook documentation under [config/](config/):
+  - [config/architecture/ARCHITECTURE.md](config/architecture/ARCHITECTURE.md)
+  - [config/runbooks/ALM-RUNBOOK.md](config/runbooks/ALM-RUNBOOK.md)
 
 ### Changed
 
-- Repository layout: moved “current” component artifacts out of `vX.Y.Z/` buffer folders into stable paths under `src/` (component versions now live in each component `README.md`).
+- Updated public “start here” docs and links:
+  - [README.md](README.md)
+  - Release notes template: [docs/release-notes/RELEASE_TEMPLATE.md](docs/release-notes/RELEASE_TEMPLATE.md)
+- Updated GitHub community health files for public use:
+  - Security policy: [.github/SECURITY.md](.github/SECURITY.md)
+  - Contributing guide: [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)
+  - PR template: [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md)
+  - Issue templates: [.github/ISSUE_TEMPLATE/](.github/ISSUE_TEMPLATE/)
+- Updated PAC task paths to match current canonical unpack locations:
+  - [.vscode/tasks.json](.vscode/tasks.json)
 
 ### Fixed
 
-- (Future bug fixes will be tracked here)
+- Removed stale placeholder references (unrelated project/version text) from v0.1.1 release drafts and templates.
+- Corrected documentation links after reorganizing canonical doc locations.
+
+### Notes
+
+- This release is focused on documentation + repository alignment; no functional changes are intended to the Canvas app or `AppUserList` flow.
+  - Canvas app baseline remains v0.0.2 (see [src/powerApps/README.md](src/powerApps/README.md))
+  - `AppUserList` flow baseline remains v0.1.0 (see [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md))
+
+---
+
+## [0.1.0] - 2026-05-27
+
+### Added
+
+- Release draft templates under [docs/release-notes/](docs/release-notes/).
+
+### Changed
+
+- Power Automate: `AppUserList` flow updated to v0.1.0 (see [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md)).
+
+### Fixed
+
+- Broken documentation links and stale path references.
+- Invalid JSON in VS Code workspace config.
 
 ---
 
@@ -25,98 +77,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added v0.0.2 Canvas app artifacts under `src/powerApps/`:
-  - Export artifact `.zip/578EHRMTrainingApp.zip` (kept local; zip files are git-ignored)
-  - App package `.msapp/v0.0.2_578EHRMTrainingApp.msapp`
-  - Unpacked source `.unpacked/` generated via Power Platform CLI
+- Canvas app v0.0.2 unpacked source under `src/powerApps/.unpacked/` (pack/unpack artifact is a local `.msapp`, git-ignored).
 
 ### Changed
 
-- Updated SharePoint list data source references to ensure imported connections bind correctly across the app.
-- Enhanced data-driven auto-population of dropdowns and text inputs (M365 directory + SharePoint lookups), with the largest changes on:
-  - `POCSUPERVISOR`
-  - `chkWeekDays`
-  - `MyAppts`
-  - `Dashboard` (minor)
-
-### Fixed
-
-- Resolved additional importation errors across remaining screens.
+- SharePoint list bindings and screen behavior improvements (see [src/powerApps/README.md](src/powerApps/README.md)).
 
 ### Validation
 
-- Tested by submitting booking requests and confirming they populate correctly into the SharePoint list and remain viewable/interactive after refresh.
+- Manual smoke test: submit reservation requests and verify persistence in SharePoint.
+
+---
 
 ## [0.0.1] - 2025-12-31
 
-### Added - Initial Project Baseline
+### Added
 
-#### Repository Structure & Configuration
-
-- Initialized Git repository with main branch
-- Created comprehensive folder hierarchy under `src/` for Power Platform artifacts
-- Established `docs/` structure for architecture, changelogs, developer notes, runbooks, and user guides
-- Created `archive/` for historical snapshots and initial request documentation
-- Configured `.vscode/` workspace settings and tasks for Power Platform CLI operations
-- Set up `.github/` folder with copilot instructions for ALM guidance
-
-#### Power Apps (Canvas)
-
-- Imported baseline canvas app template (v0.0.1) shared by **Hiram A. Zayas** (Hiram.Zayas@va.gov), Health Informatics Service, Battle Creek VA Medical Center
-- Stored original `.msapp` package at `src/powerApps/.msapp/v0.0.1_578TrainingSchedulerApp.msapp`
-- Unpacked canvas app source to `src/powerApps/.unpacked/` using Power Platform CLI
-  - 21 screens including Dashboard, MyAppts, DeskSelect, Confirm, ManageDesks, Reservation, and others
-  - Connectors: Office 365 Outlook, Office 365 Users, SharePoint
-  - Data sources: Desk Reservations, DeskAccessControl, Desks (SharePoint lists)
-- Created `src/powerApps/README.md` documenting app structure, screens, and provenance
-
-#### Power Automate
-
-- Imported baseline flow template `AppUserList` (originally authored by Kyle.Coder@va.gov for previous project)
-- Preserved baseline flow package + unpacked source as a frozen snapshot under `archive/src/powerAutomate/AppUserList/v0.0.1/`
-- Flow purpose: Auto-populate user demographics from Active Directory when new users added to access control SharePoint list
-- Created `src/powerAutomate/README.md` and `src/powerAutomate/AppUserList/README.md` documenting flow behavior and authorship
-
-#### SharePoint Lists (Sample Data)
-
-- Imported sanitized CSV sample data (PII/sensitive data removed) for three SharePoint lists:
-  - `src/sharePoint/lists/Desk Reservations/Desk Reservations.csv`
-  - `src/sharePoint/lists/DeskAccessControl/DeskAccessControl.csv`
-  - `src/sharePoint/lists/Desks/Desks.csv`
-- Sample data shared by Hiram A. Zayas to support local development and testing
-
-#### Documentation
-
-- Created root `README.md` with project overview, folder structure, daily ALM workflow, and template provenance credits
-- Created `docs/changeLogs/CHANGELOG.md` (this file) following Keep a Changelog format
-- Created `docs/architecture/ARCHITECTURE.md` for system design documentation
-- Created `docs/runbooks/ALM-RUNBOOK.md` for application lifecycle management procedures
-- Created `docs/developerNotes/AGENTS.md` for development guidance
-- Created `.github/copilot-instructions.md` to guide GitHub Copilot for ALM tasks, documentation, and code reviews
-
-#### Development Infrastructure
-
-- Created `src/config/` structure with subdirectories for environment configs (dev/test/prod), local settings, templates, and tests
-- Created `src/tools/pac/alm.ps1` for Power Platform CLI helper scripts
-- Created `src/scripts/` structure with subdirectories for PowerShell, Python, JavaScript, and Git hooks
-- Created `src/tests/` structure with subdirectories for unit tests and test scripts
-- Established placeholder directories for future SQL queries, stored procedures, and web resources (CSS/HTML/JS)
-
-#### VS Code Tasks (Power Platform CLI)
-
-- Task: "Canvas: Unpack .msapp to src" - unpacks canvas app from dist/release to src/powerApps
-- Task: "Canvas: Pack src to .msapp" - packs canvas app source to dist/release
-- Task: "Solution: Export (unmanaged) to dist" - exports Power Platform solution from environment
-- Task: "Solution: Unpack zip to src" - unpacks solution to src/solutions folder
-
-#### Archive
-
-- Preserved initial project request documentation in `archive/initialRequest/`
-- Archived early workspace setup prompt and template files
-- Created `archive/docs/local/` for historical documentation snapshots
+- Initial repository baseline:
+  - Unpacked Canvas app source under `src/powerApps/.unpacked/`
+  - Unpacked Power Automate sources under `src/powerAutomate/`
+  - Sanitized SharePoint sample CSVs under `src/sharePoint/`
+- VS Code task scaffolding for common Power Platform CLI (`pac`) operations.
 
 ### Notes
 
-- This version establishes the complete initial baseline for the EHRM Training & Booking App
-- All imported template artifacts (PowerApps, Power Automate, SharePoint lists) will be heavily modified in future versions
-- Environment-specific identifiers (tenant IDs, SharePoint URLs, emails) exist in unpacked sources and should be reviewed before broad public distribution
+- Unpacked artifacts may include environment-specific IDs/URLs/emails; sanitize before broad sharing.
