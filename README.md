@@ -1,68 +1,76 @@
-﻿# EHRM Training & Booking App
+﻿# EHRM Training & Booking App (Station 578)
 
-This repository contains the source (unpacked) Microsoft Power Platform artifacts, documentation, and automation for the EHRM Training & Booking App used at Edward Hines Jr. VA Hospital (Station #578), VISN12, U.S. Department of Veterans Affairs.
+[![Release](https://img.shields.io/badge/release-v0.1.1-blue)](CHANGELOG.md)
 
-## Key folders
+This repository contains the **unpacked (source-controlled)** Microsoft Power Platform assets, documentation, and ALM helpers for the EHRM Training & Booking App used at Edward Hines Jr. VA Hospital (Station #578), VISN12.
 
-- src/ — Unpacked, human-readable source for [Power Apps (Canvas)](src/powerApps/README.md), Power Automate flows, SharePoint list schemas/formatting, SQL, scripts.
-- src/config/ — Environment templates and local-only settings (src/config/local/ is git-ignored).
-- src/tools/ — Helper scripts and utilities (e.g., PAC helpers).
-- src/tests/ — Test scaffolds (unit, script tests).
-- docs/ — User guides, changelogs, developer notes, architecture, runbooks.
+## Current versions
 
-### Project changelog
+- **Project release (repo)**: v0.1.1 (2026-05-28) — see [CHANGELOG.md](CHANGELOG.md)
+- **Canvas app (component)**: v0.0.2 — see [src/powerApps/README.md](src/powerApps/README.md)
+- **Power Automate (component)**: `AppUserList` v0.1.0 — see [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md)
 
-- See the root-level changelog for release notes and history: [CHANGELOG.md](CHANGELOG.md)
+## Repository layout
 
-### Contributing & Ownership
+- [src/](src/) — unpacked, human-reviewable source artifacts
+  - Canvas app: [src/powerApps/](src/powerApps/) (unpacked source lives under `.unpacked/`)
+  - Power Automate: [src/powerAutomate/](src/powerAutomate/)
+  - SharePoint samples: [src/sharePoint/](src/sharePoint/)
+  - SQL scaffolding: [src/sql/](src/sql/)
+  - Scripts/hooks: [src/scripts/](src/scripts/)
+- [config/](config/) — architecture notes, runbooks, environment templates, and tooling helpers
+- [docs/](docs/) — public project docs (status, release notes, security, contributors)
+- [assets/](assets/) — images/branding used by docs
 
-- Contribution guidelines: [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)
-- Code ownership rules: [.github/CODEOWNERS](.github/CODEOWNERS)
-- Contributors list: [CONTRIBUTORS.md](CONTRIBUTORS.md)
+Local-only (git-ignored): `dist/`, `tmp/`, `archive/`, and `docs/local/`.
 
-### Acknowledgments
+## Quick start (maintainers)
 
-- Special thanks to **Hiram A. Zayas** (Health Informatics Service, Battle Creek VA Medical Center) for sharing the initial template Canvas Power App `.msapp` and sanitized SharePoint list samples that established the project baseline (v0.0.1 on 2025-12-31).
+Prerequisites:
+- Power Platform CLI (`pac`)
+- Access to the target Power Platform environment (to export Solution / Canvas app)
+- VS Code (optional, but recommended — tasks are preconfigured)
 
-### Security
+Typical loop:
+1. Export artifacts to `dist/release/` (local-only).
+2. Unpack to source:
+   - Canvas app → `src/powerApps/.unpacked/`
+   - Solution zip → `config/solutions/EHRMTrainingBooking/`
+3. Review diffs and sanitize environment-specific values.
+4. Update docs (README/changelog/release drafts).
+5. Commit and tag the release.
 
-- See the security policy: [SECURITY.md](SECURITY.md)
-- dist/ — Exports/binaries used for import (kept local; not committed).
-- archive/ — Calendar-versioned historical snapshots (optional, public).
-- .github/workflows/ — CI automation for packing/validation.
-- .vscode/ — Shared workspace settings and tasks.
+VS Code tasks are defined in [.vscode/tasks.json](.vscode/tasks.json).
 
-## v0.0.1 template provenance (credits)
+## Documentation
 
-This project intentionally starts from a set of template artifacts that will be heavily modified.
+- Project status / release readiness: [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md)
+- Architecture overview: [config/architecture/ARCHITECTURE.md](config/architecture/ARCHITECTURE.md)
+- ALM runbook: [config/runbooks/ALM-RUNBOOK.md](config/runbooks/ALM-RUNBOOK.md)
+- Release drafts and templates: [docs/release-notes/](docs/release-notes/)
+- Security policy: [.github/SECURITY.md](.github/SECURITY.md)
+- Contributors / provenance: [docs/CONTRIBUTORS.md](docs/CONTRIBUTORS.md)
 
-- **Canvas Power App template (shared source)**: The baseline canvas app source for v0.0.1 came from **Hiram A. Zayas** (Hiram.Zayas@va.gov), Health Informatics Service, Battle Creek VA Medical Center. He shared the original `.msapp` so this project did not have to start from scratch. The `.msapp` was then unpacked into source using the Power Platform CLI.
-- **SharePoint list sample data (sanitized)**: Hiram also shared sanitized CSV exports for the connected SharePoint lists, stored under `src/sharePoint/lists/`.
-- **Power Automate template (authored here)**: The initial flow under `src/powerAutomate/AppUserList/` was created by Kyle.Coder@va.gov for a previous project and imported here as the first baseline flow for v0.0.1.
+## Public repo hygiene (important)
 
-## Public-repo hygiene note
+Unpacked Power Platform artifacts frequently contain environment-specific identifiers and org/internal values:
 
-Unpacked Power Platform artifacts frequently contain environment-specific identifiers and organization/internal URLs.
+- tenant IDs, environment IDs
+- SharePoint site URLs
+- connector connection references
+- email addresses and display names
 
-Before publishing changes broadly, review the unpacked sources for values like tenant IDs, SharePoint site URLs, app play URLs, and email addresses, and replace them with environment parameters or placeholders as appropriate.
+Before publishing changes broadly, review/sanitize unpacked sources under `src/` and keep secrets/PII out of Git.
+See the security policy: [.github/SECURITY.md](.github/SECURITY.md).
 
-## Daily workflow (summary)
+## Credits / provenance (baseline)
 
-1. Make changes in Dev environment (web editor), inside a Solution when possible.
-2. Export Solution (or .msapp) to dist/release.
-3. Unpack to src/... (overwrite/clean so only latest source is present).
-4. Use Copilot Agent to summarize changes, update docs, propose commit message.
-5. Commit src/ and docs/, tag release (semantic version).
-6. Create a GitHub Release and optionally attach the export.
+This project started from template artifacts that will be heavily modified:
 
-## Versions (project + components)
+- Canvas Power App baseline `.msapp` and sanitized SharePoint list samples were provided by a VA Health Informatics contributor (credited in [docs/CONTRIBUTORS.md](docs/CONTRIBUTORS.md)).
+- The initial `AppUserList` Power Automate flow template was authored by the repository maintainer and adapted here as the first baseline flow.
 
-- **Project-wide release version**: tracked in the root [CHANGELOG.md](CHANGELOG.md).
-- **Component versions**: tracked in each component’s `README.md` (examples: [src/powerApps/README.md](src/powerApps/README.md), [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md)).
+## Contributing
 
-## Current source locations (stable paths)
-
-- Canvas app (current): `src/powerApps/` (see [src/powerApps/README.md](src/powerApps/README.md))
-- Power Automate flows (current): `src/powerAutomate/` (see [src/powerAutomate/README.md](src/powerAutomate/README.md))
-
-Historical versions are kept as frozen snapshots under `archive/src/`.
+- Guidelines: [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)
+- Code owners: [.github/CODEOWNERS](.github/CODEOWNERS)

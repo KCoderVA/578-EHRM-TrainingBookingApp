@@ -1,11 +1,14 @@
-name: Summarize new issues
+# DISABLED (2026-05-28): repo-management automation temporarily deactivated.
+name: Summarize new issues (DISABLED)
 
 on:
+  workflow_dispatch: {}
   issues:
     types: [opened]
 
 jobs:
   summary:
+    if: ${{ false }}
     runs-on: ubuntu-latest
     permissions:
       issues: write

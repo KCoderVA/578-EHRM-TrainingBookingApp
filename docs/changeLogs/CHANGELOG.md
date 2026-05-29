@@ -1,4 +1,4 @@
-﻿This file has moved. Please see the root-level changelog:
+This file has moved. Please see the root-level changelog:
 
 - [CHANGELOG.md](../../CHANGELOG.md)
 

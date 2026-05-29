@@ -5,6 +5,8 @@
   "powershell.codeFormatting.preset": "OTBS",
   "files.exclude": {
     "**/dist": true,
-    "**/tmp": true
-  }
+    "**/tmp": true,
+    "**/.git": false
+  },
+  "editor.codeActionsOnSave": {}
 }

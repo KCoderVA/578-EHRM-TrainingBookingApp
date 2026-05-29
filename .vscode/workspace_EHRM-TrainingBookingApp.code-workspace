@@ -1,7 +1,12 @@
 {
-	"folders": [
-		{
-			"path": ".."
-		}
-	]
+  "folders": [
+    {
+      "path": "..",
+      "name": "EHRM-TrainingBookingApp"
+    }
+  ],
+  "settings": {
+    "editor.codeActionsOnSave": {}
+  }
 }
+

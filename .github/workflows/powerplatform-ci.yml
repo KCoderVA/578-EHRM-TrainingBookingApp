@@ -1,14 +1,16 @@
-﻿name: Power Platform CI
+﻿# DISABLED (2026-05-28): repo-management automation temporarily deactivated.
+name: Power Platform CI (DISABLED)
 permissions:
   contents: read
 
 on:
-  push:
-    branches: ["main"]
   workflow_dispatch: {}
+  # push:
+  #   branches: ["main"]
 
 jobs:
   validate-and-pack:
+    if: ${{ false }}
     runs-on: windows-latest
     steps:
       - name: Checkout
