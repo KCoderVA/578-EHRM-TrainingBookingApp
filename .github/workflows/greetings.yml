@@ -3,8 +3,8 @@ name: Greetings (DISABLED)
 # DISABLED (2026-05-28): repo-management automation temporarily deactivated.
 on:
   workflow_dispatch: {}
-  # pull_request_target:
-  # issues:
+  pull_request_target:
+  issues:
 
 jobs:
   greeting:

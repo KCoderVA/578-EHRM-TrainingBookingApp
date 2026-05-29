@@ -3,8 +3,8 @@ name: Summarize new issues (DISABLED)
 
 on:
   workflow_dispatch: {}
-  # issues:
-  #   types: [opened]
+  issues:
+    types: [opened]
 
 jobs:
   summary:
