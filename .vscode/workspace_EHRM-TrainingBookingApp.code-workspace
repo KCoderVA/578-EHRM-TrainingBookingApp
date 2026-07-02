@@ -2,11 +2,13 @@
   "folders": [
     {
       "path": "..",
-      "name": "EHRM-TrainingBookingApp"
-    }
+      "name": "EHRM-TrainingBookingApp",
+    },
   ],
   "settings": {
-    "editor.codeActionsOnSave": {}
-  }
+    "github-enterprise.uri": "https://va.ghe.com/",
+    "github.gitAuthentication": true,
+    "git.terminalAuthentication": true,
+    "github.codespaces.authProvider": "github-enterprise",
+  },
 }
-
