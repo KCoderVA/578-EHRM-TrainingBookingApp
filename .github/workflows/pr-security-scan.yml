@@ -176,6 +176,16 @@ jobs:
       - name: Post scan results as PR comment
         if: github.event_name == 'pull_request'
         run: |
-          gh pr comment "${{ github.event.pull_request.number }}" --body-file scan-report.md
+          # Truncate report if it exceeds GitHub's 65536 character comment limit
+          if [ $(wc -c < scan-report.md) -gt 60000 ]; then
+            head -c 59000 scan-report.md > scan-report-truncated.md
+            echo "" >> scan-report-truncated.md
+            echo "---" >> scan-report-truncated.md
+            echo "> **Report truncated** — full scan found too many matches to fit in a PR comment. Review the Action run logs for complete results." >> scan-report-truncated.md
+            mv scan-report-truncated.md scan-report.md
+          fi
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file scan-report.md --repo "$GH_REPO"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_HOST: ${{ github.server_url && 'va.ghe.com' }}
+          GH_REPO: ${{ github.repository }}

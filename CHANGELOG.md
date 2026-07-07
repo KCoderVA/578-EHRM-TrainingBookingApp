@@ -19,6 +19,20 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.3.1] - 2026-07-07
+
+### Added
+
+- **`src/scripts/pwsh/powerapps-web.ps1`** — Power Apps web development workflow helper script with commands for packaging (.msapp), opening the Power Apps portal, opening source in VS Code, and showing development status.
+
+### Notes
+
+- Release type: Patch
+- Canvas app baseline remains v0.0.2
+- `AppUserList` flow baseline remains v0.1.0
+
+---
+
 ## [0.3.0] - 2026-07-07
 
 ### Added

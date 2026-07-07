@@ -2,10 +2,10 @@
 
 This document describes the current public state of the EHRM Training & Booking App repository and what is included/excluded as of the latest release.
 
-## Status summary (v0.3.0)
+## Status summary (v0.3.1)
 
-- **Release type**: Feature — GitHub Actions/workflows overhaul, VERSION file, repo automation (no Power Platform logic changes)
-- **Project release**: v0.3.0 (2026-07-07)
+- **Release type**: Patch — added Power Apps web development helper script
+- **Project release**: v0.3.1 (2026-07-07)
 - **Component baselines** (unchanged since v0.0.2 / v0.1.0):
   - Canvas app: v0.0.2 (source-controlled unpacked source under `src/powerApps/.unpacked/`)
   - Power Automate: `AppUserList` v0.1.0 (source-controlled unpacked source under `src/powerAutomate/AppUserList/.unpacked/`)
@@ -15,6 +15,7 @@ This document describes the current public state of the EHRM Training & Booking 
 
 | Version | Date | Type |
 |---------|------|------|
+| v0.3.1 | 2026-07-07 | Patch — added Power Apps web development helper script |
 | v0.3.0 | 2026-07-07 | Feature — GitHub Actions/workflows overhaul, VERSION file, repo automation |
 | v0.2.1 | 2026-07-07 | Documentation patch — updated PROJECT_STATUS.md to reflect current project state |
 | v0.2.0 | 2026-07-07 | Repository hygiene — `.gitignore` rewrite, IDE cache cleanup, template file restoration, workspace config enrichment |
