@@ -1,8 +1,62 @@
 {
 	"folders": [
 		{
-			"path": ".."
+			"path": "..",
+			"name": "578-EHRM-TrainingSchedulerApp"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.trimTrailingWhitespace": true,
+		"files.insertFinalNewline": true,
+		"editor.formatOnSave": true,
+		"files.exclude": {
+			"**/.cache": true,
+			"**/.git": false,
+			"**/dist": true,
+			"**/tmp": false,
+			"**/.vs": false
+		},
+		"github.gitAuthentication": true,
+		"git.terminalAuthentication": true
+	},
+	"extensions": {
+		"recommendations": [
+			"github.copilot",
+			"github.copilot-chat",
+			"GitHub.vscode-pull-request-github",
+			"ms-vscode.powershell",
+			"ms-powerplatform.powerplatform-vscode",
+			"ms-vscode.vscode-chat-customizations-evaluations",
+			"vscode-icons-team.vscode-icons"
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Canvas: Unpack .msapp to src",
+				"type": "shell",
+				"command": "pac canvas unpack --msapp \"${workspaceFolder}/dist/release/EHRMTrainingBookingApp.msapp\" --source \"${workspaceFolder}/src/powerApps/.unpacked\" --force",
+				"problemMatcher": []
+			},
+			{
+				"label": "Canvas: Pack src to .msapp",
+				"type": "shell",
+				"command": "pac canvas pack --msapp \"${workspaceFolder}/dist/release/EHRMTrainingBookingApp.msapp\" --sources \"${workspaceFolder}/src/powerApps/.unpacked\"",
+				"problemMatcher": []
+			},
+			{
+				"label": "Solution: Export (unmanaged) to dist",
+				"type": "shell",
+				"command": "pac solution export --name \"EHRMTrainingBooking\" --path \"${workspaceFolder}/dist/release/EHRMTrainingBooking_Solution.zip\" --managed false",
+				"problemMatcher": []
+			},
+			{
+				"label": "Solution: Unpack zip to config",
+				"type": "shell",
+				"command": "pac solution unpack --zipfile \"${workspaceFolder}/dist/release/EHRMTrainingBooking_Solution.zip\" --folder \"${workspaceFolder}/config/solutions/EHRMTrainingBooking\" --overwrite true",
+				"problemMatcher": []
+			}
+		]
+	}
 }
