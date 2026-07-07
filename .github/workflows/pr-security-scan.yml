@@ -176,6 +176,8 @@ jobs:
       - name: Post scan results as PR comment
         if: github.event_name == 'pull_request'
         run: |
-          gh pr comment "${{ github.event.pull_request.number }}" --body-file scan-report.md
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file scan-report.md --repo "$GH_REPO"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_HOST: ${{ github.server_url && 'va.ghe.com' }}
+          GH_REPO: ${{ github.repository }}
