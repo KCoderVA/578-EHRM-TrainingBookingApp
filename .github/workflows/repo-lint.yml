@@ -182,7 +182,7 @@ jobs:
               echo "::error file=$f::Invalid JSON: $f"
               ERRORS=1
             fi
-          done < <(find src/ -name '*.json' -print0 2>/dev/null)
+          done < <(find src/ -type f -name '*.json' -print0 2>/dev/null)
 
           if [ "$ERRORS" -eq 0 ]; then
             echo "✓ All JSON files under src/ are valid"
