@@ -19,6 +19,30 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.2.1] - 2026-07-07
+
+### Changed
+
+- **`docs/PROJECT_STATUS.md`** — comprehensive update to reflect current project state:
+  - Updated status summary from v0.1.1 to v0.2.1 with release history table covering all releases.
+  - Expanded repository contents and exclusions documentation.
+  - Enriched data model section with screen count and connectors/data sources.
+  - Added `.gitignore` verification step to release readiness checklist.
+  - Extended roadmap with user guide and additional flow goals.
+- **`README.md`** — updated version badge and current version to v0.2.1.
+
+### Added
+
+- v0.2.1 release drafts: [docs/release-notes/v0.2.x/v0.2.1/](docs/release-notes/v0.2.x/v0.2.1/)
+
+### Notes
+
+- Documentation-only patch release; no functional changes to the Canvas app or Power Automate flows.
+  - Canvas app baseline remains v0.0.2 (see [src/powerApps/README.md](src/powerApps/README.md))
+  - `AppUserList` flow baseline remains v0.1.0 (see [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md))
+
+---
+
 ## [0.2.0] - 2026-07-07
 
 ### Added
