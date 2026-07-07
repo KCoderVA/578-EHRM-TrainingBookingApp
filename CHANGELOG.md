@@ -19,6 +19,49 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.2.0] - 2026-07-07
+
+### Added
+
+- PR template: [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) — now tracked (was previously excluded by an overly broad `*_temp*` gitignore pattern).
+- Release notes template: [docs/release-notes/RELEASE_TEMPLATE.md](docs/release-notes/RELEASE_TEMPLATE.md) — now tracked (same root cause).
+- v0.2.0 release drafts: [docs/release-notes/v0.2.x/v0.2.0/](docs/release-notes/v0.2.x/v0.2.0/)
+
+### Changed
+
+- **`.gitignore` rewrite** — restructured and corrected:
+  - Removed overly broad `*_temp*` / `*temp_*` patterns that were incorrectly hiding `*_TEMPLATE*` files.
+  - Removed `.gitattributes` and `.editorconfig` from ignore list (these are team-shared configs and should be tracked).
+  - Consolidated redundant rules (`/archive/` + `/archive/**` → `/archive/`; `**/*.bak` + `*.bak` → `**/*.bak`).
+  - Added missing common patterns: `~$*` (Office temp-lock files), `**/*.log`, `*.swp`, `*.swo`, `*.tmp`.
+- **`.vs/` folder removed from tracking** (9 files) — Visual Studio IDE cache, index, and SQLite files are machine-specific and should never be in a public repository.
+- **`tmp/` folder removed from tracking** (8 files) — temporary scratch/probe files are developer-only local artifacts.
+- **`.github/copilot-instructions.md`** — updated Copilot agent guidance:
+  - Added explicit PowerShell terminal `^U` workaround documentation for new-terminal initialization.
+  - Re-enabled previously disabled "Releases, Tags, and Release Notes" guidance section.
+  - Updated folder structure references to include `archive/` and `tmp/` conventions.
+- **`.vscode/578-EHRM-TrainingSchedulerApp.code-workspace`** — enriched workspace configuration:
+  - Added workspace folder display name.
+  - Added editor settings (`trimTrailingWhitespace`, `insertFinalNewline`, `formatOnSave`).
+  - Added `files.exclude` visibility rules for `.cache` and `dist`.
+  - Added GitHub authentication settings.
+  - Added recommended extensions list (Copilot, PowerShell, Power Platform, etc.).
+  - Embedded PAC CLI task definitions directly in the workspace file.
+
+### Fixed
+
+- `.github/PULL_REQUEST_TEMPLATE.md` and `docs/release-notes/RELEASE_TEMPLATE.md` are now visible on the public repository (previously hidden by the `*_temp*` gitignore bug).
+- `.vs/` IDE cache files no longer pollute the public repository history.
+- `tmp/` scratch files no longer appear in the public repository.
+
+### Notes
+
+- This release is focused on repository hygiene, developer tooling, and gitignore correctness; no functional changes to the Canvas app or Power Automate flows.
+  - Canvas app baseline remains v0.0.2 (see [src/powerApps/README.md](src/powerApps/README.md))
+  - `AppUserList` flow baseline remains v0.1.0 (see [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md))
+
+---
+
 ## [0.1.1] - 2026-05-28
 
 ### Added

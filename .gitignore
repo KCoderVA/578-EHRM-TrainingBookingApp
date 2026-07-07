@@ -1,25 +1,24 @@
-﻿# Developer notes, logs, temporary files
-*_temp*
-*temp_*
-docs/logs/*
-docs/local/*
+﻿# ============================================================
+# .gitignore — 578-EHRM-TrainingSchedulerApp
+# Last updated: 2026-07-07
+# ============================================================
+
+# ------------------------------------------------------------
+# 1. Temporary / scratch directories (local-only)
+# ------------------------------------------------------------
+/tmp/
 /dist/
-**/tmp/**
-**/temp/**
 /archive/
-/archive/**
-*.zip
 
-# Power Platform export artifacts
-!*.msapp
-!src/**/.msapp/
-src/**/.zip/**
+# ------------------------------------------------------------
+# 2. Developer-only / local docs & logs
+# ------------------------------------------------------------
+docs/local/
+docs/logs/
 
-# Power BI (choose whether to commit large files)
-*.pbix
-!*.pbit
-
-# Local-only configs/secrets
+# ------------------------------------------------------------
+# 3. Local-only configs & secrets
+# ------------------------------------------------------------
 src/config/local/
 config/local/
 config/logs/
@@ -28,23 +27,44 @@ config/logs/
 .secrets/
 secrets.*
 credentials.*
-.gitattributes
-.editorconfig
 
+# ------------------------------------------------------------
+# 4. OS / editor generated files
+# ------------------------------------------------------------
+.vs/
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
 
-# Dependencies and build artifacts
+# ------------------------------------------------------------
+# 5. Dependencies & build artifacts
+# ------------------------------------------------------------
 node_modules/
 coverage/
 __pycache__/
 *.pyc
 *.pyo
 
-# OS/editor files
-.vs/
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# Backup files (all recursive)
+# ------------------------------------------------------------
+# 6. Backup, log, and swap files
+# ------------------------------------------------------------
 **/*.bak
-*.bak
+**/*.log
+*.tmp
+*.swp
+*.swo
+
+# ------------------------------------------------------------
+# 7. Power Platform
+# ------------------------------------------------------------
+# Ignore zip archives broadly, but allow .msapp binaries
+*.zip
+!*.msapp
+
+# Ignore packed zip folders inside src (pac solution unpack)
+src/**/.zip/**
+
+# Power BI — ignore large binary; allow templates
+*.pbix
+!*.pbit

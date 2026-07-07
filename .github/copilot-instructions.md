@@ -1,4 +1,6 @@
-﻿# Copilot Instructions (GitHub context)
+﻿## S:\Informatics\Data Team\Coder - Informatics\App Programing\578-EHRM-TrainingSchedulerApp\.github\copilot-instructions.md
+
+# Copilot Instructions (GitHub context)
 
 ## Purpose
 
@@ -10,20 +12,44 @@ See also: `copilot-snippets.md` for reusable prompt/playbook snippets.
 
 - Read unpacked source in src/.
 - Assist with pac commands for export/unpack/pack.
-- Keep root tidy; prefer `src/` (unpacked artifacts), `config/` (runbooks/templates/tools), and `docs/` (documentation).
-
-<!--
-DISABLED (2026-05-28): repo-management guidance temporarily deactivated.
-
-- Propose root-level CHANGELOG.md entries.
-- Suggest semantic version tags and Release notes.
--->
+- Keep root tidy; prefer `src/` (unpacked artifacts), `config/` (runbooks/templates/tools), `docs/` (documentation), `archive/` (local backup copies), and `tmp/` (temporary local developer-only files).
 
 ## PowerShell Terminal Rule (Required)
 
+**Status**: Temporary workaround for VS Code Copilot Chat issue
+**Issue**: `run_in_terminal` tool prepends `^U` character to first command in newly-created terminals
+**Affects**: Only Copilot Chat terminal launches (not manual terminal launches)
+**Workaround**: AI agent MUST run a harmless initialization command first before executing any actual command
+**Delete When**: Issue is resolved upstream in VS Code or Copilot Chat infrastructure
+
+### CRITICAL: Agent Behavior Requirement
+
+⚠️ **This is NOT automatic.** Copilot Chat will read this file, but the behavior must be explicitly implemented by the agent.
+When using `run_in_terminal` to launch commands in a **new terminal**, the agent MUST:
+1. **ALWAYS** execute a harmless initialization command FIRST
+2. **THEN** execute the actual command in a subsequent `run_in_terminal` call
+Harmless initialization command:
+
+```powershell
+Write-Host "init" | Out-Null
+```
+Then proceed with your actual command in a subsequent `run_in_terminal` call.
+
+#### Example Agent Behavior using Powershell integrated terminal patterns
+
+**CORRECT** (uses workaround):
+```
+First call:  run_in_terminal command="Write-Host 'init' | Out-Null" ...
+Second call: run_in_terminal command="git clone ..." ...
+```
+
+**AVOID** (will fail with ^U prefix):
+```
+run_in_terminal command="git clone ..." ...  # First command in new terminal = fails
+```
+### Generalized PowerShell Terminal Guidance for Copilot/LLM
 - Prefer running commands inside the existing integrated PowerShell session (avoid spawning new `pwsh -NoProfile ...` shells).
-- This repo configures a `PowerShell 7 (Shimmed)` terminal profile and an automation profile in `.vscode/settings.json` and the workspace `.code-workspace` file.
-  - Both should run PowerShell 7 *without* `-NoProfile` and should explicitly dot-source `$PROFILE` (so functions/aliases/modules are available).
+- This VS Code workspace's integrated PowerShell terminal uses the already customized and configured `PowerShell 7 (Shimmed)` terminal profile (located locally at file path "C:\Users\VHAHINCoderK1\OneDrive - Department of Veterans Affairs\Documents\PowerShell\Microsoft.PowerShell_profile.ps1".
 - Important: VS Code’s `shellIntegration.ps1` (under the VS Code install folder) is **not** your PowerShell profile. Do not treat it as the source of your dev environment.
   - Put your customizations in your normal PowerShell profile (`$PROFILE`) and/or a dedicated dev bootstrap script you control.
 - If a session ever starts without your expected profile behavior, run `src/scripts/pwsh/Ensure-DevProfile.ps1` once per terminal session before running `pac`.
@@ -63,9 +89,6 @@ DISABLED (2026-05-28): repo-management guidance temporarily deactivated.
   - Root `README.md` (overview, current “latest” versions, how to work with the repo).
   - Root `CHANGELOG.md` (add a clear entry describing changes).
 
-<!--
-DISABLED (2026-05-28): repo-management guidance temporarily deactivated.
-
 ## Releases, Tags, and Release Notes
 
 - For **major or minor** project-wide updates, prepare:
@@ -75,7 +98,7 @@ DISABLED (2026-05-28): repo-management guidance temporarily deactivated.
 - If asked to execute tagging/release steps:
   - Provide the exact `git tag` / `git push --tags` commands and/or the repo steps needed.
   - Do not publish a GitHub Release without explicit confirmation (agents should draft the release text and instructions).
--->
+
 
 ## Change Management Conventions
 
