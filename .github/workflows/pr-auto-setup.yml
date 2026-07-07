@@ -1,0 +1,195 @@
+# ============================================================================
+# WORKFLOW: PR Auto-Setup
+# ============================================================================
+#
+# PURPOSE:
+#   Automates the repetitive setup tasks every time you open a new PR.
+#   Instead of manually assigning yourself, remembering what to check,
+#   and requesting reviews — this workflow does it all in seconds.
+#
+# WHAT IT DOES (3 parallel jobs):
+#   1. AUTO-ASSIGN: Assigns the PR to its creator (you).
+#   2. REVIEW CHECKLIST: Posts a contextual checklist comment that adapts
+#      based on which files were changed. If you touched Canvas app files,
+#      you get Canvas-specific checks. If you touched docs, you get
+#      documentation-specific checks. And so on.
+#   3. COPILOT REVIEW: Requests a code review from GitHub Copilot (if
+#      Copilot code review is enabled in repo settings). This is
+#      best-effort — it won't fail if Copilot isn't available.
+#
+# WHY THIS IS USEFUL FOR A SOLO DEVELOPER:
+#   Even when you're the only developer, it's easy to forget steps.
+#   The contextual checklist acts as an automated "second brain" that
+#   reminds you exactly what to verify for the type of change you made.
+#
+# TRIGGER:
+#   - pull_request [opened]: fires once when a PR is first created.
+#     Does NOT re-fire on subsequent pushes (to avoid duplicate comments).
+#
+# THE CHECKLIST ADAPTS TO YOUR CHANGES:
+#   - Always shows: CHANGELOG check, commit message format
+#   - src/ changed: security scan reminder, component README update
+#   - src/powerApps/ changed: Canvas manifest, DataSources review
+#   - src/powerAutomate/ changed: flow README, environment values check
+#   - src/sharePoint/ changed: CSV sanitization, PII check
+#   - *.md changed: link validation, broken paths check
+#   - .github/workflows/ changed: workflow_dispatch testing, path validation
+#   - VERSION/CHANGELOG/PROJECT_STATUS changed: release readiness items
+#
+# TROUBLESHOOTING:
+#   - "Resource not accessible by integration" on auto-assign?
+#     → The GITHUB_TOKEN may lack permission. Check Settings → Actions →
+#       General → Workflow permissions → "Read and write permissions".
+#   - Checklist not appearing? → Check the Actions tab for error logs.
+#     Usually means the git diff command couldn't compare base/head SHAs
+#     (can happen on the very first PR in a new repo).
+#   - Copilot review request fails silently? → Expected if Copilot code
+#     review isn't enabled. Enable at: Settings → Code security and
+#     analysis → Copilot code review.
+#
+# DOCS:
+#   - GitHub CLI (gh):    https://cli.github.com/manual/
+#   - Copilot reviews:    https://docs.github.com/en/copilot/using-github-copilot/code-review
+# ============================================================================
+
+name: PR Auto-Setup
+
+# --- TRIGGER SECTION ---
+on:
+  pull_request:
+    types: [opened]
+
+# --- PERMISSIONS ---
+permissions:
+  contents: read
+  pull-requests: write
+
+# --- JOBS (run in parallel) ---
+jobs:
+  # ---- JOB 1: Auto-assign the PR to its creator ----
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign PR to creator
+        run: gh pr edit "$PR_NUMBER" --add-assignee "$PR_AUTHOR"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+
+  # ---- JOB 2: Post a contextual review checklist ----
+  review-checklist:
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth: 0 gets full git history so we can diff base vs head
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # Compare the PR's changed files against known project areas
+      # and build a markdown checklist tailored to what was changed.
+      - name: Build contextual checklist
+        id: checklist
+        shell: bash
+        run: |
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+          CHANGED=$(git diff --name-only "$BASE" "$HEAD" 2>/dev/null || echo "")
+
+          {
+            echo "body<<CHECKLIST_EOF"
+            echo "## PR Review Checklist"
+            echo ""
+            echo "Auto-generated based on the files changed in this PR."
+            echo ""
+            echo "### Always"
+            echo "- [ ] \`CHANGELOG.md\` updated with a new entry for this change"
+            echo "- [ ] Commit messages follow \`type(scope): description\` convention"
+            echo ""
+
+            # Source files changed?
+            if echo "$CHANGED" | grep -qE '^src/'; then
+              echo "### Source files changed"
+              echo "- [ ] Scanned changed files under \`src/\` for tenant IDs, SharePoint URLs, emails, secrets"
+              echo "- [ ] Updated the relevant component \`README.md\` if behavior changed"
+              echo ""
+            fi
+
+            # Canvas app changed?
+            if echo "$CHANGED" | grep -qE '^src/powerApps/'; then
+              echo "### Canvas app changed"
+              echo "- [ ] \`src/powerApps/README.md\` version/changelog updated"
+              echo "- [ ] Verified \`CanvasManifest.json\` is valid"
+              echo "- [ ] Checked \`DataSources/\` files for environment-specific SharePoint URLs"
+              echo ""
+            fi
+
+            # Power Automate changed?
+            if echo "$CHANGED" | grep -qE '^src/powerAutomate/'; then
+              echo "### Power Automate flows changed"
+              echo "- [ ] \`src/powerAutomate/README.md\` updated"
+              echo "- [ ] Flow \`README.md\` version/changelog updated (e.g., \`AppUserList/README.md\`)"
+              echo "- [ ] Checked flow definition JSON for environment-specific values"
+              echo ""
+            fi
+
+            # SharePoint data changed?
+            if echo "$CHANGED" | grep -qE '^src/sharePoint/'; then
+              echo "### SharePoint data changed"
+              echo "- [ ] CSV files are sanitized — no real PII, names, or email addresses"
+              echo "- [ ] No \`.xlsm\` macro files with sensitive content"
+              echo ""
+            fi
+
+            # Docs changed?
+            if echo "$CHANGED" | grep -qE '\.md$'; then
+              echo "### Documentation changed"
+              echo "- [ ] Internal markdown links resolve to existing files"
+              echo "- [ ] No broken relative paths from moved/renamed files"
+              echo ""
+            fi
+
+            # Workflows changed?
+            if echo "$CHANGED" | grep -qE '^\.github/workflows/'; then
+              echo "### Workflows changed"
+              echo "- [ ] Tested via \`workflow_dispatch\` (manual trigger) where available"
+              echo "- [ ] File paths in workflow match actual repo structure"
+              echo ""
+            fi
+
+            # Version bump?
+            if echo "$CHANGED" | grep -qE '^(README\.md|CHANGELOG\.md|docs/PROJECT_STATUS\.md)$'; then
+              echo "### Release-related"
+              echo "- [ ] \`README.md\` version badge matches the new version"
+              echo "- [ ] \`docs/PROJECT_STATUS.md\` status summary updated"
+              echo "- [ ] Release notes draft created under \`docs/release-notes/\`"
+              echo ""
+            fi
+
+            echo "CHECKLIST_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # Post the assembled checklist as a PR comment
+      - name: Comment checklist on PR
+        run: gh pr comment "$PR_NUMBER" --body "${{ steps.checklist.outputs.body }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+
+  # ---- JOB 3: Request Copilot code review (best-effort) ----
+  # This job requests GitHub Copilot as a reviewer on the PR.
+  # continue-on-error: true means if Copilot isn't available or enabled,
+  # the overall workflow still succeeds. It fails silently.
+  #
+  # To enable Copilot code reviews:
+  #   Settings → Code security and analysis → Copilot code review → Enable
+  request-copilot-review:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Request Copilot review
+        run: gh pr edit "$PR_NUMBER" --add-reviewer "copilot"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}

@@ -19,6 +19,49 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.3.0] - 2026-07-07
+
+### Added
+
+- **`VERSION` file** — single source of truth for the project-wide SemVer number, read by all workflows and scripts.
+- **`.github/labeler.yml`** — label-to-path mapping config for the Labeler workflow (moved from `.github/workflows/` to the correct location).
+- **New workflow: `pr-auto-setup.yml`** — auto-assigns PRs, posts contextual review checklist, requests Copilot code review.
+- **New workflow: `version-bump.yml`** — manual-trigger workflow that scaffolds a new version: updates VERSION, README, CHANGELOG, PROJECT_STATUS, creates release notes templates, and opens a draft PR.
+- **New workflow: `repo-lint.yml`** — validates repo structure (required files, component READMEs, VERSION/badge sync, JSON integrity, file placement).
+- **New workflow: `pr-security-scan.yml`** — scans PRs for GUIDs, SharePoint URLs, VA emails, secrets, and SSN-like patterns in source files and CSVs.
+- **New workflow: `release.yml`** — auto-creates GitHub Releases when a `v*` tag is pushed, using pre-written release notes.
+- v0.3.0 release drafts: [docs/release-notes/v0.3.x/v0.3.0/](docs/release-notes/v0.3.x/v0.3.0/)
+
+### Changed
+
+- **GitHub Actions/workflows fully overhauled** — removed 2 unused workflows (`greetings.yml`, `summary.yml`), re-enabled and enhanced all remaining workflows with proper triggers, updated action versions, and path corrections.
+- **`label.yml`** — upgraded `actions/labeler` from v4 to v5, added proper `pull_request_target` event types.
+- **`powerplatform-ci.yml`** — added Canvas app JSON validation (all files, not just manifest), added Power Automate flow JSON validation, fixed solution path from `src/solutions/` to `config/solutions/`, added `pull_request` trigger, added path filters.
+- **`stale.yml`** — tuned for solo developer: 90-day stale window (was 30), 30-day close (was 14), weekly schedule (was daily), exempt `in-progress`/`pinned`/`blocked` labels, upgraded `actions/stale` from v5 to v9.
+- **`.github/labeler.yml`** — added `scripts`, `release` labels; split `repo-hygiene` from `scripts`.
+- **All workflow files** — added comprehensive commented-out educational documentation headers and inline annotations.
+- **`PULL_REQUEST_TEMPLATE.md`** — moved from `.github/ISSUE_TEMPLATE/` to `.github/` (correct location for GitHub to auto-populate PR descriptions).
+
+### Removed
+
+- **`greetings.yml`** — first-interaction greeting (no value for solo developer; `actions/first-interaction@v1` is archived).
+- **`summary.yml`** — AI issue summarization (requires GitHub Models; summarizes your own issues back to you).
+
+### Fixed
+
+- **`.github/labeler.yml`** location — moved from `.github/workflows/` to `.github/` where `actions/labeler@v5` expects it.
+- **`.github/PULL_REQUEST_TEMPLATE.md`** location — moved from `.github/ISSUE_TEMPLATE/` to `.github/` where GitHub expects it.
+- **`powerplatform-ci.yml`** solution path — changed `src/solutions/EHRMTrainingBooking` to `config/solutions/EHRMTrainingBooking` matching actual repo layout.
+
+### Notes
+
+- Release type: Feature
+- This release adds significant CI/CD automation but makes no functional changes to the Canvas app or Power Automate flows.
+  - Canvas app baseline remains v0.0.2 (see [src/powerApps/README.md](src/powerApps/README.md))
+  - `AppUserList` flow baseline remains v0.1.0 (see [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md))
+
+---
+
 ## [0.2.1] - 2026-07-07
 
 ### Changed

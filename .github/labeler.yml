@@ -1,0 +1,98 @@
+# ============================================================================
+# LABELER CONFIGURATION — .github/labeler.yml
+# ============================================================================
+#
+# PURPOSE:
+#   Maps file path glob patterns to PR label names. When the Labeler workflow
+#   (.github/workflows/label.yml) runs, it reads this file and applies any
+#   labels whose patterns match files changed in the PR.
+#
+# IMPORTANT — FILE LOCATION:
+#   This file MUST live at .github/labeler.yml (repo root → .github/).
+#   Do NOT put it inside .github/workflows/ — the action won't find it there.
+#
+# HOW PATTERNS WORK:
+#   - "changed-files" checks files modified in the PR diff.
+#   - "any-glob-to-any-file" means: if ANY of the listed globs match ANY
+#     changed file, apply this label.
+#   - Globs are relative to the repo root. Use "**" for recursive matching.
+#   - Patterns are case-sensitive on Linux runners.
+#
+# ADDING A NEW LABEL:
+#   1. Add a new block below with the label name and file patterns.
+#   2. The label will be auto-created in the repo if it doesn't exist yet.
+#   3. You can customize label colors at: Settings → Labels.
+#
+# DOCS: https://github.com/actions/labeler
+# ============================================================================
+
+# --- DOCUMENTATION ---
+# Any markdown file or docs/ content
+documentation:
+    - changed-files:
+          - any-glob-to-any-file:
+                - "docs/**"
+                - "*.md"
+                - "CHANGELOG.md"
+                - "README.md"
+
+# --- POWER APPS (Canvas App) ---
+# Unpacked source, .msapp, .zip exports, app README
+power-apps:
+    - changed-files:
+          - any-glob-to-any-file:
+                - "src/powerApps/**"
+
+# --- POWER AUTOMATE (Flows) ---
+# Flow definitions, unpacked JSON, flow READMEs
+power-automate:
+    - changed-files:
+          - any-glob-to-any-file:
+                - "src/powerAutomate/**"
+
+# --- SHAREPOINT ---
+# SharePoint list sample CSVs and data model files
+sharepoint:
+    - changed-files:
+          - any-glob-to-any-file:
+                - "src/sharePoint/**"
+
+# --- CONFIG ---
+# Architecture docs, runbooks, tools, VS Code workspace settings
+config:
+    - changed-files:
+          - any-glob-to-any-file:
+                - "config/**"
+                - ".vscode/**"
+
+# --- CI / GITHUB ACTIONS ---
+# Workflow .yml files
+ci:
+    - changed-files:
+          - any-glob-to-any-file:
+                - ".github/workflows/**"
+
+# --- REPO HYGIENE ---
+# .gitignore, GitHub community files, templates
+repo-hygiene:
+    - changed-files:
+          - any-glob-to-any-file:
+                - ".gitignore"
+                - ".github/**"
+
+# --- SCRIPTS ---
+# PowerShell scripts, hooks, PAC CLI tools
+scripts:
+    - changed-files:
+          - any-glob-to-any-file:
+                - "src/scripts/**"
+                - "config/tools/**"
+
+# --- RELEASE ---
+# Version bumps, release notes, project status updates
+release:
+    - changed-files:
+          - any-glob-to-any-file:
+                - "VERSION"
+                - "docs/release-notes/**"
+                - "docs/PROJECT_STATUS.md"

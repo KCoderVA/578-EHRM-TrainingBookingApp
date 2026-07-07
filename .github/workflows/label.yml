@@ -1,26 +1,67 @@
-# This workflow will triage pull requests and apply a label based on the
-# paths that are modified in the pull request.
+# ============================================================================
+# WORKFLOW: Labeler
+# ============================================================================
 #
-# To use this workflow, you will need to set up a .github/labeler.yml
-# file with configuration.  For more information, see:
-# https://github.com/actions/labeler
+# PURPOSE:
+#   Automatically applies category labels to Pull Requests based on which
+#   files were changed. This helps you see at a glance what areas of the
+#   project a PR touches (e.g., "power-apps", "documentation", "ci").
+#
+# HOW IT WORKS:
+#   1. A PR is opened, updated (new commits pushed), or reopened.
+#   2. This workflow reads the label-to-path mapping from .github/labeler.yml
+#      (NOT .github/workflows/labeler.yml — that's a common mistake).
+#   3. It compares the changed files in the PR against the glob patterns.
+#   4. Any matching labels are added to the PR automatically.
+#
+# CONFIGURATION:
+#   - Label rules live in:  .github/labeler.yml  (one level above workflows/)
+#   - This workflow file:   .github/workflows/label.yml
+#   - Action docs:          https://github.com/actions/labeler
+#
+# TRIGGER:
+#   - pull_request_target: runs on every PR open/sync/reopen
+#   - Uses pull_request_target (not pull_request) so it has write access
+#     to add labels even on PRs from forks.
+#
+# PERMISSIONS:
+#   - contents: read   — to read file paths in the PR diff
+#   - pull-requests: write — to add labels to the PR
+#
+# TROUBLESHOOTING:
+#   - Labels not appearing?
+#     → Check that .github/labeler.yml exists at the REPO ROOT's .github/
+#       folder, NOT inside .github/workflows/.
+#     → Verify the glob patterns match your actual file paths (case-sensitive).
+#     → Labels must already exist in the repo (Settings → Labels) or the
+#       action will create them automatically with a default color.
+#   - Wrong labels applied?
+#     → Review .github/labeler.yml patterns. Use "**" for recursive matching.
+#   - Workflow not running?
+#     → Confirm the PR targets a branch in this repo (not a fork-to-fork PR).
+# ============================================================================
 
 name: Labeler
-# DISABLED (2026-05-28): repo-management automation temporarily deactivated.
-on:
-  workflow_dispatch: {}
-  pull_request_target:
 
+# --- TRIGGER SECTION ---
+# pull_request_target fires when a PR is opened, updated, or reopened.
+# "synchronize" means new commits were pushed to the PR branch.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+# --- JOB SECTION ---
 jobs:
   label:
-    if: ${{ false }}
-
     runs-on: ubuntu-latest
+
+    # Permissions needed by the labeler action
     permissions:
       contents: read
       pull-requests: write
 
     steps:
-      - uses: actions/labeler@v4
+      # The labeler action reads .github/labeler.yml and applies matching labels
+      - uses: actions/labeler@v5
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"

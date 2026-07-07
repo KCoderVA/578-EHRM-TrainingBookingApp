@@ -1,0 +1,235 @@
+# ============================================================================
+# WORKFLOW: Repo Lint
+# ============================================================================
+#
+# PURPOSE:
+#   Validates the structural health of the repository. Ensures required files
+#   exist, JSON files are valid, VERSION matches README, and files aren't
+#   misplaced. Think of it as a "spell check" for your repo organization.
+#
+# WHY THIS IS USEFUL:
+#   Over time, files get moved, renamed, or accidentally deleted. Links break.
+#   JSON files get corrupted by manual edits. The VERSION file drifts from
+#   the README badge. This workflow catches all of that automatically on
+#   every PR — before those issues reach the main branch.
+#
+# WHAT IT CHECKS (3 parallel jobs):
+#
+#   JOB 1: STRUCTURE
+#   - Required root files exist (VERSION, README.md, CHANGELOG.md, .gitignore)
+#   - Expected documentation files exist (PROJECT_STATUS, ARCHITECTURE, etc.)
+#   - Component folders have READMEs (src/powerApps/, src/powerAutomate/, etc.)
+#   - VERSION file contains valid SemVer (e.g., "0.3.0")
+#   - VERSION file value matches the README.md badge
+#
+#   JOB 2: JSON INTEGRITY
+#   - Every .json file under src/ can be parsed by Python's json module
+#   - Catches syntax errors: missing commas, unclosed braces, encoding issues
+#
+#   JOB 3: FILE PLACEMENT
+#   - labeler.yml is NOT in .github/workflows/ (common mistake)
+#   - PULL_REQUEST_TEMPLATE.md is NOT inside ISSUE_TEMPLATE/ (common mistake)
+#   - .vs/ IDE cache is NOT tracked (should be git-ignored)
+#   - dist/ has no tracked files (should be git-ignored)
+#
+# TRIGGERS:
+#   - pull_request to main: checks every PR before merge
+#   - workflow_dispatch: manual trigger from the Actions tab
+#
+# FAILURE BEHAVIOR:
+#   - Required root files missing → FAILS the workflow (hard requirement)
+#   - Documentation files missing → WARNS but does not fail (soft requirement)
+#   - Component README missing → FAILS (every component needs documentation)
+#   - VERSION/badge mismatch → FAILS (these must stay in sync)
+#   - Invalid JSON → FAILS (corrupted source files)
+#   - Misplaced files → FAILS (these cause silent bugs in other workflows)
+#
+# TROUBLESHOOTING:
+#   - "VERSION does not match README badge" → Run the version-bump workflow
+#     or manually update the badge in README.md to match VERSION.
+#   - "Invalid JSON" → Open the flagged file and fix the syntax. Common causes:
+#     trailing commas (not valid JSON), unescaped characters, BOM encoding.
+#   - "labeler.yml should be at .github/labeler.yml" → Move it:
+#     git mv .github/workflows/labeler.yml .github/labeler.yml
+#   - "Missing expected documentation file" warnings → These are soft
+#     warnings. Create the file when you're ready, or ignore if deferred.
+# ============================================================================
+
+name: Repo Lint
+
+# --- TRIGGER SECTION ---
+on:
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+# --- PERMISSIONS ---
+permissions:
+  contents: read
+
+# --- JOBS (run in parallel for speed) ---
+jobs:
+  # ---- JOB 1: Validate repo structure ----
+  structure:
+    name: Validate repo structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Check that essential root-level files exist.
+      # These are hard requirements — the workflow fails if any are missing.
+      - name: Check required root files exist
+        run: |
+          MISSING=0
+          for f in VERSION README.md CHANGELOG.md .gitignore; do
+            if [ ! -f "$f" ]; then
+              echo "::error::Missing required root file: $f"
+              MISSING=1
+            else
+              echo "✓ $f"
+            fi
+          done
+          exit $MISSING
+
+      # Check that expected documentation files exist.
+      # These are soft requirements — produces warnings but doesn't fail.
+      - name: Check required documentation files exist
+        run: |
+          MISSING=0
+          FILES=(
+            "docs/PROJECT_STATUS.md"
+            "docs/CONTRIBUTORS.md"
+            "docs/SECURITY.md"
+            "config/architecture/ARCHITECTURE.md"
+            "config/runbooks/ALM-RUNBOOK.md"
+            ".github/PULL_REQUEST_TEMPLATE.md"
+            ".github/CONTRIBUTING.md"
+            ".github/CODEOWNERS"
+          )
+          for f in "${FILES[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "::warning::Missing expected documentation file: $f"
+              MISSING=1
+            else
+              echo "✓ $f"
+            fi
+          done
+          # Warn but don't fail — some may be intentionally deferred
+          if [ "$MISSING" -eq 1 ]; then
+            echo "::notice::Some expected documentation files are missing. This is a warning, not a failure."
+          fi
+
+      # Every component folder must have its own README.md per the
+      # project's Documentation Rules (see copilot-instructions.md).
+      - name: Check component folders have READMEs
+        run: |
+          MISSING=0
+          DIRS=(
+            "src/powerApps"
+            "src/powerAutomate"
+            "src/powerAutomate/AppUserList"
+          )
+          for d in "${DIRS[@]}"; do
+            if [ -d "$d" ] && [ ! -f "$d/README.md" ]; then
+              echo "::error::Component folder $d/ exists but has no README.md"
+              MISSING=1
+            elif [ -d "$d" ]; then
+              echo "✓ $d/README.md"
+            fi
+          done
+          exit $MISSING
+
+      # VERSION must contain exactly MAJOR.MINOR.PATCH (e.g., "0.3.0")
+      - name: Check VERSION file format
+        run: |
+          VER=$(cat VERSION | tr -d '[:space:]')
+          if echo "$VER" | grep -qP '^\d+\.\d+\.\d+$'; then
+            echo "✓ VERSION file contains valid SemVer: $VER"
+          else
+            echo "::error::VERSION file does not contain valid SemVer. Found: '$VER'"
+            exit 1
+          fi
+
+      # The README badge must show the same version as the VERSION file.
+      # If these drift apart, the version-bump workflow can fix it.
+      - name: Verify VERSION matches README.md badge
+        run: |
+          VER=$(cat VERSION | tr -d '[:space:]')
+          if grep -q "release-v${VER}-blue" README.md; then
+            echo "✓ README.md badge matches VERSION ($VER)"
+          else
+            echo "::error::README.md version badge does not match VERSION file ($VER)"
+            exit 1
+          fi
+
+  # ---- JOB 2: Validate JSON file integrity ----
+  # Power Platform unpacked artifacts are JSON-heavy. A single syntax error
+  # (missing comma, extra bracket) can prevent pac canvas pack from working.
+  json-integrity:
+    name: Validate JSON files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate all JSON files under src/
+        shell: bash
+        run: |
+          ERRORS=0
+          while IFS= read -r -d '' f; do
+            if ! python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$f" 2>/dev/null; then
+              echo "::error file=$f::Invalid JSON: $f"
+              ERRORS=1
+            fi
+          done < <(find src/ -name '*.json' -print0 2>/dev/null)
+
+          if [ "$ERRORS" -eq 0 ]; then
+            echo "✓ All JSON files under src/ are valid"
+          else
+            exit 1
+          fi
+
+  # ---- JOB 3: Check file placement ----
+  # Catches files that are in the wrong folder. These are real bugs we've
+  # already encountered in this project (labeler.yml, PR template).
+  file-placement:
+    name: Check file placement
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for misplaced files
+        run: |
+          ISSUES=0
+
+          # labeler.yml should be in .github/, not .github/workflows/
+          if [ -f ".github/workflows/labeler.yml" ]; then
+            echo "::error::.github/workflows/labeler.yml should be at .github/labeler.yml (actions/labeler expects it there)"
+            ISSUES=1
+          fi
+
+          # PULL_REQUEST_TEMPLATE.md should be in .github/, not .github/ISSUE_TEMPLATE/
+          if [ -f ".github/ISSUE_TEMPLATE/PULL_REQUEST_TEMPLATE.md" ]; then
+            echo "::error::PULL_REQUEST_TEMPLATE.md is inside ISSUE_TEMPLATE/ — move it to .github/"
+            ISSUES=1
+          fi
+
+          # No .vs/ folder should be tracked
+          if [ -d ".vs" ]; then
+            echo "::error::.vs/ IDE cache folder should not be in the repository"
+            ISSUES=1
+          fi
+
+          # No dist/ files should be tracked
+          if [ -d "dist" ] && [ "$(find dist/ -type f 2>/dev/null | head -1)" ]; then
+            echo "::error::dist/ contains tracked files — these should be git-ignored"
+            ISSUES=1
+          fi
+
+          if [ "$ISSUES" -eq 0 ]; then
+            echo "✓ No file placement issues detected"
+          else
+            exit 1
+          fi

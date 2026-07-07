@@ -1,0 +1,181 @@
+# ============================================================================
+# WORKFLOW: PR Security Scan
+# ============================================================================
+#
+# PURPOSE:
+#   Scans source files for sensitive values that should not be in a public
+#   repository. Power Platform unpacked artifacts naturally contain
+#   environment-specific values (tenant IDs, SharePoint URLs, email
+#   addresses) that get baked into the JSON during export. This workflow
+#   catches those before they land on the main branch.
+#
+# WHY THIS MATTERS FOR YOUR PROJECT:
+#   Your Canvas app and Power Automate flow exports contain real GUIDs,
+#   SharePoint site URLs, and VA email addresses from the Hines VA
+#   environment. While some of these are expected (and documented in
+#   PROJECT_STATUS.md), new ones could indicate a data leak or an
+#   unsanitized export.
+#
+# WHAT IT SCANS FOR:
+#   1. GUIDs — potential tenant, environment, or connection IDs
+#   2. SharePoint URLs — *.sharepoint.com references in JSON/XML/CSV
+#   3. VA email addresses — @va.gov and @med.va.gov patterns
+#   4. Secret/key patterns — apikey, password, token, connectionstring
+#   5. SSN-like patterns in CSVs — ###-##-#### or 9-digit sequences
+#
+# HOW IT WORKS:
+#   1. Triggers on PRs to main that touch src/ or config/solutions/.
+#   2. Runs grep with regex patterns against all relevant file types.
+#   3. Builds a markdown report with findings grouped by category.
+#   4. Posts the report as a PR comment for your review.
+#   5. INFORMATIONAL ONLY — does not block the merge.
+#
+# IMPORTANT: This scan will ALWAYS find hits in your existing Power Platform
+# source because those files inherently contain GUIDs and URLs. The value is
+# in spotting NEW or UNEXPECTED values — not in achieving zero hits.
+#
+# TRIGGER:
+#   - pull_request to main, only when src/ or config/solutions/ files change.
+#
+# TROUBLESHOOTING:
+#   - Too many false positives? → The GUID and secret-key patterns are
+#     intentionally broad. Review the PR comment and ignore known values.
+#   - Scan not running? → Check that the PR actually modifies files under
+#     src/ or config/solutions/. Documentation-only PRs are skipped.
+#   - "Permission denied" posting comment? → Check Settings → Actions →
+#     Workflow permissions → "Read and write permissions".
+#
+# FUTURE ENHANCEMENT IDEAS:
+#   - Maintain a .github/known-guids.txt allowlist of expected GUIDs and
+#     filter them out of the report.
+#   - Add a step that fails the workflow if HIGH PRIORITY PII is found.
+# ============================================================================
+
+name: PR Security Scan
+
+# --- TRIGGER SECTION ---
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "src/**"
+      - "config/solutions/**"
+
+# --- PERMISSIONS ---
+permissions:
+  contents: read
+  pull-requests: write
+
+# --- JOB SECTION ---
+jobs:
+  scan-for-sensitive-values:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Read the VERSION file to include in the report header
+      - name: Read current version for report header
+        run: |
+          VER=$(cat VERSION 2>/dev/null | tr -d '[:space:]' || echo "unknown")
+          echo "VER=$VER" >> "$GITHUB_ENV"
+
+      # ---- MAIN SCAN STEP ----
+      # Each pattern block runs grep against source files and appends
+      # any hits to a markdown report file. The patterns are:
+      #   1. GUIDs (8-4-4-4-12 hex pattern)
+      #   2. SharePoint URLs (*.sharepoint.com)
+      #   3. VA email addresses (@va.gov, @med.va.gov)
+      #   4. Secret/key field names (apikey, password, token, etc.)
+      #   5. SSN-like patterns in CSV files (###-##-#### or 9 digits)
+      - name: Scan for potential environment-specific values
+        id: scan
+        shell: bash
+        run: |
+          echo "## PR Security Scan Results (v${VER})" > scan-report.md
+          echo "" >> scan-report.md
+          FOUND=0
+
+          # Pattern 1: GUIDs (potential tenant/environment IDs)
+          GUID_HITS=$(grep -rn --include="*.json" --include="*.xml" --include="*.yaml" --include="*.yml" \
+            -oP '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}' \
+            src/ config/solutions/ 2>/dev/null | head -20 || true)
+          if [ -n "$GUID_HITS" ]; then
+            echo "### GUIDs found (potential tenant/environment IDs)" >> scan-report.md
+            echo '```' >> scan-report.md
+            echo "$GUID_HITS" >> scan-report.md
+            echo '```' >> scan-report.md
+            echo "> Review these GUIDs to ensure no tenant-specific or environment-specific IDs are being committed." >> scan-report.md
+            echo "" >> scan-report.md
+            FOUND=1
+          fi
+
+          # Pattern 2: SharePoint URLs
+          SP_HITS=$(grep -rn --include="*.json" --include="*.xml" --include="*.yaml" --include="*.yml" --include="*.csv" \
+            -i '\.sharepoint\.com' \
+            src/ config/solutions/ 2>/dev/null | head -20 || true)
+          if [ -n "$SP_HITS" ]; then
+            echo "### SharePoint URLs found" >> scan-report.md
+            echo '```' >> scan-report.md
+            echo "$SP_HITS" >> scan-report.md
+            echo '```' >> scan-report.md
+            echo "> Verify these SharePoint URLs are expected in the public repository." >> scan-report.md
+            echo "" >> scan-report.md
+            FOUND=1
+          fi
+
+          # Pattern 3: VA email addresses (in structured files AND CSVs)
+          EMAIL_HITS=$(grep -rn --include="*.json" --include="*.xml" --include="*.yaml" --include="*.yml" --include="*.csv" \
+            -ioP '[a-zA-Z0-9._%+-]+@(va\.gov|med\.va\.gov)' \
+            src/ config/solutions/ 2>/dev/null | head -20 || true)
+          if [ -n "$EMAIL_HITS" ]; then
+            echo "### VA email addresses found" >> scan-report.md
+            echo '```' >> scan-report.md
+            echo "$EMAIL_HITS" >> scan-report.md
+            echo '```' >> scan-report.md
+            echo "> Confirm these email addresses are acceptable for the public repository." >> scan-report.md
+            echo "" >> scan-report.md
+            FOUND=1
+          fi
+
+          # Pattern 4: Connection references / API keys
+          SECRET_HITS=$(grep -rn --include="*.json" --include="*.xml" --include="*.yaml" --include="*.yml" \
+            -iP '(apikey|api_key|secret|password|token|connectionstring)' \
+            src/ config/solutions/ 2>/dev/null | head -20 || true)
+          if [ -n "$SECRET_HITS" ]; then
+            echo "### Potential secrets/keys found" >> scan-report.md
+            echo '```' >> scan-report.md
+            echo "$SECRET_HITS" >> scan-report.md
+            echo '```' >> scan-report.md
+            echo "> Review these matches — they may be false positives (field names) or actual credentials." >> scan-report.md
+            echo "" >> scan-report.md
+            FOUND=1
+          fi
+
+          # Pattern 5: Real names / PII in CSV data files
+          # Look for patterns that suggest unsanitized person data (e.g., "LastName, FirstName" or SSN-like)
+          PII_HITS=$(grep -rn --include="*.csv" \
+            -iP '(\d{3}-\d{2}-\d{4}|\d{9})' \
+            src/sharePoint/ 2>/dev/null | head -10 || true)
+          if [ -n "$PII_HITS" ]; then
+            echo "### Potential PII in CSV files (SSN-like patterns)" >> scan-report.md
+            echo '```' >> scan-report.md
+            echo "$PII_HITS" >> scan-report.md
+            echo '```' >> scan-report.md
+            echo "> **HIGH PRIORITY**: These look like Social Security Numbers or similar PII. Sanitize before committing." >> scan-report.md
+            echo "" >> scan-report.md
+            FOUND=1
+          fi
+
+          if [ "$FOUND" -eq 0 ]; then
+            echo "No sensitive patterns detected in source files." >> scan-report.md
+          fi
+
+          echo "found=$FOUND" >> "$GITHUB_OUTPUT"
+
+      - name: Post scan results as PR comment
+        if: github.event_name == 'pull_request'
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file scan-report.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
