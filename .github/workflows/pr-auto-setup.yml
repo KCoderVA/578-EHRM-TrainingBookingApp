@@ -71,9 +71,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assign PR to creator
-        run: gh pr edit "$PR_NUMBER" --add-assignee "$PR_AUTHOR"
+        run: gh pr edit "$PR_NUMBER" --add-assignee "$PR_AUTHOR" --repo "$GH_REPO"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
 
@@ -170,12 +171,17 @@ jobs:
             echo "CHECKLIST_EOF"
           } >> "$GITHUB_OUTPUT"
 
-      # Post the assembled checklist as a PR comment
+      # Post the assembled checklist as a PR comment.
+      # Uses --body-file to avoid bash interpreting backticks in the markdown.
       - name: Comment checklist on PR
-        run: gh pr comment "$PR_NUMBER" --body "${{ steps.checklist.outputs.body }}"
+        run: |
+          echo "$CHECKLIST_BODY" > /tmp/checklist.md
+          gh pr comment "$PR_NUMBER" --body-file /tmp/checklist.md --repo "$GH_REPO"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          CHECKLIST_BODY: ${{ steps.checklist.outputs.body }}
 
   # ---- JOB 3: Request Copilot code review (best-effort) ----
   # This job requests GitHub Copilot as a reviewer on the PR.
@@ -189,7 +195,8 @@ jobs:
     continue-on-error: true
     steps:
       - name: Request Copilot review
-        run: gh pr edit "$PR_NUMBER" --add-reviewer "copilot"
+        run: gh pr edit "$PR_NUMBER" --add-reviewer "copilot" --repo "$GH_REPO"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
