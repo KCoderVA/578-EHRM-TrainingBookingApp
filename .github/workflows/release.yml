@@ -1,0 +1,144 @@
+# ============================================================================
+# WORKFLOW: Create GitHub Release
+# ============================================================================
+#
+# PURPOSE:
+#   Automatically creates a GitHub Release whenever you push a version tag.
+#   This replaces the manual "gh release create" step in your release process.
+#
+# HOW IT FITS YOUR WORKFLOW:
+#   Your manual release process (v5_manualRepoManagement.md) ends with pushing
+#   a tag and creating a release. This workflow automates the last part:
+#
+#     git tag v0.3.0        ← you do this
+#     git push --tags       ← you do this
+#     (release created)     ← this workflow does this automatically
+#
+# HOW IT WORKS:
+#   1. You push a tag starting with "v" (e.g., v0.3.0).
+#   2. The workflow extracts the version number from the tag.
+#   3. It reads the VERSION file and warns if they don't match (safety check).
+#   4. It looks for your release notes at the expected path:
+#        docs/release-notes/v0.3.x/v0.3.0/v0.3.0_releaseNotes.md
+#   5. If found → creates a GitHub Release using those notes.
+#      If not found → creates a Release with auto-generated notes from commits.
+#   6. The release title includes the project name and release type,
+#      extracted from CHANGELOG.md (e.g., "EHRM Training App v0.3.0 — Feature").
+#
+# RELEASE NOTES FILE NAMING CONVENTION:
+#   docs/release-notes/
+#     v{MAJOR}.{MINOR}.x/         ← minor version family
+#       v{MAJOR}.{MINOR}.{PATCH}/ ← specific version folder
+#         v{M}.{m}.{p}_releaseNotes.md  ← the file this workflow reads
+#
+# TRIGGER:
+#   - push tags matching "v*" (e.g., v0.2.1, v1.0.0, v0.3.0-beta)
+#
+# PERMISSIONS:
+#   - contents: write — needed to create the GitHub Release
+#
+# TROUBLESHOOTING:
+#   - Release not created? → Check that you pushed a tag, not just a commit.
+#     Tags require: git push --tags (or git push origin v0.3.0).
+#   - "Tag does not match VERSION file" warning? → The VERSION file wasn't
+#     updated before tagging. This is a warning, not a failure — the release
+#     still gets created using the tag value.
+#   - Release notes not found? → Check the file path matches the convention.
+#     The workflow constructs: docs/release-notes/v{M}.{m}.x/v{tag}/{tag}_releaseNotes.md
+#   - Want to edit the release after creation? → Go to the repo's Releases
+#     page on GitHub and click "Edit" on the release.
+# ============================================================================
+
+name: Create GitHub Release
+
+# --- TRIGGER SECTION ---
+# Fires when a tag starting with "v" is pushed to the repo.
+on:
+  push:
+    tags:
+      - "v*"
+
+# --- PERMISSIONS ---
+# Write access needed to create GitHub Releases
+permissions:
+  contents: write
+
+# --- JOB SECTION ---
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ---- STEP 1: Read VERSION file (safety cross-check) ----
+      - name: Read VERSION file
+        id: ver
+        run: |
+          FILE_VER=$(cat VERSION | tr -d '[:space:]')
+          echo "file_version=$FILE_VER" >> "$GITHUB_OUTPUT"
+
+      # ---- STEP 2: Parse the git tag into version components ----
+      # TAG = "v0.3.0", VER = "0.3.0", MAJOR_MINOR = "v0.3.x"
+      - name: Determine version from tag
+        id: version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VER="${TAG#v}"
+          MAJOR_MINOR="v${VER%.*}.x"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "ver=$VER" >> "$GITHUB_OUTPUT"
+          echo "major_minor=$MAJOR_MINOR" >> "$GITHUB_OUTPUT"
+
+      # ---- STEP 3: Safety check — warn if tag ≠ VERSION file ----
+      - name: Verify tag matches VERSION file
+        run: |
+          if [ "${{ steps.version.outputs.ver }}" != "${{ steps.ver.outputs.file_version }}" ]; then
+            echo "::warning::Tag (${{ steps.version.outputs.tag }}) does not match VERSION file (${{ steps.ver.outputs.file_version }}). Proceeding with tag version."
+          fi
+
+      # ---- STEP 4: Find your pre-written release notes ----
+      - name: Find release notes file
+        id: notes
+        run: |
+          NOTES_FILE="docs/release-notes/${{ steps.version.outputs.major_minor }}/${{ steps.version.outputs.tag }}/${{ steps.version.outputs.tag }}_releaseNotes.md"
+          if [ -f "$NOTES_FILE" ]; then
+            echo "file=$NOTES_FILE" >> "$GITHUB_OUTPUT"
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No release notes found at $NOTES_FILE — will auto-generate."
+          fi
+
+      # ---- STEP 5: Detect release type from CHANGELOG ----
+      # Looks for "Release type: Feature" (or Patch/Maintenance/etc.) in the
+      # CHANGELOG entry to use as the release title suffix.
+      - name: Detect release type from CHANGELOG
+        id: reltype
+        run: |
+          TYPE=$(grep -A5 "^\#\# \[${{ steps.version.outputs.ver }}\]" CHANGELOG.md 2>/dev/null \
+            | grep -oP 'Release type: \K.*' | head -1 || echo "")
+          if [ -z "$TYPE" ]; then
+            TYPE="Release"
+          fi
+          echo "type=$TYPE" >> "$GITHUB_OUTPUT"
+
+      # ---- STEP 6a: Create release using your notes file ----
+      - name: Create GitHub Release (with notes file)
+        if: steps.notes.outputs.found == 'true'
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --title "EHRM Training App ${{ steps.version.outputs.tag }} — ${{ steps.reltype.outputs.type }}" \
+            --notes-file "${{ steps.notes.outputs.file }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ---- STEP 6b: Fallback — auto-generate from commit history ----
+      - name: Create GitHub Release (generate notes)
+        if: steps.notes.outputs.found == 'false'
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --title "EHRM Training App ${{ steps.version.outputs.tag }}" \
+            --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,49 +1,210 @@
-﻿# DISABLED (2026-05-28): repo-management automation temporarily deactivated.
-name: Power Platform CI (DISABLED)
+﻿# ============================================================================
+# WORKFLOW: Power Platform CI
+# ============================================================================
+#
+# PURPOSE:
+#   Validates the integrity of Power Platform source artifacts whenever they
+#   change. This is the project's primary continuous integration (CI) workflow.
+#   It checks that unpacked Canvas app and Power Automate flow JSON files are
+#   valid and parseable, and attempts to pack the solution if unpacked solution
+#   files exist under config/solutions/.
+#
+# WHAT "CI" MEANS:
+#   CI = Continuous Integration. Every time you push code or open a PR, this
+#   workflow runs automatically to catch problems early — before they reach
+#   the main branch. Think of it as an automated quality gate.
+#
+# HOW IT WORKS (execution order):
+#   1. Checks out the repo code on a Windows runner (required for PAC CLI).
+#   2. Installs the Power Platform CLI tools (pac).
+#   3. Validates Canvas app: checks CanvasManifest.json exists and is valid,
+#      then validates ALL .json files under src/powerApps/.unpacked/.
+#   4. Validates Power Automate flows: checks all .json files under
+#      src/powerAutomate/AppUserList/.unpacked/ and .json/ folders.
+#   5. If an unpacked solution exists at config/solutions/EHRMTrainingBooking/,
+#      attempts to pack it into a .zip (this folder doesn't exist yet — it's
+#      forward-looking for when you start unpacking solutions there).
+#
+# TRIGGERS:
+#   - push to main: runs after a PR is merged to main, if Power Platform
+#     files were changed.
+#   - pull_request to main: runs on PRs that touch Power Platform files,
+#     giving you a pass/fail check before merge.
+#   - workflow_dispatch: lets you trigger it manually from the Actions tab
+#     (useful for testing or re-running after a transient failure).
+#
+# PATH FILTERS:
+#   The "paths:" section means this workflow ONLY runs when files under
+#   these specific directories are changed. Documentation-only PRs won't
+#   trigger it — saving GitHub Actions minutes.
+#
+# TROUBLESHOOTING:
+#   - "No Canvas app unpacked source found" → Expected if src/powerApps/
+#     .unpacked/ was removed or renamed. Check the folder exists.
+#   - "Invalid JSON" errors → A .json file has syntax errors. Open it locally
+#     and look for missing commas, unclosed braces, or encoding issues.
+#     Common after manual edits to unpacked Power Platform artifacts.
+#   - "No unpacked solution found" → config/solutions/EHRMTrainingBooking/
+#     doesn't exist yet. This is normal — you haven't unpacked a solution
+#     there. The step gracefully skips.
+#   - Pack Solution fails → The unpacked solution structure may be incomplete
+#     or corrupted. Try re-exporting and unpacking from Power Platform.
+#   - "actions-install@v1 failed" → GitHub's Power Platform action may be
+#     temporarily unavailable. Re-run the workflow after a few minutes.
+#
+# RUNNER:
+#   Uses windows-latest because the PAC CLI and pack-solution action
+#   require Windows. Other workflows in this repo use ubuntu-latest.
+# ============================================================================
+
+name: Power Platform CI
+
+# --- GLOBAL PERMISSIONS ---
+# This workflow only needs to read the repo contents (no write operations).
 permissions:
   contents: read
 
+# --- TRIGGER SECTION ---
 on:
-  workflow_dispatch: {}
-  # push:
-  #   branches: ["main"]
+  # Run when Power Platform files are pushed to main (post-merge)
+  push:
+    branches: ["main"]
+    paths:
+      - "config/solutions/EHRMTrainingBooking/**"
+      - "src/powerApps/**"
+      - "src/powerAutomate/**"
 
+  # Run on PRs targeting main that touch Power Platform files (pre-merge check)
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "config/solutions/EHRMTrainingBooking/**"
+      - "src/powerApps/**"
+      - "src/powerAutomate/**"
+
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+
+# --- JOB SECTION ---
 jobs:
   validate-and-pack:
-    if: ${{ false }}
     runs-on: windows-latest
     steps:
+      # ---- STEP 1: Get the code ----
       - name: Checkout
         uses: actions/checkout@v4
 
+      # ---- STEP 2: Install PAC CLI ----
+      # The microsoft/powerplatform-actions suite provides pac commands
+      # for packing/unpacking solutions and canvas apps.
       - name: Install Power Platform Tools
         uses: microsoft/powerplatform-actions/actions-install@v1
+
+      # ---- STEP 3: Canvas app validation ----
+      # Check that the unpacked Canvas app manifest exists. This is the
+      # entry point file that pac canvas pack reads to rebuild the .msapp.
+      - name: Validate Canvas app unpacked source exists
+        id: canvascheck
+        shell: pwsh
+        run: |
+          $manifest = Join-Path "${{ github.workspace }}" "src/powerApps/.unpacked/CanvasManifest.json"
+          if (Test-Path $manifest) {
+            echo "found=true" >> $env:GITHUB_OUTPUT
+            Write-Host "Canvas app unpacked source found at src/powerApps/.unpacked/"
+          } else {
+            echo "found=false" >> $env:GITHUB_OUTPUT
+            Write-Host "No Canvas app unpacked source found. Skipping canvas validation."
+          }
+
+      # Validate the manifest file itself is parseable JSON
+      - name: Validate Canvas app manifest is valid JSON
+        if: steps.canvascheck.outputs.found == 'true'
+        shell: pwsh
+        run: |
+          $manifest = Join-Path "${{ github.workspace }}" "src/powerApps/.unpacked/CanvasManifest.json"
+          try {
+            Get-Content $manifest -Raw | ConvertFrom-Json | Out-Null
+            Write-Host "CanvasManifest.json is valid JSON."
+          } catch {
+            Write-Error "CanvasManifest.json is not valid JSON: $_"
+            exit 1
+          }
+
+      # Validate ALL JSON files in the unpacked canvas app tree.
+      # This catches corrupted DataSources/, EditorState/, Connections/ files.
+      - name: Validate all Canvas app JSON files
+        if: steps.canvascheck.outputs.found == 'true'
+        shell: pwsh
+        run: |
+          $errors = 0
+          Get-ChildItem -Path "src/powerApps/.unpacked" -Recurse -Filter "*.json" | ForEach-Object {
+            try {
+              Get-Content $_.FullName -Raw | ConvertFrom-Json | Out-Null
+            } catch {
+              Write-Error "Invalid JSON: $($_.FullName) — $_"
+              $errors++
+            }
+          }
+          if ($errors -gt 0) { exit 1 }
+          Write-Host "All Canvas app JSON files are valid."
+
+      # ---- STEP 4: Power Automate flow validation ----
+      # Validates JSON files in both the unpacked flow definition and
+      # the exported .json template for the AppUserList flow.
+      - name: Validate Power Automate flow JSON
+        shell: pwsh
+        run: |
+          $flowDirs = @(
+            "src/powerAutomate/AppUserList/.unpacked",
+            "src/powerAutomate/AppUserList/.json"
+          )
+          $errors = 0
+          foreach ($dir in $flowDirs) {
+            if (Test-Path $dir) {
+              Get-ChildItem -Path $dir -Recurse -Filter "*.json" | ForEach-Object {
+                try {
+                  Get-Content $_.FullName -Raw | ConvertFrom-Json | Out-Null
+                } catch {
+                  Write-Error "Invalid JSON: $($_.FullName) — $_"
+                  $errors++
+                }
+              }
+            }
+          }
+          if ($errors -gt 0) { exit 1 }
+          Write-Host "All Power Automate flow JSON files are valid."
+
+      # ---- STEP 5: Solution pack (future-proofing) ----
+      # This section will activate once you unpack a Power Platform solution
+      # to config/solutions/EHRMTrainingBooking/ using:
+      #   pac solution unpack --zipfile dist/release/EHRMTrainingBooking_Solution.zip \
+      #     --folder config/solutions/EHRMTrainingBooking --overwrite true
+      # Until then, these steps gracefully skip.
 
       - name: Ensure dist/release exists
         run: |
           New-Item -ItemType Directory -Force -Path "${{ github.workspace }}\dist\release" | Out-Null
 
+      # Check for the Customizations.xml file that indicates a valid unpacked solution
       - name: Check for unpacked solution files
         id: solcheck
         shell: pwsh
         run: |
-          $file = Join-Path "${{ github.workspace }}" "src/solutions/EHRMTrainingBooking/Other/Customizations.xml"
+          $file = Join-Path "${{ github.workspace }}" "config/solutions/EHRMTrainingBooking/Other/Customizations.xml"
           if (Test-Path $file) {
             echo "found=true" >> $env:GITHUB_OUTPUT
+            Write-Host "Unpacked solution found at config/solutions/EHRMTrainingBooking/"
           } else {
             echo "found=false" >> $env:GITHUB_OUTPUT
-            Write-Host "No unpacked solution found at src/solutions/EHRMTrainingBooking. Skipping pack."
+            Write-Host "No unpacked solution found at config/solutions/EHRMTrainingBooking/. Skipping pack."
           }
 
-      - name: Pack Solution from src
+      # Pack the unpacked solution back into a .zip to verify it's valid.
+      # The .zip is NOT committed — dist/ is git-ignored.
+      - name: Pack Solution from config
         if: steps.solcheck.outputs.found == 'true'
         uses: microsoft/powerplatform-actions/pack-solution@v1
         with:
-          solution-folder: '${{ github.workspace }}\src\solutions\EHRMTrainingBooking'
+          solution-folder: '${{ github.workspace }}\config\solutions\EHRMTrainingBooking'
           solution-file: '${{ github.workspace }}\dist\release\EHRMTrainingBooking_Solution.zip'
           solution-type: "Unmanaged"
-
-      - name: Create empty artifact notice
-        if: steps.solcheck.outputs.found == 'false'
-        run: |
-          echo "Solution not packed: missing unpacked files." > '${{ github.workspace }}\dist\release\README.txt'

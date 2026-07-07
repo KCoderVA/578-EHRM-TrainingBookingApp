@@ -1,29 +1,82 @@
-# This workflow warns and then closes issues and PRs that have had no activity for a specified amount of time.
+# ============================================================================
+# WORKFLOW: Mark stale issues and pull requests
+# ============================================================================
 #
-# You can adjust the behavior by modifying this file.
-# For more information, see:
-# https://github.com/actions/stale
+# PURPOSE:
+#   Automatically labels and eventually closes issues and PRs that have gone
+#   inactive for too long. Prevents forgotten work items from accumulating.
+#
+# HOW IT WORKS:
+#   1. Runs on a weekly schedule (every Monday at 4:43 AM UTC).
+#   2. Scans all open issues and PRs for activity (comments, commits, etc.).
+#   3. If no activity for 90 days → adds a "stale" label + posts a warning.
+#   4. If still no activity after 30 more days → automatically closes it.
+#   5. If you add a comment or remove the stale label, the timer resets.
+#
+# SOLO-DEVELOPER TUNING:
+#   - 90-day stale window (not the default 30) — you may go weeks between
+#     working sessions on this project, and that's normal.
+#   - 30-day close window (not the default 7) — plenty of time to respond.
+#   - Runs weekly (not daily) — saves GitHub Actions minutes.
+#   - Exempts "in-progress", "pinned", and "blocked" labels — add these to
+#     any issue/PR you want to keep open indefinitely.
+#
+# TRIGGER:
+#   - schedule (cron): runs every Monday at 4:43 AM UTC.
+#   - workflow_dispatch: manual trigger from the Actions tab.
+#
+# KEEPING AN ITEM OPEN:
+#   - Add any comment (even just "still working on this").
+#   - Remove the stale label manually.
+#   - Add the "in-progress", "pinned", or "blocked" label.
+#
+# TROUBLESHOOTING:
+#   - Items closing too fast? → Increase days-before-stale or days-before-close.
+#   - Want to exempt more labels? → Add them to exempt-issue-labels/exempt-pr-labels.
+#   - Workflow not running? → Scheduled workflows only run on the default branch.
+#     If main has no commits for 60+ days, GitHub disables scheduled workflows.
+#     Re-enable via Actions tab or push any commit.
+#
+# DOCS: https://github.com/actions/stale
+# ============================================================================
+
 name: Mark stale issues and pull requests
 
+# --- TRIGGER SECTION ---
+# Cron syntax: minute hour day-of-month month day-of-week
+# "43 4 * * 1" = every Monday at 4:43 AM UTC
 on:
-  workflow_dispatch: {}
-  # schedule:
-  # - cron: '43 4 * * *'
+  schedule:
+    - cron: "43 4 * * 1"
+  workflow_dispatch:
 
+# --- JOB SECTION ---
 jobs:
   stale:
-    if: ${{ false }}
-
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
 
     steps:
-      - uses: actions/stale@v5
+      - uses: actions/stale@v9
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          stale-issue-message: "Stale issue message"
-          stale-pr-message: "Stale pull request message"
+
+          # How many days of inactivity before marking as stale
+          days-before-stale: 90
+
+          # How many days after the stale label before auto-closing
+          days-before-close: 30
+
+          # Warning messages posted when an item is marked stale
+          stale-issue-message: "This issue has had no activity for 90 days and has been marked stale. It will be closed in 30 days if no further activity occurs. Remove the `no-issue-activity` label to keep it open."
+          stale-pr-message: "This PR has had no activity for 90 days and has been marked stale. It will be closed in 30 days if no further activity occurs. Remove the `no-pr-activity` label to keep it open."
+
+          # Labels applied when items go stale
           stale-issue-label: "no-issue-activity"
           stale-pr-label: "no-pr-activity"
+
+          # Items with these labels are NEVER marked stale
+          exempt-issue-labels: "in-progress,pinned,blocked"
+          exempt-pr-labels: "in-progress,blocked"

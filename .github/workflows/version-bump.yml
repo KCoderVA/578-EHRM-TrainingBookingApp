@@ -1,0 +1,292 @@
+# ============================================================================
+# WORKFLOW: Version Bump
+# ============================================================================
+#
+# PURPOSE:
+#   One-click version scaffolding. When you're ready to start a new release,
+#   this workflow updates ALL version references across the repo, creates
+#   the release notes folder with template files, and opens a draft PR —
+#   all from the GitHub Actions tab.
+#
+# HOW TO USE:
+#   1. Go to: GitHub repo → Actions tab → "Version Bump" → "Run workflow"
+#   2. Enter the new version number (e.g., "0.3.0") — no "v" prefix.
+#   3. Enter a release type label (e.g., "Feature", "Patch", "Maintenance").
+#   4. Click "Run workflow".
+#   5. The workflow creates a branch, updates files, and opens a draft PR.
+#   6. You fill in the release notes templates and CHANGELOG details.
+#   7. Mark the PR as ready and merge.
+#
+# WHAT IT UPDATES AUTOMATICALLY:
+#   - VERSION file → new version number
+#   - README.md → version badge + "Current versions" line
+#   - docs/PROJECT_STATUS.md → status summary header + release history table
+#   - CHANGELOG.md → new version section with template structure
+#   - docs/release-notes/vX.Y.x/vX.Y.Z/ → creates folder with 3 template files:
+#       - vX.Y.Z_commitMessage.md
+#       - vX.Y.Z_pullRequest.md
+#       - vX.Y.Z_releaseNotes.md
+#
+# WHAT YOU STILL DO MANUALLY:
+#   - Fill in the release notes templates (the "what changed" details)
+#   - Complete the CHANGELOG.md Added/Changed/Fixed sections
+#   - Review and merge the PR
+#   - Push the version tag (git tag v0.3.0 && git push --tags)
+#
+# INPUTS:
+#   - new_version (required): The new SemVer number, e.g., "0.3.0"
+#   - release_type (optional): A label like "Feature", "Patch", etc.
+#     Defaults to "Patch" if not specified.
+#
+# HOW IT READS/WRITES THE VERSION FILE:
+#   - Reads: cat VERSION → gets current version (e.g., "0.2.1")
+#   - Writes: echo "0.3.0" > VERSION → updates to new version
+#   - All other files are updated using sed (stream editor) to find-and-replace
+#     version patterns in-place.
+#
+# BRANCH NAMING:
+#   Creates a branch named "pr/v0.3.0-release" following your existing
+#   convention from v5_manualRepoManagement.md.
+#
+# TROUBLESHOOTING:
+#   - "Invalid version format" error → You entered something that isn't
+#     MAJOR.MINOR.PATCH (e.g., "v0.3.0" with the v prefix, or "0.3").
+#   - README/PROJECT_STATUS not updated? → The sed patterns may not match
+#     if the file format changed. Check the regex patterns in the workflow.
+#   - Branch already exists? → A previous version-bump run for the same
+#     version wasn't cleaned up. Delete the branch: git push origin --delete pr/v0.3.0-release
+#   - CHANGELOG section in wrong place? → The sed command looks for the
+#     first "---" separator. If the CHANGELOG format changed significantly,
+#     the insertion point may be wrong. Edit manually after the PR is created.
+#
+# SECURITY NOTE:
+#   This workflow has contents:write and pull-requests:write permissions
+#   because it creates commits and PRs. It uses the built-in GITHUB_TOKEN,
+#   not a personal access token.
+# ============================================================================
+
+# Bump the project version, update all version references, scaffold release notes,
+# and create a draft PR — all from a single manual trigger.
+name: Version Bump
+
+# --- TRIGGER SECTION ---
+# workflow_dispatch = manual trigger only (from the Actions tab).
+# The "inputs" block creates a form in the GitHub UI where you enter values.
+on:
+  workflow_dispatch:
+    inputs:
+      new_version:
+        description: 'New version number (SemVer, without "v" prefix, e.g. 0.3.0)'
+        required: true
+        type: string
+      release_type:
+        description: "Brief release type label (e.g. Feature, Patch, Documentation, Maintenance)"
+        required: false
+        default: "Patch"
+        type: string
+
+# --- PERMISSIONS ---
+permissions:
+  contents: write
+  pull-requests: write
+
+# --- JOB SECTION ---
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    env:
+      NEW_VER: ${{ inputs.new_version }}
+      REL_TYPE: ${{ inputs.release_type }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ---- STEP 1: Read the current version from VERSION file ----
+      - name: Read current version
+        id: current
+        run: |
+          CUR=$(cat VERSION | tr -d '[:space:]')
+          echo "version=$CUR" >> "$GITHUB_OUTPUT"
+          echo "Current version: $CUR"
+
+      # ---- STEP 2: Validate the new version is proper SemVer ----
+      - name: Validate new version format
+        run: |
+          if ! echo "$NEW_VER" | grep -qP '^\d+\.\d+\.\d+$'; then
+            echo "::error::Invalid version format '$NEW_VER'. Must be MAJOR.MINOR.PATCH (e.g. 0.3.0)"
+            exit 1
+          fi
+          echo "New version: $NEW_VER"
+
+      # ---- STEP 3: Compute derived variables ----
+      # TAG = "v0.3.0", MAJOR_MINOR = "v0.3.x", branch = "pr/v0.3.0-release"
+      - name: Compute version variables
+        id: vars
+        run: |
+          TAG="v${NEW_VER}"
+          MAJOR_MINOR="v${NEW_VER%.*}.x"
+          TODAY=$(date +%Y-%m-%d)
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "major_minor=$MAJOR_MINOR" >> "$GITHUB_OUTPUT"
+          echo "date=$TODAY" >> "$GITHUB_OUTPUT"
+          echo "branch=pr/${TAG}-release" >> "$GITHUB_OUTPUT"
+
+      # ---- STEP 4: Update VERSION file ----
+      # This is the single source of truth. All other updates derive from it.
+      - name: Update VERSION file
+        run: echo "$NEW_VER" > VERSION
+
+      # ---- STEP 5: Update README.md ----
+      # Uses sed (stream editor) to find-and-replace version patterns.
+      # The "|" delimiter is used instead of "/" to avoid escaping slashes.
+      - name: Update README.md version badge
+        run: |
+          sed -i "s|release-v[0-9]*\.[0-9]*\.[0-9]*-blue|release-v${NEW_VER}-blue|g" README.md
+
+      - name: Update README.md current version line
+        run: |
+          sed -i "s|Project release (repo)\*\*: v[0-9]*\.[0-9]*\.[0-9]* ([0-9-]*)|Project release (repo)**: v${NEW_VER} (${{ steps.vars.outputs.date }})|g" README.md
+
+      # ---- STEP 6: Update PROJECT_STATUS.md ----
+      - name: Update PROJECT_STATUS.md status summary
+        run: |
+          sed -i "s|## Status summary (v[0-9]*\.[0-9]*\.[0-9]*)|## Status summary (v${NEW_VER})|g" docs/PROJECT_STATUS.md
+          sed -i "s|Project release\*\*: v[0-9]*\.[0-9]*\.[0-9]* ([0-9-]*)|Project release**: v${NEW_VER} (${{ steps.vars.outputs.date }})|g" docs/PROJECT_STATUS.md
+
+      - name: Add version to PROJECT_STATUS.md release history table
+        run: |
+          # Insert new row after the table header separator
+          sed -i "/^|---------|------|------|$/a | v${NEW_VER} | ${{ steps.vars.outputs.date }} | ${REL_TYPE} |" docs/PROJECT_STATUS.md
+
+      # ---- STEP 7: Add new CHANGELOG.md section ----
+      # Inserts a new version block with template headings between the
+      # [Unreleased] section and the previous version entry.
+      - name: Add new CHANGELOG.md section
+        run: |
+          # Insert the new version section between [Unreleased] block and the previous version
+          sed -i "/^---$/!b;n;/^$/!b;a\\
+          ## [${NEW_VER}] - ${{ steps.vars.outputs.date }}\\
+          \\
+          ### Added\\
+          \\
+          ### Changed\\
+          \\
+          ### Fixed\\
+          \\
+          ### Notes\\
+          \\
+          - Release type: ${REL_TYPE}\\
+          - Canvas app baseline remains v0.0.2\\
+          - AppUserList flow baseline remains v0.1.0\\
+          \\
+          ---" CHANGELOG.md
+
+      # ---- STEP 8: Create release notes folder and templates ----
+      # Creates the version-specific folder under docs/release-notes/ and
+      # populates it with three template files matching your naming convention:
+      #   - vX.Y.Z_commitMessage.md  (for git commit -F)
+      #   - vX.Y.Z_pullRequest.md    (for gh pr create --body-file)
+      #   - vX.Y.Z_releaseNotes.md   (for gh release create --notes-file)
+      # These contain placeholder sections for you to fill in.
+      - name: Create release notes folder and templates
+        run: |
+          DIR="docs/release-notes/${{ steps.vars.outputs.major_minor }}/${{ steps.vars.outputs.tag }}"
+          mkdir -p "$DIR"
+
+          cat > "$DIR/${{ steps.vars.outputs.tag }}_commitMessage.md" << 'COMMIT_EOF'
+          ${{ inputs.release_type }}(release): v${{ inputs.new_version }} — <short description>
+
+          ## Context
+
+          This change set prepares the **EHRM Training & Booking App** repository for the **v${{ inputs.new_version }}** release.
+
+          ## What changed
+
+          <!-- Describe changes here -->
+
+          ### Notes
+
+          - Canvas app baseline remains v0.0.2
+          - `AppUserList` flow baseline remains v0.1.0
+          COMMIT_EOF
+
+          cat > "$DIR/${{ steps.vars.outputs.tag }}_pullRequest.md" << 'PR_EOF'
+          # PR: v${{ inputs.new_version }} — ${{ inputs.release_type }}
+
+          ## Summary
+
+          This PR prepares the **EHRM Training & Booking App** repo for the **v${{ inputs.new_version }}** release.
+
+          ## Changes at a glance
+
+          | Area | What changed |
+          |------|--------------|
+          | <!-- area --> | <!-- description --> |
+
+          ## Verification
+
+          - [ ] `VERSION` file reads `${{ inputs.new_version }}`
+          - [ ] `README.md` badge shows v${{ inputs.new_version }}
+          - [ ] `CHANGELOG.md` has a `[${{ inputs.new_version }}]` entry
+          - [ ] `docs/PROJECT_STATUS.md` summary shows v${{ inputs.new_version }}
+          - [ ] Release notes exist at `docs/release-notes/`
+          PR_EOF
+
+          cat > "$DIR/${{ steps.vars.outputs.tag }}_releaseNotes.md" << 'NOTES_EOF'
+          # EHRM Training & Booking App — Release Notes (v${{ inputs.new_version }})
+
+          - **Release date**: ${{ steps.vars.outputs.date }}
+          - **Release type**: ${{ inputs.release_type }}
+          - **Previous release**: v${{ steps.current.outputs.version }}
+
+          ## Executive summary
+
+          <!-- Describe this release -->
+
+          ## Highlights
+
+          - <!-- highlight 1 -->
+
+          ## Changes
+
+          ### Changed
+
+          - <!-- change 1 -->
+
+          ## Component baselines (unchanged)
+
+          - Canvas app: v0.0.2
+          - `AppUserList` flow: v0.1.0
+          NOTES_EOF
+
+      # ---- STEP 9: Create branch and commit ----
+      # Uses the github-actions[bot] identity so the commit is attributed
+      # to the workflow, not to your personal account. Creates a branch
+      # following your "pr/vX.Y.Z-release" naming convention.
+      - name: Create branch and commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "${{ steps.vars.outputs.branch }}"
+          git add --all
+          git commit -m "chore: bump version to v${NEW_VER} and scaffold release notes"
+          git push --set-upstream origin "${{ steps.vars.outputs.branch }}"
+
+      # ---- STEP 10: Create draft PR ----
+      # Opens a draft PR so you can review the automated changes before
+      # merging. The PR body includes next-step instructions.
+      - name: Create draft PR
+        run: |
+          gh pr create \
+            --draft \
+            --base main \
+            --head "${{ steps.vars.outputs.branch }}" \
+            --title "release: v${NEW_VER} — ${REL_TYPE}" \
+            --body "Auto-generated version bump from v${{ steps.current.outputs.version }} → v${NEW_VER}.
+
+          **Next steps:**
+          1. Fill in the release notes templates under \`docs/release-notes/${{ steps.vars.outputs.major_minor }}/${{ steps.vars.outputs.tag }}/\`
+          2. Complete the \`CHANGELOG.md\` entry
+          3. Mark PR as ready and merge"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
