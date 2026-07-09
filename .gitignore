@@ -13,9 +13,10 @@
 # ------------------------------------------------------------
 # 2. Developer-only / local docs & logs
 # ------------------------------------------------------------
-docs/local/
-docs/logs/
-assets/screenshots/
+/docs/local/
+/docs/logs/
+/assets/screenshots/
+/optionalGUI/
 
 # ------------------------------------------------------------
 # 3. Local-only configs & secrets

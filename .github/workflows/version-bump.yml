@@ -287,6 +287,8 @@ jobs:
           **Next steps:**
           1. Fill in the release notes templates under \`docs/release-notes/${{ steps.vars.outputs.major_minor }}/${{ steps.vars.outputs.tag }}/\`
           2. Complete the \`CHANGELOG.md\` entry
-          3. Mark PR as ready and merge"
+          3. Mark PR as ready and merge" \
+            --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_HOST: ${{ github.server_url && 'va.ghe.com' }}

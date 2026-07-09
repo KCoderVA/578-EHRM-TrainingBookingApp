@@ -1,12 +1,12 @@
 ﻿# EHRM Training & Booking App (Station 578)
 
-[![Release](https://img.shields.io/badge/release-v0.3.1-blue)](CHANGELOG.md)
+[![Release](https://img.shields.io/badge/release-v0.3.2-blue)](CHANGELOG.md)
 
 This repository contains the **unpacked (source-controlled)** Microsoft Power Platform assets, documentation, and ALM helpers for the EHRM Training & Booking App used at Edward Hines Jr. VA Hospital (Station #578), VISN12.
 
 ## Current versions
 
-- **Project release (repo)**: v0.3.1 (2026-07-07) — see [CHANGELOG.md](CHANGELOG.md)
+- **Project release (repo)**: v0.3.2 (2026-07-07) — see [CHANGELOG.md](CHANGELOG.md)
 - **Canvas app (component)**: v0.0.2 — see [src/powerApps/README.md](src/powerApps/README.md)
 - **Power Automate (component)**: `AppUserList` v0.1.0 — see [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md)
 
