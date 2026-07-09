@@ -190,20 +190,20 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           CHECKLIST_BODY: ${{ steps.checklist.outputs.body }}
 
-  # ---- JOB 3: Request Copilot code review (best-effort) ----
-  # This job requests GitHub Copilot as a reviewer on the PR.
-  # continue-on-error: true means if Copilot isn't available or enabled,
-  # the overall workflow still succeeds. It fails silently.
+  # ---- JOB 3: Request Copilot code review (DISABLED on GHES) ----
+  # Copilot code review is not available on GitHub Enterprise Server (va.ghe.com).
+  # This job is commented out to avoid a misleading red X in PR checks.
+  # To re-enable when Copilot code review becomes available on GHES:
+  #   1. Uncomment the job below
+  #   2. Enable at: Settings → Code security and analysis → Copilot code review
   #
-  # To enable Copilot code reviews:
-  #   Settings → Code security and analysis → Copilot code review → Enable
-  request-copilot-review:
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - name: Request Copilot review
-        run: gh pr edit "$PR_NUMBER" --add-reviewer "copilot" --repo "$GH_REPO"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_HOST: ${{ github.server_url && 'va.ghe.com' }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+  # request-copilot-review:
+  #   runs-on: ubuntu-latest
+  #   continue-on-error: true
+  #   steps:
+  #     - name: Request Copilot review
+  #       run: gh pr edit "$PR_NUMBER" --add-reviewer "copilot" --repo "$GH_REPO"
+  #       env:
+  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         GH_HOST: ${{ github.server_url && 'va.ghe.com' }}
+  #         PR_NUMBER: ${{ github.event.pull_request.number }}

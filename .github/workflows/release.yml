@@ -129,9 +129,11 @@ jobs:
         run: |
           gh release create "${{ steps.version.outputs.tag }}" \
             --title "EHRM Training App ${{ steps.version.outputs.tag }} — ${{ steps.reltype.outputs.type }}" \
-            --notes-file "${{ steps.notes.outputs.file }}"
+            --notes-file "${{ steps.notes.outputs.file }}" \
+            --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_HOST: ${{ github.server_url && 'va.ghe.com' }}
 
       # ---- STEP 6b: Fallback — auto-generate from commit history ----
       - name: Create GitHub Release (generate notes)
@@ -139,6 +141,8 @@ jobs:
         run: |
           gh release create "${{ steps.version.outputs.tag }}" \
             --title "EHRM Training App ${{ steps.version.outputs.tag }}" \
-            --generate-notes
+            --generate-notes \
+            --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_HOST: ${{ github.server_url && 'va.ghe.com' }}

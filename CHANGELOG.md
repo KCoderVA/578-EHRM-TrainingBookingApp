@@ -19,6 +19,22 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.3.2] - 2026-07-07
+
+### Fixed
+
+- **`release.yml`** — added `GH_HOST` and `--repo` flags for GHES compatibility (would have failed with 401 on first tag push).
+- **`version-bump.yml`** — added `GH_HOST` and `--repo` flags for GHES compatibility (would have failed with 401 on first version bump).
+- **`pr-auto-setup.yml`** — disabled Copilot review job (not available on GHES; was producing a misleading red X on every PR).
+
+### Notes
+
+- Release type: Patch
+- Canvas app baseline remains v0.0.2
+- `AppUserList` flow baseline remains v0.1.0
+
+---
+
 ## [0.3.1] - 2026-07-07
 
 ### Added
