@@ -5,25 +5,50 @@
     Width: =Max(App.Width, App.DesignWidth)
 
     bgRounded_13 As htmlViewer:
-        Height: =640
+        Height: |-
+            =//640
+            HtmlText1.Height + 10
         HtmlText: |-
-            ="<div style='border-radius:10%;height:800px;width:100%;background-color:#FCFCFC'></div>"
-        Width: =610
-        X: =15
-        ZIndex: =3
+            =//"<div style='border-radius:10%;height:800px;width:100%;background-color:#FCFCFC'></div>"
+            "<div style='border-radius:10%;height:590px;width:100%;background-color:#FCFCFC'></div>"
+        Width: |-
+            =//610
+            HtmlText1.Width + 20
+        X: |-
+            =//15
+            HtmlText1.X - 20
+        Y: =HtmlText1.Y - 15
+        ZIndex: =1
+
+    HtmlText1 As htmlViewer:
+        Height: |-
+            =//640
+            Parent.Height - Image2_10.Y - Image2_10.Height - 25
+        HtmlText: |-
+            ="<p>New Features:</p><ul><li>Disable the selection of previous days on the calendar</li><li>Added ability to restrict the calendar selection to X days in the future</li><li>Added Manage Desk Screens</li><li>Added View Reservation Screen</li></ul><p>Bug Fixes/Optimizations</p><ul><li>Clear out selections after confirmation</li><li>Optimize time dropdowns</li><li>Fix time zone issues</li></ul>"
+        Size: =12
+        Width: |-
+            =//560
+            Parent.Width - 50
+        X: |-
+            =//40
+            25
+        Y: |-
+            =//0
+            Image2_10.Y + Image2_10.Height + 20
+        ZIndex: =2
 
     lblSuccess_2 As label:
-        Align: =Align.Center
         BorderColor: =App.Theme.Colors.Darker40
         Color: =RGBA(255, 255, 255, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         Font: =App.Theme.Font
         FontWeight: =FontWeight.Bold
-        Height: =113
+        Height: =Image2_10.Height
         Size: =32
-        Text: ="Release Notes"
-        Width: =640
-        ZIndex: =8
+        Text: ="   Release Notes"
+        Width: =Image2_10.Width
+        ZIndex: =5
 
     Tabs_11 As Tabs:
         Items: |-
@@ -53,17 +78,9 @@
                     Visible:true
                 }
             )
-        Y: =520
-        ZIndex: =9
-
-    HtmlText1 As htmlViewer:
-        Height: =640
-        HtmlText: |-
-            ="<p>New Features:</p><ul><li>Disable the selection of previous days on the calendar</li><li>Added ability to restrict the calendar selection to X days in the future</li><li>Added Manage Desk Screens</li><li>Added View Reservation Screen</li></ul><p>Bug Fixes/Optimizations</p><ul><li>Clear out selections after confirmation</li><li>Optimize time dropdowns</li><li>Fix time zone issues</li></ul>"
-        Size: =20
-        Width: =560
-        X: =40
-        ZIndex: =10
+        Width: =600
+        X: =536
+        ZIndex: =6
 
     grpHeader_9 As group:
         Height: =5
@@ -76,16 +93,17 @@
             BorderColor: =App.Theme.Colors.Darker40
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =150
+            Height: =Tabs_11.Height
             Image: =abstractBackground
             ImagePosition: =ImagePosition.Fill
-            Width: =640
-            ZIndex: =1
+            Width: =Parent.Width
+            ZIndex: =3
 
         Rectangle2_9 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
             Fill: =RGBA(135, 78, 181, 0.65)
-            Height: =150
-            Width: =640
-            ZIndex: =2
+            Height: =Image2_10.Height
+            Width: =600
+            X: =536
+            ZIndex: =4
 

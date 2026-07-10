@@ -80,7 +80,7 @@ Screens:
         );
     Children:
       - Container1:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
             Height: =617
@@ -312,7 +312,7 @@ Screens:
                 Control: Classic/Button@2.2.0
                 Properties:
                   Height: =33
-                  OnSelect: =Navigate(scrn_WeeklyCal_1)
+                  OnSelect: =Navigate(scrn_DailyCal)
                   Size: =14
                   Text: ="Daily"
                   Visible: =!hideForPDF
@@ -334,7 +334,7 @@ Screens:
             Width: =62
             Y: =22
       - Container3:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
             Fill: =RGBA(255, 255, 255, 1)

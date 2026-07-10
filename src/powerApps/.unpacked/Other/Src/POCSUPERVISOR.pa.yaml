@@ -472,7 +472,7 @@ Screens:
                         Size: =12
                         Text: |-
                           ="OPTIONAL:    
-                               Free-text any additional comments, concerns, learning accommodations, or any other relavant information about this reservation in the box below:"
+                               Free-text any additional comments, concerns, learning accommodations, or any other relevant information about this reservation in the box below:"
                         Width: =DataCardValue1.Width
                         X: =30
                   - DataCardValue1:
@@ -560,11 +560,24 @@ Screens:
               //Set(varOptionalAttendees, Concat(OptionAttendeesPP.SelectedItems, Email, ";"));
               Set(varMeetCat, DropdownCanvas1.Selected.Value);
               Set(varReservePOC, DataCardValue7.Selected.Email); // CBMPeoplepicker
-              Set(varTitle, "BCVAMC EHRM Training Room & Desk Reservation"); //DataCardValue8.Text); // TBService
+              Set(varTitle, "Hines EHRM Training Room & Desk Reservation"); //DataCardValue8.Text); // TBService
               Set(varDescription, DataCardValue1.Text); // RDReason 
-              Set(varEmailBody, "***PLEASE DISREGARD THE COORDINATED UNIVERSAL TIME SHOWN ABOVE***<br><br> Please follow this Link to view your Desk Reservations: <br> https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/81adf8d2-7dfd-4915-9999-f28857d14a9c?tenantId=e95f1b23-abaf-45ee-821d-b7ab251ab3bf&hint=f71f21b7-125c-4ce7-ae22-e8815c50196f&sourcetime=1758755444988&source=portal <br> <br> ***FOLLOW THE LINK ABOVE and then Click on My Bookings or Click the BLUE button to see your Training Calander for your EHRM DESK RESERVATIONS THAT HAVE BEEN BOOKED*** <br>"); //DataCardValue1.Text); // RDReason
-              //Set(varURL,"https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/81adf8d2-7dfd-4915-9999-f28857d14a9c?tenantId=e95f1b23-abaf-45ee-821d-b7ab251ab3bf&hint=f71f21b7-125c-4ce7-ae22-e8815c50196f&sourcetime=1758755444988&source=portal#");
-              //Set(varURLName, "BCVAMC EHRM Training Desk Booking");
+              Set(
+                  varEmailBody,
+                  "You have a confirmed reservation for EHRM Training at the Edward Hines Jr. VA Hospital!
+                  <br>
+                  <br>
+                  Please follow this Link to view or cancel your EHRM Training reservations: 
+                  <br>
+                  https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079
+                  <br>
+                  <br>
+                  <i>***FOLLOW THE LINK ABOVE and then Click on My Bookings or Click the BLUE button to see your Training Calander for your EHRM DESK RESERVATIONS THAT HAVE BEEN BOOKED***<i>
+                  <br>"
+              );
+              Set(varURL,"https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079"
+              );
+              Set(varURLName, "578 EHRM Training App");
 
               Navigate(chkWeekDays)
             Size: |-

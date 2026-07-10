@@ -24,7 +24,7 @@ EditorState:
     - Screen3
     - scrn_MoCalendar
     - scrn_WeeklyCal
-    - scrn_WeeklyCal_1
+    - scrn_DailyCal
     - DebuggingScreen
     - Screen1
     - PDFScreen

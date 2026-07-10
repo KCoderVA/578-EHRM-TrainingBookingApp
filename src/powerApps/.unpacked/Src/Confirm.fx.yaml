@@ -34,7 +34,7 @@ Confirm As screen:
             colCombinedRecurrence
         Layout: =Layout.Vertical
         LoadingSpinner: =LoadingSpinner.Data
-        TemplateSize: =22
+        TemplateSize: =175
         Visible: =!varAccept3 And !varAccept4
         Width: =507
         X: =314
@@ -51,12 +51,18 @@ Confirm As screen:
             ZIndex: =1
 
         TextCanvas7_4 As Text:
+            AutoHeight: =false
             BorderColor: =
             DisplayMode: =DisplayMode.Edit
             Fill: =
             FontColor: =
-            Height: =20
-            Text: =ThisItem.Floor
+            Height: =173
+            Text: |-
+                ="Selected Training: "
+                & varMeetCat
+                & "
+                Selected Location: "
+                & varSelectedDesk.CombinedLocationDetails_multilinePlainText
             Width: =236
             X: =261
             Y: =2
@@ -186,13 +192,17 @@ Confirm As screen:
 
     Container2 As groupContainer.manualLayoutContainer:
         Height: =482
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
         RadiusTopRight: =4
         Visible: =varAccept3 Or varAccept4 ///varAccept2
-        Width: =696
-        X: =(Parent.Width - Self.Width) / 2
+        Width: =854
+        X: =164
         Y: =158
         ZIndex: =7
 
@@ -213,10 +223,17 @@ Confirm As screen:
                         Set(varAccept4, false)
                     )
                 )
-            Text: ="Accept"
-            Width: =696
-            X: =0
-            Y: =392
+            Text: |-
+                =If(varAccept3,
+                    "Accept Terms 
+                        & Conditions",
+                    //Else
+                    "Aknowledge My
+                    Responsibility"
+                )
+            Width: =277
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =Parent.Height - Self.Height - 10
             ZIndex: =2
 
         HtmlText3 As htmlViewer:
@@ -247,7 +264,7 @@ Confirm As screen:
                     "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:40px; border-radius:5px; text-align: center'>By acknowledging this, you accept responsibility for the EHRM VILT workstation and ensuring the desk is returned to its original state.</div>"
                 )
             Size: =13
-            Width: =696
+            Width: =Parent.Width
             ZIndex: =5
 
     Image2_4 As image:
@@ -281,7 +298,7 @@ Confirm As screen:
                 varTitle, // subject
                 varEventStartTime, // Start time,
                 varEventEndTime, // End time
-                "(UTC) Coordinated Universal Time",  // Time zone
+                "(UTC-06:00) Central Time",  // Time zone
                 {
                     // Main properties
                     requiredAttendees: varAttendees,
@@ -289,7 +306,7 @@ Confirm As screen:
                     ///resourceAttendees: "room@yourdomain.com", // Update with your room/resource email or variable
                     body: varEmailBody,
                     categories: varMeetCat,       
-                    location: First(colCombinedRecurrence).Floor, // Need proper value
+                    location: varSelectedDesk.CombinedLocationDetails_multilinePlainText, // Need proper value
                     importance: varImportance, // low, normal, high
                     isAllDay: false, // true if all day
                     recurrence: varRecurrence, // "weekly", "daily", etc.
@@ -319,13 +336,15 @@ Confirm As screen:
                         Defaults('Desk Reservations'),
                         {
                             // simple string concatenation for Title
-                            Title: DataCardValue3.Selected.DisplayName & " – " &  desk.Title & " @ " & Text(
+                            Title: DataCardValue3.Selected.DisplayName & " – " &  varMeetCat & " @ " & Text(
                                 rec.StartDateTime,
                                 "[$-en-US]mm/dd/yyyy hh:mm AM/PM" 
                             ),
-                            DeskText: desk.Title, 
+                            DeskText: varMeetCat, 
                             'Check Out From': rec.StartDateTime,
                             'Check Out To': rec.EndDateTime,
+                            'Check Out From Text': Text(rec.StartDateTime),
+                            'Check Out To Text': Text(rec.EndDateTime),
                             // use the people‐picker cards directly (they include Department, etc.)
                             'Reserved By': DataCardValue3.Selected,
                             Manager: DataCardValue7.Selected,
@@ -334,7 +353,7 @@ Confirm As screen:
                             Asset: desk.Asset,
                             DeskFloor: If(
                                 desk.Asset.Value = "Desk",
-                                desk.RoomLocation,
+                                desk.'Room Location',
                                 ""
                             ),
                             IsRecurring: If(varRecurrence = "None", false, true),
@@ -344,8 +363,9 @@ Confirm As screen:
                             ///RecurrenceTimes: varRecurringtimes,
                             RecurrenceID: varRecurrenceID,
                             MeetingCategory: varMeetCat,
-                            Description: varDescription
-                            //OptionalAttendees: OptionAttendeesPP.Selected
+                            Description: varDescription,
+                            //OptionalAttendees: OptionAttendeesPP.Selected,
+                            Floor: varSelectedDesk.FloorNumber_number
                         }
                     )   
                 )
@@ -380,7 +400,7 @@ Confirm As screen:
         PressedColor: =Self.Color
         PressedFill: =App.Theme.Colors.Darker40
         Size: =24
-        Text: ="Confirm"
+        Text: ="SUBMIT!"
         Underline: =true
         Visible: =!varAccept3 And !varAccept4
         Width: =200

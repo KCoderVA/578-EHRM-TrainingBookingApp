@@ -46,12 +46,13 @@ Screens:
           Control: HtmlViewer@2.1.0
           Properties:
             DisabledBorderColor: =RGBA(56, 56, 56, 1)
+            DisplayMode: =DisplayMode.View
             Font: =Font.'Open Sans'
-            Height: =501
+            Height: =Parent.Height - Self.Y
             HtmlText: ="<div style='border:1px gray;border-radius:10%;height:870px;width:100%;background-color:#FCFCFC'></div>"
             Size: =24
             Width: =1136
-            Y: =139
+            Y: =150
       - Tabs_8:
           Control: CanvasComponent
           ComponentName: Tabs
@@ -130,7 +131,8 @@ Screens:
             HintText: ="C4077 or Item"
             Size: =18
             Width: =293
-            Y: =277
+            X: =179
+            Y: =240
       - lblMapDesk:
           Control: Label@2.5.1
           Properties:
@@ -184,7 +186,61 @@ Screens:
             Fill: =RGBA(135, 78, 181, 1)
             FontWeight: =FontWeight.Bold
             HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: "=Set(\n    submitItem,\n    Blank()\n);\nSet(\n    submitItem,\n    Patch(\n        Desks,\n        Defaults(Desks),\n        {\n            Title: tbNameDesk.Text,\n            Asset: ddAsset.SelectedText,\n            'Room Location': tbFloorDesk.Text,\n            //DeskLocation: tbDeskLocation.Text,\n            RoomPicture: tbRoomPhoto.Text,\n            Active: toggleActive.Value,\n            'Map Link': tbMapDesk.Text,\n            Description: tbDescrDesk.Text\n            //SmartBoard: \"<img src='https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/smartboard.png'>\"\n            //SmartBoard: If(Checkbox1_6.Value = true,\"https://dvagov.sharepoint.com/:i:/r/sites/vhaaugroom/Assets/images/projector.png?csf=1&web=1&e=Hk3YcJ\",Blank()) // Ensure URL is correct\n           // Projector_x002f_TV: If(Checkbox1_8.Value, \"<img src='https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/vtel.png' alt='Projector/TV' />\", Blank()), // Ensure URL is correct\n           // VTel: If(Checkbox1_7.Value, \"<img src='https://dvagov.sharepoint.com/sites/vhaaugroom/SiteAssets/images/projector.png' alt='VTel' />\", Blank()) // Ensure URL is correct\n           \n            }\n    )\n);\nIf(\n    IsBlankOrError(submitItem),\n    Notify(\n        \"Something went wrong. Your item has not been submitted.\" & Last(Errors(Desks)).Message,\n        NotificationType.Error,\n        10000\n    ),\n    Notify(\n        \"Your item has been submitted. (ID: \" & submitItem.ID & \")\",\n        NotificationType.Success,\n        5000\n    );\n    Set(\n        currentItem,\n        submitItem\n    )\n);\nReset(tbFloorDesk);\nReset(tbNameDesk);\nReset(toggleActive);\nReset(tbDescrDesk);\nReset(tbMapDesk);\nReset(tbDeskLocation_2);\nReset(tbRoomPhoto);\nReset(ddAsset);\nReset(SmarBoardckb);\nReset(Vtelckb);\nReset(Ptvckb);\nNavigate(ManageDesks);\n"
+            OnSelect: |
+              =Set(
+                  submitItem,
+                  Blank()
+              );
+              Set(
+                  submitItem,
+                  Patch(
+                      Desks,
+                      Defaults(Desks),
+                      {
+                          Title: tbNameDesk.Text,
+                          Asset: ddAsset.SelectedText,
+                          'Room Location': tbFloorDesk.Text,
+                          //DeskLocation: tbDeskLocation.Text,
+                          RoomPicture: tbRoomPhoto.Text,
+                          Active: toggleActive.Value,
+                          //'Map Link': tbMapDesk.Text,
+                          Description: tbDescrDesk.Text,
+                          //SmartBoard: If(SmarBoardckb.Value = true, smartboard, Blank()),
+                          //Projector_x002f_TV: If(Ptvckb.Value = true, projector, Blank()),
+                          //VTel: If(Vtelckb.Value = true, vtel, Blank()),
+                          Capacity: Int(ddCapacity.Selected.Value)
+                          }
+                  )
+              );
+              If(
+                  IsBlankOrError(submitItem),
+                  Notify(
+                      "Something went wrong. Your item has not been submitted." & Last(Errors(Desks)).Message,
+                      NotificationType.Error,
+                      10000
+                  ),
+                  Notify(
+                      "Your item has been submitted. (ID: " & submitItem.ID & ")",
+                      NotificationType.Success,
+                      5000
+                  );
+                  Set(
+                      currentItem,
+                      submitItem
+                  )
+              );
+              Reset(tbFloorDesk);
+              Reset(tbNameDesk);
+              Reset(toggleActive);
+              Reset(tbDescrDesk);
+              Reset(tbMapDesk);
+              Reset(tbDeskLocation_2);
+              Reset(tbRoomPhoto);
+              Reset(ddAsset);
+              Reset(SmarBoardckb);
+              Reset(Vtelckb);
+              Reset(Ptvckb);
+              Navigate(ManageDesks);
             Text: ="Submit"
             Width: =224
             X: =912
@@ -390,7 +446,7 @@ Screens:
             OnUncheck: =Set(varsmartboardck,"")
             Text: ="Smart Board"
             Width: =248
-            Y: =309
+            Y: =277
       - Vtelckb:
           Control: Classic/CheckBox@2.1.0
           Properties:
@@ -407,7 +463,7 @@ Screens:
             Text: ="VTel"
             Width: =155
             X: =248
-            Y: =305
+            Y: =273
       - Ptvckb:
           Control: Classic/CheckBox@2.1.0
           Properties:
@@ -423,4 +479,41 @@ Screens:
             Text: ="Projector/TV"
             Width: =196
             X: =428
-            Y: =308
+            Y: =276
+      - ddCapacity:
+          Control: Classic/DropDown@2.3.1
+          Properties:
+            Default: |-
+              =If(
+                  ddAsset.Selected.Value = Text("Desk"),
+                      "1",
+                  ddAsset.Selected.Value = Text("Item"),
+                      "0"
+              )
+            Height: =32
+            Items: |-
+              =If(
+                  ddAsset.Selected.Value = Text("Desk"),
+                      [1],
+                  ddAsset.Selected.Value = Text("Room"),
+                      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
+                  ddAsset.Selected.Value = Text("Item"),
+                      [0]
+              )
+            Items.Value: =Value
+            Width: =176
+            X: =215
+            Y: =366
+      - lblFloorDesk_6:
+          Control: Label@2.5.1
+          Properties:
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =43
+            Text: |-
+              =Concatenate(
+                  ddAsset.Selected.Value,
+                  " Capacity"
+              )
+            Width: =215
+            Y: =359

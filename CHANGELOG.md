@@ -19,6 +19,59 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.3.4] - 2026-07-09
+
+### Added
+
+- **Canvas app `scrn_DailyCal` screen** — New "Daily Calendar List" screen replacing the deprecated `scrn_WeeklyCal_1`. Displays a filterable daily training room reservation list ("Daily Training Room List") with ID#, Desk Reservation Info, and POC Comments columns. Built on the modern Power Apps container grid layout (6 col × 6 row).
+- **Canvas app role-based access control (RBAC)** — `Dashboard.OnVisible` now resolves the current user's `AccessLevel_Text` from the `DeskAccessControl` SharePoint list and builds `colMenu` conditionally across 8 access tiers: `SuperUser`, `AppAdmin`, `Manager`, `ServiceChief`, `ProjectLeader`, `User`, `View-only`, `AccessDenied`. Users with `AccessDenied` receive an empty menu.
+- **Canvas app `userAccessDemographics` collection** — Populated on Dashboard load with the current user's full access control record for downstream use.
+- **Canvas app `App.OnStart` version variable** — `Set(varGetRepo_ProjectVersion, "0.3.4")` added to `App.OnStart` (previously empty), initializing a global version string displayed in the Dashboard top-left corner.
+- **Canvas app smart scheduling default time** — `chkWeekDays.OnVisible` now calculates and injects a default start time rounded up to the nearest 15-minute boundary from current clock time.
+- **Canvas app booking conflict detector** — `chkWeekDays` surfaces all existing reservations on the selected date in a live "Existing reservations already booked" gallery, visible before the user continues.
+- **Canvas app `MyAppts` — explicit action buttons** — Added "View This" (green) and "Cancel This" (red) buttons inside the `gallUpcoming` gallery template, replacing icon-only navigation.
+- **Canvas app cancellation confirmation dialog** — `MyAppts` shows a modal "Confirm Cancellation?" overlay (NEVERMIND / CONFIRM) before any reservation cancellation executes.
+- **Canvas app scheduling dropdowns** — New `ddImportance` (Normal/High/Low), `ddReminder` (minute intervals), and `ddRecurrenceFrequency` (None/Daily/Weekly) controls on `chkWeekDays` for richer booking options.
+- **Canvas app O365 Users connector actions** — Added `MyProfileV2`, `ManagerV2`, `UserProfileV2` to the connector manifest.
+- **Screenshots (v0.3.4)** — 19 app screenshots captured 2026-07-09 and stored under `assets/screenshots/` (renamed from `v0.2.7_*` to `v0.3.4_*`; `scrn_WeeklyCal1` renamed to `scrn_DailyCal`).
+- **`.github/ISSUE_TEMPLATE/commit_message-TEMPLATE.md`** — New commit message template modeled on the v0.3.4 commit style; Conventional Commits format with type/scope/version title line, Context section, per-file-area change bullets, documentation sub-sections for updated/new/renamed files, and an inline type and scope reference guide.
+
+### Changed
+
+- **Canvas app `Dashboard` — gallery filter** — `gallMyReservationsPreview` filter simplified to `'Reserved By'.Email` only (removed the OR `'Created By'.Email` condition).
+- **Canvas app `Dashboard` — calendar button** — `Button5` text "Click to see calendar" → "View calendars!"; height 94→37, width 240→333.
+- **Canvas app `Dashboard` — reason label** — `Label6` height 26→94px, `Overflow = Scroll`, `VerticalAlign = Top` to support multi-line text.
+- **Canvas app `chkWeekDays` — advance booking window** — `DaysAheadRestriction` 180 → **230 days**.
+- **Canvas app `chkWeekDays` — auto 1-hour duration** — `ContinueDatebtn.OnSelect` pre-calculates `varEventEndTime = varEventStartTime + 60 minutes`.
+- **Canvas app `MyAppts` — past reservations filter** — `gallPast` filter expanded to include items where `Active_choice.Value` is blank or `"false"`.
+- **Canvas app `Reservation` screen labels** — Comprehensive relabeling: title → "Reservation Details"; name label → "EHRM Training Description" (Bold); floor label → "Location (Desk/Room/Building/Division):"; map label → "Start Date/Time"; description label → "Additional Comments/Notes:".
+- **Canvas app `Confirm` screen** — `Container2` upgraded to 6×6 layout grid; `Gallery3_1` template size 22→175px; `TextCanvas7_4` renders combined training category + location.
+- **Canvas app `scrn_WeeklyCal` + `scrn_MoCalendar`** — Containers updated to 6×6 grid layout.
+- **Canvas app `scrn_MoCalendar` — Daily button** — `OnSelect` updated from `Navigate(scrn_WeeklyCal_1)` → `Navigate(scrn_DailyCal)`.
+- **Canvas app platform format** — `FormatVersion` 0.24→0.30, `DocVersion` 1.347→1.349, `MinVersionToLoad` 1.331→1.349. Preview flags `commentgeneratedformulasv2`, `enablecreateaformula`, `enablesaveloadcleardataonweb` all toggled `false`→`true`.
+- **`src/powerApps/README.md`** — Complete rewrite for v0.3.4: full screen inventory table (21 screens), all 8 change areas documented, screenshots table, connector/platform diff tables, component version history.
+- **`README.md`** (root) — Version badge v0.3.2→v0.3.4; project release 2026-07-07→2026-07-09; Canvas app v0.0.2→v0.3.4.
+- **`VERSION`** — 0.3.2→0.3.4.
+- **`docs/PROJECT_STATUS.md`** — Status summary and release history updated for v0.3.4.
+- **`assets/screenshots/`** — All 19 files renamed from `v0.2.7_*` to `v0.3.4_*` prefix.
+- **`src/solution.xml`** — Completely corrected from an unrelated Employee Recognition project placeholder to the correct EHRM Training & Booking App content: `UniqueName` → `EHRMTrainingBooking`; `LocalizedName` → "578 EHRM Training & Booking App"; `Version` → 0.3.4; Canvas app schema → `vah_EHRMTrainingBookingApp`; Power Automate flow → `vah_AppUserList`; connections → SharePoint, Outlook, O365Users (Teams and Approvals removed); environment variables → `vah_SharePointSiteUrl`, `vah_NotificationEmailFrom`, `vah_BookingHorizonDays`.
+- **`.github/ISSUE_TEMPLATE/pull_request-TEMPLATE.md`** — Substantially rewritten from a generic GitHub checkbox-style template to match the v0.3.4 PR narrative style: Summary paragraph, "Changes at a glance" table, numbered detailed breakdown sections, Known Issues block, and artifact-level verification checklist.
+- **`.github/ISSUE_TEMPLATE/release_notes-TEMPLATE.md`** — Substantially updated from a generic Added/Changed/Fixed structure to match the v0.3.4 detailed release notes style: metadata block, Executive Summary with numbered change area list, per-area narrative sections with before/after tables and formula code blocks, Upgrade Notes callout, Known Issues block, and Component Baselines table.
+
+### Removed
+
+- **Canvas app `scrn_WeeklyCal_1` screen** — Removed and replaced by `scrn_DailyCal`.
+- **Canvas app legacy Outlook actions** — `V4CalendarGetItems` and `CalendarGetTables_V2` removed from connector manifest (deprecated).
+
+### Notes
+
+- Release type: **Feature** — First major Canvas app functional update since v0.0.2.
+- Canvas app component version: v0.0.2 → **v0.3.4** (now aligned with project release versioning).
+- `AppUserList` flow baseline remains v0.1.0 (unchanged).
+- SharePoint schema unchanged — new RBAC requires `DeskAccessControl` list's `AccessLevel_Text` column to be populated per-user for full role enforcement.
+
+---
+
 ## [0.3.2] - 2026-07-07
 
 ### Fixed

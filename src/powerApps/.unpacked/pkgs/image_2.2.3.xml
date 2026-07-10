@@ -54,7 +54,8 @@
             backgroundImage: imageUrl,
             '-webkit-transform': transform,
             transform: transform,
-            forcedColorAdjust: 'none'
+            forcedColorAdjust: 'none',
+            imageOrientation: 'none'
           },
           attr: {
             role: properties.TabIndex() < 0 && !!properties.AccessibleLabel() && 'img',
@@ -79,7 +80,8 @@
             flex: '0 0 auto',
             borderRadius: '0.1px',
             '-webkit-transform': transform,
-            transform: transform
+            transform: transform,
+            imageOrientation: 'none'
           },
           attr: {
             src: $data.imageSrc && $data.imageSrc(),

@@ -2,19 +2,20 @@
 
 This document describes the current public state of the EHRM Training & Booking App repository and what is included/excluded as of the latest release.
 
-## Status summary (v0.3.2)
+## Status summary (v0.3.4)
 
-- **Release type**: Patch — GHES compatibility fixes for release and version-bump workflows
-- **Project release**: v0.3.2 (2026-07-07)
-- **Component baselines** (unchanged since v0.0.2 / v0.1.0):
-  - Canvas app: v0.0.2 (source-controlled unpacked source under `src/powerApps/.unpacked/`)
+- **Release type**: Feature — First major Canvas app functional update since v0.0.2; role-based access control, intelligent scheduling, calendar modernization, and UX improvements
+- **Project release**: v0.3.4 (2026-07-09)
+- **Component versions**:
+  - Canvas app: **v0.3.4** (source-controlled unpacked source under `src/powerApps/.unpacked/`; package at `src/powerApps/.msapp/v0.3.4_578EHRMTrainingApp.msapp`)
   - Power Automate: `AppUserList` v0.1.0 (source-controlled unpacked source under `src/powerAutomate/AppUserList/.unpacked/`)
-  - SharePoint samples: `src/sharePoint/` (sanitized CSVs)
+  - SharePoint samples: `src/sharePoint/` (sanitized CSVs — schema unchanged)
 
 ## Release history
 
 | Version | Date | Type |
 |---------|------|------|
+| v0.3.4 | 2026-07-09 | Feature — Canvas app v0.3.4: RBAC, smart scheduling, calendar modernization, UX improvements |
 | v0.3.2 | 2026-07-07 | Patch — GHES compatibility fixes for release and version-bump workflows |
 | v0.3.1 | 2026-07-07 | Patch — added Power Apps web development helper script |
 | v0.3.0 | 2026-07-07 | Feature — GitHub Actions/workflows overhaul, VERSION file, repo automation |
@@ -29,12 +30,12 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
 
 ## What is in this repository
 
-- **Unpacked sources** (for code review/diffing) for the Power Apps Canvas app and Power Automate flows.
+- **Unpacked sources** (for code review/diffing) for the Power Apps Canvas app and Power Automate flows; also includes `src/solution.xml` (Power Platform solution manifest, corrected in v0.3.4 to reflect EHRM Training & Booking App identity and components).
 - **Documentation & runbooks**: [ARCHITECTURE.md](../config/architecture/ARCHITECTURE.md), [ALM-RUNBOOK.md](../config/runbooks/ALM-RUNBOOK.md), component-level READMEs, release notes.
 - **VS Code workspace configuration**: task definitions for common PAC CLI operations (canvas pack/unpack, solution export/unpack), recommended extensions, editor settings.
 - **Scripts & hooks**: PowerShell dev-profile bootstrap (`Ensure-DevProfile.ps1`), pre-commit/pre-push hooks.
 - **SharePoint sample data**: sanitized CSVs under `src/sharePoint/`.
-- **GitHub community files**: PR template, issue templates, security policy, contributing guide, Copilot instructions.
+- **GitHub community files**: PR template, issue templates (including `commit_message-TEMPLATE.md` added in v0.3.4), security policy, contributing guide, Copilot instructions.
 
 ## What is intentionally NOT in this repository
 
@@ -53,7 +54,11 @@ The current baseline artifacts are driven by SharePoint lists with a desk/reserv
 - `DeskAccessControl`
 - `Desks`
 
-The Canvas app screens (21 screens from Dashboard through PDFScreen) and the `AppUserList` flow behavior still reference this baseline terminology. Renaming/re-modeling to training-specific naming is an expected future change.
+The Canvas app now contains 21 screens (v0.3.4 replaced `scrn_WeeklyCal_1` with `scrn_DailyCal`). The screen and list naming still reflects the original desk/room reservation terminology in some areas. Renaming/re-modeling fields and labels to fully training-centric terminology is an expected future change.
+
+### Canvas app access control model (v0.3.4)
+
+As of v0.3.4, the Canvas app enforces role-based access control driven by the `DeskAccessControl` SharePoint list's `AccessLevel_Text` column. Valid access levels are: `SuperUser`, `AppAdmin`, `Manager`, `ServiceChief`, `ProjectLeader`, `User`, `View-only`, `AccessDenied`. Each user's row in `DeskAccessControl` must have this column populated for full role enforcement.
 
 ### Connectors & data sources
 
@@ -77,7 +82,12 @@ Before tagging/publishing a release:
 
 ## Next steps / roadmap (high level)
 
-- Continue replacing baseline “desk reservation” terminology with training booking terms where appropriate.
+- Populate `DeskAccessControl` list with correct `AccessLevel_Text` values for all intended users to activate the v0.3.4 RBAC system.
+- Complete the cancellation workflow — `Button3_9` ("Cancel This") in `MyAppts` is stubbed; the actual `Patch`/delete logic to mark a reservation as cancelled in SharePoint needs to be wired up.
+- Continue replacing baseline "desk reservation" terminology with training-booking-centric labels throughout all screens and SharePoint columns.
+- Evaluate adding SharePoint column `Active_choice` population on booking creation so the past/active filter works consistently from day one.
+- Consider adding a user-facing in-app notification or email confirmation on successful booking cancellation.
+- See [`docs/local/futureEnhancementIdeas.md`](local/futureEnhancementIdeas.md) for the full future improvement backlog.
 - Add/expand component-level documentation as flows/app screens evolve.
 - Develop user guides under `docs/userGuides/`.
 - Evaluate additional Power Automate flows for the training scheduling workflow.
