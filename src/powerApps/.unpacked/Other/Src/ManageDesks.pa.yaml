@@ -20,8 +20,8 @@ Screens:
           Properties:
             Height: =263
             Visible: =varShowConfirmDelete
-            Width: =532
-            X: =55
+            Width: =973
+            X: =101
             Y: =63
       - Image2_6:
           Control: Image@2.2.3
@@ -377,32 +377,35 @@ Screens:
             Fill: =RGBA(116, 116, 116, 0.85)
             Height: =640
             Visible: =varShowConfirmDelete
-            Width: =640
+            Width: =1136
       - bgRounded_9:
           Control: HtmlViewer@2.1.0
           Group: grpConfirmDelete
           Properties:
             DisabledBorderColor: =RGBA(56, 56, 56, 1)
             Font: =Font.'Open Sans'
-            Height: =640
-            HtmlText: ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+            Height: =293
+            HtmlText: |-
+              =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+              "<div style='border:1px gray;border-radius:10%;height:275px;width:100%;background-color:#FCFCFC'></div>"
             Size: =24
             Visible: =varShowConfirmDelete
-            Width: =610
-            X: =14
+            Width: =722
+            X: =207
+            Y: =84
       - Label1:
           Control: Label@2.5.1
           Group: grpConfirmDelete
           Properties:
             Align: =Align.Center
             FontWeight: =FontWeight.Semibold
-            Height: =366
+            Height: =121
             Size: =24
             Text: ="Confirm Deletion?"
             Visible: =varShowConfirmDelete
-            Width: =557
-            X: =42
-            Y: =11
+            Width: =695
+            X: =220
+            Y: =113
       - btnConfirmCancel:
           Control: Classic/Button@2.2.0
           Group: grpConfirmDelete
@@ -420,9 +423,9 @@ Screens:
             Size: =14
             Text: ="CANCEL"
             Visible: =varShowConfirmDelete
-            Width: =160
-            X: =141
-            Y: =401
+            Width: =293
+            X: =239
+            Y: =257
       - btnConfirmDelete:
           Control: Classic/Button@2.2.0
           Group: grpConfirmDelete
@@ -438,8 +441,8 @@ Screens:
             RadiusTopRight: =20
             Size: =14
             Text: |-
-              =" 🗑️  DELETE"
+              =" 🗑️   DELETE"
             Visible: =varShowConfirmDelete
-            Width: =160
-            X: =341
-            Y: =401
+            Width: =293
+            X: =604
+            Y: =257

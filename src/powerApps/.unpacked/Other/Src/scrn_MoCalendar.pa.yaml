@@ -114,7 +114,7 @@ Screens:
             X: =800
             Y: =27
       - Container7:
-          Control: GroupContainer@1.3.0
+          Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
             Height: =640
@@ -198,7 +198,7 @@ Screens:
                 Control: Classic/Button@2.2.0
                 Properties:
                   Height: =33
-                  OnSelect: =Navigate(scrn_WeeklyCal_1)
+                  OnSelect: =Navigate(scrn_DailyCal)
                   Size: =14
                   Text: ="Daily"
                   Width: =111

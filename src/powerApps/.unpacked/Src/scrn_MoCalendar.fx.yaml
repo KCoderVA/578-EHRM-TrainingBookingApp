@@ -134,6 +134,10 @@ scrn_MoCalendar As screen:
     Container7 As groupContainer.manualLayoutContainer:
         DropShadow: =DropShadow.Light
         Height: =640
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
@@ -275,7 +279,7 @@ scrn_MoCalendar As screen:
             HoverBorderColor: =App.Theme.Colors.Darker10
             HoverColor: =App.Theme.Colors.PrimaryForeground
             HoverFill: =App.Theme.Colors.Darker10
-            OnSelect: =Navigate(scrn_WeeklyCal_1)
+            OnSelect: =Navigate(scrn_DailyCal)
             PressedBorderColor: =App.Theme.Colors.Darker40
             PressedColor: =Self.Color
             PressedFill: =App.Theme.Colors.Darker40

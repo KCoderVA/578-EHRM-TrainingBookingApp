@@ -7,14 +7,12 @@
       "FindMeetingTimes",
       "GetRoomLists",
       "GetRooms",
-      "GetRoomsInRoomList",
-      "CalendarGetTables_V2",
-      "V4CalendarGetItems"
+      "GetRoomsInRoomList"
     ],
     "connectionRef": {
       "apiTier": "Standard",
       "displayName": "Office 365 Outlook",
-      "iconUri": "https://connectorsiconsfairfax.z5.web.core.usgovcloudapi.net/v1.0.1763/1.0.1763.4311/office365/icon.png",
+      "iconUri": "https://gov.static.powerapps.us/resource/ppcr/releases/v1.0.1812/1.0.1812.4763/office365/icon.png",
       "id": "/providers/microsoft.powerapps/apis/shared_office365",
       "parameterHints": {},
       "parameterHintsV2": {}
@@ -29,12 +27,15 @@
   },
   "64852b16-4509-4d34-be4c-adfa1f496b3a": {
     "appActions": [
+      "MyProfileV2",
+      "ManagerV2",
+      "UserProfileV2",
       "SearchUser"
     ],
     "connectionRef": {
       "apiTier": "Standard",
       "displayName": "Office 365 Users",
-      "iconUri": "https://connectorsiconsfairfax.z5.web.core.usgovcloudapi.net/v1.0.1767/1.0.1767.4341/office365users/icon.png",
+      "iconUri": "https://connectorsiconsfairfax.z5.web.core.usgovcloudapi.net/releases/v1.0.1788/1.0.1788.4544/office365users/icon.png",
       "id": "/providers/microsoft.powerapps/apis/shared_office365users",
       "parameterHints": {},
       "parameterHintsV2": {}
@@ -56,7 +57,7 @@
     "connectionRef": {
       "apiTier": "Standard",
       "displayName": "SharePoint",
-      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/releases/v1.0.1732/1.0.1732.4070/sharepointonline/icon.png",
+      "iconUri": "https://gov.static.powerapps.us/resource/ppcr/releases/v1.0.1769/1.0.1769.4361/sharepointonline/icon.png",
       "id": "/providers/microsoft.powerapps/apis/shared_sharepointonline",
       "parameterHints": {},
       "parameterHintsV2": {}

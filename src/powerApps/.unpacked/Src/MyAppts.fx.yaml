@@ -21,7 +21,13 @@ MyAppts As screen:
                             'Reserved By'.Email = currentUser.Email
                             // || 'Created By'.Email = currentUser.Email
                         )
-                        && 'Check Out From' <= Today(),DeskFloor
+                        && //'Check Out From' <= Today(),DeskFloor,
+                        Or(
+                            'Check Out From' <= Today(),
+                            IsBlank(Active_choice.Value),
+                            Active_choice.Value = "false",
+                            DeskFloor
+                        )
                     ),
                     "CheckOutFrom",
                     SortOrder.Descending
@@ -97,8 +103,9 @@ MyAppts As screen:
             Height: =40
             Icon: =Icon.OpenInNewWindow
             OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+            Visible: =false
             Width: =45
-            X: =450
+            X: =848
             Y: =5
             ZIndex: =4
 
@@ -219,6 +226,105 @@ MyAppts As screen:
             Y: =10
             ZIndex: =10
 
+        Button3_4 As button:
+            BorderColor: =RGBA(109, 49, 162, 1)
+            BorderThickness: =3
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(152, 208, 70, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =16
+            Text: ="View This"
+            Width: =142
+            X: =Parent.Width - Self.Width - 10
+            Y: =10
+            ZIndex: =13
+
+        Button3_9 As button:
+            BorderColor: =RGBA(109, 49, 162, 1)
+            BorderThickness: =3
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(184, 0, 0, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+                =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =16
+            Text: ="Cancel This"
+            Visible: =false
+            Width: =142
+            X: =Parent.Width - Self.Width - 10
+            Y: =Parent.TemplateHeight - Self.Height - 10
+            ZIndex: =14
+
+        Icon2_3 As icon:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(109, 49, 162, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(152, 208, 70, 1)
+            Height: =40
+            Icon: =Icon.OpenInNewWindow
+            OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+            PaddingBottom: =5
+            PaddingLeft: =5
+            PaddingRight: =5
+            PaddingTop: =5
+            Visible: =false
+            Width: =46
+            X: =847
+            Y: =5
+            ZIndex: =15
+
+        Icon2_4 As icon:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(184, 0, 0, 1)
+            Height: =40
+            Icon: =Icon.CancelBadge
+            OnSelect: |-
+                =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+            PaddingBottom: =5
+            PaddingLeft: =5
+            PaddingRight: =5
+            PaddingTop: =5
+            Visible: =false
+            Width: =46
+            X: =860
+            Y: =Parent.TemplateHeight - Self.Height - 3
+            ZIndex: =16
+
     "gallUpcoming As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
         '#CopilotOverlayLabel': ="Filtered"
         AccessibleLabel: ="Upcoming Reservations"
@@ -234,7 +340,13 @@ MyAppts As screen:
                             'Reserved By'.Email = currentUser.Email
                             // || 'Created By'.Email = currentUser.Email
                         )
-                        && 'Check Out From' >= Today(),DeskFloor
+                        && //'Check Out From' <= Today(),DeskFloor,
+                        Or(
+                            'Check Out From' >= Today(),
+                            !IsBlank(Active_choice.Value),
+                            Active_choice.Value = "true",
+                            DeskFloor
+                        )            
                     ),
                     "CheckOutFrom",
                     SortOrder.Ascending
@@ -258,27 +370,27 @@ MyAppts As screen:
         Separator2_1 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
             Fill: =RGBA(135, 78, 181, 1)
-            Height: =1
+            Height: =2
             OnSelect: =Select(Parent)
             Width: =Parent.TemplateWidth
             Y: =Parent.TemplateHeight - 1
-            ZIndex: =1
+            ZIndex: =2
 
         Button3 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
+            BorderColor: =RGBA(109, 49, 162, 1)
+            BorderThickness: =3
             Color: =App.Theme.Colors.PrimaryForeground
             DisabledBorderColor: =RGBA(244, 244, 244, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(184, 0, 0, 1)
+            Fill: =RGBA(152, 208, 70, 1)
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
+            Height: =30
             HoverBorderColor: =App.Theme.Colors.Darker10
             HoverColor: =App.Theme.Colors.PrimaryForeground
             HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+            OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
             PressedBorderColor: =App.Theme.Colors.Darker40
             PressedColor: =Self.Color
             PressedFill: =App.Theme.Colors.Darker40
@@ -287,14 +399,13 @@ MyAppts As screen:
             RadiusTopLeft: =20
             RadiusTopRight: =20
             Size: =16
-            Text: ="CANCEL"
+            Text: ="View This"
             Width: =142
-            X: =878
+            X: =Parent.Width - Self.Width - 10
             Y: =10
-            ZIndex: =2
+            ZIndex: =3
 
         Title2_7 As label:
-            Align: =Align.Center
             Color: =RGBA(0, 0, 0, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =Font.'Segoe UI'
@@ -311,23 +422,48 @@ MyAppts As screen:
                 //Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)ThisItem.'Check Out From'
             VerticalAlign: =VerticalAlign.Top
             Width: =314
-            X: =582
+            X: =537
             Y: =15
-            ZIndex: =3
+            ZIndex: =4
 
         Icon2 As icon.OpenInNewWindow:
             BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(39, 113, 194, 1)
+            Color: =RGBA(109, 49, 162, 1)
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledColor: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(152, 208, 70, 1)
             Height: =40
             Icon: =Icon.OpenInNewWindow
             OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+            PaddingBottom: =5
+            PaddingLeft: =5
+            PaddingRight: =5
+            PaddingTop: =5
             Visible: =false
-            Width: =45
-            X: =547
-            Y: =10
-            ZIndex: =4
+            Width: =46
+            X: =860
+            Y: =3
+            ZIndex: =5
+
+        Icon2_2 As icon:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(184, 0, 0, 1)
+            Height: =40
+            Icon: =Icon.CancelBadge
+            OnSelect: |-
+                =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+            PaddingBottom: =5
+            PaddingLeft: =5
+            PaddingRight: =5
+            PaddingTop: =5
+            Visible: =false
+            Width: =46
+            X: =860
+            Y: =Parent.TemplateHeight - Self.Height - 3
+            ZIndex: =6
 
         Title2_5 As label:
             Align: =Align.Center
@@ -347,7 +483,7 @@ MyAppts As screen:
             Width: =383
             X: =127
             Y: =10
-            ZIndex: =5
+            ZIndex: =7
 
         Title2_13 As label:
             Align: =Align.Center
@@ -368,7 +504,7 @@ MyAppts As screen:
             Width: =54
             X: =172
             Y: =10
-            ZIndex: =6
+            ZIndex: =8
 
         Title2_12 As label:
             Align: =Align.Center
@@ -388,7 +524,7 @@ MyAppts As screen:
             Width: =58
             X: =127
             Y: =10
-            ZIndex: =7
+            ZIndex: =9
 
         Label2 As label:
             Align: =Align.Center
@@ -405,7 +541,7 @@ MyAppts As screen:
             Width: =43
             X: =98
             Y: =10
-            ZIndex: =8
+            ZIndex: =10
 
         Title2_6 As label:
             Align: =Align.Center
@@ -425,7 +561,7 @@ MyAppts As screen:
             Width: =40
             X: =Title2_4.X + Title2_4.Width
             Y: =10
-            ZIndex: =9
+            ZIndex: =11
 
         Title2_4 As label:
             Align: =Align.Center
@@ -444,7 +580,37 @@ MyAppts As screen:
             VerticalAlign: =VerticalAlign.Top
             Width: =60
             Y: =10
-            ZIndex: =10
+            ZIndex: =12
+
+        Button3_3 As button:
+            BorderColor: =RGBA(109, 49, 162, 1)
+            BorderThickness: =3
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(184, 0, 0, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+                =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =16
+            Text: ="Cancel This"
+            Width: =142
+            X: =Parent.Width - Self.Width - 10
+            Y: =Parent.TemplateHeight - Self.Height - 10
+            ZIndex: =13
 
     rectSeperator As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
@@ -562,32 +728,47 @@ MyAppts As screen:
         Y: =60
         ZIndex: =16
 
-    grpConfirmCancel As group:
-        Height: =5
-        Width: =5
-        X: =40
-        Y: =40
-        ZIndex: =20
+    Container5 As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Height: =471
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =varConfirmCancel
+        Width: =1136
+        Y: =169
+        ZIndex: =18
 
-        Rectangle3_3 As rectangle:
+        Rectangle6 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =66
-            Visible: =varConfirmCancel
-            Width: =640
-            X: =271
-            Y: =353
-            ZIndex: =9
+            Fill: =RGBA(214, 221, 224, 0.75)
+            Height: =Parent.Height
+            Width: =Parent.Width
+            X: =
+            ZIndex: =1
 
         bgRounded_10 As htmlViewer:
-            Height: =189
+            Height: =183
             HtmlText: |-
-                ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+                =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+                "<div style='border:1px gray;border-radius:25%;height:170px;width:100%;background-color:#FCFCFC'></div>"
+                /*Concat(
+                    "<div style='border:1px gray;border-radius:10%;height:",
+                    "239",
+                    "px;width:",
+                    "100",
+                    "%;background-color:#FCFCFC'></div>"
+                )*/
             Visible: =varConfirmCancel
-            Width: =610
-            X: =285
-            Y: =229
-            ZIndex: =10
+            Width: =Label1_1.Width
+            X: =289
+            Y: =120
+            ZIndex: =2
 
         Label1_1 As label:
             Align: =Align.Center
@@ -596,22 +777,37 @@ MyAppts As screen:
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
-            Height: =119
+            Height: =54
             Size: =24
-            Text: ="Confirm Cancellation"
+            Text: ="Confirm Cancellation?"
             Visible: =varConfirmCancel
             Width: =557
-            X: =311
-            Y: =258
-            ZIndex: =11
+            X: =289
+            Y: =140
+            ZIndex: =3
+
+        Rectangle3_3 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =btnConfirmCancel_1.Height + 10
+            Visible: |-
+                =//varConfirmCancel
+                false
+            Width: =bgRounded_10.Width - 20
+            X: =299
+            Y: =274
+            ZIndex: =4
 
         btnConfirmCancel_1 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
+            BorderColor: =RGBA(180, 214, 250, 1)
+            BorderThickness: =5
+            Color: =App.Theme.Colors.PrimaryForeground
             DisabledBorderColor: =RGBA(244, 244, 244, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(128, 128, 128, 1)
+            Fill: |-
+                =//RGBA(128, 128, 128, 1)
+                RGBA(184, 0, 0, 1)
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
             Height: =66
@@ -630,18 +826,18 @@ MyAppts As screen:
             Size: =14
             Text: ="NEVERMIND"
             Visible: =varConfirmCancel
-            X: =412
-            Y: =394
-            ZIndex: =12
+            X: =388
+            Y: =194
+            ZIndex: =5
 
         btnConfirmDelete_1 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
+            BorderColor: =RGBA(180, 214, 250, 1)
+            BorderThickness: =5
             Color: =App.Theme.Colors.PrimaryForeground
             DisabledBorderColor: =RGBA(244, 244, 244, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(184, 0, 0, 1)
+            Fill: =RGBA(9, 33, 98, 1)
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
             Height: =66
@@ -660,7 +856,7 @@ MyAppts As screen:
             Size: =14
             Text: ="CONFIRM"
             Visible: =varConfirmCancel
-            X: =612
-            Y: =394
-            ZIndex: =13
+            X: =588
+            Y: =194
+            ZIndex: =6
 

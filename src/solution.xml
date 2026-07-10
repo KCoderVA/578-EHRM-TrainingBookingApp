@@ -1,0 +1,74 @@
+<!--
+Copyright 2025 Kyle J. Coder
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.0000.0000" SolutionPackageVersion="9.2.0000.0000"
+    languagecode="1033" generatedBy="EHRMTrainingBooking">
+    <SolutionManifest>
+        <UniqueName>EHRMTrainingBooking</UniqueName>
+        <LocalizedNames>
+            <LocalizedName description="578 EHRM Training &amp; Booking App" languagecode="1033" />
+        </LocalizedNames>
+        <Descriptions>
+            <Description
+                description="v0.3.4: Role-based access control with 8-tier permission model (SuperUser/AppAdmin/Manager/ServiceChief/ProjectLeader/User/View-only/AccessDenied), intelligent scheduling with 15-minute boundary rounding and live conflict detection, appointment cancellation confirmation modal, new Daily Calendar screen (scrn_DailyCal), app version tracking variable, Office 365 Users connector integration (MyProfileV2/ManagerV2/UserProfileV2). Includes prior enhancements: AppUserList Power Automate flow for dynamic user access population. Complete Power Platform solution for EHRM training room scheduling and booking at VA facility 578."
+                languagecode="1033" />
+        </Descriptions>
+        <Version>0.3.4</Version>
+        <Managed>1</Managed>
+        <Publisher>
+            <UniqueName>VAHealthcare</UniqueName>
+            <LocalizedNames>
+                <LocalizedName description="VA Healthcare" languagecode="1033" />
+            </LocalizedNames>
+            <Descriptions>
+                <Description description="Department of Veterans Affairs Healthcare"
+                    languagecode="1033" />
+            </Descriptions>
+            <Addresses>
+                <Address>
+                    <AddressNumber>1</AddressNumber>
+                    <AddressTypeCode>1</AddressTypeCode>
+                    <City>Washington</City>
+                    <County>District of Columbia</County>
+                    <Country>United States</Country>
+                    <PostalCode>20420</PostalCode>
+                    <StateOrProvince>DC</StateOrProvince>
+                    <StreetAddress>810 Vermont Avenue NW</StreetAddress>
+                </Address>
+            </Addresses>
+        </Publisher>
+        <RootComponents>
+            <!-- Canvas App -->
+            <RootComponent type="300" schemaName="vah_EHRMTrainingBookingApp" behavior="0" />
+
+            <!-- Power Automate Flows -->
+            <RootComponent type="29" schemaName="vah_AppUserList" behavior="0" />
+
+            <!-- Connection References -->
+            <RootComponent type="35" schemaName="vah_SharePointConnection" behavior="0" />
+            <RootComponent type="35" schemaName="vah_OutlookConnection" behavior="0" />
+            <RootComponent type="35" schemaName="vah_O365UsersConnection" behavior="0" />
+
+            <!-- Environment Variables -->
+            <RootComponent type="380" schemaName="vah_SharePointSiteUrl" behavior="0" />
+            <RootComponent type="380" schemaName="vah_NotificationEmailFrom" behavior="0" />
+            <RootComponent type="380" schemaName="vah_BookingHorizonDays" behavior="0" />
+        </RootComponents>
+        <MissingDependencies />
+    </SolutionManifest>
+</ImportExportXml>
+

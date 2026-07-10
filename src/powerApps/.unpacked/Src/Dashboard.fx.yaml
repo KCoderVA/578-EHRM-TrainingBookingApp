@@ -2,30 +2,8 @@ Dashboard As screen:
     Fill: =RGBA(236, 236, 236, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
-    OnVisible: |
-        =ClearCollect(
-            colMenu,
-            Table(
-                {
-                    Name: "Dashboard",
-                    Icon: Icon.DetailList,
-                    Page: Dashboard,
-                    Visible: true
-                },
-                {
-                    Name: "My Bookings",
-                    Icon: Icon.Person,
-                    Page: MyAppts,
-                    Visible: true
-                },
-                       {
-                    Name: "Book",
-                    Icon: Icon.Add,
-                    Page: POCSUPERVISOR,
-                    Visible: true
-                }         
-            )
-        );
+    OnVisible: |-
+        =ClearCollect(colMenu, Blank());
         Set(
             _CurrentUser,
             User()
@@ -58,26 +36,138 @@ Dashboard As screen:
             varUser,
             User()
         );
+        ClearCollect(CollectionRecurrence, Blank());
+        Refresh(DeskAccessControl);
+        ClearCollect(userAccessDemographics, Blank());
+        Set(isUserAdminSPList, false);
+        
         Set(
             isUserAdminSPList,
             !IsBlank(
                 LookUp(
                     DeskAccessControl,
-                    Lower(Email_Text) = Lower(varUser.Email)
+                    Lower(Email_Text) = Lower(User().Email)
                 )
             )
         );
-        If(isUserAdminSPList, 
-            Collect(colMenu, 
+        If(
+            isUserAdminSPList = true, 
+            ClearCollect(
+                userAccessDemographics,
+                Filter(
+                    DeskAccessControl,
+                    Lower(Email_Text) = Lower(User().Email)
+                )
+            ); Set(
+                userAccessLevel_text,
+                    LookUp(
+                        DeskAccessControl,
+                        (!IsBlank(AccessLevel_Text) && Lower(Email_Text) = Lower(User().Email)),
+                        AccessLevel_Text
+                    )
+                ),
+            isUserAdminSPList = false,
+            Patch(
+                DeskAccessControl,
                 {
-                    Name: "Manage Rooms",
-                    Icon: Icon.ComputerDesktop,
-                    Page: ManageDesks,
-                    Visible: true
+                    Email_Text: Lower(User().Email),
+                    AccessLevel_Choice:
+                        {
+                            Value: "User"
+                            //Value: "AccessDenied"
+                            //Value: "View-only"
+                            //Value: "User"
+                            //Value: "SuperUser"
+                            //Value: "Manager"
+                            //Value: "ServiceChief"
+                            //Value: "ProjectLeader"
+                            //Value: "AppAdmin"
+                        }
                 }
+            ); Set(isUserAdminSPList, true); Set(userAccessLevel_text, "User")
+        );
+        If(
+            (userAccessLevel_text = "SuperUser"
+                || userAccessLevel_text = "Manager"
+                || userAccessLevel_text = "ServiceChief"
+                || userAccessLevel_text = "ProjectLeader"
+                || userAccessLevel_text = "AppAdmin"
+                ), 
+            Collect(
+                colMenu, 
+                    {
+                        Name: "Dashboard",
+                        Icon: Icon.DetailList,
+                        Page: Dashboard,
+                        Visible: true
+                    },
+                    {
+                        Name: "My Bookings",
+                        Icon: Icon.Person,
+                        Page: MyAppts,
+                        Visible: true
+                    },
+                   {
+                        Name: "Book",
+                        Icon: Icon.Add,
+                        Page: POCSUPERVISOR,
+                        Visible: true
+                    },
+                    {
+                        Name: "Manage Rooms",
+                        Icon: Icon.ComputerDesktop,
+                        Page: ManageDesks,
+                        Visible: true
+                    }
+            ),
+                (userAccessLevel_text = "User"),
+                ClearCollect(
+                    colMenu,
+                    Table(
+                    {
+                        Name: "Dashboard",
+                        Icon: Icon.DetailList,
+                        Page: Dashboard,
+                        Visible: true
+                    },
+                    {
+                        Name: "My Bookings",
+                        Icon: Icon.Person,
+                        Page: MyAppts,
+                        Visible: true
+                    },
+                   {
+                        Name: "Book",
+                        Icon: Icon.Add,
+                        Page: POCSUPERVISOR,
+                        Visible: true
+                    }         
+                )
+            ),
+            (userAccessLevel_text = "View-only"),
+                ClearCollect(
+                colMenu,
+                Table(
+                    {
+                        Name: "Dashboard",
+                        Icon: Icon.DetailList,
+                        Page: Dashboard,
+                        Visible: true
+                    },
+                    {
+                        Name: "My Bookings",
+                        Icon: Icon.Person,
+                        Page: MyAppts,
+                        Visible: true
+                    }        
+                )
+            ),
+        (userAccessLevel_text = "AccessDenied"),
+            ClearCollect(
+                colMenu,
+                Blank()
             )
         );
-        ClearCollect(CollectionRecurrence, Blank());
     Width: =Max(App.Width, App.DesignWidth)
 
     Button5 As button:
@@ -89,7 +179,7 @@ Dashboard As screen:
         Fill: =App.Theme.Colors.Primary
         Font: =App.Theme.Font
         FontWeight: =FontWeight.Semibold
-        Height: =94
+        Height: =37
         HoverBorderColor: =App.Theme.Colors.Darker10
         HoverColor: =App.Theme.Colors.PrimaryForeground
         HoverFill: =App.Theme.Colors.Darker10
@@ -98,10 +188,10 @@ Dashboard As screen:
         PressedColor: =Self.Color
         PressedFill: =App.Theme.Colors.Darker40
         Size: =24
-        Text: ="Click to see calendar"
-        Width: =240
-        X: =78
-        Y: =527
+        Text: ="View calendars!"
+        Width: =333
+        X: =137
+        Y: =591
         ZIndex: =1
 
     Image2_13 As image:
@@ -134,8 +224,10 @@ Dashboard As screen:
                 SortByColumns(
                     Filter(
                         'Desk Reservations',
-                        ('Reserved By'.Email = currentUser.Email || 'Created By'.Email = currentUser.Email) &&
-                        'Check Out From' >= Today()
+                        (
+                            'Reserved By'.Email = currentUser.Email // || 'Created By'.Email = currentUser.Email
+                        )
+                        && 'Check Out From' >= Today()
                     ),
                     "CheckOutFrom",
                     SortOrder.Ascending
@@ -145,7 +237,7 @@ Dashboard As screen:
         Layout: =Layout.Vertical
         TabIndex: =5
         TemplatePadding: =0
-        TemplateSize: =107
+        TemplateSize: =175
         Width: =504
         X: =620
         Y: =97
@@ -166,11 +258,13 @@ Dashboard As screen:
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Bold
-            Height: =26
+            Height: =94
             OnSelect: =Select(Parent)
+            Overflow: =Overflow.Scroll
             Size: =16
             Text: =ThisItem.'Reason for desk reservation'
-            Width: =515
+            VerticalAlign: =VerticalAlign.Top
+            Width: =234
             Y: =80
             ZIndex: =2
 
@@ -251,7 +345,7 @@ Dashboard As screen:
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =Font.'Segoe UI'
             FontWeight: =FontWeight.Semibold
-            Height: =24
+            Height: =35
             OnSelect: =Select(Parent)
             PaddingBottom: =0
             PaddingLeft: =10
@@ -259,10 +353,10 @@ Dashboard As screen:
             PaddingTop: =0
             Size: =16
             Text: =Text(DateTimeValue(ThisItem.'Check Out From'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To'), DateTimeFormat.ShortTime)
-            VerticalAlign: =VerticalAlign.Top
+            VerticalAlign: =VerticalAlign.Bottom
             Width: =300
-            X: =130
-            Y: =60
+            X: =204
+            Y: =128
             ZIndex: =7
 
         Title2_2 As label:
@@ -271,7 +365,7 @@ Dashboard As screen:
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =Font.'Segoe UI'
             FontWeight: =FontWeight.Semibold
-            Height: =24
+            Height: =42
             OnSelect: =Select(Parent)
             PaddingBottom: =0
             PaddingLeft: =10
@@ -281,8 +375,8 @@ Dashboard As screen:
             Text: =ThisItem.DeskText
             VerticalAlign: =VerticalAlign.Top
             Width: =300
-            X: =130
-            Y: =26
+            X: =204
+            Y: =86
             ZIndex: =8
 
         Title2_1 As label:
@@ -306,8 +400,8 @@ Dashboard As screen:
                     )
                 )
             VerticalAlign: =VerticalAlign.Top
-            Width: =76
-            X: =68
+            Width: =42
+            X: =102
             ZIndex: =9
 
         Title2 As label:
@@ -316,7 +410,7 @@ Dashboard As screen:
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =Font.'Segoe UI'
             FontWeight: =FontWeight.Semibold
-            Height: =57
+            Height: =45
             OnSelect: =Select(Parent)
             PaddingBottom: =0
             PaddingLeft: =0
@@ -325,7 +419,7 @@ Dashboard As screen:
             Size: =18
             Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]mmm"))
             VerticalAlign: =VerticalAlign.Top
-            Width: =94
+            Width: =102
             ZIndex: =10
 
         Title2_20 As label:
@@ -334,17 +428,13 @@ Dashboard As screen:
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =Font.'Segoe UI'
             FontWeight: =FontWeight.Semibold
-            Height: =57
+            Height: =86
             OnSelect: =Select(Parent)
-            PaddingBottom: =0
-            PaddingLeft: =10
-            PaddingRight: =10
-            PaddingTop: =0
             Size: =16
             Text: =ThisItem.DeskFloor
             VerticalAlign: =VerticalAlign.Top
             Width: =300
-            X: =130
+            X: =204
             ZIndex: =11
 
     lblMyUpcomingRes As label:
@@ -356,7 +446,8 @@ Dashboard As screen:
         FontWeight: =FontWeight.Semibold
         Height: =57
         Size: =21
-        Text: ="Upcoming Reservations (" & gallMyReservationsPreview.AllItemsCount & ")"
+        Text: |-
+            ="Your Upcoming Reservations (" & gallMyReservationsPreview.AllItemsCount & ")" & ":"
         Width: =448
         X: =648
         Y: =40
@@ -389,22 +480,37 @@ Dashboard As screen:
         Color: =RGBA(0, 0, 0, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         Font: =App.Theme.Font
-        Height: =54
-        Size: =21
-        Text: ="View all current reservations"
-        Width: =396
-        Y: =473
+        Height: =38
+        Size: =18
+        Text: |-
+            ="See daily/weekly/monthly reservation calendars:"
+        Width: =556
+        X: =42
+        Y: =553
         ZIndex: =9
 
     HtmlText2 As htmlViewer:
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        Height: =248
-        HtmlText: |
-            ="<div style='font-size:16px; font-weight:bold;'>Welcome to the Battle Creek VA Room Reservation Portal!</div><br>" & 
-            "<div style='font-size:14px;'>Rooms listed may be reserved for Super User or End User Virtual Instructor Led Training (VILT) events (Seating Range: 8-16+). Each EHRM Training workstation contains a monitor, keyboard, mouse, barcode scanner, and laptop. There are tables and chairs located in each room.  <br><br>***Please bring Headphones with Microphone as other trainees are in different classes***<br><br>"&  
-            "We’d recommend contacting the following individuals for room reservations or questions:<br>" & 
-            "<a href='mailto:Denise.patterer@va.gov?subject=Conference%20Room%20Reservation'>Denise Patterer</a> or <a href='mailto:Sean.Krontz@va.gov?subject=Conference%20Room%20Reservation'>Sean Krontz</a>.<br><br>" & 
-            "Please feel free to reach out to <a href='mailto:vhabacclt@va.gov?subject=Conference%20Room%20Reservation'>Battle Creek CLT</a> Change Leadership Team (CLT) or the Points of Contact listed above if you have any questions or concerns.</div>"
+        Height: =342
+        HtmlText: |-
+            =If(
+                userAccessLevel_text = "AccessDenied",
+                    ("Your application user access has been revoked. Please contact the application admins regarding this message!"),
+                ("<div style='font-size:14px; text-align:center'>Welcome to the Edward Hines Jr. VA Hospital's</div>
+                        <br><div style='font-size:18px; text-align:center; font-weight:bold;'>EHRM Training Reservation Portal!</div>
+                        <br>
+                        <div style='font-size:14px;'>Within this app, individual desks & classrooms may be reserved to participate in upcoming '<b><u>Super User</u></b>' or '<b><u>End User Virtual Instructor Led Training (VILT)</u></b>' training events provided by the Hines EHRM Training Coordinators.
+                        <br>
+                        <br>
+                        Each reserved workstation will provide a monitor, keyboard, mouse, barcode scanner, and laptop to each training event participant. <i>***Please bring your own headphones with microphone, as other trainees may be participating in different classes simultaneously***</i>
+                        <br>
+                        <br>  
+                        You may contact the following Hines EHRM Training Coordinators for any training questions or reservation issues: 
+                        <a href='mailto:Celina.Ceballo@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>Celina Ceballo</a>,
+                        <a href='mailto:Amy.Garner2@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>Amy Garner</a>,
+                        <a href='mailto:Brenda.Beben@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>Brenda Beben</a>
+                        . Alternatively, please feel free to reach out to the Edward Hines Jr. VA Hospital's <a href='mailto:hinesehrmclt@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>EHRM Change Leadership Team (CLT)</a> if you have any other concerns related to the EHRM roll-out process.</div>")
+            )
         Size: =
         Width: =608
         Y: =211
@@ -439,8 +545,8 @@ Dashboard As screen:
         Font: =App.Theme.Font
         FontWeight: =FontWeight.Semibold
         Height: =45
-        Text: ="V1"
-        Width: =53
+        Text: =varGetRepo_ProjectVersion
+        Width: =75
         X: =15
         ZIndex: =14
 

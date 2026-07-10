@@ -99,7 +99,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 663,
+        "PublishOrderIndex": 670,
         "Rules": [
           {
             "Category": "Data",
@@ -462,7 +462,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 664,
+        "PublishOrderIndex": 671,
         "Rules": [
           {
             "Category": "Data",
@@ -914,7 +914,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 665,
+        "PublishOrderIndex": 672,
         "Rules": [
           {
             "Category": "Data",
@@ -1449,7 +1449,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 666,
+        "PublishOrderIndex": 673,
         "Rules": [
           {
             "Category": "Data",
@@ -1838,7 +1838,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 667,
+        "PublishOrderIndex": 674,
         "Rules": [
           {
             "Category": "Data",
@@ -2061,7 +2061,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galWeekdays",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 669,
+            "PublishOrderIndex": 676,
             "Rules": [
               {
                 "Category": "Data",
@@ -2182,7 +2182,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galWeekdays",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 670,
+            "PublishOrderIndex": 677,
             "Rules": [
               {
                 "Category": "Data",
@@ -2499,7 +2499,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 668,
+        "PublishOrderIndex": 675,
         "Rules": [
           {
             "Category": "Data",
@@ -2772,7 +2772,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 672,
+            "PublishOrderIndex": 679,
             "Rules": [
               {
                 "Category": "Data",
@@ -2951,7 +2951,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 673,
+            "PublishOrderIndex": 680,
             "Rules": [
               {
                 "Category": "Data",
@@ -3381,7 +3381,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 674,
+            "PublishOrderIndex": 681,
             "Rules": [
               {
                 "Category": "Data",
@@ -3691,7 +3691,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 675,
+            "PublishOrderIndex": 682,
             "Rules": [
               {
                 "Category": "Data",
@@ -3923,7 +3923,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 671,
+        "PublishOrderIndex": 678,
         "Rules": [
           {
             "Category": "Data",
@@ -4235,7 +4235,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 676,
+        "PublishOrderIndex": 683,
         "Rules": [
           {
             "Category": "Data",
@@ -4510,7 +4510,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 677,
+        "PublishOrderIndex": 684,
         "Rules": [
           {
             "Category": "Data",
@@ -4843,7 +4843,7 @@
       },
       "OnChangeCal"
     ],
-    "LastModifiedTimestamp": "639028051397523753",
+    "LastModifiedTimestamp": "639192121310832302",
     "Name": "Calendar",
     "Rules": [
       {
@@ -4985,7 +4985,7 @@
       "Name": "StartDate",
       "PropertyDataTypeKey": "DateTime",
       "Tooltip": "Start date",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"DateTime\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"DateTime\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 0,
@@ -4994,7 +4994,7 @@
       "Name": "EndDate",
       "PropertyDataTypeKey": "DateTime",
       "Tooltip": "End date",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"DateTime\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"DateTime\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 0,
@@ -5003,7 +5003,7 @@
       "Name": "Color",
       "PropertyDataTypeKey": "Color",
       "Tooltip": "Text color",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Color\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Color\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 0,
@@ -5012,7 +5012,7 @@
       "Name": "SelectRange",
       "PropertyDataTypeKey": "Boolean",
       "Tooltip": "True if selecting a date range and false for a single date",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Boolean\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Boolean\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 0,
@@ -5021,7 +5021,7 @@
       "Name": "BorderRadius",
       "PropertyDataTypeKey": "Number",
       "Tooltip": "Border radius of the calendar selections",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Number\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Number\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 0,
@@ -5030,7 +5030,7 @@
       "Name": "SelectedDateColor",
       "PropertyDataTypeKey": "Color",
       "Tooltip": "Selected date color",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Color\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Color\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 0,
@@ -5039,7 +5039,7 @@
       "Name": "SelectedDateFill",
       "PropertyDataTypeKey": "Color",
       "Tooltip": "Fill of the selected day",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Color\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Color\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 0,
@@ -5049,7 +5049,7 @@
       "Name": "DefaultStartDate",
       "PropertyDataTypeKey": "DateTime",
       "Tooltip": "Default Start Date",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"DateTime\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"DateTime\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 0,
@@ -5059,7 +5059,7 @@
       "Name": "DefaultEndDate",
       "PropertyDataTypeKey": "DateTime",
       "Tooltip": "Default End Date",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"DateTime\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"DateTime\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 0,
@@ -5068,7 +5068,7 @@
       "Name": "Styles",
       "PropertyDataTypeKey": "Table",
       "Tooltip": "Style sheet",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Table\",\"EnumString\":\"\",\"Type\":[{\"Name\":\"Key\",\"Kind\":\"String\",\"EnumString\":\"\",\"Type\":[]},{\"Name\":\"Type\",\"Kind\":\"String\",\"EnumString\":\"\",\"Type\":[]},{\"Name\":\"Value\",\"Kind\":\"String\",\"EnumString\":\"\",\"Type\":[]}]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Table\",\"EnumString\":\"\",\"Type\":[{\"Name\":\"Key\",\"Kind\":\"String\",\"EnumString\":\"\",\"Type\":[]},{\"Name\":\"Type\",\"Kind\":\"String\",\"EnumString\":\"\",\"Type\":[]},{\"Name\":\"Value\",\"Kind\":\"String\",\"EnumString\":\"\",\"Type\":[]}]}}"
     },
     {
       "Category": 0,
@@ -5077,7 +5077,7 @@
       "Name": "DaysAheadRestriction",
       "PropertyDataTypeKey": "Number",
       "Tooltip": "A custom property",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Number\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Number\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 0,
@@ -5086,7 +5086,7 @@
       "Name": "SelectedDates",
       "PropertyDataTypeKey": "Table",
       "Tooltip": "SelectedDates Multipl no Range",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Table\",\"EnumString\":\"\",\"Type\":[{\"Name\":\"DateValue\",\"Kind\":\"Date\",\"EnumString\":\"\",\"Type\":[]}]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Table\",\"EnumString\":\"\",\"Type\":[{\"Name\":\"DateValue\",\"Kind\":\"Date\",\"EnumString\":\"\",\"Type\":[]}]}}"
     },
     {
       "Category": 2,
@@ -5099,7 +5099,7 @@
         "PropertyScopeRulesKey": []
       },
       "Tooltip": "A custom property",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Table\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Table\",\"EnumString\":\"\",\"Type\":[]}}"
     },
     {
       "Category": 2,
@@ -5112,7 +5112,7 @@
         "PropertyScopeRulesKey": []
       },
       "Tooltip": "A custom property",
-      "Type": "{\"Version\":\"1.347\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Void\",\"EnumString\":\"\",\"Type\":[]}}"
+      "Type": "{\"Version\":\"1.349\",\"Type\":{\"Name\":\"Root\",\"Kind\":\"Void\",\"EnumString\":\"\",\"Type\":[]}}"
     }
   ],
   "FirstParty": true,
@@ -5123,7 +5123,7 @@
   "IsPcfControl": false,
   "IsPremiumPcfControl": false,
   "IsWidgetTemplate": false,
-  "LastModifiedTimestamp": "639028051397523753",
+  "LastModifiedTimestamp": "639192121310832302",
   "Name": "0c469c74dd37480dbc0b81f64833370c",
   "OverridableProperties": {},
   "TemplateOriginalName": "fe29d6eb8ed24c219f22b476f07be944",

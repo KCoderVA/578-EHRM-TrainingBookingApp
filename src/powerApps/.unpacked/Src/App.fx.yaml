@@ -2,7 +2,16 @@ App As appinfo:
     BackEnabled: =false
     MinScreenHeight: =320
     MinScreenWidth: =320
-    OnStart: =
+    OnStart: |-
+        =Set(
+            varGetRepo_ProjectVersion, 
+            "0.3.4"
+            //GitHub.SearchGithubWithQuery({query:("https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/releases/latest")})
+            //GitHub.GetReference("KCoderVA", "578-EHRM-TrainingBookingApp", "tags/")
+            //GitHub.GetMilestones("KCoderVA", "578-EHRM-TrainingBookingApp",{page:("https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/releases/latest")})
+            //PowerAppsforMakers.GetApp("d0958d55-fe85-425c-83f6-03c659bf4079")
+            //PowerAppsforMakers.GetAppVersions("f14182d6-e4ef-42bf-8dd2-0a628377cb77",{'$top':("50")})
+        );
     StartScreen: =
     Theme: =PowerAppsTheme
 

@@ -74,6 +74,10 @@ scrn_WeeklyCal As screen:
     Container1 As groupContainer.manualLayoutContainer:
         DropShadow: =DropShadow.Light
         Height: =617
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
@@ -406,7 +410,7 @@ scrn_WeeklyCal As screen:
             HoverBorderColor: =App.Theme.Colors.Darker10
             HoverColor: =App.Theme.Colors.PrimaryForeground
             HoverFill: =App.Theme.Colors.Darker10
-            OnSelect: =Navigate(scrn_WeeklyCal_1)
+            OnSelect: =Navigate(scrn_DailyCal)
             PressedBorderColor: =App.Theme.Colors.Darker40
             PressedColor: =Self.Color
             PressedFill: =App.Theme.Colors.Darker40
@@ -442,6 +446,10 @@ scrn_WeeklyCal As screen:
         DropShadow: =DropShadow.Light
         Fill: =RGBA(255, 255, 255, 1)
         Height: =415
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4

@@ -13,41 +13,69 @@ Screens:
       Height: =Max(App.Height, App.DesignHeight)
       Width: =Max(App.Width, App.DesignWidth)
     Children:
-      - Image2_10:
-          Control: Image@2.2.3
-          Group: grpHeader_9
-          Properties:
-            Height: =150
-            Image: =abstractBackground
-            ImagePosition: =ImagePosition.Fill
-            Width: =640
-      - Rectangle2_9:
-          Control: Rectangle@2.3.0
-          Group: grpHeader_9
-          Properties:
-            Fill: =RGBA(135, 78, 181, 0.65)
-            Height: =150
-            Width: =640
       - bgRounded_13:
           Control: HtmlViewer@2.1.0
           Properties:
             DisabledBorderColor: =RGBA(56, 56, 56, 1)
             Font: =Font.'Open Sans'
-            Height: =640
-            HtmlText: ="<div style='border-radius:10%;height:800px;width:100%;background-color:#FCFCFC'></div>"
+            Height: |-
+              =//640
+              HtmlText1.Height + 10
+            HtmlText: |-
+              =//"<div style='border-radius:10%;height:800px;width:100%;background-color:#FCFCFC'></div>"
+              "<div style='border-radius:10%;height:590px;width:100%;background-color:#FCFCFC'></div>"
             Size: =24
-            Width: =610
-            X: =15
+            Width: |-
+              =//610
+              HtmlText1.Width + 20
+            X: |-
+              =//15
+              HtmlText1.X - 20
+            Y: =HtmlText1.Y - 15
+      - HtmlText1:
+          Control: HtmlViewer@2.1.0
+          Properties:
+            DisabledBorderColor: =RGBA(56, 56, 56, 1)
+            Font: =Font.'Open Sans'
+            Height: |-
+              =//640
+              Parent.Height - Image2_10.Y - Image2_10.Height - 25
+            HtmlText: ="<p>New Features:</p><ul><li>Disable the selection of previous days on the calendar</li><li>Added ability to restrict the calendar selection to X days in the future</li><li>Added Manage Desk Screens</li><li>Added View Reservation Screen</li></ul><p>Bug Fixes/Optimizations</p><ul><li>Clear out selections after confirmation</li><li>Optimize time dropdowns</li><li>Fix time zone issues</li></ul>"
+            Size: =12
+            Width: |-
+              =//560
+              Parent.Width - 50
+            X: |-
+              =//40
+              25
+            Y: |-
+              =//0
+              Image2_10.Y + Image2_10.Height + 20
+      - Image2_10:
+          Control: Image@2.2.3
+          Group: grpHeader_9
+          Properties:
+            Height: =Tabs_11.Height
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+      - Rectangle2_9:
+          Control: Rectangle@2.3.0
+          Group: grpHeader_9
+          Properties:
+            Fill: =RGBA(135, 78, 181, 0.65)
+            Height: =Image2_10.Height
+            Width: =600
+            X: =536
       - lblSuccess_2:
           Control: Label@2.5.1
           Properties:
-            Align: =Align.Center
             Color: =RGBA(255, 255, 255, 1)
             FontWeight: =FontWeight.Bold
-            Height: =113
+            Height: =Image2_10.Height
             Size: =32
-            Text: ="Release Notes"
-            Width: =640
+            Text: ="   Release Notes"
+            Width: =Image2_10.Width
       - Tabs_11:
           Control: CanvasComponent
           ComponentName: Tabs
@@ -81,13 +109,5 @@ Screens:
                       Visible:true
                   }
               )
-            Y: =520
-      - HtmlText1:
-          Control: HtmlViewer@2.1.0
-          Properties:
-            DisabledBorderColor: =RGBA(56, 56, 56, 1)
-            Font: =Font.'Open Sans'
-            Height: =640
-            HtmlText: ="<p>New Features:</p><ul><li>Disable the selection of previous days on the calendar</li><li>Added ability to restrict the calendar selection to X days in the future</li><li>Added Manage Desk Screens</li><li>Added View Reservation Screen</li></ul><p>Bug Fixes/Optimizations</p><ul><li>Clear out selections after confirmation</li><li>Optimize time dropdowns</li><li>Fix time zone issues</li></ul>"
-            Size: =20
-            X: =40
+            Width: =600
+            X: =536

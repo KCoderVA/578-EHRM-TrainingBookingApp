@@ -461,8 +461,8 @@ ManageDesks As screen:
             Fill: =App.Theme.Colors.Primary
             Height: =263
             Visible: =varShowConfirmDelete
-            Width: =532
-            X: =55
+            Width: =973
+            X: =101
             Y: =63
             ZIndex: =1
 
@@ -471,16 +471,18 @@ ManageDesks As screen:
             Fill: =RGBA(116, 116, 116, 0.85)
             Height: =640
             Visible: =varShowConfirmDelete
-            Width: =640
+            Width: =1136
             ZIndex: =16
 
         bgRounded_9 As htmlViewer:
-            Height: =640
+            Height: =293
             HtmlText: |-
-                ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+                =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+                "<div style='border:1px gray;border-radius:10%;height:275px;width:100%;background-color:#FCFCFC'></div>"
             Visible: =varShowConfirmDelete
-            Width: =610
-            X: =14
+            Width: =722
+            X: =207
+            Y: =84
             ZIndex: =17
 
         Label1 As label:
@@ -490,13 +492,13 @@ ManageDesks As screen:
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
-            Height: =366
+            Height: =121
             Size: =24
             Text: ="Confirm Deletion?"
             Visible: =varShowConfirmDelete
-            Width: =557
-            X: =42
-            Y: =11
+            Width: =695
+            X: =220
+            Y: =113
             ZIndex: =18
 
         btnConfirmCancel As button:
@@ -524,8 +526,9 @@ ManageDesks As screen:
             Size: =14
             Text: ="CANCEL"
             Visible: =varShowConfirmDelete
-            X: =141
-            Y: =401
+            Width: =293
+            X: =239
+            Y: =257
             ZIndex: =19
 
         btnConfirmDelete As button:
@@ -552,9 +555,10 @@ ManageDesks As screen:
             RadiusTopLeft: =20
             RadiusTopRight: =20
             Size: =14
-            Text: =" 🗑️  DELETE"
+            Text: =" 🗑️   DELETE"
             Visible: =varShowConfirmDelete
-            X: =341
-            Y: =401
+            Width: =293
+            X: =604
+            Y: =257
             ZIndex: =20
 

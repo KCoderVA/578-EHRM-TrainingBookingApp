@@ -211,6 +211,16 @@
         <appMagic:overrideProperty name="UseFluentV9Cards" defaultValue="true" isHidden="true" />
       </appMagic:overrideProperties>
     </appMagic:controlVariant>
+    <appMagic:controlVariant name="ModernForm">
+      <appMagic:requirementsMetadata>
+        <appMagic:requiredConditions>
+          <appMagic:previewFlag name="FluentV9ControlsPreview" />
+        </appMagic:requiredConditions>
+      </appMagic:requirementsMetadata>
+      <appMagic:insertMetadata isDeviceOptimized="true">
+        <appMagic:category name="FluentV9" priority="100" />
+      </appMagic:insertMetadata>
+    </appMagic:controlVariant>
   </appMagic:controlVariants>
   <appMagic:conversion from="2.0.0" to="2.0.1">
     <!-- legacy KO template was removed -->

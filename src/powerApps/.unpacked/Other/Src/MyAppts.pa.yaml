@@ -30,7 +30,13 @@ Screens:
                               'Reserved By'.Email = currentUser.Email
                               // || 'Created By'.Email = currentUser.Email
                           )
-                          && 'Check Out From' <= Today(),DeskFloor
+                          && //'Check Out From' <= Today(),DeskFloor,
+                          Or(
+                              'Check Out From' <= Today(),
+                              IsBlank(Active_choice.Value),
+                              Active_choice.Value = "false",
+                              DeskFloor
+                          )
                       ),
                       "CheckOutFrom",
                       SortOrder.Descending
@@ -100,8 +106,9 @@ Screens:
                   Height: =40
                   Icon: =Icon.OpenInNewWindow
                   OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+                  Visible: =false
                   Width: =45
-                  X: =450
+                  X: =848
                   Y: =5
             - Title2_9:
                 Control: Label@2.5.1
@@ -214,6 +221,75 @@ Screens:
                   VerticalAlign: =VerticalAlign.Top
                   Width: =60
                   Y: =10
+            - Button3_4:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(109, 49, 162, 1)
+                  BorderThickness: =3
+                  Fill: =RGBA(152, 208, 70, 1)
+                  Height: =30
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =16
+                  Text: ="View This"
+                  Width: =142
+                  X: =Parent.Width - Self.Width - 10
+                  Y: =10
+            - Button3_9:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(109, 49, 162, 1)
+                  BorderThickness: =3
+                  Fill: =RGBA(184, 0, 0, 1)
+                  Height: =30
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =16
+                  Text: ="Cancel This"
+                  Visible: =false
+                  Width: =142
+                  X: =Parent.Width - Self.Width - 10
+                  Y: =Parent.TemplateHeight - Self.Height - 10
+            - Icon2_3:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Color: =RGBA(109, 49, 162, 1)
+                  Fill: =RGBA(152, 208, 70, 1)
+                  Height: =40
+                  Icon: =Icon.OpenInNewWindow
+                  OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+                  PaddingBottom: =5
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  PaddingTop: =5
+                  Visible: =false
+                  Width: =46
+                  X: =847
+                  Y: =5
+            - Icon2_4:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(184, 0, 0, 1)
+                  Height: =40
+                  Icon: =Icon.CancelBadge
+                  OnSelect: =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+                  PaddingBottom: =5
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  PaddingTop: =5
+                  Visible: =false
+                  Width: =46
+                  X: =860
+                  Y: =Parent.TemplateHeight - Self.Height - 3
       - gallUpcoming:
           Control: Gallery@2.15.0
           Variant: BrowseLayout_Vertical_OneTextVariant_ver4.0
@@ -230,7 +306,13 @@ Screens:
                               'Reserved By'.Email = currentUser.Email
                               // || 'Created By'.Email = currentUser.Email
                           )
-                          && 'Check Out From' >= Today(),DeskFloor
+                          && //'Check Out From' <= Today(),DeskFloor,
+                          Or(
+                              'Check Out From' >= Today(),
+                              !IsBlank(Active_choice.Value),
+                              Active_choice.Value = "true",
+                              DeskFloor
+                          )            
                       ),
                       "CheckOutFrom",
                       SortOrder.Ascending
@@ -252,31 +334,31 @@ Screens:
                 Control: Rectangle@2.3.0
                 Properties:
                   Fill: =RGBA(135, 78, 181, 1)
-                  Height: =1
+                  Height: =2
                   OnSelect: =Select(Parent)
                   Width: =Parent.TemplateWidth
                   Y: =Parent.TemplateHeight - 1
             - Button3:
                 Control: Classic/Button@2.2.0
                 Properties:
-                  BorderThickness: =0
-                  Fill: =RGBA(184, 0, 0, 1)
-                  Height: =40
+                  BorderColor: =RGBA(109, 49, 162, 1)
+                  BorderThickness: =3
+                  Fill: =RGBA(152, 208, 70, 1)
+                  Height: =30
                   HoverFill: =ColorFade(Self.Fill, -20%)
-                  OnSelect: =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+                  OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
                   RadiusBottomLeft: =20
                   RadiusBottomRight: =20
                   RadiusTopLeft: =20
                   RadiusTopRight: =20
                   Size: =16
-                  Text: ="CANCEL"
+                  Text: ="View This"
                   Width: =142
-                  X: =878
+                  X: =Parent.Width - Self.Width - 10
                   Y: =10
             - Title2_7:
                 Control: Label@2.5.1
                 Properties:
-                  Align: =Align.Center
                   BorderColor: =RGBA(0, 0, 0, 1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Semibold
@@ -292,19 +374,40 @@ Screens:
                     //Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)ThisItem.'Check Out From'
                   VerticalAlign: =VerticalAlign.Top
                   Width: =314
-                  X: =582
+                  X: =537
                   Y: =15
             - Icon2:
                 Control: Classic/Icon@2.5.0
                 Properties:
-                  Color: =RGBA(39, 113, 194, 1)
+                  Color: =RGBA(109, 49, 162, 1)
+                  Fill: =RGBA(152, 208, 70, 1)
                   Height: =40
                   Icon: =Icon.OpenInNewWindow
                   OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+                  PaddingBottom: =5
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  PaddingTop: =5
                   Visible: =false
-                  Width: =45
-                  X: =547
-                  Y: =10
+                  Width: =46
+                  X: =860
+                  Y: =3
+            - Icon2_2:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(184, 0, 0, 1)
+                  Height: =40
+                  Icon: =Icon.CancelBadge
+                  OnSelect: =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+                  PaddingBottom: =5
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  PaddingTop: =5
+                  Visible: =false
+                  Width: =46
+                  X: =860
+                  Y: =Parent.TemplateHeight - Self.Height - 3
             - Title2_5:
                 Control: Label@2.5.1
                 Properties:
@@ -415,6 +518,24 @@ Screens:
                   VerticalAlign: =VerticalAlign.Top
                   Width: =60
                   Y: =10
+            - Button3_3:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(109, 49, 162, 1)
+                  BorderThickness: =3
+                  Fill: =RGBA(184, 0, 0, 1)
+                  Height: =30
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =Select(Parent);UpdateContext({varConfirmCancel:true});UpdateContext({varReservationToCancel:ThisItem});
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =16
+                  Text: ="Cancel This"
+                  Width: =142
+                  X: =Parent.Width - Self.Width - 10
+                  Y: =Parent.TemplateHeight - Self.Height - 10
       - rectSeperator:
           Control: Rectangle@2.3.0
           Properties:
@@ -483,81 +604,6 @@ Screens:
             Width: =640
             X: =240
             Y: =169
-      - Rectangle3_3:
-          Control: Rectangle@2.3.0
-          Group: grpConfirmCancel
-          Properties:
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =66
-            Visible: =varConfirmCancel
-            Width: =640
-            X: =271
-            Y: =353
-      - bgRounded_10:
-          Control: HtmlViewer@2.1.0
-          Group: grpConfirmCancel
-          Properties:
-            DisabledBorderColor: =RGBA(56, 56, 56, 1)
-            Font: =Font.'Open Sans'
-            Height: =189
-            HtmlText: ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
-            Size: =24
-            Visible: =varConfirmCancel
-            Width: =610
-            X: =285
-            Y: =229
-      - Label1_1:
-          Control: Label@2.5.1
-          Group: grpConfirmCancel
-          Properties:
-            Align: =Align.Center
-            FontWeight: =FontWeight.Semibold
-            Height: =119
-            Size: =24
-            Text: ="Confirm Cancellation"
-            Visible: =varConfirmCancel
-            Width: =557
-            X: =311
-            Y: =258
-      - btnConfirmCancel_1:
-          Control: Classic/Button@2.2.0
-          Group: grpConfirmCancel
-          Properties:
-            BorderThickness: =0
-            Color: =RGBA(255, 255, 255, 1)
-            Fill: =RGBA(128, 128, 128, 1)
-            Height: =66
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: =UpdateContext({varConfirmCancel:false})
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="NEVERMIND"
-            Visible: =varConfirmCancel
-            Width: =160
-            X: =412
-            Y: =394
-      - btnConfirmDelete_1:
-          Control: Classic/Button@2.2.0
-          Group: grpConfirmCancel
-          Properties:
-            BorderThickness: =0
-            Fill: =RGBA(184, 0, 0, 1)
-            Height: =66
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: =Remove('Desk Reservations',varReservationToCancel);UpdateContext({varConfirmCancel:false})
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="CONFIRM"
-            Visible: =varConfirmCancel
-            Width: =160
-            X: =612
-            Y: =394
       - Image2_5:
           Control: Image@2.2.3
           Properties:
@@ -586,3 +632,103 @@ Screens:
             Width: =608
             X: =(Parent.Width - Self.Width) / 2
             Y: =60
+      - Container5:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =471
+            Visible: =varConfirmCancel
+            Width: =1136
+            Y: =169
+          Children:
+            - Rectangle6:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(214, 221, 224, 0.75)
+                  Height: =Parent.Height
+                  Width: =Parent.Width
+                  X: =
+            - bgRounded_10:
+                Control: HtmlViewer@2.1.0
+                Properties:
+                  DisabledBorderColor: =RGBA(56, 56, 56, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =183
+                  HtmlText: |-
+                    =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+                    "<div style='border:1px gray;border-radius:25%;height:170px;width:100%;background-color:#FCFCFC'></div>"
+                    /*Concat(
+                        "<div style='border:1px gray;border-radius:10%;height:",
+                        "239",
+                        "px;width:",
+                        "100",
+                        "%;background-color:#FCFCFC'></div>"
+                    )*/
+                  Size: =24
+                  Visible: =varConfirmCancel
+                  Width: =Label1_1.Width
+                  X: =289
+                  Y: =120
+            - Label1_1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  FontWeight: =FontWeight.Semibold
+                  Height: =54
+                  Size: =24
+                  Text: ="Confirm Cancellation?"
+                  Visible: =varConfirmCancel
+                  Width: =557
+                  X: =289
+                  Y: =140
+            - Rectangle3_3:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(116, 116, 116, 0.85)
+                  Height: =btnConfirmCancel_1.Height + 10
+                  Visible: |-
+                    =//varConfirmCancel
+                    false
+                  Width: =bgRounded_10.Width - 20
+                  X: =299
+                  Y: =274
+            - btnConfirmCancel_1:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(180, 214, 250, 1)
+                  BorderThickness: =5
+                  Fill: |-
+                    =//RGBA(128, 128, 128, 1)
+                    RGBA(184, 0, 0, 1)
+                  Height: =66
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =UpdateContext({varConfirmCancel:false})
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =14
+                  Text: ="NEVERMIND"
+                  Visible: =varConfirmCancel
+                  Width: =160
+                  X: =388
+                  Y: =194
+            - btnConfirmDelete_1:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(180, 214, 250, 1)
+                  BorderThickness: =5
+                  Fill: =RGBA(9, 33, 98, 1)
+                  Height: =66
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =Remove('Desk Reservations',varReservationToCancel);UpdateContext({varConfirmCancel:false})
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =14
+                  Text: ="CONFIRM"
+                  Visible: =varConfirmCancel
+                  Width: =160
+                  X: =588
+                  Y: =194
