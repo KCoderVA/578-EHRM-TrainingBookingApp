@@ -15,8 +15,10 @@
 # ------------------------------------------------------------
 /docs/local/
 /docs/logs/
+docs/release-notes/releaseTemplates/
 !/assets/screenshots/
 /optionalGUI/
+
 
 # ------------------------------------------------------------
 # 3. Local-only configs & secrets
