@@ -19,6 +19,37 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.3.5] - 2026-07-10
+
+### Added
+
+- **`src/scripts/pwsh/enterpriseCommitGuide.ps1`** — New enterprise-grade PowerShell 7 script that fully automates the release branch/commit/push/PR/checks/merge/sync cycle for VA GHES environments. Validates prerequisites (VERSION + all three release artifact `.md` files), creates a `pr/release-vX.Y.Z` branch, commits all staged changes using the first line of `_commitMessage.md` as the title, opens a draft PR with `gh pr create --body-file`, watches CI checks with `gh pr checks --watch`, marks ready, merges, and re-syncs the local `main` branch. Supersedes the manual `docs/local/v6_manualRepoManagement.md` workflow guide.
+- **`src/scripts/pwsh/postEnterpriseCommitArchival.ps1`** — New PowerShell 7 script that performs the three-step post-release artifact rotation: (1) archives current live `docs/release-notes/v*_commitMessage.md`, `v*_pullRequest.md`, and `v*_releaseNotes.md` files to `.\archive\docs\release-notes\` (with timestamp suffix on name collision); (2) renames the live files by swapping the old version prefix with the next version from `.\VERSION`; (3) overwrites renamed files with fresh template content from `.\docs\release-notes\releaseTemplates\`, leaving them ready for the next release cycle.
+- **`.github/prompts/`** — Four new Copilot Chat prompt files (`.prompt.md` format) that act as AI-driven release documentation agents. Each reads the current `VERSION`, runs `git status/diff/log` commands, analyzes all pending workspace changes, and populates `{{PLACEHOLDER}}` fields in the targeted release artifact documents. Scopes:
+  - `enterprisePrepareAll.prompt.md` — all three release artifacts (`_commitMessage.md`, `_pullRequest.md`, `_releaseNotes.md`) plus a `CHANGELOG.md` entry in a single pass
+  - `enterprisePrepareCommit.prompt.md` — commit message artifact + CHANGELOG entry
+  - `enterprisePreparePR.prompt.md` — pull request artifact only
+  - `enterprisePrepareRelease.prompt.md` — release notes artifact only
+
+### Changed
+
+- **`VERSION`** — 0.3.4 → 0.3.5
+- **`CHANGELOG.md`** — [0.3.5] entry added (this file)
+
+### Removed
+
+- **`docs/release-notes/v0.3.4_commitMessage.md`** — removed from live folder as part of v0.3.4→v0.3.5 artifact rotation; previously committed with the v0.3.4 release
+- **`docs/release-notes/v0.3.4_pullRequest.md`** — removed from live folder (same rotation)
+- **`docs/release-notes/v0.3.4_releaseNotes.md`** — removed from live folder (same rotation)
+
+### Notes
+
+- Release type: Patch — developer tooling and ALM infrastructure only; no functional Canvas app, Power Automate, or SharePoint changes
+- Canvas app baseline remains v0.3.4 (unchanged)
+- `AppUserList` flow baseline remains v0.1.0 (unchanged)
+
+---
+
 ## [0.3.4] - 2026-07-09
 
 ### Added
