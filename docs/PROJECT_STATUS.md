@@ -2,10 +2,10 @@
 
 This document describes the current public state of the EHRM Training & Booking App repository and what is included/excluded as of the latest release.
 
-## Status summary (v0.3.4)
+## Status summary (v0.3.6)
 
-- **Release type**: Feature — First major Canvas app functional update since v0.0.2; role-based access control, intelligent scheduling, calendar modernization, and UX improvements
-- **Project release**: v0.3.4 (2026-07-09)
+- **Release type**: Patch — `.gitignore` security hardening and repository hygiene; comprehensive data file type and compressed archive ignore rules; documentation catch-up through v0.3.5 and v0.3.6
+- **Project release**: v0.3.6 (2026-07-14)
 - **Component versions**:
   - Canvas app: **v0.3.4** (source-controlled unpacked source under `src/powerApps/.unpacked/`; package at `src/powerApps/.msapp/v0.3.4_578EHRMTrainingApp.msapp`)
   - Power Automate: `AppUserList` v0.1.0 (source-controlled unpacked source under `src/powerAutomate/AppUserList/.unpacked/`)
@@ -15,6 +15,8 @@ This document describes the current public state of the EHRM Training & Booking 
 
 | Version | Date | Type |
 |---------|------|------|
+| v0.3.6 | 2026-07-14 | Patch — `.gitignore` security hardening, data/archive file type rules, documentation catch-up |
+| v0.3.5 | 2026-07-10 | Patch — automated release workflow scripts (`enterpriseCommitGuide.ps1`, `postEnterpriseCommitArchival.ps1`), Copilot prompt agents |
 | v0.3.4 | 2026-07-09 | Feature — Canvas app v0.3.4: RBAC, smart scheduling, calendar modernization, UX improvements |
 | v0.3.2 | 2026-07-07 | Patch — GHES compatibility fixes for release and version-bump workflows |
 | v0.3.1 | 2026-07-07 | Patch — added Power Apps web development helper script |
@@ -31,7 +33,7 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
 ## What is in this repository
 
 - **Unpacked sources** (for code review/diffing) for the Power Apps Canvas app and Power Automate flows; also includes `src/solution.xml` (Power Platform solution manifest, corrected in v0.3.4 to reflect EHRM Training & Booking App identity and components).
-- **Documentation & runbooks**: [ARCHITECTURE.md](../config/architecture/ARCHITECTURE.md), [ALM-RUNBOOK.md](../config/runbooks/ALM-RUNBOOK.md), component-level READMEs, release notes.
+- **Documentation & runbooks**: `config/architecture/ARCHITECTURE.md`, `config/runbooks/ALM-RUNBOOK.md` (local-only; git-ignored as of v0.3.6), component-level READMEs under `src/`, and release notes under `docs/release-notes/`.
 - **VS Code workspace configuration**: task definitions for common PAC CLI operations (canvas pack/unpack, solution export/unpack), recommended extensions, editor settings.
 - **Scripts & hooks**: PowerShell dev-profile bootstrap (`Ensure-DevProfile.ps1`), pre-commit/pre-push hooks.
 - **SharePoint sample data**: sanitized CSVs under `src/sharePoint/`.
@@ -42,8 +44,11 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
 - **Export artifacts** such as Solution `.zip` files and Canvas `.msapp` packages.
   - These are stored locally under `dist/` and are git-ignored by design.
   - For releases, attach exports to a GitHub Release if you need distributable artifacts.
+- **Compressed archive files** (`.zip`, `.7z`, `.gz`, `.rar`, `.tar`, etc.) — broadly git-ignored as of v0.3.6 to prevent large binary exports from entering the repo.
+- **Spreadsheet and data list files** (`.csv`, `.xlsx`, `.xls`, `.ods`, `.tsv`, etc.) — broadly git-ignored as of v0.3.6 to prevent PII or sensitive VA data from being committed accidentally. Use `!path/to/file` negation entries in `.gitignore` to selectively expose sanitized public-facing files.
+- **Configuration, runbooks, and tooling** under `config/` — fully git-ignored as of v0.3.6 (previously only `config/local/` was excluded). The 3 currently-tracked files (`ARCHITECTURE.md`, `ALM-RUNBOOK.md`, `alm.ps1`) remain in the remote repo pending a follow-up `git rm --cached -r config/`.
 - **Local-only history snapshots** under `archive/` and local notes under `docs/local/` (git-ignored).
-- **Secrets or environment-specific configuration**; use `config/local/` (git-ignored) and environment variables.
+- **Secrets or environment-specific values** — use `config/local/` (git-ignored) and environment variables.
 - **IDE caches** (`.vs/` folder removed in v0.2.0 and now git-ignored).
 
 ## Current data model (baseline)
