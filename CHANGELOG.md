@@ -19,6 +19,43 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.3.6] - 2026-07-14
+
+### Added
+
+- **`docs/release-notes/v0.3.6_commitMessage.md`** — Fresh template stub created by the post-v0.3.5 artifact rotation (`postEnterpriseCommitArchival.ps1`); ready for population before the release commit.
+- **`docs/release-notes/v0.3.6_pullRequest.md`** — Fresh template stub (same post-v0.3.5 rotation).
+- **`docs/release-notes/v0.3.6_releaseNotes.md`** — Fresh template stub (same post-v0.3.5 rotation).
+
+### Changed
+
+- **`.gitignore`** — Comprehensive overhaul for security hardening and repo hygiene (2026-07-14):
+  - Added `/config/` — now fully ignores the entire root-level `config/` directory; previously only `config/local/` and `config/logs/` were excluded. The 3 files currently tracked under `config/` (`ARCHITECTURE.md`, `ALM-RUNBOOK.md`, `alm.ps1`) remain in the git index until explicitly untracked with `git rm --cached -r config/`.
+  - Added `/.git/` — explicit entry for documentation clarity (Git always protects this directory internally; entry is redundant but intentional).
+  - Added full suite of compressed archive format rules: `**/*.7z`, `**/*.gz`, `**/*.bz2`, `**/*.tar`, `**/*.tgz`, `**/*.tar.gz`, `**/*.tar.bz2`, `**/*.rar` (previously only `*.zip` was covered).
+  - Added spreadsheet and data list file type rules: `**/*.csv`, `**/*.tsv`, `**/*.xlsx`, `**/*.xls`, `**/*.xlsm`, `**/*.xlsb`, `**/*.ods` — prevents PII or sensitive VA data files from being committed accidentally. The 10 sanitized CSVs currently tracked under `src/sharePoint/` remain in the git index until explicitly untracked.
+  - Fixed `/docs/release-notes/releaseTemplates/` — added root-anchoring `/` prefix for consistency with all other directory rules (rule was already working but was not root-anchored).
+  - Removed redundant `config/local/` and `config/logs/` entries — now superseded by the broader `/config/` rule.
+  - Updated `Last updated` date to 2026-07-14; refreshed section numbering (now §1–§10) and added instructional inline comments to §9 and §10 guiding use of `!` negation for per-file exceptions.
+- **`VERSION`** — 0.3.5 → 0.3.6 (automated by `postEnterpriseCommitArchival.ps1` post-v0.3.5 release rotation).
+
+### Removed
+
+- **`docs/release-notes/v0.3.5_commitMessage.md`** — Rotated out of the live `docs/release-notes/` folder by `postEnterpriseCommitArchival.ps1` as part of the v0.3.5 → v0.3.6 artifact cycle.
+- **`docs/release-notes/v0.3.5_pullRequest.md`** — Rotated out of the live `docs/release-notes/` folder (same post-release rotation).
+- **`docs/release-notes/v0.3.5_releaseNotes.md`** — Rotated out of the live `docs/release-notes/` folder (same post-release rotation).
+
+### Notes
+
+- Release type: Patch — repository hygiene and `.gitignore` security hardening; no functional changes to Canvas app, Power Automate, or SharePoint.
+- Canvas app baseline remains v0.3.4 (unchanged).
+- `AppUserList` flow baseline remains v0.1.0 (unchanged).
+- **Pending tracking cleanup** (requires explicit `git rm --cached` before or alongside this release commit):
+  - `config/` — 3 files currently tracked (`config/architecture/ARCHITECTURE.md`, `config/runbooks/ALM-RUNBOOK.md`, `config/tools/pac/alm.ps1`) will remain in the remote repo until `git rm --cached -r config/` is run.
+  - `src/sharePoint/` — 10 sanitized CSV files currently tracked will remain in the remote repo until individually removed or until a decision is made on which (if any) to retain as public-facing samples. Use `git rm --cached -r src/sharePoint/` or `!path/to/file.csv` negation entries for retained files.
+
+---
+
 ## [0.3.5] - 2026-07-10
 
 ### Added

@@ -1,10 +1,15 @@
 ﻿# ============================================================
 # .gitignore — 578-EHRM-TrainingSchedulerApp
-# Last updated: 2026-07-07
+# Last updated: 2026-07-14
+# ============================================================
+
+# ============================================================
+# CONFIRMED LOCAL-ONLY / SENSITIVE DIRECTORIES
+# Everything listed below is intentionally NEVER committed.
 # ============================================================
 
 # ------------------------------------------------------------
-# 1. Temporary / scratch directories (local-only)
+# 1. Temporary / scratch / export directories (local-only)
 # ------------------------------------------------------------
 /tmp/
 /dist/
@@ -15,17 +20,32 @@
 # ------------------------------------------------------------
 /docs/local/
 /docs/logs/
-docs/release-notes/releaseTemplates/
+/docs/release-notes/releaseTemplates/
 !/assets/screenshots/
 /optionalGUI/
 
+# ------------------------------------------------------------
+# 3. Config folder (local-only; contains runbooks, environment
+#    templates, tooling helpers, and sensitive config values).
+#    NOTE: files already tracked under config/ before this
+#    rule was added (ARCHITECTURE.md, ALM-RUNBOOK.md, alm.ps1)
+#    will NOT be auto-untracked — run the following if you
+#    want to fully remove them from git's index:
+#      git rm --cached -r config/
+# ------------------------------------------------------------
+/config/
+/src/config/local/
 
 # ------------------------------------------------------------
-# 3. Local-only configs & secrets
+# 4. Git internals
+#    .git/ is always protected by Git itself — this entry is
+#    explicit for documentation/clarity purposes only.
 # ------------------------------------------------------------
-src/config/local/
-config/local/
-config/logs/
+/.git/
+
+# ------------------------------------------------------------
+# 5. Secrets and environment-specific values
+# ------------------------------------------------------------
 *.env
 *.env.*
 .secrets/
@@ -33,7 +53,7 @@ secrets.*
 credentials.*
 
 # ------------------------------------------------------------
-# 4. OS / editor generated files
+# 6. OS / editor generated files
 # ------------------------------------------------------------
 .vs/
 .DS_Store
@@ -42,7 +62,7 @@ desktop.ini
 ~$*
 
 # ------------------------------------------------------------
-# 5. Dependencies & build artifacts
+# 7. Dependencies & build artifacts
 # ------------------------------------------------------------
 node_modules/
 coverage/
@@ -51,7 +71,7 @@ __pycache__/
 *.pyo
 
 # ------------------------------------------------------------
-# 6. Backup, log, and swap files
+# 8. Backup, log, and swap files
 # ------------------------------------------------------------
 **/*.bak
 **/*.log
@@ -60,15 +80,56 @@ __pycache__/
 *.swo
 
 # ------------------------------------------------------------
-# 7. Power Platform
+# 9. Power Platform — binary exports & compressed archives
+#
+#    .zip / compressed formats are always ignored to prevent
+#    large binary exports from entering the repo accidentally.
+#    .msapp is excluded from the zip rule (pac canvas output
+#    that lives under dist/, which is already ignored anyway).
+#    .pbit (Power BI template) is excluded from the pbix rule.
+#
+#    To expose a specific public-facing file, add a negation
+#    directly below this block, e.g.:
+#      !docs/some-sanitized-file.zip
 # ------------------------------------------------------------
-# Ignore zip archives broadly, but allow .msapp binaries
+
+# Canvas app packages and solution exports
 *.zip
 !*.msapp
-
-# Ignore packed zip folders inside src (pac solution unpack)
 src/**/.zip/**
 
-# Power BI — ignore large binary; allow templates
+# Compressed archive formats
+**/*.7z
+**/*.gz
+**/*.bz2
+**/*.tar
+**/*.tgz
+**/*.tar.gz
+**/*.tar.bz2
+**/*.rar
+
+# Power BI binary (ignore large binary; allow templates)
 *.pbix
 !*.pbit
+
+# ------------------------------------------------------------
+# 10. Spreadsheet / data list files
+#
+#     Ignored broadly to prevent PII or sensitive VA data from
+#     being committed accidentally.
+#
+#     NOTE: files already tracked before this rule was added
+#     (e.g., sanitized CSVs under src/sharePoint/) will NOT be
+#     auto-untracked — they remain visible in the repo. To
+#     untrack a specific file run:
+#       git rm --cached path/to/file.csv
+#     To un-ignore a specific public-facing file, add a line:
+#       !src/sharePoint/Desks/Desks.csv
+# ------------------------------------------------------------
+**/*.csv
+**/*.tsv
+**/*.xlsx
+**/*.xls
+**/*.xlsm
+**/*.xlsb
+**/*.ods
