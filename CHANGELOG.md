@@ -19,7 +19,46 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
-## [0.3.6] - 2026-07-14
+## [0.3.7] - 2026-07-17
+
+### Added
+
+- **`assets/images/`** — 21 new app branding and UI image files committed to version control for the first time, covering the full visual asset library:
+  - Site theme / header: `23715-Hines-Site-Theme-DASH-cheetah_14x9-SCREEN.png`
+  - People/staff banner: `banner_genericPeople.png`
+  - UI button graphics: `button_getSupport.png`, `button_upcoming60Days.png`, `button_upcoming90Days.png`
+  - Feature/role icons: `icon_bullhorn.png`, `icon_computerReports.png`, `icon_heartHands.jpg`, `icon_silhouetteAlert.png`, `icon_silhouetteChecklist.png`, `icon_silhouetteCrowd.png`, `icon_silhouetteExecutives.png`, `icon_silhouetteExecutivesCheckmark.png`, `icon_silhouetteReports.png`
+  - Super-user role image: `image_genericSuperUser.png`
+  - Mascot variants: `mascot_banner_cropped.png`, `mascot_banner_highRes.png`, `mascot_iconHorizontal_peachBackground.png`, `mascot_iconRound_transparent.png`, `mascot_iconVertical_whiteBackground.png`, `mascot_icon_lowRes.png`
+- **`src/scripts/pwsh/backupProject.ps1`** — New PowerShell 7 script that creates a timestamped `.zip` archive of the entire workspace to `archive/backup/` (git-ignored). Compresses to `$env:TEMP` first, runs 7-Zip integrity validation (`7z t`), then moves to the permanent location and re-validates. Auto-detects the project root whether invoked from `src/scripts/pwsh/` or the workspace root.
+- **`docs/release-notes/v0.3.7_commitMessage.md`** — Fresh v0.3.7 commit message artifact (populated for this release).
+- **`docs/release-notes/v0.3.7_pullRequest.md`** — Fresh v0.3.7 PR description artifact (populated for this release).
+- **`docs/release-notes/v0.3.7_releaseNotes.md`** — Fresh v0.3.7 release notes artifact (populated for this release).
+- **`docs/release-notes/v0.3.7_priorityWorklist.md`** — Comprehensive developer planning document listing all Canvas app security fixes, feature improvements, and repository health items planned for v0.3.7 and near-term. Generated during the 2026-07-14 project deep-dive (Sections 1–6: RBAC security, UX, training schedule, admin features, repo health, and deferred v0.4.x backlog).
+
+### Changed
+
+- **`VERSION`** — 0.3.6 → 0.3.7
+- **`README.md`** — Release badge updated v0.3.6 → v0.3.7; release date updated to 2026-07-17.
+- **`CHANGELOG.md`** — [0.3.7] entry added (this entry).
+
+### Removed
+
+- **`src/scripts/pwsh/enterpriseCommitGuide.ps1`** — Removed from tracked source and relocated locally to `docs/release-notes/releaseTemplates/` (git-ignored). These release-cycle orchestration scripts are better co-located with the release artifact templates they operate on; they were incorrectly placed in `src/scripts/pwsh/` when first added in v0.3.5.
+- **`src/scripts/pwsh/postEnterpriseCommitArchival.ps1`** — Same rationale and relocation as `enterpriseCommitGuide.ps1` above.
+- **`docs/release-notes/v0.3.6_commitMessage.md`** — Rotated out of the live `docs/release-notes/` folder as part of the v0.3.6 → v0.3.7 artifact cycle.
+- **`docs/release-notes/v0.3.6_pullRequest.md`** — Rotated out (same cycle).
+- **`docs/release-notes/v0.3.6_releaseNotes.md`** — Rotated out (same cycle).
+
+### Notes
+
+- Release type: Maintenance/Patch — repository asset additions, developer tooling, and ALM housekeeping; no functional changes to Canvas app, Power Automate, or SharePoint.
+- Canvas app baseline remains v0.3.4 (unchanged).
+- `AppUserList` flow baseline remains v0.1.0 (unchanged).
+- **Security gap still open** (tracked in `v0.3.7_priorityWorklist.md` §1.1): New unknown users are auto-granted `User` access instead of `AccessDenied` in the Canvas app RBAC default. Fix requires a Canvas app editor change, re-export, and unpack — targeted for the next Canvas app update.
+- **Pending tracking cleanup** (carried forward from v0.3.6): 3 `config/` files and 10 `src/sharePoint/*.csv` files remain in the git index until `git rm --cached` is explicitly run. See worklist item 5.1 in `v0.3.7_priorityWorklist.md`.
+
+---
 
 ### Added
 
