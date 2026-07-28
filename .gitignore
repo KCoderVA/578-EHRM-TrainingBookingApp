@@ -1,6 +1,6 @@
 ﻿# ============================================================
 # .gitignore — 578-EHRM-TrainingSchedulerApp
-# Last updated: 2026-07-14
+# Last updated: 2026-07-28
 # ============================================================
 
 # ============================================================
@@ -27,11 +27,10 @@
 # ------------------------------------------------------------
 # 3. Config folder (local-only; contains runbooks, environment
 #    templates, tooling helpers, and sensitive config values).
-#    NOTE: files already tracked under config/ before this
-#    rule was added (ARCHITECTURE.md, ALM-RUNBOOK.md, alm.ps1)
-#    will NOT be auto-untracked — run the following if you
-#    want to fully remove them from git's index:
-#      git rm --cached -r config/
+#    RESOLVED (v0.3.8): the 3 files formerly tracked under
+#    config/ (ARCHITECTURE.md, ALM-RUNBOOK.md, alm.ps1) have
+#    been untracked via `git rm --cached -r config/` and the
+#    local folder relocated to archive/src/config/.
 # ------------------------------------------------------------
 /config/
 /src/config/local/
@@ -118,13 +117,14 @@ src/**/.zip/**
 #     Ignored broadly to prevent PII or sensitive VA data from
 #     being committed accidentally.
 #
-#     NOTE: files already tracked before this rule was added
-#     (e.g., sanitized CSVs under src/sharePoint/) will NOT be
-#     auto-untracked — they remain visible in the repo. To
-#     untrack a specific file run:
-#       git rm --cached path/to/file.csv
-#     To un-ignore a specific public-facing file, add a line:
-#       !src/sharePoint/Desks/Desks.csv
+#     RESOLVED (v0.3.8): the sanitized CSVs formerly tracked
+#     under src/sharePoint/ have been untracked via
+#     `git rm --cached -r src/sharePoint/`. Raw list exports now
+#     live under src/sharePoint/list/<listName>/local/ (fully
+#     covered by both this extension rule and §11 below). To
+#     un-ignore a specific public-facing file, add a line, e.g.:
+#       !src/sharePoint/list/desks/local/Desks.csv
+#     ...then `git add -f` that file.
 # ------------------------------------------------------------
 **/*.csv
 **/*.tsv
@@ -133,3 +133,22 @@ src/**/.zip/**
 **/*.xlsm
 **/*.xlsb
 **/*.ods
+
+# ------------------------------------------------------------
+# 11. Local-only working directories (any folder literally named
+#     "local" anywhere in the repo).
+#
+#     Generalizes the folder-based rule already used for
+#     /docs/local/ and /src/config/local/ to also cover newer
+#     local-only locations introduced in v0.3.8, e.g.:
+#       assets/local/                    (raw screen recordings)
+#       src/analytics/sql/local/
+#       src/analytics/powerBI/local/
+#       src/sharePoint/list/*/local/     (raw list export CSV/XLSX)
+#
+#     The extension-based rules above (§9, §10) already ignore
+#     most data/archive formats regardless of folder; this rule
+#     adds folder-level protection for any other file type (e.g.,
+#     .webm screen recordings) dropped into a "local" folder.
+# ------------------------------------------------------------
+**/local/

@@ -2,19 +2,22 @@
 
 This document describes the current public state of the EHRM Training & Booking App repository and what is included/excluded as of the latest release.
 
-## Status summary (v0.3.6)
+## Status summary (v0.3.8)
 
-- **Release type**: Patch — `.gitignore` security hardening and repository hygiene; comprehensive data file type and compressed archive ignore rules; documentation catch-up through v0.3.5 and v0.3.6
-- **Project release**: v0.3.6 (2026-07-14)
+- **Release type**: Maintenance/Patch — repository restructuring (new `src/analytics/` component; `src/sharePoint/` reorganized into a `list/<listName>/local/` + `searchConfig/` structure), asset additions, and documentation catch-up through v0.3.7 and v0.3.8. No functional changes to Canvas app or Power Automate.
+- **Project release**: v0.3.8 (2026-07-28)
 - **Component versions**:
   - Canvas app: **v0.3.4** (source-controlled unpacked source under `src/powerApps/.unpacked/`; package at `src/powerApps/.msapp/v0.3.4_578EHRMTrainingApp.msapp`)
   - Power Automate: `AppUserList` v0.1.0 (source-controlled unpacked source under `src/powerAutomate/AppUserList/.unpacked/`)
-  - SharePoint samples: `src/sharePoint/` (sanitized CSVs — schema unchanged)
+  - SharePoint: `src/sharePoint/list/<listName>/local/` (raw exports, local-only) + `src/sharePoint/searchConfig/SearchConfiguration.xml` (tracked) — see [src/sharePoint/README.md](../src/sharePoint/README.md)
+  - Analytics: `src/analytics/powerBI/` (Power BI `.pbit` template tracked) + `src/analytics/sql/` (scaffolded, currently empty) — see [src/analytics/README.md](../src/analytics/README.md)
 
 ## Release history
 
 | Version | Date | Type |
 |---------|------|------|
+| v0.3.8 | 2026-07-28 | Patch — `src/analytics/` component added, `src/sharePoint/` restructured, `.gitignore` local-folder hardening, documentation catch-up |
+| v0.3.7 | 2026-07-17 | Patch — app branding image assets, `backupProject.ps1`, release artifact rotation, enterprise script relocation |
 | v0.3.6 | 2026-07-14 | Patch — `.gitignore` security hardening, data/archive file type rules, documentation catch-up |
 | v0.3.5 | 2026-07-10 | Patch — automated release workflow scripts (`enterpriseCommitGuide.ps1`, `postEnterpriseCommitArchival.ps1`), Copilot prompt agents |
 | v0.3.4 | 2026-07-09 | Feature — Canvas app v0.3.4: RBAC, smart scheduling, calendar modernization, UX improvements |
@@ -33,10 +36,11 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
 ## What is in this repository
 
 - **Unpacked sources** (for code review/diffing) for the Power Apps Canvas app and Power Automate flows; also includes `src/solution.xml` (Power Platform solution manifest, corrected in v0.3.4 to reflect EHRM Training & Booking App identity and components).
-- **Documentation & runbooks**: `config/architecture/ARCHITECTURE.md`, `config/runbooks/ALM-RUNBOOK.md` (local-only; git-ignored as of v0.3.6), component-level READMEs under `src/`, and release notes under `docs/release-notes/`.
+- **Documentation & runbooks**: `config/architecture/ARCHITECTURE.md`, `config/runbooks/ALM-RUNBOOK.md` (local-only; git-ignored; folder relocated to `archive/src/config/` as of v0.3.8), component-level READMEs under `src/`, and release notes under `docs/release-notes/`.
 - **VS Code workspace configuration**: task definitions for common PAC CLI operations (canvas pack/unpack, solution export/unpack), recommended extensions, editor settings.
-- **Scripts & hooks**: PowerShell dev-profile bootstrap (`Ensure-DevProfile.ps1`), pre-commit/pre-push hooks.
-- **SharePoint sample data**: sanitized CSVs under `src/sharePoint/`.
+- **Scripts & hooks**: PowerShell dev-profile bootstrap (`Ensure-DevProfile.ps1`), Power Apps web helper (`powerapps-web.ps1`), workspace backup (`backupProject.ps1`), pre-commit/pre-push hooks.
+- **SharePoint list data & search config**: raw list exports under `src/sharePoint/list/<listName>/local/` (local-only) and a tracked search configuration export at `src/sharePoint/searchConfig/SearchConfiguration.xml`. See [src/sharePoint/README.md](../src/sharePoint/README.md).
+- **Analytics**: an early-stage Power BI report template under `src/analytics/powerBI/.pbit/` and scaffolded SQL folders under `src/analytics/sql/`. See [src/analytics/README.md](../src/analytics/README.md).
 - **GitHub community files**: PR template, issue templates (including `commit_message-TEMPLATE.md` added in v0.3.4), security policy, contributing guide, Copilot instructions.
 
 ## What is intentionally NOT in this repository
@@ -46,7 +50,9 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
   - For releases, attach exports to a GitHub Release if you need distributable artifacts.
 - **Compressed archive files** (`.zip`, `.7z`, `.gz`, `.rar`, `.tar`, etc.) — broadly git-ignored as of v0.3.6 to prevent large binary exports from entering the repo.
 - **Spreadsheet and data list files** (`.csv`, `.xlsx`, `.xls`, `.ods`, `.tsv`, etc.) — broadly git-ignored as of v0.3.6 to prevent PII or sensitive VA data from being committed accidentally. Use `!path/to/file` negation entries in `.gitignore` to selectively expose sanitized public-facing files.
-- **Configuration, runbooks, and tooling** under `config/` — fully git-ignored as of v0.3.6 (previously only `config/local/` was excluded). The 3 currently-tracked files (`ARCHITECTURE.md`, `ALM-RUNBOOK.md`, `alm.ps1`) remain in the remote repo pending a follow-up `git rm --cached -r config/`.
+- **Any folder literally named `local/`** — broadly git-ignored as of v0.3.8 (e.g., `assets/local/`, `src/analytics/*/local/`, `src/sharePoint/list/*/local/`), in addition to the extension-based rules above.
+- **Configuration, runbooks, and tooling** under `config/` — fully git-ignored as of v0.3.6. **Resolved as of v0.3.8**: the 3 files formerly tracked under `config/` (`ARCHITECTURE.md`, `ALM-RUNBOOK.md`, `alm.ps1`) have been untracked (`git rm --cached -r config/`) and the local folder relocated to `archive/src/config/`.
+- **SharePoint sample data** under `src/sharePoint/` — **Resolved as of v0.3.8**: the sanitized CSVs formerly tracked at the old flat paths have been untracked (`git rm --cached -r src/sharePoint/`); only `src/sharePoint/searchConfig/SearchConfiguration.xml` is tracked today.
 - **Local-only history snapshots** under `archive/` and local notes under `docs/local/` (git-ignored).
 - **Secrets or environment-specific values** — use `config/local/` (git-ignored) and environment variables.
 - **IDE caches** (`.vs/` folder removed in v0.2.0 and now git-ignored).
@@ -58,8 +64,9 @@ The current baseline artifacts are driven by SharePoint lists with a desk/reserv
 - `Desk Reservations`
 - `DeskAccessControl`
 - `Desks`
+- `Schedule` *(new in v0.3.8 — scaffold only; no list schema exported yet)*
 
-The Canvas app now contains 21 screens (v0.3.4 replaced `scrn_WeeklyCal_1` with `scrn_DailyCal`). The screen and list naming still reflects the original desk/room reservation terminology in some areas. Renaming/re-modeling fields and labels to fully training-centric terminology is an expected future change.
+The Canvas app now contains 21 screens (v0.3.4 replaced `scrn_WeeklyCal_1` with `scrn_DailyCal`). The screen and list naming still reflects the original desk/room reservation terminology in some areas. The new `Schedule` list scaffold is an early step toward renaming/re-modeling fields and labels to fully training-centric terminology, an expected future change.
 
 ### Canvas app access control model (v0.3.4)
 
