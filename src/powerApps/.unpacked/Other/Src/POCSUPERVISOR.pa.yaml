@@ -11,6 +11,72 @@ Screens:
     Properties:
       Fill: =RGBA(236, 236, 236, 1)
       Height: =Max(App.Height, App.DesignHeight)
+      OnVisible: |-
+        =If(
+            varPopUp_ClassPicker = 0 || IsBlankOrError(varPopUp_ClassPicker),
+                Concurrent(
+                    Set(varPopUp_ClassPicker, 0),
+                    Set(varPopUp_ClassPicker_scenario, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioName, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioSplit, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioRole, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioDateTime, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioDate, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioStartTime, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioEndTime, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioLocation, Blank()),
+                    Reset(Dropdown3),
+                    Reset(Dropdown3_1),
+                    Reset(Dropdown3_2),
+                    Reset(Dropdown3_3)
+                ),
+            varPopUp_ClassPicker = 1 || !IsBlankOrError(varPopUp_ClassPicker),
+                Concurrent(
+                    Set(varPopUp_ClassPicker, 1),
+                    Set(varPopUp_ClassPicker_scenario, Dropdown3.Selected.Value),
+                    Set(varPopUp_ClassPicker_scenarioName, Text(Dropdown3.Selected.Value)),
+                    Set(varPopUp_ClassPicker_scenarioSplit, Substitute(Text(Dropdown3.Selected.Value), " ", "%20")),
+                    Set(varPopUp_ClassPicker_scenarioRole, Dropdown3_1.Selected.Value),
+                    Set(varPopUp_ClassPicker_scenarioDateTime, Dropdown3_2.Selected.Value),
+                    With(
+                        {
+                            DatePart: Match(Dropdown3_2.Selected.Value, "\d{2}/\d{2}/\d{4}").FullMatch,
+                            StartTimePart: Match(Dropdown3_2.Selected.Value, "\d{1,2}:\d{2} [APM]{2}").FullMatch,
+                            EndTimePart: Last(MatchAll(Dropdown3_2.Selected.Value, "\d{1,2}:\d{2} [APM]{2}")).FullMatch,
+                            StartTimeDay24h: Last(MatchAll(Dropdown3_2.Selected.Value, "[APM]{2}")).FullMatch,
+                            EndTimeDay24h: Last(MatchAll(Dropdown3_2.Selected.Value, "[APM]{2}")).FullMatch
+                        },
+                        Concurrent(
+                            Set(varPopUp_ClassPicker_scenarioDate,
+                                Date(
+                                    Year(DatePart),
+                                    Month(DatePart),
+                                    Day(DatePart)
+                                )
+                            ),
+                            Set(varPopUp_ClassPicker_scenarioStartTime,
+                                Time(
+                                    Hour(StartTimePart),
+                                    Minute(StartTimePart),
+                                    Second(0)
+                                )
+                            ),
+                            Set(varPopUp_ClassPicker_scenarioStart24,StartTimeDay24h),
+                            Set(varPopUp_ClassPicker_scenarioEndTime,
+                                Time(
+                                    Hour(EndTimePart),
+                                    Minute(EndTimePart),
+                                    Second(0)
+                                )
+                            ),
+                            Set(varPopUp_ClassPicker_scenarioEnd24,EndTimeDay24h),
+                            Set(varPopUp_ClassPicker_scenarioDayOfWeek, First(Split(Dropdown3_2.Selected.Value, " ")).Value)
+                        )
+                    ),
+                    Set(varPopUp_ClassPicker_scenarioLocation, Dropdown3_3.Selected.Value)
+                )
+        )
       Width: =Max(App.Width, App.DesignWidth)
     Children:
       - Label16:
@@ -39,10 +105,10 @@ Screens:
           Properties:
             DataSource: ='Desk Reservations'
             DefaultMode: =FormMode.New
-            Height: =373
+            Height: =490
             NumberOfColumns: =2
             Width: =1136
-            Y: =165
+            Y: =150
           Children:
             - Reserved By_DataCard1:
                 Control: TypedDataCard@1.0.7
@@ -301,8 +367,8 @@ Screens:
                         FontWeight: =FontWeight.Bold
                         Height: |-
                           =If(
-                              Len(Self.Text) > 30,
-                              DataCardValue3.Height * 1.3,
+                              Len(Self.Text) > 54,
+                              DataCardValue3.Height * 1.25,
                               DataCardValue3.Height 
                           )
                         HintText: ="Required"
@@ -431,7 +497,119 @@ Screens:
                         FontWeight: =FontWeight.Bold
                         Height: =DataCardValue3.Height
                         IsSearchable: =false
-                        Items: =["Super User Training", "End User Training"]
+                        Items: |-
+                          =[
+                              "Super User Learning Lab",
+                              "TESTING - DO NOT USE"
+                              ]
+                          /*
+                          [
+                              "Super User Learning Lab",
+                              "Anatomic Pathology",
+                              "Anesthesia",
+                              "Audiology Hearing Aid Check",
+                              "Behavioral Health - Inpatient",
+                              "Behavioral Health - Outpatient",
+                              "Between Visit Encounter",
+                              "Blind Rehabilitation",
+                              "Blood Bank",
+                              "Caregiver Support Program",
+                              "Case Management to Primary Care to Mental Health",
+                              "Clinical Contact Center",
+                              "Clinical Resource Hub",
+                              "Coding Health Information Management",
+                              "Community Care Referral",
+                              "Community Living Center - Leave of Absence",
+                              "Community Living Center - Pre-Admission Screening",
+                              "Community Living Center Admission",
+                              "Consult to Dietitian",
+                              "Dental Care with Follow Up",
+                              "Dentistry Simple",
+                              "Ear Nose Throat Visit",
+                              "Emergency Department",
+                              "Emergency Department to Intensive Care Unit Admission",
+                              "Eye Care Visit",
+                              "Gastroenterology",
+                              "General Laboratory",
+                              "Health Resource Center",
+                              "Holiday",
+                              "Home and Community Based Care",
+                              "Home Based Primary Care - Discipline Visits",
+                              "Home Based Primary Care - Nurse and Provider Visit",
+                              "Homeless Services and Programs",
+                              "Infection Control Worklist",
+                              "Infection Prevention",
+                              "Inpatient Nurse",
+                              "Inpatient Pharmacy",
+                              "Insurance Verification",
+                              "Intensive Care Unit to Discharge",
+                              "Long-Acting Injectables",
+                              "Mental Health New Visit",
+                              "Microbiology",
+                              "Nurse Visit",
+                              "Occupational Therapy",
+                              "Oncology Infusion Visit",
+                              "Oncology Office Visit",
+                              "Orthopedic Clinic with Physical Therapy",
+                              "Orthopedic Referral",
+                              "Orthotics and Prosthetics",
+                              "Outpatient Billing with Revenue Utilization Review",
+                              "Outpatient Case Management",
+                              "Outpatient Hemodialysis",
+                              "Outpatient Palliative Care",
+                              "Palliative Care Consult",
+                              "Patient Accounting",
+                              "Pharmacist Provider",
+                              "Pharmacy Outpatient",
+                              "Pharmacy Supply Chain - Electronic Purchase Orders",
+                              "Pharmacy Supply Chain Receiving",
+                              "Pharmacy Technician",
+                              "Physical Medicine and Rehabilitation",
+                              "Physical Therapy",
+                              "Podiatry",
+                              "Primary Care Established",
+                              "Primary Care Focused",
+                              "Primary Care Mental Health Integration",
+                              "Primary Care to Primary Care Mental Health Integration",
+                              "Primary Care with Home Telehealth Referral",
+                              "Primary Care with Lab and Pharmacy",
+                              "Primary Care with Podiatry and Wound Care",
+                              "Primary Care with Pulmonary and Cardiothoracic Surgery",
+                              "Primary Care with Radiology",
+                              "Primary Care with Referral Management and Clinical Resource Hub - Day 1",
+                              "Primary Care with Referral Management and Clinical Resource Hub - Day 2",
+                              "Primary Care with Spinal Cord Injuries and Disorders and Physical Therapy",
+                              "Primary Care with Suicidal Ideation",
+                              "Pulmonology",
+                              "Radiology",
+                              "Recreation Therapy",
+                              "Release of Information Specialist",
+                              "Research Initial Visit",
+                              "Residential Rehabilitation Treatment Program",
+                              "Residential Rehabilitation Treatment Program Admission",
+                              "Respiratory Therapy",
+                              "Scenario 1 - Mr. Frank - Day 1",
+                              "Scenario 1 - Mr. Frank - Day 2",
+                              "Scenario 2 - Mr. Lee - Day 1",
+                              "Scenario 2 - Mr. Lee - Day 2",
+                              "Scenario 3 - Ms. White - Day 1",
+                              "Scenario 3 - Ms. White - Day 2",
+                              "Social Work Inpatient",
+                              "Solid Organ Transplant Referral",
+                              "Specialty Care Office Visit",
+                              "Speech Language Pathology",
+                              "Spinal Cord Injury Home Care",
+                              "Standard Surgery - Day 1",
+                              "Standard Surgery - Day 2",
+                              "Tele-Health Visit",
+                              "Tele-Imaging",
+                              "Urgent Care",
+                              "Women's Health & Gynecology Procedure",
+                              "Women's Health Visit",
+                              "Wound Care",
+
+                          ]
+                          */
                         PaddingBottom: =5
                         PaddingLeft: =5
                         PaddingRight: =5
@@ -453,6 +631,7 @@ Screens:
                   MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, 'Reason for desk reservation')
                   Required: =false
                   Update: =DataCardValue1.Text
+                  Visible: =false
                   Width: |-
                     =Parent.Width
                     // 568
@@ -532,6 +711,116 @@ Screens:
                         Width: =30
                         Wrap: =false
                         Y: =DataCardKey1.Y
+            - Description_DataCard2:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicTextualEdit
+                Properties:
+                  DataField: ="Description"
+                  Default: =ThisItem.Description
+                  DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Description)
+                  Height: =266
+                  MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Description)
+                  Required: =false
+                  Update: =DataCardValue13.Text
+                  Visible: |-
+                    =If(
+                        btnContinueDate_1.DisplayMode <> DisplayMode.Disabled,
+                        true,
+                        false
+                    )
+                  Width: =Parent.Width
+                  X: =0
+                  Y: =3
+                Children:
+                  - DataCardKey14:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =App.Theme.Colors.Darker30
+                        Height: =38
+                        Size: =16
+                        Text: |-
+                          =//Parent.DisplayName
+                          "Selected training DESCRIPTION:"
+                        Width: =Parent.Width - 60
+                        Wrap: =false
+                        X: =21
+                  - DataCardValue13:
+                      Control: Classic/TextInput@2.3.2
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                        Default: |-
+                          ="Super User Learning lab: Learning Labs bring care teams together in a computer lab setting to practice completion of VA-approved, interdisciplinary workflow-based scenarios in the Sandbox domain, an environment designed to simulate the Federal Electronic Health Record (EHR).
+
+                          Where? Event Platform and Setting: In-person meetings in a computer lab setting ( With the exception of CBOCs and Clinical Resource Hub super users who will have virtual only sessions) 
+
+                          When? Date and time varies by department and scenario. Sessions start October 26th and End December 11th."
+                        DelayOutput: =true
+                        DisplayMode: =Parent.DisplayMode
+                        MaxLength: =Parent.MaxLength
+                        Mode: =TextMode.MultiLine
+                        PaddingLeft: =5
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =14
+                        Tooltip: =Parent.DisplayName
+                        Visible: =false
+                        Width: =Parent.Width - 60
+                        X: =30
+                        Y: =DataCardKey14.Y + DataCardKey14.Height + 5
+                  - ErrorMessage14:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60
+                        X: =30
+                        Y: =DataCardValue13.Y + DataCardValue13.Height
+                  - StarVisible14:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =App.Theme.Colors.Darker30
+                        Height: =DataCardKey14.Height
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30
+                        Wrap: =false
+                        Y: =DataCardKey14.Y
+                  - HtmlText4:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        DisplayMode: =DisplayMode.View
+                        Height: =223
+                        HtmlText: |-
+                          ="<b>Super User Learning lab</b>: Learning Labs bring care teams together in a computer lab setting to practice completion of VA-approved, interdisciplinary workflow-based scenarios in the Sandbox domain, an environment designed to simulate the Federal Electronic Health Record (EHR).
+                          <br>
+                          <b>WHERE</b>: Event Platform and Setting: In-person meetings in a computer lab setting ( With the exception of CBOCs and Clinical Resource Hub super users who will have virtual only sessions)
+                          <br>
+                          <b>WHEN</b>: Date and time varies by department and scenario. Sessions will occur between October 26, 2026 thru December 11, 2026."
+                        Size: =14
+                        Width: =DataCardValue13.Width
+                        X: =DataCardValue13.X
+                        Y: =DataCardValue13.Y
       - Rectangle2_11:
           Control: Rectangle@2.3.0
           Group: grpHeader_11
@@ -578,8 +867,9 @@ Screens:
               Set(varURL,"https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079"
               );
               Set(varURLName, "578 EHRM Training App");
+              Set(varPopUp_ClassPicker, 1);
 
-              Navigate(chkWeekDays)
+              //Navigate(chkWeekDays)
             Size: |-
               =If(
                   btnContinueDate_1.DisplayMode = DisplayMode.Disabled,
@@ -630,3 +920,975 @@ Screens:
             Text: ="Create a new reservation..."
             Width: =600
             X: =(Parent.Width - Self.Width) / 2
+      - ctn_PopUp_ClassPicker:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(180, 214, 250, 1)
+            Height: =640
+            Visible: =If(varPopUp_ClassPicker = 1, true, false)
+            Width: =Parent.Width
+          Children:
+            - ctn_PopUp_ClassPicker_Location:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Height: |-
+                    =If(
+                        IsBlankOrError(Dropdown3_2.Selected) || Dropdown3_2.Selected.Value = Blank(),
+                        0,
+                        (Dropdown3_3.Height + HtmlText7_3.Height + 5)
+                    )
+                  Visible: |-
+                    =If(
+                        IsBlankOrError(Dropdown3_2.Selected) || Dropdown3_2.Selected.Value = Blank(),
+                        false,
+                        true
+                    )
+                  Width: =ctn_PopUp_ClassPicker_Scenario.Width
+                  X: =ctn_PopUp_ClassPicker_Scenario.X
+                  Y: =ctn_PopUp_ClassPicker_DateTime.Y + ctn_PopUp_ClassPicker_DateTime.Height + 5
+                Children:
+                  - Dropdown3_3:
+                      Control: ModernDropdown@1.0.2
+                      Properties:
+                        Height: =48
+                        ItemDisplayText: =ThisItem.Value
+                        Items: |-
+                          =[
+                              "Building 20 - Room 204",
+                              "Building 20 - Room 205",
+                              "Building 20 - Room 209",
+                              "Building 20 - Room 210",
+                              "Virtual",
+                              "Virtual CBOC"
+                          ]
+                        OnChange: =Set(varPopUp_ClassPicker_scenarioLocation, Self.Selected.Value);
+                        Width: =Parent.Width - Self.X - 10
+                        X: =HtmlText7_3.X + 10
+                        Y: =HtmlText7_3.Y + HtmlText7_3.Height
+                  - HtmlText7_3:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        AutoHeight: =true
+                        HtmlText: ="Pick a <b>LOCATION</b> that <b>" & varDeskAccessControl_record.GivenName_Text & "</b> will physically attend this training:"
+                        Size: =14
+                        Width: =Parent.Width
+            - ctn_PopUp_ClassPicker_DateTime:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Height: |-
+                    =If(
+                        IsBlankOrError(Dropdown3_1.Selected) || Dropdown3_1.Selected.Value = Blank(),
+                        0,
+                        (Dropdown3_2.Height + HtmlText7_2.Height + 5)
+                    )
+                  Visible: |-
+                    =If(
+                        IsBlankOrError(Dropdown3_1.Selected) || Dropdown3_1.Selected.Value = Blank(),
+                        false,
+                        true
+                    )
+                  Width: =ctn_PopUp_ClassPicker_Scenario.Width
+                  X: =ctn_PopUp_ClassPicker_Scenario.X
+                  Y: =ctn_PopUp_ClassPicker_Role.Y + ctn_PopUp_ClassPicker_Role.Height + 5
+                Children:
+                  - Dropdown3_2:
+                      Control: ModernDropdown@1.0.2
+                      Properties:
+                        Height: =48
+                        ItemDisplayText: =ThisItem.Value
+                        Items: |-
+                          =[
+                              "Friday 10/30/2026 @ 1:00 PM - 2:30 PM",
+                              "Friday 10/30/2026 @ 10:30 AM - 12:00 PM",
+                              "Friday 10/30/2026 @ 2:30 PM - 4:00 PM",
+                              "Friday 10/30/2026 @ 3:00 PM - 4:00 PM",
+                              "Friday 10/30/2026 @ 8:30 AM - 1:00 PM",
+                              "Friday 10/30/2026 @ 8:30 AM - 10:00 AM",
+                              "Friday 10/30/2026 @ 8:30 AM - 12:30 PM",
+                              "Friday 10/30/2026 @ 8:30 AM - 2:00 PM",
+                              "Friday 10/30/2026 @ 8:30 AM - 2:30 PM",
+                              "Friday 11/06/2026 @ 1:00 PM - 2:00 PM",
+                              "Friday 11/06/2026 @ 1:30 PM - 3:00 PM",
+                              "Friday 11/06/2026 @ 1:30 PM - 4:00 PM",
+                              "Friday 11/06/2026 @ 12:30 PM - 4:00 PM",
+                              "Friday 11/06/2026 @ 8:30 AM - 1:00 PM",
+                              "Friday 11/06/2026 @ 8:30 AM - 12:00 PM",
+                              "Friday 11/06/2026 @ 8:30 AM - 12:30 PM",
+                              "Friday 11/13/2026 @ 1:00 PM - 4:00 PM",
+                              "Friday 11/13/2026 @ 10:30 AM - 12:00 PM",
+                              "Friday 11/13/2026 @ 12:00 PM - 2:30 PM",
+                              "Friday 11/13/2026 @ 12:00 PM - 4:00 PM",
+                              "Friday 11/13/2026 @ 12:30 PM - 2:00 PM",
+                              "Friday 11/13/2026 @ 2:00 PM - 4:00 PM",
+                              "Friday 11/13/2026 @ 2:30 PM - 4:00 PM",
+                              "Friday 11/13/2026 @ 3:00 PM - 4:00 PM",
+                              "Friday 11/13/2026 @ 8:30 AM - 10:00 AM",
+                              "Friday 11/13/2026 @ 8:30 AM - 11:00 AM",
+                              "Friday 11/13/2026 @ 8:30 AM - 11:30 AM",
+                              "Friday 11/13/2026 @ 8:30 AM - 12:30 PM",
+                              "Friday 11/13/2026 @ 9:00 AM - 1:30 PM",
+                              "Friday 11/20/2026 @ 1:30 PM - 3:00 PM",
+                              "Friday 11/20/2026 @ 11:00 AM - 1:00 PM",
+                              "Friday 11/20/2026 @ 11:00 AM - 12:30 PM",
+                              "Friday 11/20/2026 @ 11:30 AM - 1:30 PM",
+                              "Friday 11/20/2026 @ 12:30 PM - 2:30 PM",
+                              "Friday 11/20/2026 @ 2:00 PM - 4:00 PM",
+                              "Friday 11/20/2026 @ 3:00 PM - 4:00 PM",
+                              "Friday 11/20/2026 @ 8:30 AM - 10:00 AM",
+                              "Friday 11/20/2026 @ 8:30 AM - 10:30 AM",
+                              "Friday 11/20/2026 @ 8:30 AM - 11:00 AM",
+                              "Friday 11/20/2026 @ 8:30 AM - 12:00 PM",
+                              "Friday 12/04/2026 @ 1:30 PM - 4:00 PM",
+                              "Friday 12/04/2026 @ 10:30 AM - 12:00 PM",
+                              "Friday 12/04/2026 @ 11:00 AM - 1:00 PM",
+                              "Friday 12/04/2026 @ 3:00 PM - 4:00 PM",
+                              "Friday 12/04/2026 @ 8:30 AM - 1:00 PM",
+                              "Friday 12/04/2026 @ 8:30 AM - 10:00 AM",
+                              "Friday 12/04/2026 @ 8:30 AM - 10:30 AM",
+                              "Monday 10/26/2026 @ 1:30 PM - 3:00 PM",
+                              "Monday 10/26/2026 @ 10:30 AM - 12:00 PM",
+                              "Monday 10/26/2026 @ 11:00 AM - 3:30 PM",
+                              "Monday 10/26/2026 @ 2:00 PM - 4:00 PM",
+                              "Monday 10/26/2026 @ 7:30 PM - 9:00 PM",
+                              "Monday 10/26/2026 @ 8:30 AM - 1:30 PM",
+                              "Monday 11/02/2026 @ 1:30 PM - 4:00 PM",
+                              "Monday 11/02/2026 @ 11:00 AM - 1:00 PM",
+                              "Monday 11/02/2026 @ 11:30 AM - 1:30 PM",
+                              "Monday 11/02/2026 @ 12:00 PM - 1:30 PM",
+                              "Monday 11/02/2026 @ 2:00 PM - 4:00 PM",
+                              "Monday 11/02/2026 @ 2:30 PM - 4:00 PM",
+                              "Monday 11/02/2026 @ 7:00 PM - 9:00 PM",
+                              "Monday 11/02/2026 @ 8:30 AM - 1:30 PM",
+                              "Monday 11/02/2026 @ 8:30 AM - 10:30 AM",
+                              "Monday 11/02/2026 @ 8:30 AM - 11:00 AM",
+                              "Monday 11/02/2026 @ 8:30 AM - 11:30 AM",
+                              "Monday 11/02/2026 @ 8:30 AM - 2:00 PM",
+                              "Monday 11/09/2026 @ 1:00 PM - 2:00 PM",
+                              "Monday 11/09/2026 @ 1:30 PM - 4:00 PM",
+                              "Monday 11/09/2026 @ 10:30 AM - 12:30 PM",
+                              "Monday 11/09/2026 @ 2:30 PM - 4:00 PM",
+                              "Monday 11/09/2026 @ 7:00 PM - 8:00 PM",
+                              "Monday 11/09/2026 @ 8:30 AM - 1:00 PM",
+                              "Monday 11/09/2026 @ 8:30 AM - 10:00 AM",
+                              "Monday 11/09/2026 @ 8:30 AM - 12:30 PM",
+                              "Monday 11/16/2026 @ 1:30 PM - 2:30 PM",
+                              "Monday 11/16/2026 @ 1:30 PM - 4:00 PM",
+                              "Monday 11/16/2026 @ 11:00 AM - 1:00 PM",
+                              "Monday 11/16/2026 @ 11:30 AM - 1:30 PM",
+                              "Monday 11/16/2026 @ 12:00 PM - 4:00 PM",
+                              "Monday 11/16/2026 @ 2:00 PM - 4:00 PM",
+                              "Monday 11/16/2026 @ 3:00 PM - 4:00 PM",
+                              "Monday 11/16/2026 @ 8:30 AM - 1:00 PM",
+                              "Monday 11/16/2026 @ 8:30 AM - 10:30 AM",
+                              "Monday 11/16/2026 @ 8:30 AM - 11:00 AM",
+                              "Monday 11/16/2026 @ 8:30 AM - 11:30 AM",
+                              "Monday 11/23/2026 @ 8:30 AM - 4:00 PM",
+                              "Monday 11/30/2026 @ 1:00 PM - 2:00 PM",
+                              "Monday 11/30/2026 @ 1:30 PM - 3:30 PM",
+                              "Monday 11/30/2026 @ 11:00 AM - 1:00 PM",
+                              "Monday 11/30/2026 @ 12:30 PM - 1:30 PM",
+                              "Monday 11/30/2026 @ 2:00 PM - 4:00 PM",
+                              "Monday 11/30/2026 @ 2:30 PM - 4:00 PM",
+                              "Monday 11/30/2026 @ 8:30 AM - 10:00 AM",
+                              "Monday 11/30/2026 @ 8:30 AM - 10:30 AM",
+                              "Monday 11/30/2026 @ 8:30 AM - 11:00 AM",
+                              "Monday 12/07/2026 @ 11:30 AM - 1:30 PM",
+                              "Monday 12/07/2026 @ 12:30 PM - 4:00 PM",
+                              "Monday 12/07/2026 @ 2:00 PM - 4:00 PM",
+                              "Monday 12/07/2026 @ 2:30 PM - 4:00 PM",
+                              "Monday 12/07/2026 @ 8:30 AM - 10:30 AM",
+                              "Monday 12/07/2026 @ 8:30 AM - 11:00 AM",
+                              "Monday 12/07/2026 @ 8:30 AM - 12:00 PM",
+                              "Thursday 10/29/2026 @ 1:00 PM - 4:00 PM",
+                              "Thursday 10/29/2026 @ 2:00 PM - 4:00 PM",
+                              "Thursday 10/29/2026 @ 2:30 PM - 3:30 PM",
+                              "Thursday 10/29/2026 @ 3:00 PM - 4:00 PM",
+                              "Thursday 10/29/2026 @ 7:00 PM - 10:30 PM",
+                              "Thursday 10/29/2026 @ 8:30 AM - 10:30 AM",
+                              "Thursday 10/29/2026 @ 8:30 AM - 12:30 PM",
+                              "Thursday 10/29/2026 @ 8:30 AM - 2:30 PM",
+                              "Thursday 11/05/2026 @ 1:30 PM - 4:00 PM",
+                              "Thursday 11/05/2026 @ 11:00 AM - 1:00 PM",
+                              "Thursday 11/05/2026 @ 2:30 PM - 4:00 PM",
+                              "Thursday 11/05/2026 @ 7:00 PM - 11:30 PM",
+                              "Thursday 11/05/2026 @ 8:30 AM - 1:00 PM",
+                              "Thursday 11/05/2026 @ 8:30 AM - 1:30 PM",
+                              "Thursday 11/05/2026 @ 8:30 AM - 10:30 AM",
+                              "Thursday 11/05/2026 @ 8:30 AM - 2:30 PM",
+                              "Thursday 11/12/2026 @ 1:00 PM - 4:00 PM",
+                              "Thursday 11/12/2026 @ 1:30 PM - 4:00 PM",
+                              "Thursday 11/12/2026 @ 11:00 AM - 12:30 PM",
+                              "Thursday 11/12/2026 @ 12:00 PM - 4:00 PM",
+                              "Thursday 11/12/2026 @ 8:30 AM - 1:00 PM",
+                              "Thursday 11/12/2026 @ 8:30 AM - 10:30 AM",
+                              "Thursday 11/12/2026 @ 8:30 AM - 11:30 AM",
+                              "Thursday 11/19/2026 @ 1:00 PM - 2:00 PM",
+                              "Thursday 11/19/2026 @ 1:00 PM - 4:00 PM",
+                              "Thursday 11/19/2026 @ 1:30 PM - 4:00 PM",
+                              "Thursday 11/19/2026 @ 11:00 AM - 1:00 PM",
+                              "Thursday 11/19/2026 @ 2:00 PM - 4:00 PM",
+                              "Thursday 11/19/2026 @ 2:30 PM - 4:00 PM",
+                              "Thursday 11/19/2026 @ 8:30 AM - 1:00 PM",
+                              "Thursday 11/19/2026 @ 8:30 AM - 10:00 AM",
+                              "Thursday 11/19/2026 @ 8:30 AM - 10:30 AM",
+                              "Thursday 11/19/2026 @ 8:30 AM - 12:30 PM",
+                              "Thursday 12/03/2026 @ 1:00 PM - 3:00 PM",
+                              "Thursday 12/03/2026 @ 1:30 PM - 4:00 PM",
+                              "Thursday 12/03/2026 @ 11:00 AM - 12:30 PM",
+                              "Thursday 12/03/2026 @ 2:30 PM - 4:00 PM",
+                              "Thursday 12/03/2026 @ 8:30 AM - 10:30 AM",
+                              "Tuesday 10/27/2026 @ 1:30 PM - 4:00 PM",
+                              "Tuesday 10/27/2026 @ 10:00 AM - 11:00 AM",
+                              "Tuesday 10/27/2026 @ 10:30 AM - 2:30 PM",
+                              "Tuesday 10/27/2026 @ 11:00 AM - 1:00 PM",
+                              "Tuesday 10/27/2026 @ 11:30 AM - 1:30 PM",
+                              "Tuesday 10/27/2026 @ 2:00 PM - 4:00 PM",
+                              "Tuesday 10/27/2026 @ 2:30 PM - 3:30 PM",
+                              "Tuesday 10/27/2026 @ 7:00 PM - 9:00 PM",
+                              "Tuesday 10/27/2026 @ 8:30 AM - 1:30 PM",
+                              "Tuesday 10/27/2026 @ 8:30 AM - 10:30 AM",
+                              "Tuesday 10/27/2026 @ 8:30 AM - 9:30 AM",
+                              "Tuesday 11/03/2026 @ 11:30 AM - 4:00 PM",
+                              "Tuesday 11/03/2026 @ 12:30 PM - 4:00 PM",
+                              "Tuesday 11/03/2026 @ 2:30 PM - 4:00 PM",
+                              "Tuesday 11/03/2026 @ 7:00 PM - 9:00 PM",
+                              "Tuesday 11/03/2026 @ 8:30 AM - 10:00 AM",
+                              "Tuesday 11/03/2026 @ 8:30 AM - 12:00 PM",
+                              "Tuesday 11/03/2026 @ 8:30 AM - 2:00 PM",
+                              "Tuesday 11/03/2026 @ 9:00 AM - 1:30 PM",
+                              "Tuesday 11/10/2026 @ 1:30 PM - 4:00 PM",
+                              "Tuesday 11/10/2026 @ 2:00 PM - 4:00 PM",
+                              "Tuesday 11/10/2026 @ 3:00 PM - 4:00 PM",
+                              "Tuesday 11/10/2026 @ 7:00 PM - 8:30 PM",
+                              "Tuesday 11/10/2026 @ 8:30 AM - 1:00 PM",
+                              "Tuesday 11/10/2026 @ 8:30 AM - 12:30 PM",
+                              "Tuesday 11/10/2026 @ 8:30 AM - 2:30 PM",
+                              "Tuesday 11/17/2026 @ 1:00 PM - 4:00 PM",
+                              "Tuesday 11/17/2026 @ 1:30 PM - 4:00 PM",
+                              "Tuesday 11/17/2026 @ 12:00 PM - 1:30 PM",
+                              "Tuesday 11/17/2026 @ 2:00 PM - 4:00 PM",
+                              "Tuesday 11/17/2026 @ 8:30 AM - 1:00 PM",
+                              "Tuesday 11/17/2026 @ 8:30 AM - 11:30 AM",
+                              "Tuesday 11/17/2026 @ 8:30 AM - 12:30 PM",
+                              "Tuesday 12/01/2026 @ 1:00 PM - 4:00 PM",
+                              "Tuesday 12/01/2026 @ 1:30 PM - 3:30 PM",
+                              "Tuesday 12/01/2026 @ 10:30 AM - 12:00 PM",
+                              "Tuesday 12/01/2026 @ 3:00 PM - 4:00 PM",
+                              "Tuesday 12/01/2026 @ 8:30 AM - 1:00 PM",
+                              "Tuesday 12/01/2026 @ 8:30 AM - 12:30 PM",
+                              "Tuesday 12/01/2026 @ 8:30 AM - 2:00 PM",
+                              "Tuesday 12/08/2026 @ 10:30 AM - 12:00 PM",
+                              "Tuesday 12/08/2026 @ 11:00 AM - 12:00 PM",
+                              "Tuesday 12/08/2026 @ 11:30 AM - 1:30 PM",
+                              "Tuesday 12/08/2026 @ 12:30 PM - 2:00 PM",
+                              "Tuesday 12/08/2026 @ 2:00 PM - 4:00 PM",
+                              "Tuesday 12/08/2026 @ 2:30 PM - 4:00 PM",
+                              "Tuesday 12/08/2026 @ 8:30 AM - 10:00 AM",
+                              "Tuesday 12/08/2026 @ 8:30 AM - 10:30 AM",
+                              "Wednesday 10/28/2026 @ 11:00 AM - 12:00 PM",
+                              "Wednesday 10/28/2026 @ 12:30 PM - 2:00 PM",
+                              "Wednesday 10/28/2026 @ 12:30 PM - 2:30 PM",
+                              "Wednesday 10/28/2026 @ 2:30 PM - 3:30 PM",
+                              "Wednesday 10/28/2026 @ 2:30 PM - 4:00 PM",
+                              "Wednesday 10/28/2026 @ 3:00 PM - 4:00 PM",
+                              "Wednesday 10/28/2026 @ 7:00 PM - 9:00 PM",
+                              "Wednesday 10/28/2026 @ 8:30 AM - 1:00 PM",
+                              "Wednesday 10/28/2026 @ 8:30 AM - 10:30 AM",
+                              "Wednesday 10/28/2026 @ 8:30 AM - 12:00 PM",
+                              "Wednesday 10/28/2026 @ 8:30 AM - 12:30 PM",
+                              "Wednesday 10/28/2026 @ 8:30 AM - 2:30 PM",
+                              "Wednesday 11/04/2026 @ 1:30 PM - 2:30 PM",
+                              "Wednesday 11/04/2026 @ 11:00 AM - 1:00 PM",
+                              "Wednesday 11/04/2026 @ 2:30 PM - 4:00 PM",
+                              "Wednesday 11/04/2026 @ 3:00 PM - 4:00 PM",
+                              "Wednesday 11/04/2026 @ 7:00 PM - 8:30 PM",
+                              "Wednesday 11/04/2026 @ 8:30 AM - 1:00 PM",
+                              "Wednesday 11/04/2026 @ 8:30 AM - 10:30 AM",
+                              "Wednesday 11/04/2026 @ 8:30 AM - 12:30 PM",
+                              "Wednesday 11/04/2026 @ 8:30 AM - 2:00 PM",
+                              "Wednesday 11/11/2026 @ 8:30 AM - 4:00 PM",
+                              "Wednesday 11/18/2026 @ 1:00 PM - 4:00 PM",
+                              "Wednesday 11/18/2026 @ 12:30 PM - 1:30 PM",
+                              "Wednesday 11/18/2026 @ 8:30 AM - 1:00 PM",
+                              "Wednesday 11/18/2026 @ 8:30 AM - 12:00 PM",
+                              "Wednesday 11/18/2026 @ 8:30 AM - 12:30 PM",
+                              "Wednesday 12/02/2026 @ 1:30 PM - 3:30 PM",
+                              "Wednesday 12/02/2026 @ 1:30 PM - 4:00 PM",
+                              "Wednesday 12/02/2026 @ 2:30 PM - 4:00 PM",
+                              "Wednesday 12/02/2026 @ 3:00 PM - 4:00 PM",
+                              "Wednesday 12/02/2026 @ 8:30 AM - 12:30 PM",
+                              "Wednesday 12/02/2026 @ 9:00 AM - 1:00 PM",
+                              "Wednesday 12/02/2026 @ 9:00 AM - 1:30 PM",
+                              "Wednesday 12/02/2026 @ 9:00 AM - 2:30 PM",
+                              "Wednesday 12/09/2026 @ 1:30 PM - 4:00 PM",
+                              "Wednesday 12/09/2026 @ 10:00 AM - 11:30 AM",
+                              "Wednesday 12/09/2026 @ 11:00 AM - 1:00 PM",
+                              "Wednesday 12/09/2026 @ 11:00 AM - 1:30 PM",
+                              "Wednesday 12/09/2026 @ 12:00 PM - 1:30 PM",
+                              "Wednesday 12/09/2026 @ 2:30 PM - 4:00 PM",
+                              "Wednesday 12/09/2026 @ 3:00 PM - 4:00 PM",
+                              "Wednesday 12/09/2026 @ 8:30 AM - 10:00 AM",
+                              "Wednesday 12/09/2026 @ 8:30 AM - 10:30 AM",
+                              "Wednesday 12/09/2026 @ 8:30 AM - 9:30 AM"
+                          ]
+                        OnChange: |-
+                          =Set(varPopUp_ClassPicker_scenarioDateTime, Self.Selected.Value);
+                          With(
+                              {
+                                  // 1. Matches the date pattern using RegEx (Captures Month/Day/Year)
+                                  DatePart: Match(Self.Selected.Value, "\d{2}/\d{2}/\d{4}").FullMatch,
+                                  // 2. Matches the first time pattern (Start time)
+                                  StartTimePart: Match(Self.Selected.Value, "\d{1,2}:\d{2} [APM]{2}").FullMatch,
+                                  // 3. Matches the second time pattern (End time)
+                                  EndTimePart: Last(MatchAll(Self.Selected.Value, "\d{1,2}:\d{2} [APM]{2}")).FullMatch,
+                                  // 4. Matches AM vs PM first time pattern (Start time)
+                                  StartTimeDay24h: Last(MatchAll(Self.Selected.Value, "[APM]{2}")).FullMatch,
+                                  // 4. Matches AM vs PM second time pattern (End time)
+                                  EndTimeDay24h: Last(MatchAll(Self.Selected.Value, "[APM]{2}")).FullMatch
+                              },
+                              // Set separate strongly-typed variables
+                              Concurrent(
+                                  //Set(varPopUp_ClassPicker_scenarioDate, DateValue(DatePart)),
+                                  Set(varPopUp_ClassPicker_scenarioDate,
+                                      Date(
+                                          Year(DatePart),
+                                          Month(DatePart),
+                                          Day(DatePart)
+                                      )
+                                  ),
+                                  //Set(varPopUp_ClassPicker_scenarioStartTime, TimeValue(StartTimePart)),
+                                  Set(varPopUp_ClassPicker_scenarioStartTime,
+                                      Time(
+                                          Hour(StartTimePart),
+                                          Minute(StartTimePart),
+                                          Second(0)
+                                      )
+                                  ),
+                                  Set(varPopUp_ClassPicker_scenarioStart24,
+                                      StartTimeDay24h
+                                  ),
+                                  //Set(varPopUp_ClassPicker_scenarioEndTime, TimeValue(EndTimePart)),
+                                  Set(varPopUp_ClassPicker_scenarioEndTime,
+                                      Time(
+                                          Hour(EndTimePart),
+                                          Minute(EndTimePart),
+                                          Second(0)
+                                      )
+                                  ),
+                                  Set(varPopUp_ClassPicker_scenarioEnd24,
+                                      EndTimeDay24h
+                                  ),
+                                  Set(varPopUp_ClassPicker_scenarioDayOfWeek, First(Split(Self.Selected.Value, " ")).Value)
+                              )
+                          );
+                        Width: =Parent.Width - Self.X - 10
+                        X: =HtmlText7_2.X + 10
+                        Y: =HtmlText7_2.Y + HtmlText7_2.Height
+                  - HtmlText7_2:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        AutoHeight: =true
+                        HtmlText: ="Pick a <b>Date & Time</b> that <b>" & varDeskAccessControl_record.GivenName_Text & "</b> will attend this training:"
+                        Size: =14
+                        Width: =Parent.Width - Self.X
+                        X: =Label3_2.X + Label3_2.Width
+                  - Label3_2:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =Label3.Color
+                        FontWeight: =Label3.FontWeight
+                        Height: =Label3.Height
+                        Size: =Label3.Size
+                        Text: ="*"
+                        Visible: |-
+                          =If(
+                              IsBlankOrError(Dropdown3_2.Selected) || Dropdown3_2.Selected.Value = Blank(),
+                              true,
+                              false
+                          )
+                        Width: |-
+                          =If(
+                              IsBlankOrError(Dropdown3_2.Selected) || Dropdown3_2.Selected.Value = Blank(),
+                              33,
+                              0
+                          )
+                        X: =Label3.X
+                        Y: =Label3.Y
+            - ctn_PopUp_ClassPicker_Role:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Height: |-
+                    =If(
+                        IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
+                        0,
+                        (HtmlText7_1.Height + Dropdown3_1.Height + 5)
+                    )
+                  Visible: |-
+                    =If(
+                        IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
+                        false,
+                        true
+                    )
+                  Width: =ctn_PopUp_ClassPicker_Scenario.Width
+                  X: =ctn_PopUp_ClassPicker_Scenario.X
+                  Y: =ctn_PopUp_ClassPicker_Scenario.Height + ctn_PopUp_ClassPicker_Scenario.Y + 5
+                Children:
+                  - Dropdown3_1:
+                      Control: ModernDropdown@1.0.2
+                      Properties:
+                        Height: =48
+                        ItemDisplayText: =ThisItem.Value
+                        Items: |-
+                          =[
+                              "Accounts Management – Cash Poster",
+                              "Accounts Management – Financial Accounts Technician",
+                              "Accounts Management Manager",
+                              "Acupuncturist",
+                              "Adjudicating Pharmacist",
+                              "Anesthesia Provider",
+                              "Audiology Health Technologist",
+                              "Audiology Provider",
+                              "Billing – Medical Records Technician",
+                              "Blind Rehabilitation Outpatient Specialist",
+                              "Blind Rehabilitation Specialist",
+                              "Cardiology Provider",
+                              "Cardiology Technician",
+                              "Cardiothoracic Surgery Provider",
+                              "Caregiver Support Program Staff",
+                              "Chaplain",
+                              "Clinical Contact Center Nurse",
+                              "Clinical Resource Hub Medical Support Assistant or Registration and Scheduling Clerk",
+                              "Community Care Medical Support Assistant or Registration and Scheduling Clerk",
+                              "Community Care Nurse",
+                              "Community Living Center Admission Coordinator",
+                              "Community Living Center Nurse",
+                              "Community Living Center Nursing Assistant",
+                              "Community Living Center Provider",
+                              "Community Living Center Social Worker",
+                              "Critical Care Nurse",
+                              "Dental Assistant",
+                              "Dental Hygienist",
+                              "Dental Medical Support Assistant or Registration and Scheduling Clerk",
+                              "Dentist",
+                              "Dermatology Provider",
+                              "Dialysis Nurse or Dialysis Technician",
+                              "Dietary Technician ",
+                              "Dietitian",
+                              "Eligibility Site Policy Personnel",
+                              "Emergency Department Medical Support Assistant or Registration and Scheduling Clerk",
+                              "Emergency Department Nurse",
+                              "Emergency Department Provider",
+                              "Emergency Department Triage Nurse",
+                              "Eye Care Provider",
+                              "Eye Care Technician",
+                              "Facility Revenue Manager",
+                              "Gastroenterology Provider",
+                              "Gynecology Provider",
+                              "Health Information Management Coder",
+                              "Histologist",
+                              "Holiday",
+                              "Home and Community-Based Care Clinician",
+                              "Home Based Primary Care Dietitian",
+                              "Home Based Primary Care Nurse",
+                              "Home Based Primary Care Provider",
+                              "Home Based Primary Care Social Worker",
+                              "Home Based Primary Care Therapist",
+                              "Homeless Coordinator",
+                              "Homeless Program Staff–Licensed (e.g., LCSW, LMHC, LMFT)",
+                              "Homeless Program Staff–Nonclinical (Coordinator or Specialist)",
+                              "Homeless Program Staff–Unlicensed (Student or Intern)",
+                              "Homeless Provider",
+                              "Hospitalist",
+                              "Hybrid Medical Technician",
+                              "Infection Prevention Provider",
+                              "Inpatient Nurse",
+                              "Inpatient Nursing Assistant",
+                              "Inpatient Pharmacist",
+                              "Inpatient RN",
+                              "Intensivist",
+                              "Medical Support Assistant or Registration and Scheduling Clerk",
+                              "Medical Support Assistant or Registration and Scheduling Clerk (RRTP)",
+                              "Mental Health Licensed Independent Provider",
+                              "Mental Health Medical Support Assistant or Registration and Scheduling Clerk",
+                              "Mental Health Nurse",
+                              "Mental Health Nurse (RRTP)",
+                              "Mental Health Prescribing Provider",
+                              "Mental Health Provider",
+                              "Mental Health Provider (RRTP)",
+                              "Mental Health Psychologist",
+                              "Mental Health Referral Manager (Originating Clinic)",
+                              "Mental Health Referral Manager (Receiving Clinic)",
+                              "Mental Health Technician",
+                              "Mental Health Technician (RRTP)",
+                              "Mental Health Therapist",
+                              "Mental Health Therapist (RRTP)",
+                              "Microbiologist",
+                              "Military Sexual Trauma Coordinator",
+                              "Nephrology Provider",
+                              "Nurse Case Manager",
+                              "Occupational Therapist",
+                              "Occupational Therapist, Physical Therapist, or Speech-Language Pathologist",
+                              "Occupational Therapy Assistant",
+                              "Oncology Nurse Navigator Telehealth",
+                              "Oncology Provider",
+                              "OPECC Biller",
+                              "OPECC Insurance Verification Manager",
+                              "Orthopedic Clinic Provider",
+                              "Orthopedic Clinical Staff",
+                              "Orthopedic Surgeon",
+                              "Orthotics and Prosthetics Provider ",
+                              "Otolaryngology Provider",
+                              "Outpatient Case Manager",
+                              "Outpatient LPN",
+                              "Outpatient Nurse",
+                              "Outpatient Nurse Case Manager",
+                              "Outpatient Nurse or Homeless Program Staff - Licensed",
+                              "Outpatient Oncology RN",
+                              "Outpatient Oncology RN One",
+                              "Outpatient Oncology RN Two",
+                              "Outpatient Pharmacist",
+                              "Outpatient Provider and Outpatient Nurse",
+                              "Outpatient RN",
+                              "Palliative Care Nurse",
+                              "Palliative Care Nurse or Palliative Care Social Worker",
+                              "Palliative Care Provider",
+                              "Palliative Care Social Worker",
+                              "Pathologist",
+                              "Perioperative Nurse",
+                              "Perioperative Nurse - Circulator",
+                              "Perioperative Nurse - Intraoperative",
+                              "Perioperative Nurse - Phase I and Phase II",
+                              "Perioperative Nurse - Preoperative",
+                              "Perioperative Nurse – Preoperative Anesthesia and Teaching",
+                              "Perioperative Sedation Nurse",
+                              "Personal Care Services Coordinator",
+                              "Pharmacist",
+                              "Pharmacist One",
+                              "Pharmacist Provider ",
+                              "Pharmacist Two",
+                              "Pharmacy Procurement Technician",
+                              "Pharmacy Technician",
+                              "Phlebotomist",
+                              "Physical Medicine & Rehabilitation Provider",
+                              "Physical Therapist",
+                              "Physical Therapy Assistant",
+                              "Podiatry Provider",
+                              "Primary Care Mental Health Integration Provider",
+                              "Primary Care Provider",
+                              "Prosthetics and Sensory Aids Services Staff (view only)",
+                              "Psychiatrist",
+                              "Psychiatrist (RRTP)",
+                              "Pulmonology Provider",
+                              "Purchased Skilled Coordinator",
+                              "Radiology Clerk",
+                              "Radiology Technologist",
+                              "Recreation Therapist",
+                              "Recreation Therapist (RRTP)",
+                              "Referral Manager",
+                              "Referring Provider or Transplant Referral Coordinator",
+                              "Release of Information Specialist",
+                              "Research Coordinator",
+                              "Research Principal Investigator",
+                              "Respiratory Therapist",
+                              "Respiratory Therapist or Home O2 Coordinator",
+                              "Revenue Utilization Review Manager",
+                              "Social Worker",
+                              "Specialty Provider",
+                              "Speech Language Pathologist",
+                              "Spinal Cord Injuries and Disorders Provider",
+                              "Spinal Cord Injury Provider",
+                              "Spinal Cord Injury RN",
+                              "Suicide Prevention Coordinator",
+                              "Surgeon",
+                              "Telehealth Clinical Technician",
+                              "Transplant Referral Coordinator",
+                              "Ultrasound Technologist",
+                              "VA Contact Representative",
+                              "Veteran Services  – Patient Services Associate",
+                              "Visual Impairment Services Team Coordinator",
+                              "Whole Health Clinician",
+                              "Whole Health Coach",
+                              "Wound and Ostomy Specialist ",
+                              "Wound Care Nurse",
+                              "Wound Care Provider",
+                              "Wound Care Provider "
+                          ]
+                        OnChange: =Set(varPopUp_ClassPicker_scenarioRole, Self.Selected.Value);
+                        Width: =Parent.Width - Self.X - 10
+                        X: =HtmlText7_1.X + 10
+                        Y: =HtmlText7_1.Y + HtmlText7_1.Height
+                  - HtmlText7_1:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        AutoHeight: =true
+                        HtmlText: ="What is the <b>ROLE</b> that <b>" & varDeskAccessControl_record.GivenName_Text & "'s</b> will play during this training:"
+                        Size: =14
+                        Width: =Parent.Width - Self.X
+                        X: =Label3_1.X + Label3_1.Width
+                  - Label3_1:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =Label3.Color
+                        FontWeight: =Label3.FontWeight
+                        Height: =Label3.Height
+                        Size: =Label3.Size
+                        Text: ="*"
+                        Visible: |-
+                          =If(
+                              IsBlankOrError(Dropdown3_1.Selected) || Dropdown3_1.Selected.Value = Blank(),
+                              true,
+                              false
+                          )
+                        Width: |-
+                          =If(
+                              IsBlankOrError(Dropdown3_1.Selected) || Dropdown3_1.Selected.Value = Blank(),
+                              33,
+                              0
+                          )
+                        X: =Label3.X
+                        Y: =Label3.Y
+            - ctn_PopUp_ClassPicker_Scenario:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Height: =HtmlText7.Height + Dropdown3.Height + HtmlText8.Height + 5
+                  Width: =Parent.Width - 30
+                  X: =15
+                  Y: =ctn_PopUp_ClassPicker_Header.Height + ctn_PopUp_ClassPicker_Header.Y + 10
+                Children:
+                  - HtmlText8:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        AutoHeight: =true
+                        Height: |-
+                          =If(
+                              IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
+                              0,
+                              70
+                          )
+                        HtmlText: |-
+                          =If(
+                              IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
+                              "<center><i>Click here to open the <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"">Learning Lab training material library</a> in another browser window...",
+                              "<center><i>Click here to open the <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=" & varPopUp_ClassPicker_scenarioSplit & "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603""> " & varPopUp_ClassPicker_scenarioName & "</a> Learning Lab training materials in another browser window..."
+                          )
+                        OnSelect: |-
+                          =If(
+                              IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
+                              Launch("https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx", LaunchTarget.New, ""),
+                              Launch(
+                                  Concatenate(
+                                      "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=",
+                                      varPopUp_ClassPicker_scenarioSplit,
+                                      "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603"
+                                  ),
+                                  LaunchTarget.New, ""
+                              )
+                          )
+                        Size: =20
+                        Width: =Dropdown3.Width
+                        X: =Dropdown3.X
+                        Y: =Dropdown3.Y + Dropdown3.Height
+                  - Dropdown3:
+                      Control: ModernDropdown@1.0.2
+                      Properties:
+                        Height: =48
+                        ItemDisplayText: =ThisItem.Value
+                        Items: |-
+                          =[
+                              "Anatomic Pathology",
+                              "Anesthesia",
+                              "Audiology Hearing Aid Check",
+                              "Behavioral Health - Inpatient",
+                              "Behavioral Health - Outpatient",
+                              "Between Visit Encounter",
+                              "Blind Rehabilitation",
+                              "Blood Bank",
+                              "Caregiver Support Program",
+                              "Case Management to Primary Care to Mental Health",
+                              "Clinical Contact Center",
+                              "Clinical Resource Hub",
+                              "Coding Health Information Management",
+                              "Community Care Referral",
+                              "Community Living Center - Leave of Absence",
+                              "Community Living Center - Pre-Admission Screening",
+                              "Community Living Center Admission",
+                              "Consult to Dietitian",
+                              "Dental Care with Follow Up",
+                              "Dentistry Simple",
+                              "Ear Nose Throat Visit",
+                              "Emergency Department",
+                              "Emergency Department to Intensive Care Unit Admission",
+                              "Eye Care Visit",
+                              "Gastroenterology",
+                              "General Laboratory",
+                              "Health Resource Center",
+                              "Holiday",
+                              "Home and Community Based Care",
+                              "Home Based Primary Care - Discipline Visits",
+                              "Home Based Primary Care - Nurse and Provider Visit",
+                              "Homeless Services and Programs",
+                              "Infection Control Worklist",
+                              "Infection Prevention",
+                              "Inpatient Nurse",
+                              "Inpatient Pharmacy",
+                              "Insurance Verification",
+                              "Intensive Care Unit to Discharge",
+                              "Long-Acting Injectables",
+                              "Mental Health New Visit",
+                              "Microbiology",
+                              "Nurse Visit",
+                              "Occupational Therapy",
+                              "Oncology Infusion Visit",
+                              "Oncology Office Visit",
+                              "Orthopedic Clinic with Physical Therapy",
+                              "Orthopedic Referral",
+                              "Orthotics and Prosthetics",
+                              "Outpatient Billing with Revenue Utilization Review",
+                              "Outpatient Case Management",
+                              "Outpatient Hemodialysis",
+                              "Outpatient Palliative Care",
+                              "Palliative Care Consult",
+                              "Patient Accounting",
+                              "Pharmacist Provider",
+                              "Pharmacy Outpatient",
+                              "Pharmacy Supply Chain - Electronic Purchase Orders",
+                              "Pharmacy Supply Chain Receiving",
+                              "Pharmacy Technician",
+                              "Physical Medicine and Rehabilitation",
+                              "Physical Therapy",
+                              "Podiatry",
+                              "Primary Care Established",
+                              "Primary Care Focused",
+                              "Primary Care Mental Health Integration",
+                              "Primary Care to Primary Care Mental Health Integration",
+                              "Primary Care with Home Telehealth Referral",
+                              "Primary Care with Lab and Pharmacy",
+                              "Primary Care with Podiatry and Wound Care",
+                              "Primary Care with Pulmonary and Cardiothoracic Surgery",
+                              "Primary Care with Radiology",
+                              "Primary Care with Referral Management and Clinical Resource Hub - Day 1",
+                              "Primary Care with Referral Management and Clinical Resource Hub - Day 2",
+                              "Primary Care with Spinal Cord Injuries and Disorders and Physical Therapy",
+                              "Primary Care with Suicidal Ideation",
+                              "Pulmonology",
+                              "Radiology",
+                              "Recreation Therapy",
+                              "Release of Information Specialist",
+                              "Research Initial Visit",
+                              "Residential Rehabilitation Treatment Program",
+                              "Residential Rehabilitation Treatment Program Admission",
+                              "Respiratory Therapy",
+                              "Scenario 1 - Mr. Frank - Day 1",
+                              "Scenario 1 - Mr. Frank - Day 2",
+                              "Scenario 2 - Mr. Lee - Day 1",
+                              "Scenario 2 - Mr. Lee - Day 2",
+                              "Scenario 3 - Ms. White - Day 1",
+                              "Scenario 3 - Ms. White - Day 2",
+                              "Social Work Inpatient",
+                              "Solid Organ Transplant Referral",
+                              "Specialty Care Office Visit",
+                              "Speech Language Pathology",
+                              "Spinal Cord Injury Home Care",
+                              "Standard Surgery - Day 1",
+                              "Standard Surgery - Day 2",
+                              "Tele-Health Visit",
+                              "Tele-Imaging",
+                              "Urgent Care",
+                              "Women's Health & Gynecology Procedure",
+                              "Women's Health Visit",
+                              "Wound Care",
+
+                          ]
+                        OnChange: |-
+                          =Set(varPopUp_ClassPicker_scenarioName, Self.Selected.Value);
+                          Set(varPopUp_ClassPicker_scenarioSplit, Substitute(Text(Self.Selected.Value), " ", "%20"));
+                        Width: =Parent.Width - Self.X - 10
+                        X: =HtmlText7.X + 10
+                        Y: =HtmlText7.Y + HtmlText7.Height
+                  - HtmlText7:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        AutoHeight: =true
+                        HtmlText: ="Pick a <b>SCENARIO</b> for <b>" & varDeskAccessControl_record.GivenName_Text & "'s</b> Learning Lab:"
+                        Size: =14
+                        Width: =Parent.Width - Self.X
+                        X: =Label3.X + Label3.Width
+                  - Button9:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        FontWeight: =FontWeight.Normal
+                        Height: =HtmlText8.Height + 2
+                        HoverBorderColor: =RGBA(9, 33, 98, 1)
+                        HoverFill: =RGBA(9, 33, 98, 0.25)
+                        OnSelect: =Select(HtmlText8)
+                        PressedBorderColor: =
+                        RadiusBottomLeft: =15
+                        RadiusBottomRight: =15
+                        RadiusTopLeft: =15
+                        RadiusTopRight: =15
+                        Size: =20
+                        Text: =
+                        Width: =HtmlText8.Width + 4
+                        X: =HtmlText8.X - 2
+                        Y: =HtmlText8.Y - 1
+                  - Label3:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =RGBA(168, 0, 0, 1)
+                        FontWeight: =FontWeight.Bold
+                        Height: =33
+                        Size: =30
+                        Text: ="*"
+                        Visible: |-
+                          =If(
+                              IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
+                              true,
+                              false
+                          )
+                        Width: |-
+                          =If(
+                              IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
+                              33,
+                              0
+                          )
+            - ctn_PopUp_ClassPicker_Header:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Height: =Image2_14.Height
+                  Width: =Parent.Width
+                Children:
+                  - Rectangle2_12:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        Fill: =RGBA(135, 78, 181, 0.65)
+                        Height: =150
+                        Width: =Parent.Width
+                  - Image2_14:
+                      Control: Image@2.2.3
+                      Properties:
+                        Height: =150
+                        Image: =abstractBackground
+                        ImagePosition: =ImagePosition.Fill
+                        Width: =Parent.Width
+                  - btnContinueDate_2:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        DisplayMode: |-
+                          =If(
+                              IsBlankOrError(Dropdown3_3.Selected) || Dropdown3_3.Selected.Value = Blank(),
+                              DisplayMode.Disabled,
+                              DisplayMode.Edit
+                          )
+                        Fill: =RGBA(15, 108, 189, 1)
+                        Height: =45
+                        HoverFill: =ColorFade(Self.Fill, -20%)
+                        OnSelect: |-
+                          =// 1. Set global variables
+                          Set(varAttendees, Concat(DataCardValue3.SelectedItems, Email, ";")); //e.g. "Kyle.Coder@va.gov;"
+                          Set(varOptionalAttendees, Concat(DataCardValue7.SelectedItems, Email, ";")); //e.g. "Bradley.Lomax@va.gov;"
+                          Set(varMeetCat, DropdownCanvas1.Selected.Value);  //e.g. "Super User Learning Lab"
+                          Set(varReservePOC, DataCardValue7.Selected.Email); //e.g. "Bradley.Lomax@va.gov;"
+                          Set(varTitle, "Hines EHRM Training Room & Desk Reservation"); //DataCardValue8.Text); // TBService
+                          Set(varDescription, DataCardValue1.Text); // RDReason 
+                          Set(
+                              varEmailBody,
+                              "You have a confirmed reservation for EHRM Learning Lab training at the Edward Hines Jr. VA Hospital!
+                              <br>
+                                   <br>Scenario:          " & varPopUp_ClassPicker_scenarioName &
+                                  "<br>Role:              " & varPopUp_ClassPicker_scenarioRole &
+                                  "<br>Date:              " & varPopUp_ClassPicker_scenarioDate &
+                                  "<br>Date:              " & varPopUp_ClassPicker_scenarioStartTime &
+                                  "<br>Location:          " & varPopUp_ClassPicker_scenarioLocation &
+                              "<br>
+                              <br>
+                              Please follow this Link to view or cancel your EHRM Training reservations: 
+                              <br>
+                              https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079<br>
+                              <i>***FOLLOW THE LINK ABOVE and then Click on My Bookings or Click the BLUE button to see your Training Calander for your RESERVATION(s) THAT HAS BEEN SCHEDULED***<i>
+                              <br>"
+                          );
+                          Set(varURL,"https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079"
+                          );
+                          Set(varURLName, "578 EHRM Training App");
+                          Set(varPopUp_ClassPicker, 1);
+
+                          Navigate(chkWeekDays)
+                        Size: |-
+                          =If(
+                              btnContinueDate_2.DisplayMode = DisplayMode.Disabled,
+                              16,
+                              24
+                          )
+                        Text: |-
+                          =If(
+                              btnContinueDate_2.DisplayMode = DisplayMode.Disabled,
+                              "Response Missing",
+                              "CONTINUE"
+                          )
+                        Tooltip: =If(Self.DisplayMode = DisplayMode.Disabled, "You have not completed all required fields.")
+                        Width: =200
+                        X: =btnBackDate_2.X + btnBackDate_2.Width + 20
+                        Y: =btnBackDate_2.Y
+                  - btnBackDate_2:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Fill: =RGBA(128, 128, 128, 1)
+                        Height: =45
+                        HoverFill: =ColorFade(Self.Fill, -20%)
+                        OnSelect: =Set(varPopUp_ClassPicker, 0);
+                        Text: ="Back"
+                        Width: =200
+                        X: =(Parent.Width - (Self.Width + 20 + btnContinueDate_2.Width)) / 2
+                        Y: =70
+                  - lblSelectDate_2:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        Color: =RGBA(255, 255, 255, 1)
+                        FontWeight: =FontWeight.Bold
+                        Height: =50
+                        Size: =32
+                        Text: ="Create a new reservation..."
+                        Width: =600
+                        X: =(Parent.Width - Self.Width) / 2
+                        Y: =20
+            - Label16_1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(168, 0, 0, 1)
+                  FontWeight: =FontWeight.Bold
+                  Height: =104
+                  Text: |-
+                    ="Fields marked with an asterisk ( * ) are required to be filled out.
+                    You may not proceed until you provide an answer to all required questions!"
+                  Visible: |-
+                    =If(
+                        (IsBlankOrError(Dropdown3_2.Selected) || Dropdown3_2.Selected.Value = Blank())
+                        || !ctn_PopUp_ClassPicker_Location.Visible,
+                        true,
+                        false
+                    )
+                  Width: =1136
+                  Y: =536
+      - Button1:
+          Control: ModernButton@1.0.0
+          Properties:
+            Height: =50
+            OnSelect: |-
+              =Reset(Dropdown3);
+              Reset(Dropdown3_1);
+              Reset(Dropdown3_2);
+              Reset(Dropdown3_3);
+            Text: ="RESET"
+            Visible: =user_isAdmin
+            Width: =176

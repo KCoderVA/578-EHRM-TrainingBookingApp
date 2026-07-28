@@ -12,7 +12,7 @@ Screens:
       OnVisible: |
         =Set(
             _dateSelected2,
-            _CurrentDate2
+            Today()
         );
         Set(
             _firstDayofWeek2,
@@ -182,12 +182,77 @@ Screens:
                 Control: Gallery@2.15.0
                 Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
                 Properties:
+                  DisplayMode: |-
+                    =If(
+                        (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
+                            DisplayMode.Edit,
+                        (userAccessLevel_text = "View-only" || "View-only"),
+                            DisplayMode.View,
+                        (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                            DisplayMode.Disabled
+                    )
                   Height: =468
                   Items: |-
-                    =Filter(
+                    =/*
+                    Filter(
                         'Desk Reservations',
                         DateValue(RecurrenceEndDate) = Today() && 
                         (Dropdown2_1.Selected.Title = "All" || DeskFloor = Dropdown2_1.Selected.Title)
+                    )
+                    */
+                    If(
+                        (userAccessLevel_text = "AppAdmin"),
+                                Filter(
+                                    'Desk Reservations',
+                                    DateValue(RecurrenceEndDate) = Today()
+                                    && (Dropdown2_1.Selected.Title = "All" || DeskFloor = Dropdown2_1.Selected.Title)
+                                ),
+                        (userAccessLevel_text = "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief"),
+                            SortByColumns(
+                                Filter(
+                                    'Desk Reservations',
+                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
+                                    (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
+                                    (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
+                                ),
+                                "Title",
+                                SortOrder.Ascending
+                            ),
+                        (userAccessLevel_text = "User"),
+                            SortByColumns(
+                                Filter(
+                                    'Desk Reservations',
+                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
+                                    && (Lower('Created By'.Email) = Lower(varTargetEmail) || Lower('Reserved By'.Email) = Lower(varTargetEmail))
+                                ),
+                                "Title",
+                                SortOrder.Ascending
+                            ),
+                        (userAccessLevel_text = "View-only" || "View-only"),
+                            SortByColumns(
+                                Filter(
+                                    'Desk Reservations',
+                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
+                                    && (Lower('Created By'.Email) = Lower(varTargetEmail) || Lower('Reserved By'.Email) = Lower(varTargetEmail))
+                                ),
+                                "Title",
+                                SortOrder.Ascending
+                            ),
+                        (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                                    SortByColumns(
+                                Filter(
+                                    'Desk Reservations',
+                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
+                                ),
+                                "Title",
+                                SortOrder.Ascending
+                            )
                     )
                   TemplateSize: =35
                   Width: =1061
@@ -198,19 +263,14 @@ Screens:
                       Properties:
                         AccessibleLabel: =Self.Tooltip
                         BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(166, 166, 166, 1)
+                        Color: =RGBA(9, 33, 98, 1)
                         DisabledBorderColor: =RGBA(56, 56, 56, 1)
                         DisabledColor: =RGBA(119, 119, 119, 1)
                         DisplayMode: |+
-                          =If(
-                              ThisItem.'Created By'.Email = varUser.Email || isUserAdminSPList && ThisItem.'Created By'.DisplayName = "Admin",
-                              DisplayMode.Edit,
-                              DisplayMode.Disabled
-                          )
-                          //DisplayMode.Edit
-                          //Admin.Email = varUser.Email
+                          =DisplayMode.Edit
+                          //Admin.Email = varUser_details.Email
                         Height: =50
-                        Icon: =Icon.ChevronRight
+                        Icon: =Icon.View
                         OnSelect: |+
                           =Set(varDaily, ThisItem.ID);
                           Set(varSelectedReservation, ThisItem);

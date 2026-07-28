@@ -21,11 +21,11 @@ Screens:
             AccessibleLabel: ="Available Desks"
             Height: =433
             Items: |-
-              =Filter(
+              =/*Filter(
                   Desks,
                   !IsBlankOrError(Active_text),
                   SortOrder.Descending
-              )
+              )*/
 
               /*Filter(
                   Desks,
@@ -33,7 +33,7 @@ Screens:
                   Text(Dropdown1_1.Selected.RoomNumber) = Text(CombinedLocationDetails_multilinePlainText)
               )*/
 
-              /*If(
+              If(
                   Dropdown1.SelectedText.Value = "EHRM Training Rooms",
                   SortByColumns(
                       Filter(
@@ -69,7 +69,7 @@ Screens:
                       "Title",
                       SortOrder.Ascending
                   )
-              )*/
+              )
             Selectable: =false
             TabIndex: =2
             TemplateSize: =110

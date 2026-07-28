@@ -1,0 +1,109 @@
+Tabs_altColor As CanvasComponent:
+    Fill: =RGBA(0, 11, 38, 1)
+    Height: =120
+    HomePage: =App.ActiveScreen
+    Items: |-
+        =Table(
+            {
+                Name: "Dashboard",
+                Icon: Icon.DetailList,
+                Page: App.ActiveScreen,
+                Visible:true
+            },
+            {
+                Name: "My Appts",
+                Icon: Icon.Person,
+                Page: App.ActiveScreen,
+                Visible:true
+            },
+             {
+                Name: "Manage Desks",
+                Icon: Icon.ComputerDesktop,
+                Page: App.ActiveScreen,
+                Visible:true
+            },
+            {
+                Name: "Book",
+                Icon: Icon.Add,
+                Page: App.ActiveScreen,
+                Visible:true
+            }
+        )
+    Width: =640
+    X: =0
+    Y: =0
+    ZIndex: =2
+
+    Rectangle1_1 As rectangle:
+        BorderColor: =RGBA(128, 128, 128, 1)
+        Fill: =RGBA(128, 128, 128, .5)
+        Height: =2
+        Width: =640
+        ZIndex: =1
+
+    Gallery4_1 As gallery.galleryHorizontal:
+        '#CopilotOverlayLabel': ="Filtered"
+        AccessibleLabel: ="Footer tabs"
+        BorderColor: =RGBA(32, 54, 71, 1)
+        DisabledBorderColor: =Gallery4_1.BorderColor
+        DisabledFill: =Gallery4_1.Fill
+        Fill: =RGBA(0, 11, 38, 0.75)
+        FocusedBorderThickness: =0
+        Height: =115
+        HoverBorderColor: =Gallery4_1.BorderColor
+        HoverFill: =Gallery4_1.Fill
+        Items: =Tabs_altColor.Items
+        LoadingSpinnerColor: =Gallery4_1.BorderColor
+        OnSelect: =Navigate(ThisItem.Page)
+        PressedBorderColor: =Gallery4_1.BorderColor
+        PressedFill: =Gallery4_1.Fill
+        TabIndex: =1
+        TemplateSize: =151
+        Width: =638
+        X: =1
+        ZIndex: =2
+
+        Icon10_1 As icon.Search:
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            DisabledFill: =Icon10_1.Fill
+            FocusedBorderColor: =Icon10_1.BorderColor
+            Height: =40
+            HoverBorderColor: =ColorFade(Icon10_1.BorderColor, 20%)
+            HoverColor: =ColorFade(Icon10_1.Color, 20%)
+            HoverFill: =Icon10_1.Fill
+            Icon: =ThisItem.Icon
+            OnSelect: =Select(Parent);Navigate(ThisItem.Page)
+            PressedBorderColor: =ColorFade(Icon10_1.BorderColor, -20%)
+            PressedColor: =ColorFade(Icon10_1.Color, -20%)
+            PressedFill: =Icon10_1.Fill
+            Visible: =ThisItem.Visible
+            Width: =40
+            X: =52
+            Y: =60
+            ZIndex: =1
+
+        Label10_1 As label:
+            Align: =LayoutAlignItems.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            FocusedBorderColor: =Label10_1.BorderColor
+            Height: =52
+            HoverBorderColor: =Label10_1.BorderColor
+            HoverColor: =Label10_1.Color
+            HoverFill: =Label10_1.Fill
+            OnSelect: =Select(Parent);Navigate(ThisItem.Page)
+            PressedBorderColor: =Label10_1.BorderColor
+            PressedColor: =Label10_1.Color
+            PressedFill: =Label10_1.Fill
+            Size: =16
+            Text: =ThisItem.Name
+            Visible: =ThisItem.Visible
+            Width: =137
+            X: =4
+            Y: =48
+            ZIndex: =2
+

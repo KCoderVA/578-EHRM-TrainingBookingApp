@@ -55,6 +55,7 @@ ComponentDefinitions:
             Image: =Preloader.AnimatedGIF
             PressedBorderColor: =ColorFade(imgLoader.BorderColor, -20%)
             PressedFill: =ColorFade(imgLoader.Fill, -20%)
+            Visible: =false
             Width: =If(!IsBlank(LookUp(Preloader.Styles, Key = "PreloaderWidth").Value),LookUp(Preloader.Styles, Key = "PreloaderWidth").Value, 82)
             X: =Preloader.Width / 2 - imgLoader.Width / 2
             Y: =Preloader.Height /2 - imgLoader.Height / 2
@@ -73,7 +74,7 @@ ComponentDefinitions:
             PressedColor: =lblLoaderText.Color
             PressedFill: =lblLoaderText.Fill
             Text: =Preloader.Text
-            Width: =Preloader.Width
+            Width: =Parent.Width
             Y: =imgLoader.Y + imgLoader.Height
       - DefaultStyle:
           Control: Classic/Button@2.2.0
@@ -93,3 +94,11 @@ ComponentDefinitions:
             Visible: =false
             X: =60
             Y: =282
+      - spinner.svg:
+          Control: Image@2.2.3
+          Properties:
+            Height: =Parent.Height
+            Image: =Spinner
+            Width: =Parent.Width
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =(Parent.Height / 2) - (Self.Height / 2)

@@ -1,0 +1,122 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+ComponentDefinitions:
+  Tabs_altColor:
+    DefinitionType: CanvasComponent
+    CustomProperties:
+      HomePage:
+        PropertyKind: Input
+        DisplayName: HomePage
+        Description: The Home Page URL
+        DataType: Screen
+        Default: =App.ActiveScreen
+      Items:
+        PropertyKind: Input
+        DisplayName: Items
+        Description: Items for the tabs
+        DataType: Table
+        Default: |-
+          =Table(
+              {
+                  Name: "Dashboard",
+                  Icon: Icon.DetailList,
+                  Page: App.ActiveScreen,
+                  Visible:true
+              },
+              {
+                  Name: "My Appts",
+                  Icon: Icon.Person,
+                  Page: App.ActiveScreen,
+                  Visible:true
+              },
+               {
+                  Name: "Manage Desks",
+                  Icon: Icon.ComputerDesktop,
+                  Page: App.ActiveScreen,
+                  Visible:true
+              },
+              {
+                  Name: "Book",
+                  Icon: Icon.Add,
+                  Page: App.ActiveScreen,
+                  Visible:true
+              }
+          )
+    Properties:
+      Fill: =RGBA(0, 11, 38, 1)
+      Height: =120
+    Children:
+      - Rectangle1_1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(128, 128, 128, 1)
+            Fill: =RGBA(128, 128, 128, .5)
+            Height: =2
+            Width: =640
+      - Gallery4_1:
+          Control: Gallery@2.15.0
+          Variant: Horizontal
+          Properties:
+            AccessibleLabel: ="Footer tabs"
+            BorderColor: =RGBA(32, 54, 71, 1)
+            DelayItemLoading: =false
+            Fill: =RGBA(0, 11, 38, 0.75)
+            FocusedBorderThickness: =0
+            Height: =115
+            Items: =Tabs_altColor.Items
+            LoadingSpinner: =LoadingSpinner.None
+            LoadingSpinnerColor: =Gallery4_1.BorderColor
+            OnSelect: =Navigate(ThisItem.Page)
+            TabIndex: =1
+            TemplateSize: =151
+            Width: =638
+            X: =1
+          Children:
+            - Icon10_1:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Color: =RGBA(255, 255, 255, 1)
+                  DisabledFill: =Icon10_1.Fill
+                  FocusedBorderColor: =Icon10_1.BorderColor
+                  Height: =40
+                  HoverBorderColor: =ColorFade(Icon10_1.BorderColor, 20%)
+                  HoverColor: =ColorFade(Icon10_1.Color, 20%)
+                  HoverFill: =Icon10_1.Fill
+                  Icon: =ThisItem.Icon
+                  OnSelect: =Select(Parent);Navigate(ThisItem.Page)
+                  PressedBorderColor: =ColorFade(Icon10_1.BorderColor, -20%)
+                  PressedColor: =ColorFade(Icon10_1.Color, -20%)
+                  PressedFill: =Icon10_1.Fill
+                  Visible: =ThisItem.Visible
+                  Width: =40
+                  X: =52
+                  Y: =60
+            - Label10_1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =LayoutAlignItems.Center
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Color: =RGBA(255, 255, 255, 1)
+                  FocusedBorderColor: =Label10_1.BorderColor
+                  Font: =Font.'Open Sans'
+                  Height: =52
+                  HoverBorderColor: =Label10_1.BorderColor
+                  HoverColor: =Label10_1.Color
+                  HoverFill: =Label10_1.Fill
+                  OnSelect: =Select(Parent);Navigate(ThisItem.Page)
+                  PressedBorderColor: =Label10_1.BorderColor
+                  PressedColor: =Label10_1.Color
+                  PressedFill: =Label10_1.Fill
+                  Size: =16
+                  Text: =ThisItem.Name
+                  Visible: =ThisItem.Visible
+                  Width: =137
+                  X: =4
+                  Y: =48

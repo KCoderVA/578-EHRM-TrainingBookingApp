@@ -12,7 +12,37 @@ Screens:
       Fill: =RGBA(236, 236, 236, 1)
       Height: =Max(App.Height, App.DesignHeight)
       OnVisible: |-
-        =UpdateContext({
+        =UpdateContext(
+        {
+            varDefaultTime: With(
+                {
+                    CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
+                    CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
+                },
+                // Construct a pure Time value from the corrected hour and minute.
+                Time(CorrectedHour, CorrectedMinute, 0)
+            ),
+            Date: With(
+                {
+                    CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
+                    CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
+                },
+                // Construct a pure Time value from the corrected hour and minute.
+                Date(
+                    Year(varPopUp_ClassPicker_scenarioDate),
+                    Month(varPopUp_ClassPicker_scenarioDate),
+                    Day(varPopUp_ClassPicker_scenarioDate)
+                )
+            )
+        }
+        );
+        Reset(Calendar_1);
+        Reset(TimeFromdd);
+        Reset(TimeTodd);
+        Select(calClickBtn);
+
+        /*
+        UpdateContext({
             varDefaultTime: With(
                 {
                     // Calculate the current time plus any minutes needed to get to the next hour if rounding up.
@@ -31,6 +61,7 @@ Screens:
         Reset(TimeFromdd);
         Reset(TimeTodd);
         Select(calClickBtn)
+        */
       Width: =Max(App.Width, App.DesignWidth)
     Children:
       - Rectangle2:
@@ -43,7 +74,7 @@ Screens:
       - Gallery3:
           Control: Gallery@2.15.0
           Variant: Vertical
-          Group: Group5
+          Group: Group3
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
             Height: =120
@@ -70,7 +101,7 @@ Screens:
                   Width: =120
       - SelectTimeSlotlb_1:
           Control: Label@2.5.1
-          Group: Group5
+          Group: Group3
           Properties:
             Align: =Align.Center
             Height: =30
@@ -87,16 +118,31 @@ Screens:
       - Calendar_1:
           Control: CanvasComponent
           ComponentName: Calendar
+          Group: Group3
           Properties:
             BorderRadius: =1
             Color: =RGBA(50,50,50,1)
-            DaysAheadRestriction: =230 //180
-            DefaultEndDate: =Now()
-            DefaultStartDate: =Now()
+            DaysAheadRestriction: =390
+            DefaultEndDate: |-
+              =varPopUp_ClassPicker_scenarioDate
+              /*
+              If(
+                  !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Blank(),
+                      varPopUp_ClassPicker_scenarioDate,
+                      Now()
+              )
+              */
+            DefaultStartDate: |-
+              =If(
+                  !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Blank(),
+                      varPopUp_ClassPicker_scenarioDate,
+                      Now()
+              )
             Height: =445
             OnChangeCal: |-
               =// Calculate the default end time (60 mins after start time) and store it in a variable
-              Set(varDefaultEndTime, DateAdd(TimeFromdd.Selected.Value, 60, TimeUnit.Minutes));
+              //Set(varDefaultEndTime, DateAdd(TimeFromdd.Selected.Value, 60, TimeUnit.Minutes));
+              Set(varDefaultEndTime, varPopUp_ClassPicker_scenarioEndTime);
 
               // Reset the end time dropdown to apply the new default
               Reset(TimeTodd);
@@ -107,9 +153,6 @@ Screens:
             SelectedDateColor: =Color.White
             SelectedDateFill: =RGBA(15, 108, 189, 1)
             Styles: =Table({Key:"",Value:"",Type:""})
-            Visible: |+
-              =true
-
             Width: =400
             X: =5
             Y: =155
@@ -133,7 +176,7 @@ Screens:
               Set(
                   varEventStartTime,
                   DateAdd(
-                      DateTimeValue(DateValue(Calendar_1.StartDate) + TimeFromdd.Selected.Value),
+                      DateTimeValue(DateValue(Calendar_1.DefaultStartDate) + TimeFromdd.Selected.Value),
                       TimeZoneOffset(),
                       TimeUnit.Minutes
                   )
@@ -141,7 +184,7 @@ Screens:
               Set(
                   varEventEndTime,
                   DateAdd(
-                      DateTimeValue(DateValue(Calendar_1.StartDate) + TimeTodd.Selected.Value),
+                      DateTimeValue(DateValue(Calendar_1.DefaultEndDate) + TimeTodd.Selected.Value),
                       TimeZoneOffset(),
                       TimeUnit.Minutes
                   )
@@ -196,17 +239,16 @@ Screens:
                   )
               );
               If(
-                  false And false,/// 250611 CED do not understand this If clause
+                  false And false,
                   Notify(
                       "You must select a date and time to continue",
                       NotificationType.Warning
                   ),
-                  //Else
+
                   ClearCollect(
                       colBookedDesks,
                       Filter(
                           'Desk Reservations',
-                          ///('Check Out From' < endTime And ('Check Out From' >= startTime Or 'Check Out To' > startTime))
                           ('Check Out From' < varEventEndTime And ('Check Out From' >= varEventStartTime Or 'Check Out To' > varEventStartTime))
                       )
                   );
@@ -275,8 +317,11 @@ Screens:
             Fill: =RGBA(128, 128, 128, 1)
             Height: =45
             HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |+
+            OnSelect: |-
               =ClearCollect(CollectionRecurrence, Blank());
+              Reset(Calendar_1);
+              Reset(TimeTodd);
+              Reset(TimeFromdd);
               Back();
             Text: ="Back"
             Width: =200
@@ -293,8 +338,72 @@ Screens:
             Text: ="Select Date(s)/Time"
             Width: =450
             X: =(Parent.Width - Self.Width) / 2
+      - TextCanvas8_1:
+          Control: Text@0.0.51
+          Group: Group3
+          Properties:
+            Align: =Align.Left
+            Fill: =RGBA(180, 214, 250, 1)
+            Height: =27
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =12
+            Text: ="End Date/Time"
+            VerticalAlign: =VerticalAlign.Middle
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =125
+            X: =TextCanvas8.X + TextCanvas8.Width
+            Y: =TextCanvas8.Y
+      - TextCanvas8:
+          Control: Text@0.0.51
+          Group: Group3
+          Properties:
+            Align: =Align.Left
+            Fill: =RGBA(180, 214, 250, 1)
+            Height: =27
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =12
+            Text: ="Start Date/Time"
+            VerticalAlign: =VerticalAlign.Middle
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =125
+            X: =SelectTimeSlotlb_1.X
+            Y: =SelectTimeSlotlb_1.Y + SelectTimeSlotlb_1.Height
+      - SelectTimeSlotlb_3:
+          Control: Label@2.5.1
+          Group: Group3
+          Properties:
+            Align: =Align.Center
+            Height: =20
+            Italic: =true
+            Size: =10
+            Text: |-
+              =Switch(Gallery3.AllItemsCount,
+                  0, Gallery3.AllItemsCount & " no occurrences",
+                  1, Gallery3.AllItemsCount & " occurrence", 
+                  Gallery3.AllItemsCount & " occurrences"
+              )
+            Width: =250
+            X: =SelectTimeSlotlb_1.X
+            Y: =Gallery3.Y + Gallery3.Height
+      - shape_hiddenUnlessAdmin:
+          Control: Rectangle@2.3.0
+          Group: Group3
+          Properties:
+            Fill: =RGBA(236, 236, 236, 1)
+            Height: =ctn_ReservationsAlreadyBooked.Height + 1
+            Visible: =user_isAdmin
+            Width: =ctn_ReservationsAlreadyBooked.Width + 1
+            X: =ctn_ReservationsAlreadyBooked.X - 1
+            Y: =ctn_ReservationsAlreadyBooked.Y - 1
       - calClickBtn:
           Control: Classic/Button@2.2.0
+          Group: Group3
           Properties:
             FontWeight: =FontWeight.Bold
             Height: =25
@@ -476,81 +585,29 @@ Screens:
                       )
                   )
               );
-              ///ClearCollect(varRecurrenceFreq, ddRecurrenceFrequency.Selected.Value);
+              ///ClearCollect(colRecurrenceFreq, ddRecurrenceFrequency.Selected.Value);
               ///Set(varLastEndDate, Max(CollectionRecurrence, EndDateTime));
               ///Set(varNumberOccurances, RecurringWeekdd.Selected.Value)
             Size: =10
-            Text: ="Calendar click"
-            Visible: =false
+            Text: ="Recalculate"
+            Visible: =user_isAdmin
             Width: =110
-            X: =75
+            X: =8
             Y: =609
-      - TextCanvas8_1:
-          Control: Text@0.0.51
-          Group: Group5
-          Properties:
-            Align: =Align.Left
-            Fill: =RGBA(180, 214, 250, 1)
-            Height: =27
-            PaddingBottom: =0
-            PaddingLeft: =0
-            PaddingRight: =0
-            PaddingTop: =0
-            Size: =12
-            Text: ="End Date/Time"
-            VerticalAlign: =VerticalAlign.Middle
-            Weight: ='TextCanvas.Weight'.Bold
-            Width: =125
-            X: =TextCanvas8.X + TextCanvas8.Width
-            Y: =TextCanvas8.Y
-      - TextCanvas8:
-          Control: Text@0.0.51
-          Group: Group5
-          Properties:
-            Align: =Align.Left
-            Fill: =RGBA(180, 214, 250, 1)
-            Height: =27
-            PaddingBottom: =0
-            PaddingLeft: =0
-            PaddingRight: =0
-            PaddingTop: =0
-            Size: =12
-            Text: ="Start Date/Time"
-            VerticalAlign: =VerticalAlign.Middle
-            Weight: ='TextCanvas.Weight'.Bold
-            Width: =125
-            X: =SelectTimeSlotlb_1.X
-            Y: =SelectTimeSlotlb_1.Y + SelectTimeSlotlb_1.Height
-      - SelectTimeSlotlb_3:
-          Control: Label@2.5.1
-          Group: Group5
-          Properties:
-            Align: =Align.Center
-            Height: =20
-            Italic: =true
-            Size: =10
-            Text: |-
-              =Switch(Gallery3.AllItemsCount,
-                  0, Gallery3.AllItemsCount & " no occurrences",
-                  1, Gallery3.AllItemsCount & " occurrence", 
-                  Gallery3.AllItemsCount & " occurrences"
-              )
-            Width: =250
-            X: =SelectTimeSlotlb_1.X
-            Y: =Gallery3.Y + Gallery3.Height
       - nthWeekdayBtn:
           Control: Classic/Button@2.2.0
+          Group: Group3
           Properties:
             FontWeight: =FontWeight.Bold
             Height: =25
             OnSelect: |
-              =// Create 180 day date collection
+              =// Create 390 day date collection
               ClearCollect(
                   colDates,
                   With(
                       {
                           startDate: DateValue(startDateLbl.Text),
-                          sequenceDays: Sequence(DateDiff(DateValue(startDateLbl.Text), DateAdd(DateValue(startDateLbl.Text), 180, TimeUnit.Days) + 1)) // +1 to include both start and end dates
+                          sequenceDays: Sequence(DateDiff(DateValue(startDateLbl.Text), DateAdd(DateValue(startDateLbl.Text), Calendar_1.DaysAheadRestriction, TimeUnit.Days) + 1)) // +1 to include both start and end dates
                       },
                       AddColumns(
                           sequenceDays,
@@ -574,25 +631,13 @@ Screens:
               Set(NthWeekdayRecord, Last(FirstN(WeekdaysOnly, Value(recurPeriodTxt_1.Text))).Value)
             Size: =10
             Text: ="Get Nth weekday"
-            Visible: =false
+            Visible: =user_isAdmin
             Width: =110
-            X: =calClickBtn.X + calClickBtn.Width + 10
+            X: =128
             Y: =609
-      - shape_hiddenUnlessAdmin:
-          Control: Rectangle@2.3.0
-          Properties:
-            Fill: =RGBA(236, 236, 236, 1)
-            Height: =ctn_ReservationsAlreadyBooked.Height + 1
-            Visible: |-
-              =If(
-                  IsEmpty(colDeskChckRecur),
-                  true,
-                  false)
-            Width: =ctn_ReservationsAlreadyBooked.Width + 1
-            X: =ctn_ReservationsAlreadyBooked.X - 1
-            Y: =ctn_ReservationsAlreadyBooked.Y - 1
       - weeklyBtn:
           Control: Classic/Button@2.2.0
+          Group: Group3
           Properties:
             FontWeight: =FontWeight.Bold
             Height: =25
@@ -671,13 +716,14 @@ Screens:
               );
             Size: =10
             Text: ="Get weekly"
-            Visible: =false
+            Visible: =user_isAdmin
             Width: =110
-            X: =nthWeekdayBtn.X + nthWeekdayBtn.Width + 10
+            X: =248
             Y: =609
       - ctn_SelectTimeSlot:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
+          Group: Group3
           Properties:
             Height: =ddImportance.Y + ddImportance.Height + 5
             Width: =(Parent.Width - Self.X) / 2
@@ -694,18 +740,17 @@ Screens:
                   ChevronFill: =Color.White
                   ChevronHoverBackground: =ColorValue("#874EB5")
                   Default: |-
-                    =varDefaultEndTime
-                    /* TimeValue(DateAdd(DateValue(Now())+Time(Hour(Now()),RoundUp(Minute(Now())/15,0)*15,0),
-                        // If(Minute(Now()) >= 0 && Minute(Now()) < 15, 0, 15),
-                     1,TimeUnit.Hours)) */
-
-                    // "10:00 AM"
+                    =If(
+                        !IsBlankOrError(varPopUp_ClassPicker_scenarioEndTime) || varPopUp_ClassPicker_scenarioEndTime <> Blank(),
+                            varPopUp_ClassPicker_scenarioEndTime,
+                            Now()
+                    )
                   Height: =30
                   HoverFill: =Color.LightGray
                   Items: |-
                     =Filter(
                         With(
-                            {Interval: 15},
+                            {Interval: 30},
                             ForAll(
                                 Sequence(60 * 24 / Interval),
                                 Time(
@@ -745,14 +790,27 @@ Screens:
                   ChevronFill: =Color.White
                   ChevronHoverBackground: =ColorValue("#874EB5")
                   Default: |-
-                    =varDefaultTime
+                    =If(
+                        !IsBlankOrError(varPopUp_ClassPicker_scenarioStartTime) || varPopUp_ClassPicker_scenarioStartTime <> Blank(),
+                            varDefaultTime,
+                            varPopUp_ClassPicker_scenarioStartTime
+                            //Now()
+                    )
                     // TimeValue(DateAdd(DateValue(Today())+Time(Hour(Now()),RoundUp(Minute(Now())/15,0)*15,0),If(Minute(Today())>=0&&Minute(Now())<15,0,15),TimeUnit.Minutes))
                     //"9:00 AM"
                   Height: =30
                   HoverFill: =Color.LightGray
-                  Items: |-
-                    =With({Interval:15},ForAll(Sequence(60*24/Interval),Time(0,Interval*(Value-1),0)))
-                    // With({Interval:60},ForAll(Sequence(60*24/Interval),Time(0,Interval*(Value-1),0)))
+                  Items: |+
+                    =With(
+                        {Interval: 30},
+                        ForAll(
+                            Sequence(60 * 24 / Interval),
+                            Time(
+                                0,
+                                Interval * (Value - 1),
+                                0)
+                        )
+                    )
                   Items.Value: =Value
                   OnChange: |-
                     =Select(calClickBtn);
@@ -857,8 +915,10 @@ Screens:
       - ctn_ReservationsAlreadyBooked:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
+          Group: Group3
           Properties:
             Height: =118
+            Visible: =user_isAdmin
             Width: =Parent.Width - Self.X - 5
             X: =ctn_SelectTimeSlot.X
             Y: |-
@@ -1065,6 +1125,7 @@ Screens:
       - ctn_Recurrance:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
+          Group: Group3
           Properties:
             BorderColor: |-
               =If(
@@ -1090,12 +1151,6 @@ Screens:
                   ddRecurrenceFrequency.Selected.Value = "None", // Self.Visible = true,
                   (ddRecurrenceFrequency.Height + ddRecurrenceFrequency.Y),
                   (Radio1.Y + Radio1.Height)
-              )
-            Visible: |-
-              =If(
-                  isUserAdminSPList = true,
-                  true,
-                  false
               )
             Width: |-
               =If(
@@ -1555,7 +1610,12 @@ Screens:
                   Height: =20
                   PaddingBottom: =7
                   Size: =9
-                  Text: =Text(Calendar_1.StartDate, DateTimeFormat.ShortDate)
+                  Text: |-
+                    =Text(
+                        //Calendar_1.StartDate,
+                        Calendar_1.DefaultStartDate,
+                        DateTimeFormat.ShortDate
+                        )
                   Visible: =RecurringWeeklb_2.Visible
                   Width: =70
                   X: =RecurringWeeklb_7.X + RecurringWeeklb_7.Width
@@ -1697,7 +1757,7 @@ Screens:
                   Italic: =true
                   PaddingBottom: =7
                   Size: =9
-                  Text: =Text(DateAdd(DateValue(startDateLbl.Text), 179, TimeUnit.Days), DateTimeFormat.ShortDate)
+                  Text: =Text(DateAdd(DateValue(startDateLbl.Text), Calendar_1.DaysAheadRestriction, TimeUnit.Days), DateTimeFormat.ShortDate)
                   Visible: =RecurringWeeklb_8.Visible
                   Width: =75
                   X: =16

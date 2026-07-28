@@ -356,6 +356,7 @@ Screens:
             Height: =112
             HomePage: =App.ActiveScreen
             Items: =colMenu
+            Width: =608
             X: =252
             Y: =52
       - iconAddDesk:
@@ -363,13 +364,13 @@ Screens:
           Properties:
             AccessibleLabel: ="Add Desk"
             Color: =RGBA(0, 0, 0, 1)
-            Height: =50
+            Height: =45
             Icon: =Icon.Add
             OnSelect: =Set(varDeskMode,"New");Navigate(NewDesk);
             TabIndex: =3
-            Width: =50
-            X: =1070
-            Y: =117
+            Width: =62
+            X: =1058
+            Y: =178
       - Rectangle3_2:
           Control: Rectangle@2.3.0
           Group: grpConfirmDelete

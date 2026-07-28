@@ -12,7 +12,7 @@ Screens:
       OnVisible: |
         =Set(
             _dateSelected2,
-            _CurrentDate2
+            Today()
         );
         Set(
             _firstDayofWeek2,
@@ -152,6 +152,15 @@ Screens:
                 Properties:
                   BorderColor: =RGBA(56, 96, 178, 1)
                   DelayItemLoading: =false
+                  DisplayMode: |-
+                    =If(
+                        (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
+                            DisplayMode.Edit,
+                        (userAccessLevel_text = "View-only" || "View-only"),
+                            DisplayMode.View,
+                        (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                            DisplayMode.Disabled
+                    )
                   Height: =482
                   Items: =[0,1,2,3,4,5,6,]
                   LoadingSpinner: =LoadingSpinner.None
@@ -232,7 +241,7 @@ Screens:
                             Properties:
                               DisplayMode: |-
                                 =/*If(
-                                    ThisItem.'Created By'.Email = varUser.Email || isUserAdminSPList,*/
+                                    ThisItem.'Created By'.Email = varUser_details.Email || user_isAdmin,*/
                                     DisplayMode.Edit
                                     //DisplayMode.Disabled
                                 //)
@@ -322,17 +331,22 @@ Screens:
       - Rectangle7_1:
           Control: Rectangle@2.3.0
           Properties:
-            Height: =595
-            Width: =62
-            Y: =22
+            Height: =640
+            Width: =75
       - Icon3_1:
           Control: Classic/Icon@2.5.0
           Properties:
-            Height: =58
+            BorderColor: =RGBA(255, 255, 255, 1)
+            BorderThickness: =5
+            Color: =RGBA(0, 63, 114, 1)
+            Fill: =RGBA(0, 131, 190, 1)
+            FocusedBorderThickness: =5
+            Height: =51
             Icon: =Icon.Home
             OnSelect: =Navigate(Dashboard)
-            Width: =62
-            Y: =22
+            Width: =48
+            X: =13
+            Y: =14
       - Container3:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
@@ -350,9 +364,10 @@ Screens:
                   DisabledBorderColor: =RGBA(56, 56, 56, 1)
                   DisplayMode: |-
                     =If(
-                        User().Email,
-                        DisplayMode.View & If(User().Email, "Admin", DisplayMode.Edit
-                    ))
+                        varDeskAccessControl_record.AccessLevel_Text = "AppAdmin",
+                        DisplayMode.Edit,
+                        DisplayMode.View
+                    )
                     //DisplayMode.Edit
                   Font: =Font.'Open Sans'
                   Height: =322

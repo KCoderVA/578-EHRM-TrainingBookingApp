@@ -11,7 +11,7 @@
   },
   "Properties": {
     "AppCreationSource": "AppFromScratch",
-    "AppDescription": "v0.3.3",
+    "AppDescription": "v0.8.14 (source code @ https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp)",
     "AppPreviewFlagsMap": {
       "adaptivepaging": false,
       "aibuilderserviceenrollment": true,
@@ -100,7 +100,7 @@
       "zeroalltabindexes": false
     },
     "Author": "",
-    "BindingErrorCount": 3,
+    "BindingErrorCount": 49,
     "ConnectionString": "",
     "ContainsThirdPartyPcfControls": false,
     "DefaultConnectedDataSourceMaxGetRowsCount": 2000,
@@ -114,7 +114,7 @@
     "DocumentType": "App",
     "EnableInstrumentation": false,
     "FileID": "0f3a39dc-445b-4767-b602-736c272321f7",
-    "Id": "b3500e70-b3a8-43de-b8a6-828f332d2687",
+    "Id": "7264bee3-d87b-47ab-9ec4-1785a70ff835",
     "LocalDatabaseReferences": "",
     "ManualOfflineProfileId": "",
     "Name": "578 EHRM Training App",
@@ -142,6 +142,7 @@
     "Confirm",
     "Success",
     "ManageDesks",
+    "alt_ManageDesks",
     "NewDesk",
     "NewEditDesk",
     "Reservation",

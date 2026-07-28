@@ -1,0 +1,159 @@
+<widget xmlns="http://openajax.org/metadata" xmlns:appMagic="http://schemas.microsoft.com/appMagic" spec="1.0" id="http://microsoft.com/appmagic/modernButton" name="modernButton" jsClass="AppMagic.Controls.ModernButtonControl" version="1.0.0" styleable="true" runtimeCost="1" enabledForFeatureGate="Controls.ModernButtonControl">
+  <author name="Microsoft AppMagic" />
+  <license type="text/html"><![CDATA[<p>Copyright (C) Microsoft Corporation. All rights reserved.</p>]]></license>
+  <description><![CDATA[Modern button control using Fluent UI v9. Supports 5 appearance styles (Primary, Secondary, Outline, Subtle, Transparent), icon with layout options, and BasePaletteColor theming.]]></description>
+  <requires>
+    <require type="javascript" src="/openSource/modified/pcfplatformlibs/fluent_9_4_0.js" />
+    <require type="javascript" src="/ctrllib/shared/js/PowerAppsControlsFluentIcons.js" />
+    <require type="javascript" src="js/modernButton.js" />
+  </requires>
+  <appMagic:capabilities contextualViewsEnabled="true" autoDisabledViewState="true" isVersionFlexible="true" />
+  <appMagic:accessibilityChecks controlIsInteractive="true" />
+  <content><![CDATA[]]></content>
+  <properties>
+    <!-- Button-specific custom properties -->
+    <property name="Appearance" localizedName="##button_Appearance##" datatype="ButtonAppearance" defaultValue="%ButtonAppearance.RESERVED%.Primary" isExpr="true" direction="in">
+      <title>Appearance</title>
+      <appMagic:category>design</appMagic:category>
+      <appMagic:displayName>##button_Appearance_DisplayName##</appMagic:displayName>
+      <appMagic:tooltip>##button_Appearance_Tooltip##</appMagic:tooltip>
+    </property>
+    <property name="Icon" localizedName="##button_Icon##" datatype="String" defaultValue="&quot;&quot;" isExpr="true" direction="in">
+      <title>Icon</title>
+      <appMagic:category>design</appMagic:category>
+      <appMagic:displayName>##button_Icon_DisplayName##</appMagic:displayName>
+      <appMagic:tooltip>##button_Icon_Tooltip##</appMagic:tooltip>
+    </property>
+    <property name="Layout" localizedName="##button_Layout##" datatype="ButtonLayout" defaultValue="%ButtonLayout.RESERVED%.IconBefore" isExpr="true" direction="in">
+      <title>Layout</title>
+      <appMagic:category>design</appMagic:category>
+      <appMagic:displayName>##button_Layout_DisplayName##</appMagic:displayName>
+      <appMagic:tooltip>##button_Layout_Tooltip##</appMagic:tooltip>
+    </property>
+    <property name="IconStyle" localizedName="##button_IconStyle##" datatype="IconStyle" defaultValue="%IconStyle.RESERVED%.Outline" isExpr="true" direction="in">
+      <title>Icon style</title>
+      <appMagic:category>design</appMagic:category>
+      <appMagic:displayName>##button_IconStyle_DisplayName##</appMagic:displayName>
+      <appMagic:tooltip>##button_IconStyle_Tooltip##</appMagic:tooltip>
+    </property>
+    <property name="IconRotation" localizedName="##button_IconRotation##" datatype="Number" defaultValue="0" isExpr="true" direction="in">
+      <title>Icon rotation</title>
+      <appMagic:category>design</appMagic:category>
+      <appMagic:displayName>##button_IconRotation_DisplayName##</appMagic:displayName>
+      <appMagic:tooltip>##button_IconRotation_Tooltip##</appMagic:tooltip>
+    </property>
+  </properties>
+  <appMagic:includeProperties>
+    <!-- Data -->
+    <appMagic:includeProperty name="Text" defaultValue="##Button_DefaultValue_Text##" isExpr="true" />
+    <appMagic:includeProperty name="ContentLanguage" />
+    <appMagic:includeProperty name="DisplayMode" />
+    <appMagic:includeProperty name="OnSelect" direction="in" isPrimaryBehaviorProperty="true" isPrimaryInputProperty="true" />
+    <appMagic:includeProperty name="BasePaletteColor" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <!-- Font -->
+    <appMagic:includeProperty name="Font" defaultValue="" nullDefault="" isExpr="false" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="Size" defaultValue="" phoneDefaultValue="24" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="Color" defaultValue="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="FontWeight" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="Italic" />
+    <appMagic:includeProperty name="Underline" />
+    <appMagic:includeProperty name="Strikethrough" />
+    <appMagic:includeProperty name="Align" defaultValue="" />
+    <appMagic:includeProperty name="VerticalAlign" defaultValue="" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <!-- Design - Border -->
+    <appMagic:includeProperty name="BorderStyle" defaultValue="" isExpr="false" />
+    <appMagic:includeProperty name="BorderThickness" defaultValue="" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="BorderColor" defaultValue="" isExpr="true" />
+    <!-- Design - Radius -->
+    <appMagic:includeProperty name="RadiusTopLeft" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="RadiusTopRight" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="RadiusBottomLeft" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="RadiusBottomRight" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <!-- Design - Padding -->
+    <appMagic:includeProperty name="PaddingTop" defaultValue="" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="PaddingRight" defaultValue="" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="PaddingBottom" defaultValue="" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="PaddingLeft" defaultValue="" nullDefault="" isExpr="true" />
+    <!-- Position and Size -->
+    <appMagic:includeProperty name="X" />
+    <appMagic:includeProperty name="Y" />
+    <appMagic:includeProperty name="Width" defaultValue="96" phoneDefaultValue="280" />
+    <appMagic:includeProperty name="Height" defaultValue="32" phoneDefaultValue="64" />
+    <appMagic:includeProperty name="Visible" />
+    <!-- Accessibility -->
+    <appMagic:includeProperty name="AccessibleLabel" />
+    <!-- Tooltip -->
+    <appMagic:includeProperty name="Tooltip" />
+    <!-- Hidden properties -->
+    <appMagic:includeProperty name="maximumHeight" defaultValue="768" />
+    <appMagic:includeProperty name="maximumWidth" defaultValue="1366" />
+    <appMagic:includeProperty name="minimumHeight" defaultValue="10" />
+    <appMagic:includeProperty name="minimumWidth" defaultValue="10" />
+  </appMagic:includeProperties>
+  <!-- Property Dependencies -->
+  <appMagic:propertyDependencies />
+  <appMagic:insertMetadata>
+    <appMagic:category name="Input" priority="10" />
+  </appMagic:insertMetadata>
+  <!-- Display metadata -->
+  <appMagic:displayMetadata>
+    <!-- General section -->
+    <appMagic:section type="GeneralSection">
+      <appMagic:property name="Text" />
+      <appMagic:property name="Icon" displayType="FluentIcon" />
+      <appMagic:property name="Layout" itemsOrder="IconBefore;IconAfter;TextOnly;IconOnly" />
+      <appMagic:property name="AccessibleLabel" />
+    </appMagic:section>
+    <!-- Behavior section -->
+    <appMagic:section type="BehaviorSection">
+      <appMagic:property name="DisplayMode" />
+      <appMagic:property name="Visible" />
+    </appMagic:section>
+    <!-- Size and Position section -->
+    <appMagic:section type="SizeAndPositioningSection">
+      <appMagic:property name="Align" itemsOrder="Left;Center;Right;Justify" labelOverride="##FontAlign_Property##" showInFloatie="true" showInCommandBar="true" floatieDisplayType="FaceplateIconEnum" />
+      <appMagic:property name="VerticalAlign" />
+      <appMagic:property name="IconRotation" />
+      <appMagic:propertyGroup name="Position">
+        <appMagic:property name="X" />
+        <appMagic:property name="Y" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Size">
+        <appMagic:property name="Width" />
+        <appMagic:property name="Height" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Padding">
+        <appMagic:property name="PaddingTop" labelOverride="##Padding_Top_Title##" />
+        <appMagic:property name="PaddingRight" labelOverride="##Padding_Right_Title##" />
+        <appMagic:property name="PaddingBottom" labelOverride="##Padding_Bottom_Title##" />
+        <appMagic:property name="PaddingLeft" labelOverride="##Padding_Left_Title##" />
+      </appMagic:propertyGroup>
+    </appMagic:section>
+    <!-- Style and Theme section -->
+    <appMagic:section type="StyleAndThemeSection">
+      <appMagic:property name="Appearance" />
+      <appMagic:property name="IconStyle" />
+      <appMagic:property name="BasePaletteColor" displayType="ColorPalette" />
+      <appMagic:property name="Font" displayType="FontEnum" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="Size" labelOverride="##FontSize_Property##" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="Color" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="FontWeight" displayType="EnumIcon" itemsOrder="Bold;Semibold;Normal;Lighter" />
+      <appMagic:propertyGroup name="Style">
+        <appMagic:property name="Italic" displayType="ToggleButton" />
+        <appMagic:property name="Underline" displayType="ToggleButton" />
+        <appMagic:property name="Strikethrough" displayType="ToggleButton" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Border">
+        <appMagic:property name="BorderStyle" />
+        <appMagic:property name="BorderThickness" />
+        <appMagic:property name="BorderColor" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Radius">
+        <appMagic:property name="RadiusTopLeft" labelOverride="##Radius_TopLeft_Title##" />
+        <appMagic:property name="RadiusTopRight" labelOverride="##Radius_TopRight_Title##" />
+        <appMagic:property name="RadiusBottomLeft" labelOverride="##Radius_BottomLeft_Title##" />
+        <appMagic:property name="RadiusBottomRight" labelOverride="##Radius_BottomRight_Title##" />
+      </appMagic:propertyGroup>
+    </appMagic:section>
+  </appMagic:displayMetadata>
+</widget>

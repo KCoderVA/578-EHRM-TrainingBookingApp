@@ -27,8 +27,8 @@ Screens:
                       Filter(
                           'Desk Reservations',
                           (
-                              'Reserved By'.Email = currentUser.Email
-                              // || 'Created By'.Email = currentUser.Email
+                              'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                              // || Lower('Created By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
                           )
                           && //'Check Out From' <= Today(),DeskFloor,
                           Or(
@@ -50,7 +50,7 @@ Screens:
               SortByColumns(
                   Filter(
                       'Desk Reservations',
-                      'Reserved By'.Email = currentUser.Email && 'Check Out From Number' < Value(
+                      Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text) && 'Check Out From Number' < Value(
                           Text(
                               Today(),
                               "yyyymmddhmm"
@@ -303,8 +303,8 @@ Screens:
                       Filter(
                           'Desk Reservations',
                           (
-                              'Reserved By'.Email = currentUser.Email
-                              // || 'Created By'.Email = currentUser.Email
+                              Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
+                              // || Lower('Created By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
                           )
                           && //'Check Out From' <= Today(),DeskFloor,
                           Or(

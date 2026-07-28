@@ -3,7 +3,7 @@ Screen2 As screen:
     LoadingSpinnerColor: =App.Theme.Colors.Primary
     OnHidden: =Timer2.Reset
     OnVisible: |
-        =Set(testAccessVariable, Blank());
+        =Set(user_Access-testing, Blank());
         Timer2.Start
 
     Timer2 As timer:
@@ -23,21 +23,21 @@ Screen2 As screen:
         HoverFill: =App.Theme.Colors.Darker10
         OnTimerEnd: |-
             =Set(
-                isUserAdminSPList,
+                user_isAdmin,
                 !IsBlank(
                     LookUp(
                         DeskAccessControl,
-                        Lower(Email_Text) = Lower(User().Email)
+                        Lower(Email_Text) = Lower(Lower(varDeskAccessControl_record.Email_Text))
                     )
                 )
             );
             If(
-                isUserAdminSPList = true, 
+                user_isAdmin = true, 
                 ClearCollect(
-                    userAccessDemographics,
+                    varUser_details,
                     Filter(
                         DeskAccessControl,
-                        Lower(Email_Text) = Lower(User().Email)
+                        Lower(Email_Text) = Lower(Lower(varDeskAccessControl_record.Email_Text))
                     )
                 )
             );
@@ -47,18 +47,18 @@ Screen2 As screen:
                 !IsBlank(
                     Filter(
                         DeskAccessControl,
-                        Lower(Email_Text) = Lower(User().Email)
+                        Lower(Email_Text) = Lower(Lower(varDeskAccessControl_record.Email_Text))
                     )
                 ),
-                Set(testAccessVariable, "True: Source data is found!"),
-                Refresh(DeskAccessControl) && Set(testAccessVariable, "False: Source data is not found!") && Reset(Timer2)    
+                Set(user_Access-testing, "True: Source data is found!"),
+                Refresh(DeskAccessControl) && Set(user_Access-testing, "False: Source data is not found!") && Reset(Timer2)    
                 //Navigate(Dashboard),
                 //&& Navigate(Screen2)
             );
             Refresh(DeskAccessControl)
         OnTimerStart: |-
-            =ClearCollect(userAccessDemographics, Blank());
-            Set(isUserAdminSPList, false);
+            =Set(varUser_details, Blank());
+            Set(user_isAdmin, false);
         PressedBorderColor: =App.Theme.Colors.Darker40
         PressedColor: =Self.Color
         PressedFill: =App.Theme.Colors.Darker40
@@ -80,12 +80,12 @@ Screen2 As screen:
         Size: =36
         Text: |-
             =If(
-                testAccessVariable = "True: Source data is found!",
+                user_Access-testing = "True: Source data is found!",
                     "True: Source data is found! Redirecting you back to dashboard!",
-                testAccessVariable = "False: Source data is not found!",
+                user_Access-testing = "False: Source data is not found!",
                     "False: Source data is not found! Starting timer over again for another refresh attempt...",
-                testAccessVariable = Blank(),
-                    "Error: The 'testAccessVariable' value is currently 'Blank()'..."
+                user_Access-testing = Blank(),
+                    "Error: The 'user_Access-testing' value is currently 'Blank()'..."
             )
         VerticalAlign: =VerticalAlign.Middle
         Weight: ='TextCanvas.Weight'.Bold

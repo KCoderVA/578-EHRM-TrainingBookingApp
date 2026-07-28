@@ -4,7 +4,7 @@ scrn_WeeklyCal As screen:
     OnVisible: |
         =Set(
             _dateSelected2,
-            _CurrentDate2
+            Today()
         );
         Set(
             _firstDayofWeek2,
@@ -158,6 +158,15 @@ scrn_WeeklyCal As screen:
         Gallery9 As gallery.galleryVertical:
             '#CopilotOverlayLabel': ="Filtered"
             BorderColor: =RGBA(56, 96, 178, 1)
+            DisplayMode: |-
+                =If(
+                    (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
+                        DisplayMode.Edit,
+                    (userAccessLevel_text = "View-only" || "View-only"),
+                        DisplayMode.View,
+                    (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                        DisplayMode.Disabled
+                )
             Height: =482
             Items: =[0,1,2,3,4,5,6,]
             Layout: =Layout.Vertical
@@ -270,7 +279,7 @@ scrn_WeeklyCal As screen:
                     DisabledFill: =RGBA(244, 244, 244, 1)
                     DisplayMode: |-
                         =/*If(
-                            ThisItem.'Created By'.Email = varUser.Email || isUserAdminSPList,*/
+                            ThisItem.'Created By'.Email = varUser_details.Email || user_isAdmin,*/
                             DisplayMode.Edit
                             //DisplayMode.Disabled
                         //)
@@ -425,21 +434,24 @@ scrn_WeeklyCal As screen:
     Rectangle7_1 As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
         Fill: =App.Theme.Colors.Primary
-        Height: =595
-        Width: =62
-        Y: =22
+        Height: =640
+        Width: =75
         ZIndex: =2
 
     Icon3_1 As icon.Home:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =App.Theme.Colors.Darker30
+        BorderColor: =RGBA(255, 255, 255, 1)
+        BorderThickness: =5
+        Color: =RGBA(0, 63, 114, 1)
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
         DisabledColor: =RGBA(244, 244, 244, 1)
-        Height: =58
+        Fill: =RGBA(0, 131, 190, 1)
+        FocusedBorderThickness: =5
+        Height: =51
         Icon: =Icon.Home
         OnSelect: =Navigate(Dashboard)
-        Width: =62
-        Y: =22
+        Width: =48
+        X: =13
+        Y: =14
         ZIndex: =3
 
     Container3 As groupContainer.manualLayoutContainer:
@@ -463,9 +475,10 @@ scrn_WeeklyCal As screen:
         bgRounded_15 As htmlViewer:
             DisplayMode: |-
                 =If(
-                    User().Email,
-                    DisplayMode.View & If(User().Email, "Admin", DisplayMode.Edit
-                ))
+                    varDeskAccessControl_record.AccessLevel_Text = "AppAdmin",
+                    DisplayMode.Edit,
+                    DisplayMode.View
+                )
                 //DisplayMode.Edit
             Height: =322
             HtmlText: |-

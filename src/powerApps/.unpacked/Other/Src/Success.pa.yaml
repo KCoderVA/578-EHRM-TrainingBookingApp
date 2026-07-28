@@ -57,6 +57,71 @@ Screens:
             Duration: =4000
             OnTimerEnd: |-
               =Refresh('Desk Reservations');
+              Set(varPopUp_ClassPicker_scenario, Blank());
+              Set(varPopUp_ClassPicker_scenarioDate, Blank());
+              Set(varPopUp_ClassPicker_scenarioDateTime, Blank());
+              Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank());
+              Set(varPopUp_ClassPicker_scenarioEnd24, Blank());
+              Set(varPopUp_ClassPicker_scenarioEndTime, Blank());
+              Set(varPopUp_ClassPicker_scenarioLocation, Blank());
+              Set(varPopUp_ClassPicker_scenarioName, Blank());
+              Set(varPopUp_ClassPicker_scenarioRole, Blank());
+              Set(varPopUp_ClassPicker_scenarioSplit, Blank());
+              Set(varPopUp_ClassPicker_scenarioStart24, Blank());
+              Set(varPopUp_ClassPicker_scenarioStartTime, Blank());
+              Set(_dateSelected, Blank());
+              Set(_dateSelected2, Blank());
+              Set(_firstDayInView, Blank());
+              Set(_FirstDayinView2, Blank());
+              Set(_firstDayOfMonth, Blank());
+              Set(_firstDayOfMonth2, Blank());
+              Set(_firstDayofWeek2, Blank());
+              Set(_lastDayOfMonth, Blank());
+              Set(_LastDayOfMonth2, Blank());
+              Set(_maxDate, Blank());
+              Set(_MaxDate, Blank());
+              Set(_MaxDate2, Blank());
+              Set(_minDate, Blank());
+              Set(_MinDate, Blank());
+              Set(_MinDate2, Blank());
+              Set(gv_item, Blank());
+              Set(maxOccurrence, Blank());
+              Set(numWorkDays, Blank());
+              Set(PDFPrint, Blank());
+              Set(varAccept, Blank());
+              Set(varAccept3, Blank());
+              Set(varAccept4, Blank());
+              Set(varAttendees, Blank());
+              Set(varCancelContainer, Blank());
+              Set(varDaily, Blank());
+              Set(varDefaultEndTime, Blank());
+              Set(varDescription, Blank());
+              Set(varDeskMode, Blank());
+              Set(varEmailBody, Blank());
+              Set(varEndDate, Blank());
+              Set(varEventEndTime, Blank());
+              Set(varEventStartTime, Blank());
+              Set(varImportance, Blank());
+              Set(varManageSelectedDesk, Blank());
+              Set(varMeetCat, Blank());
+              Set(varOptionalAttendees, Blank());
+              Set(varPopUp_ClassPicker, Blank());
+              Set(varRecurrence, Blank());
+              Set(varRecurrenceID, Blank());
+              Set(varReminder, Blank());
+              Set(varReservePOC, Blank());
+              Set(varSelectedDesk, Blank());
+              Set(varSelectedReservation, Blank());
+              Set(varSelectedStartDate, Blank());
+              Set(varsmartboardck, Blank());
+              Set(varTimer, Blank());
+              Set(varTitle, Blank());
+              Set(varURL, Blank());
+              Set(varURLName, Blank());
+              Set(varWeekday, Blank());
+
+
+
               Navigate(Dashboard)
             Visible: =false
             X: =299
@@ -84,7 +149,7 @@ Screens:
               /*
               Table(
                   {
-                      Name: "Dashboard",
+                      Name: "Home",
                       Icon: Icon.DetailList,
                       Page: Dashboard,        
                       Visible:true
@@ -96,7 +161,7 @@ Screens:
                       Visible:true
                   },
                   {
-                      Name: "Book",
+                      Name: "Create New",
                       Icon: Icon.Add,
                       Page: chkWeekDays,
                       Visible:true
@@ -109,5 +174,6 @@ Screens:
                   }
               )
               */
+            Width: =608
             X: =(Parent.Width - Self.Width) / 2
             Y: =520

@@ -1486,7 +1486,14 @@
       "ControlPropertyState": [
         "Y",
         "ZIndex",
-        "DefaultStartDate",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "Now()",
+          "InvariantPropertyName": "DefaultStartDate",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "StartDate",
         {
           "AFDDataSourceName": "",
@@ -1548,7 +1555,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "DefaultEndDate",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "Now()",
+          "InvariantPropertyName": "DefaultEndDate",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "OnReset",
         {
           "AFDDataSourceName": "",
@@ -1561,7 +1575,7 @@
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "Table({SampleStringField: \"SampleText\", SampleNumberField: 10, SampleBooleanField: true})",
+          "AutoRuleBindingString": "Table({DateValue: Self.Def})",
           "InvariantPropertyName": "SelectedDates",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
@@ -1638,8 +1652,9 @@
         },
         {
           "Category": "Data",
+          "NameMap": "{\"DateValue\":\"DateValue\"}",
           "PropertyName": "SelectedDates",
-          "RuleProviderType": "System"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",

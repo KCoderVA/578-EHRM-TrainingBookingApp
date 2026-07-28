@@ -1,13 +1,13 @@
 # EHRM Training & Booking App (Station 578)
 
-[![Release](https://img.shields.io/badge/release-v0.3.8-blue)](CHANGELOG.md)
+[![Release](https://img.shields.io/badge/release-v0.8.16-blue)](CHANGELOG.md)
 
 This repository contains the **unpacked (source-controlled)** Microsoft Power Platform assets, documentation, and ALM helpers for the EHRM Training & Booking App used at Edward Hines Jr. VA Hospital (Station #578), VISN12.
 
 ## Current versions
 
-- **Project release (repo)**: v0.3.8 (2026-07-28) — see [CHANGELOG.md](CHANGELOG.md)
-- **Canvas app (component)**: v0.3.4 *(unchanged)* — see [src/powerApps/README.md](src/powerApps/README.md)
+- **Project release (repo)**: v0.8.16 (2026-07-28) — see [CHANGELOG.md](CHANGELOG.md)
+- **Canvas app (component)**: v0.8.14 *(app-wide RBAC, impersonation, class/session picker, `alt_ManageDesks` CRUD screen, Dashboard redesign)* — see [src/powerApps/README.md](src/powerApps/README.md)
 - **Power Automate (component)**: `AppUserList` v0.1.0 *(unchanged)* — see [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md)
 
 ## Repository layout
@@ -74,3 +74,7 @@ This project started from template artifacts that will be heavily modified:
 
 - Guidelines: [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)
 - Code owners: [.github/CODEOWNERS](.github/CODEOWNERS)
+
+## License
+
+Licensed under the Apache License, Version 2.0 — see [LICENSE](LICENSE). All source files carry the Apache 2.0 header (`Copyright 2025-2026 Coder, Kyle J. (github.com/KCoderVA)`).

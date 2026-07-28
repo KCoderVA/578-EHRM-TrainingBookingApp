@@ -5,8 +5,18 @@ Calendar As CanvasComponent:
     BorderRadius: =0
     Color: =RGBA(50,50,50,1)
     DaysAheadRestriction: =30
-    DefaultEndDate: =Now()
-    DefaultStartDate: =Now()
+    DefaultEndDate: |-
+        =If(
+            !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Now(),
+            varPopUp_ClassPicker_scenarioDate,
+            Now()
+        )
+    DefaultStartDate: |-
+        =If(
+            !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Now(),
+            varPopUp_ClassPicker_scenarioDate,
+            Now()
+        )
     EndDate: =If(Calendar.SelectRange, _selectedEnd, _selectedStart)
     Fill: =RGBA(0, 0, 0, 0)
     Height: =445
@@ -14,7 +24,12 @@ Calendar As CanvasComponent:
     SelectedDateColor: =Color.White
     SelectedDateFill: =RGBA(0, 134, 208, 1)
     SelectedDates: |-
-        =Table({DateValue: Today()})
+        =If(
+            Self.StartDate = Self.DefaultStartDate,
+            Table({DateValue: Self.DefaultStartDate}),
+            Self.StartDate = Today(),
+            Table({DateValue: Today()})
+        )
     SelectRange: =true
     StartDate: =_selectedStart
     Styles: |-

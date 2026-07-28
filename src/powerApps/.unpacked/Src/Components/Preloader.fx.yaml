@@ -26,6 +26,7 @@ Preloader As CanvasComponent:
         Image: =Preloader.AnimatedGIF
         PressedBorderColor: =ColorFade(imgLoader.BorderColor, -20%)
         PressedFill: =ColorFade(imgLoader.Fill, -20%)
+        Visible: =false
         Width: =If(!IsBlank(LookUp(Preloader.Styles, Key = "PreloaderWidth").Value),LookUp(Preloader.Styles, Key = "PreloaderWidth").Value, 82)
         X: =Preloader.Width / 2 - imgLoader.Width / 2
         Y: =Preloader.Height /2 - imgLoader.Height / 2
@@ -47,7 +48,7 @@ Preloader As CanvasComponent:
         PressedFill: =lblLoaderText.Fill
         Size: =21
         Text: =Preloader.Text
-        Width: =Preloader.Width
+        Width: =Parent.Width
         Y: =imgLoader.Y + imgLoader.Height
         ZIndex: =3
 
@@ -73,4 +74,15 @@ Preloader As CanvasComponent:
         X: =60
         Y: =282
         ZIndex: =5
+
+    "'spinner.svg' As image":
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =Parent.Height
+        Image: =Spinner
+        Width: =Parent.Width
+        X: =(Parent.Width / 2) - (Self.Width / 2)
+        Y: =(Parent.Height / 2) - (Self.Height / 2)
+        ZIndex: =6
 

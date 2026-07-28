@@ -85,7 +85,7 @@ Screens:
             Items: |-
               =Table(
                   {
-                      Name: "Dashboard",
+                      Name: "Home",
                       Icon: Icon.DetailList,
                       Page: Dashboard,        
                       Visible:true
@@ -103,7 +103,7 @@ Screens:
                       Visible:true
                   },
                   {
-                      Name: "Book",
+                      Name: "Create New",
                       Icon: Icon.Add,
                       Page: chkWeekDays,
                       Visible:true

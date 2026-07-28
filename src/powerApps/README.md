@@ -1,7 +1,14 @@
 # Power Apps (Canvas): EHRM Training & Booking App (Station #578)
 
-**Canvas app version**: v0.3.4 (2026-07-09)
-**App package**: `.msapp/v0.3.4_578EHRMTrainingApp.msapp`
+**Canvas app version**: v0.8.14 (2026-07-28)
+**App package**: `.msapp/v0.8.14_578EHRMTrainingApp.msapp`
+
+> Component versioning note: starting with this release the Canvas app version is
+> being brought onto the project-wide SemVer line (project release **v0.8.16**). The
+> unpacked `.msapp` carries the label **v0.8.14**; minor version-string drift exists
+> inside the app itself (`App.OnStart` sets `varRepoVersion "0.8.12"`, the Dashboard
+> timer still shows the prior stamp) and is tracked as a follow-up in
+> [`v0.8.14_recentChangesSummary.md`](v0.8.14_recentChangesSummary.md) §9.
 
 ## Provenance / credits (v0.0.1 baseline)
 
@@ -10,9 +17,26 @@
 
 ---
 
-## What changed in v0.3.4 (current)
+## What changed in v0.8.14 (current)
 
-This release represents the most substantial functional overhaul of the Canvas app since the original baseline. Changes span seven core areas: role-based access control, intelligent scheduling, appointment management, reservation detail enhancements, calendar screen modernization, connector/API updates, and app-level version tracking.
+v0.8.14 is the largest functional advance of the Canvas app since the baseline. It moved the app from an early prototype to a substantially complete application. A full file-by-file structural/behavioral diff (hash/size analysis of every unpacked screen, with per-screen rationale) lives in [`v0.8.14_recentChangesSummary.md`](v0.8.14_recentChangesSummary.md). The headline changes:
+
+1. **Access control re-architected app-wide.** `App.OnStart` grew from a 1-line version stub into a full role-based access-control (RBAC), user auto-provisioning, and impersonation engine. The dynamic navigation menu (`colMenu`) moved out of `Dashboard.OnVisible` into `App.OnStart` so every screen is gated consistently. Eight tiers (`AccessDenied` → `View-only` → `User` → `SuperUser` → `Manager` → `ServiceChief` → `ProjectLeader` → `AppAdmin`) are read live per-user from the `DeskAccessControl` list and wired into menu contents, Dashboard messaging, calendar `DisplayMode`/`Items` filters, and admin-only controls.
+2. **Impersonation ("act as another user").** Admins get a hidden combobox on the Dashboard that re-renders the entire app as any selected user — for support/troubleshooting and booking on behalf of others. The real signed-in identity is captured separately and auto-provisioning only ever writes for the real user, never while impersonating.
+3. **Zero-touch onboarding.** On first launch, a user with no `DeskAccessControl` row is auto-provisioned with a default `"User"` level (Entra ID, timestamps, and manager email via `Office365Users.Manager`), then re-read.
+4. **Training-aware bookings (Class/Session Picker).** A new `ctn_PopUp_ClassPicker` popup on `POCSUPERVISOR` walks the user through Scenario → Role → Date/Time session → Location, deep-links to the SharePoint Learning Lab Workbook library, and echoes selections on the Confirm screen. *(Known gap: the picker values are displayed but not yet persisted in the SUBMIT `Patch` — see summary §9.)*
+5. **New `alt_ManageDesks` screen.** A modern responsive-layout CRUD console for the `Desks` list (add/edit/delete), staged alongside the legacy `ManageDesks` ahead of a planned cutover.
+6. **Dashboard redesign.** Dark-navy theme, mascot banner, role-aware welcome / "ACCESS DENIED" / "VIEW ONLY" messaging, author/version timer, and the host for the impersonation controls.
+7. **Calendar + `chkWeekDays` refinements.** Layout/visibility polish across `scrn_MoCalendar`, `scrn_WeeklyCal`, `scrn_DailyCal`; loose top-level controls on `chkWeekDays` consolidated under group containers.
+8. **Assets & components.** Image assets grew from 6 → 38; a new `Tabs_altColor` component was added. **Data sources and connections are unchanged** (no SharePoint schema or connector changes at the app-manifest level).
+
+> **Open security note (carried forward):** new/unknown users are still auto-granted the `User` level rather than `AccessDenied`. Populating `DeskAccessControl.AccessLevel_Text` for all intended users — and deciding the default for unknown users — remains a required admin action.
+
+---
+
+## What changed in v0.3.4 (previous)
+
+This release represented the most substantial functional overhaul of the Canvas app since the original baseline at the time. Changes span seven core areas: role-based access control, intelligent scheduling, appointment management, reservation detail enhancements, calendar screen modernization, connector/API updates, and app-level version tracking.
 
 ### 1. Role-Based Access Control System (Dashboard)
 
@@ -248,13 +272,18 @@ All three connectors (Office 365 Outlook, Office 365 Users, SharePoint) now refe
 
 | Version          | Date                 | Summary                                                                                                                                                                                                                                                                                                                           |
 | ---------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **v0.3.4** | **2026-07-09** | **Role-based access control (8 tiers), smart scheduling defaults, conflict detection, cancellation confirmation dialog, Daily Calendar screen replacement (scrn_DailyCal), grid layout modernization, explicit action buttons on MyAppts, Reservation detail relabeling, app version variable, connector/platform updates** |
+| **v0.8.14** | **2026-07-28** | **App-wide RBAC engine in `App.OnStart` (8 tiers), impersonation, zero-touch user auto-provisioning, new training Class/Session Picker (`ctn_PopUp_ClassPicker`) on POCSUPERVISOR, new `alt_ManageDesks` CRUD screen, Dashboard redesign, calendar/`chkWeekDays` refinements, assets 6→38, new `Tabs_altColor` component. See [`v0.8.14_recentChangesSummary.md`](v0.8.14_recentChangesSummary.md).** |
+| v0.3.4 | 2026-07-09 | Role-based access control (8 tiers), smart scheduling defaults, conflict detection, cancellation confirmation dialog, Daily Calendar screen replacement (scrn_DailyCal), grid layout modernization, explicit action buttons on MyAppts, Reservation detail relabeling, app version variable, connector/platform updates |
 | v0.0.2           | 2026-01-02           | SharePoint binding fixes, screen behavior improvements (Dashboard, MyAppts, POCSUPERVISOR, chkWeekDays)                                                                                                                                                                                                                           |
 | v0.0.1           | 2025-12-31           | Initial baseline shared starter app                                                                                                                                                                                                                                                                                               |
 
 ---
 
-## Screenshots (v0.3.4)
+## Screenshots
+
+> **v0.8.14 screenshots not yet recaptured.** The screenshots below are from the v0.3.4 app and remain the most recent captures. New screenshots of the redesigned Dashboard, Class/Session Picker, and `alt_ManageDesks` screen should be captured from the live v0.8.14 app and added under [`assets/screenshots/`](../../assets/screenshots/) with a `v0.8.14_*` prefix.
+
+### Screenshots (v0.3.4)
 
 Screenshots captured 2026-07-09 from the live v0.3.4 app. Stored under [`assets/screenshots/`](../../assets/screenshots/).
 
@@ -291,11 +320,12 @@ Screenshots captured 2026-07-09 from the live v0.3.4 app. Stored under [`assets/
   - **Office 365 Outlook**: CalendarGetTables, V3CalendarPostItem, V2CalendarPostItem, FindMeetingTimes, GetRoomLists, GetRooms, GetRoomsInRoomList
   - **Office 365 Users**: SearchUser, MyProfileV2, ManagerV2, UserProfileV2
 
-## 2. Screens (v0.3.4 — 21 screens)
+## 2. Screens (v0.8.14 — 22 screens)
 
 | #  | Screen Name         | Purpose                                                                                                        |
 | -- | ------------------- | -------------------------------------------------------------------------------------------------------------- |
-| 1  | `Dashboard`       | Welcome, upcoming reservations preview, role-based menu                                                        |
+| 0  | `alt_ManageDesks` | **NEW** Modern responsive CRUD console for the `Desks` list (add/edit/delete); staged alongside legacy `ManageDesks` |
+| 1  | `Dashboard`       | Welcome, upcoming reservations preview, role-based menu, impersonation controls (admin)                        |
 | 2  | `MyAppts`         | My Reservations — Upcoming / Previous tabs with CANCEL action                                                 |
 | 3  | `POCSUPERVISOR`   | Create a new reservation — employee, supervisor, training type selection                                      |
 | 4  | `chkWeekDays`     | Select Date(s)/Time — calendar, time pickers, recurrence, conflict checker                                    |
@@ -317,7 +347,7 @@ Screenshots captured 2026-07-09 from the live v0.3.4 app. Stored under [`assets/
 | 20 | `PDFScreen`       | PDF export/preview                                                                                             |
 | 21 | `Screen2`         | *(utility screen)*                                                                                           |
 
-> **Note**: `scrn_WeeklyCal_1` was removed and replaced by `scrn_DailyCal` in v0.3.4.
+> **Note**: `scrn_WeeklyCal_1` was removed and replaced by `scrn_DailyCal` in v0.3.4. `alt_ManageDesks` was added in v0.8.14 (22 screens total).
 
 ## 3. ALM workflow (pack/unpack)
 
