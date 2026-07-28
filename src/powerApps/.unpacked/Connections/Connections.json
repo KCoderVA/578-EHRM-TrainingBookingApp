@@ -27,9 +27,10 @@
   },
   "64852b16-4509-4d34-be4c-adfa1f496b3a": {
     "appActions": [
+      "UserProfileV2",
+      "Manager",
       "MyProfileV2",
       "ManagerV2",
-      "UserProfileV2",
       "SearchUser"
     ],
     "connectionRef": {

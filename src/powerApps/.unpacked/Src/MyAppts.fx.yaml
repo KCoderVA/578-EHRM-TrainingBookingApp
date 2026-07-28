@@ -18,8 +18,8 @@ MyAppts As screen:
                     Filter(
                         'Desk Reservations',
                         (
-                            'Reserved By'.Email = currentUser.Email
-                            // || 'Created By'.Email = currentUser.Email
+                            'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                            // || Lower('Created By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
                         )
                         && //'Check Out From' <= Today(),DeskFloor,
                         Or(
@@ -41,7 +41,7 @@ MyAppts As screen:
             SortByColumns(
                 Filter(
                     'Desk Reservations',
-                    'Reserved By'.Email = currentUser.Email && 'Check Out From Number' < Value(
+                    Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text) && 'Check Out From Number' < Value(
                         Text(
                             Today(),
                             "yyyymmddhmm"
@@ -337,8 +337,8 @@ MyAppts As screen:
                     Filter(
                         'Desk Reservations',
                         (
-                            'Reserved By'.Email = currentUser.Email
-                            // || 'Created By'.Email = currentUser.Email
+                            Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
+                            // || Lower('Created By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
                         )
                         && //'Check Out From' <= Today(),DeskFloor,
                         Or(
@@ -723,7 +723,6 @@ MyAppts As screen:
     Tabs_2 As Tabs:
         Height: =109
         Items: =colMenu
-        Width: =608
         X: =(Parent.Width - Self.Width) / 2
         Y: =60
         ZIndex: =16

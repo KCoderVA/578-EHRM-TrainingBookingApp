@@ -19,6 +19,38 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.8.16] - 2026-07-28
+
+> **Version alignment:** With this release the project-wide version jumps from `0.3.8` to `0.8.16` to bring the repository release line onto the Canvas app's independently-advancing `0.8.x` version series. The Canvas app component advances **v0.3.4 → v0.8.14** (the app-internal version strings still show minor drift — `App.OnStart` sets `varRepoVersion "0.8.12"` and the Dashboard timer shows the prior stamp — tracked as a follow-up). This supersedes the note in the `[0.3.8]` entry below, which stated the Canvas app "remains v0.3.4" and that the v0.8.14 app had "not yet been exported/unpacked."
+
+### Added
+
+- **Canvas app v0.8.14 unpacked source** — the substantially updated Canvas app was exported and unpacked into `src/powerApps/.unpacked/` (package `src/powerApps/.msapp/v0.8.14_578EHRMTrainingApp.msapp`, tracked via `.gitignore` `!*.msapp`, replacing the prior v0.3.4 package). This is the largest functional advance since the baseline:
+  - **App-wide role-based access control (RBAC) engine** — `App.OnStart` grew from a 1-line version stub into a full RBAC + auto-provisioning + impersonation engine. Eight access tiers (`AccessDenied` → `View-only` → `User` → `SuperUser` → `Manager` → `ServiceChief` → `ProjectLeader` → `AppAdmin`) are read live per-user from `DeskAccessControl` and wired into the navigation menu (`colMenu`, moved out of `Dashboard.OnVisible`), Dashboard messaging, calendar `DisplayMode`/`Items` filters, and admin-only controls.
+  - **Impersonation ("act as another user")** — admins get a hidden Dashboard combobox that re-renders the entire app as any selected user (support/troubleshooting and booking on behalf of others); the real signed-in identity is captured separately and auto-provisioning never writes while impersonating.
+  - **Zero-touch user onboarding** — first-launch users with no `DeskAccessControl` row are auto-provisioned at the default `"User"` level (Entra ID, timestamps, manager email via `Office365Users.Manager`).
+  - **Training Class/Session Picker** — new `ctn_PopUp_ClassPicker` popup on `POCSUPERVISOR` (Scenario → Role → Date/Time session → Location), with a deep-link into the SharePoint Learning Lab Workbook library and selections echoed on the Confirm screen.
+  - **New `alt_ManageDesks` screen** — modern responsive CRUD console for the `Desks` list, staged alongside legacy `ManageDesks` ahead of a planned cutover (22 screens total).
+  - **Dashboard redesign** — dark-navy theme, mascot banner, role-aware welcome / "ACCESS DENIED" / "VIEW ONLY" messaging, author/version timer.
+  - **Assets & components** — image assets grew from 6 → 38; new `Tabs_altColor` component.
+  - Full file-by-file structural/behavioral diff with per-screen rationale: **`src/powerApps/v0.8.14_recentChangesSummary.md`** (new).
+- **`docs/release-notes/v0.8.16_commitMessage.md`**, **`v0.8.16_pullRequest.md`**, **`v0.8.16_releaseNotes.md`** — populated release artifacts for this release.
+
+### Changed
+
+- **`VERSION`** — 0.3.8 → 0.8.16.
+- **`README.md`** — release badge v0.3.8 → v0.8.16; Canvas app component version v0.3.4 → v0.8.14.
+- **`src/powerApps/README.md`** — updated header to v0.8.14, added a "What changed in v0.8.14 (current)" narrative, demoted the v0.3.4 section to "previous", added a v0.8.14 component version-history row, and updated the screen inventory (21 → 22 screens; added `alt_ManageDesks`).
+- **`docs/PROJECT_STATUS.md`** — status summary, component versions, release history table, data model, and RBAC section updated for v0.8.16 / Canvas app v0.8.14.
+
+### Notes
+
+- **Data sources and connections are unchanged** — no SharePoint schema or connector changes at the app-manifest level.
+- **Open security gap (carried forward from `[0.3.8]`):** new/unknown users are still auto-granted the `User` access level rather than `AccessDenied`. Populating `DeskAccessControl.AccessLevel_Text` for all intended users, and deciding the unknown-user default, remains a required admin action.
+- **Known follow-ups:** the Class/Session Picker values are displayed on Confirm but not yet persisted in the SUBMIT `Patch`; app-internal version strings show minor drift (msapp `v0.8.14`, `varRepoVersion "0.8.12"`, hardcoded Dashboard stamp, `VERSION` `0.8.16`) to be reconciled. See `src/powerApps/v0.8.14_recentChangesSummary.md` §9.
+
+---
+
 ## [0.3.8] - 2026-07-28
 
 ### Added

@@ -1,182 +1,64 @@
 Dashboard As screen:
-    Fill: =RGBA(236, 236, 236, 1)
+    Fill: =RGBA(0, 63, 114, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
-    OnVisible: |-
-        =ClearCollect(colMenu, Blank());
-        Set(
-            _CurrentUser,
-            User()
-        );
-        Set(
-            _CurrentDate2,
-            Today()
-        );
-        Set(
-            _CurrentUser,
-            User()
-        );
-        Set(
-            _CurrentDate2,
-            Today()
-        );
-        Set(
-            varTimer,
-            true
-        );
-        Set(
-            currentUser,
-            User()
-        );
-        Set(
-            varTimer,
-            false
-        );
-        Set(
-            varUser,
-            User()
-        );
-        ClearCollect(CollectionRecurrence, Blank());
-        Refresh(DeskAccessControl);
-        ClearCollect(userAccessDemographics, Blank());
-        Set(isUserAdminSPList, false);
-        
-        Set(
-            isUserAdminSPList,
-            !IsBlank(
-                LookUp(
-                    DeskAccessControl,
-                    Lower(Email_Text) = Lower(User().Email)
-                )
-            )
-        );
-        If(
-            isUserAdminSPList = true, 
-            ClearCollect(
-                userAccessDemographics,
-                Filter(
-                    DeskAccessControl,
-                    Lower(Email_Text) = Lower(User().Email)
-                )
-            ); Set(
-                userAccessLevel_text,
-                    LookUp(
-                        DeskAccessControl,
-                        (!IsBlank(AccessLevel_Text) && Lower(Email_Text) = Lower(User().Email)),
-                        AccessLevel_Text
-                    )
-                ),
-            isUserAdminSPList = false,
-            Patch(
-                DeskAccessControl,
-                {
-                    Email_Text: Lower(User().Email),
-                    AccessLevel_Choice:
-                        {
-                            Value: "User"
-                            //Value: "AccessDenied"
-                            //Value: "View-only"
-                            //Value: "User"
-                            //Value: "SuperUser"
-                            //Value: "Manager"
-                            //Value: "ServiceChief"
-                            //Value: "ProjectLeader"
-                            //Value: "AppAdmin"
-                        }
-                }
-            ); Set(isUserAdminSPList, true); Set(userAccessLevel_text, "User")
-        );
-        If(
-            (userAccessLevel_text = "SuperUser"
-                || userAccessLevel_text = "Manager"
-                || userAccessLevel_text = "ServiceChief"
-                || userAccessLevel_text = "ProjectLeader"
-                || userAccessLevel_text = "AppAdmin"
-                ), 
-            Collect(
-                colMenu, 
-                    {
-                        Name: "Dashboard",
-                        Icon: Icon.DetailList,
-                        Page: Dashboard,
-                        Visible: true
-                    },
-                    {
-                        Name: "My Bookings",
-                        Icon: Icon.Person,
-                        Page: MyAppts,
-                        Visible: true
-                    },
-                   {
-                        Name: "Book",
-                        Icon: Icon.Add,
-                        Page: POCSUPERVISOR,
-                        Visible: true
-                    },
-                    {
-                        Name: "Manage Rooms",
-                        Icon: Icon.ComputerDesktop,
-                        Page: ManageDesks,
-                        Visible: true
-                    }
-            ),
-                (userAccessLevel_text = "User"),
-                ClearCollect(
-                    colMenu,
-                    Table(
-                    {
-                        Name: "Dashboard",
-                        Icon: Icon.DetailList,
-                        Page: Dashboard,
-                        Visible: true
-                    },
-                    {
-                        Name: "My Bookings",
-                        Icon: Icon.Person,
-                        Page: MyAppts,
-                        Visible: true
-                    },
-                   {
-                        Name: "Book",
-                        Icon: Icon.Add,
-                        Page: POCSUPERVISOR,
-                        Visible: true
-                    }         
-                )
-            ),
-            (userAccessLevel_text = "View-only"),
-                ClearCollect(
-                colMenu,
-                Table(
-                    {
-                        Name: "Dashboard",
-                        Icon: Icon.DetailList,
-                        Page: Dashboard,
-                        Visible: true
-                    },
-                    {
-                        Name: "My Bookings",
-                        Icon: Icon.Person,
-                        Page: MyAppts,
-                        Visible: true
-                    }        
-                )
-            ),
-        (userAccessLevel_text = "AccessDenied"),
-            ClearCollect(
-                colMenu,
-                Blank()
-            )
-        );
+    OnVisible: =Set(varTimer, false);
     Width: =Max(App.Width, App.DesignWidth)
 
-    Button5 As button:
+    Timer3 As timer:
+        Align: =Align.Left
+        AutoStart: =true
         BorderColor: =App.Theme.Colors.Primary
-        Color: =App.Theme.Colors.PrimaryForeground
+        BorderThickness: =0
+        Color: =RGBA(0, 0, 0, 0)
         DisabledBorderColor: =RGBA(244, 244, 244, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
-        Fill: =App.Theme.Colors.Primary
+        Duration: =600
+        Fill: =RGBA(0, 0, 0, 0)
+        Font: =App.Theme.Font
+        Height: =12
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =App.Theme.Colors.Darker10
+        OnTimerEnd: =Set(varTimer, false);
+        OnTimerStart: |-
+            =Set(
+                var_AuthorInfo, "App developed by 'Kyle.Coder@va.gov' (GitHub.com/KCoderVA & https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp, published state v0.3.8 on 07/21/2026)"
+            );
+        PaddingBottom: =0
+        PaddingLeft: =0
+        PaddingRight: =0
+        PaddingTop: =0
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Repeat: =true
+        Reset: =true
+        Size: =1
+        Start: =true
+        Text: |-
+            =//Text(Time(0, 0, Self.Value/1000), "hh:mm:ss")
+            Concatenate(
+                "App developed by 'Kyle.Coder@va.gov' (GitHub.com/KCoderVA & https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp, published state v",
+                varRepoVersion,
+                " on 07/21/2026)"
+            )
+        Tooltip: |-
+            ="App developed by 'Kyle.Coder@va.gov' (GitHub.com/KCoderVA & https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp, published state v0.3.8 on 07/21/2026)"
+        VerticalAlign: =VerticalAlign.Top
+        Width: =666
+        X: =470
+        Y: =628
+        ZIndex: =1
+
+    Button5 As button:
+        BorderColor: =RGBA(180, 214, 250, 1)
+        BorderThickness: =5
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(0, 131, 190, 1)
         Font: =App.Theme.Font
         FontWeight: =FontWeight.Semibold
         Height: =37
@@ -190,28 +72,81 @@ Dashboard As screen:
         Size: =24
         Text: ="View calendars!"
         Width: =333
-        X: =137
+        X: =Label4.X + (Label4.Width / 2) - (Self.Width / 2)
         Y: =591
-        ZIndex: =1
-
-    Image2_13 As image:
-        BorderColor: =App.Theme.Colors.Darker40
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledFill: =RGBA(244, 244, 244, 1)
-        Height: =211
-        Image: =abstractBackground
-        ImagePosition: =ImagePosition.Fill
-        Width: =Parent.Width
         ZIndex: =2
 
+    Label4 As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        Height: =38
+        Size: =18
+        Text: |-
+            ="See daily/weekly/monthly reservation calendars:"
+        Width: =HtmlText2.Width
+        X: =HtmlText2.X
+        Y: =HtmlText2.Y + HtmlText2.Height
+        ZIndex: =3
+
+    HtmlText2 As htmlViewer:
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        Height: =342
+        HtmlText: |-
+            =If(
+                userAccessLevel_text = "AccessDenied",
+                ("<br><br><div style='font-size:36px; text-align:center; font-weight:bold;'>Your application user access has been revoked or was never previously approved. Please
+                    <br>
+                    <a  href='mailto:Celina.Ceballo@va.gov,Amy.Garner2@va.gov,Brenda.Beben@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'><i><b>contact the application admins</b></i></a>
+                    <br>
+                    regarding this message!</div>"),
+                userAccessLevel_text = "View-only",
+                ("<br><br><div style='font-size:30px; text-align:center; font-weight:bold;'>Your user access is set to 
+                    <br>
+                    '<b><u>VIEW ONLY</u></b>'
+                    <br>preventing you from creating/modifying new content. Please
+                    <a  href='mailto:Celina.Ceballo@va.gov,Amy.Garner2@va.gov,Brenda.Beben@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20VIEW%20ONLY'><i><b>contact the application admins</b></i></a>
+                    <br>
+                    regarding this message!</div>"),
+                ("<div style='font-size:16px; text-align:center'>Welcome to the Edward Hines Jr. VA Hospital's</div>
+                        <br><div style='font-size:20px; text-align:center; font-weight:bold;'>EHRM Learning Lab Portal!</div>
+                        <br>
+                        <div style='font-size:15px;'>Within this app, individual desks & classrooms may be reserved to participate in upcoming '<i>Learning Lab</i>' & '<i>Virtual Instructor Led Training (VILT)</i>' training events provided by the Hines EHRM Training Coordinators. EHRM training resources & additional information can be found online at:
+                        <br>
+                        <div style='font-size:15px; text-align:center; font-weight:bold;'>'<u><i><a href='https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Resources-for-FEHR-Training.aspx'>Federal Electronic Health Record - Team Hines SharePoint</a></i></u>'</div>
+                        <br> 
+                        <div style='font-size:15px;'>You may contact the following Hines EHRM Training Coordinators for any training questions or issues related to this app @  
+                        <a style='text-decoration:none;' href='mailto:Celina.Ceballo@va.gov,Amy.Garner2@va.gov,Brenda.Beben@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App'><i><b> Hines EHRM Training Coordinators</b></i></a>.
+                        <br>
+                        Alternatively, please feel free to reach out to the Edward Hines Jr. VA Hospital's <a style='text-decoration:none;' href='mailto:hinesehrmclt@va.gov?subject=Training%20Reservation%20or%20Booking%20App'><i><b>EHRM Change Leadership Team (CLT)</b></i></a> if you have any other concerns related to the EHRM roll-out process.</div>")
+            )
+        Size: =
+        Width: =(Parent.Width - bgRounded_3.Width) - 30
+        X: =15
+        Y: =211
+        ZIndex: =4
+
+    Rectangle7 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(0, 11, 38, 1)
+        Height: =211
+        Width: =1136
+        ZIndex: =5
+
     bgRounded_3 As htmlViewer:
+        BorderColor: =RGBA(9, 33, 98, 1)
+        BorderThickness: =5
         Height: =623
         HtmlText: |-
-            ="<div style='border:1px gray;border-radius:10%;height:600px;width:100%;background-color:#FCFCFC'></div>"
+            =//"<div style='border:1px gray;border-radius:10%;height:600px;width:100%;background-color:#FCFCFC'></div>"
+            "<div style='border:5px solid #b4d6fa;border-radius:8px;height:600px;width:100%;background-color:#fcfcfc;'></div>"
         Width: =528
         X: =608
         Y: =17
-        ZIndex: =4
+        ZIndex: =6
 
     "gallMyReservationsPreview As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
         '#CopilotOverlayLabel': ="Filtered"
@@ -225,7 +160,7 @@ Dashboard As screen:
                     Filter(
                         'Desk Reservations',
                         (
-                            'Reserved By'.Email = currentUser.Email // || 'Created By'.Email = currentUser.Email
+                            Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text) // || Lower('Created By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
                         )
                         && 'Check Out From' >= Today()
                     ),
@@ -241,7 +176,7 @@ Dashboard As screen:
         Width: =504
         X: =620
         Y: =97
-        ZIndex: =5
+        ZIndex: =7
 
         Separator2 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
@@ -451,7 +386,7 @@ Dashboard As screen:
         Width: =448
         X: =648
         Y: =40
-        ZIndex: =6
+        ZIndex: =8
 
     lblNoResDashboard As label:
         Align: =Align.Center
@@ -459,69 +394,42 @@ Dashboard As screen:
         Color: =RGBA(0, 0, 0, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         Font: =App.Theme.Font
-        FontWeight: =FontWeight.Lighter
-        Height: =88
-        Size: =21
-        Text: ="No upcoming reservations"
-        Visible: =If(CountRows(gallMyReservationsPreview.AllItems) >=1, false, true)
-        Width: =515
-        X: =621
-        Y: =353
-        ZIndex: =7
-
-    Preloader_1 As Preloader:
-        Height: =640
-        Visible: =varTimer
-        ZIndex: =8
-
-    Label4 As label:
-        Align: =Align.Center
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =App.Theme.Font
-        Height: =38
-        Size: =18
-        Text: |-
-            ="See daily/weekly/monthly reservation calendars:"
-        Width: =556
-        X: =42
-        Y: =553
-        ZIndex: =9
-
-    HtmlText2 As htmlViewer:
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        Height: =342
-        HtmlText: |-
+        FontWeight: |-
             =If(
                 userAccessLevel_text = "AccessDenied",
-                    ("Your application user access has been revoked. Please contact the application admins regarding this message!"),
-                ("<div style='font-size:14px; text-align:center'>Welcome to the Edward Hines Jr. VA Hospital's</div>
-                        <br><div style='font-size:18px; text-align:center; font-weight:bold;'>EHRM Training Reservation Portal!</div>
-                        <br>
-                        <div style='font-size:14px;'>Within this app, individual desks & classrooms may be reserved to participate in upcoming '<b><u>Super User</u></b>' or '<b><u>End User Virtual Instructor Led Training (VILT)</u></b>' training events provided by the Hines EHRM Training Coordinators.
-                        <br>
-                        <br>
-                        Each reserved workstation will provide a monitor, keyboard, mouse, barcode scanner, and laptop to each training event participant. <i>***Please bring your own headphones with microphone, as other trainees may be participating in different classes simultaneously***</i>
-                        <br>
-                        <br>  
-                        You may contact the following Hines EHRM Training Coordinators for any training questions or reservation issues: 
-                        <a href='mailto:Celina.Ceballo@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>Celina Ceballo</a>,
-                        <a href='mailto:Amy.Garner2@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>Amy Garner</a>,
-                        <a href='mailto:Brenda.Beben@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>Brenda Beben</a>
-                        . Alternatively, please feel free to reach out to the Edward Hines Jr. VA Hospital's <a href='mailto:hinesehrmclt@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>EHRM Change Leadership Team (CLT)</a> if you have any other concerns related to the EHRM roll-out process.</div>")
+                FontWeight.Bold,
+                FontWeight.Lighter
             )
-        Size: =
-        Width: =608
-        Y: =211
-        ZIndex: =10
+        Height: =88
+        Size: |-
+            =If(
+                userAccessLevel_text = "AccessDenied",
+                40,
+                25
+            )
+        Text: |-
+            =If(
+                userAccessLevel_text = "AccessDenied",
+                "ACCESS DENIED!",
+                "No upcoming reservations!"
+            )
+        Visible: =If(CountRows(gallMyReservationsPreview.AllItems) >=1, false, true)
+        Width: =bgRounded_3.Width
+        X: =bgRounded_3.X
+        Y: |-
+            =//353
+            ((bgRounded_3.Y / 2) + (bgRounded_3.Height / 2)) - (Self.Height / 2)
+        ZIndex: =9
 
-    Tabs_1 As Tabs:
-        Height: =114
-        Items: =colMenu
-        Width: =608
-        Y: =97
-        ZIndex: =11
+    Image2_13 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =211
+        Image: =mascot_banner_croppedHighRes
+        ImagePosition: =ImagePosition.Stretch
+        Width: =613
+        ZIndex: =10
 
     lblWelcome As label:
         BorderColor: =App.Theme.Colors.Darker40
@@ -532,21 +440,121 @@ Dashboard As screen:
         Height: =80
         Size: =32
         Text: |-
-            ="Welcome back, " & Trim(Last(FirstN(ForAll(Split(currentUser.FullName," "), {Result: ThisRecord.Value}), 1)).Result)
+            =Concatenate(
+                "Welcome, ",
+                Coalesce(varDeskAccessControl_record.GivenName_Text, "Hines Team"),
+                "!"
+            )
         Width: =606
         X: =15
         Y: =17
+        ZIndex: =11
+
+    Tabs_1 As Tabs:
+        Fill: =RGBA(0, 11, 38, .05)
+        Height: =116
+        Items: =colMenu
+        Width: =Parent.Width - bgRounded_3.Width + 3
+        Y: =97
+        ZIndex: =12
+
+    Button6 As modernButton:
+        Height: =40
+        Text: =varTargetEmail & " (" & userAccessLevel_text & ")"
+        Visible: =user_isAdmin || User().Email = "Kyle.Coder@va.gov"
+        Width: =464
+        X: =460
+        Y: =- Self.Height - 5
         ZIndex: =13
+
+    Combobox1 As modernCombobox:
+        Appearance: =Appearance.FilledDarker
+        DefaultSelectedItems: |-
+            =Filter(
+                Distinct(colDeskAccess, Lower(Email_Text)),
+                Value = varRealEmail
+            )
+        Height: =41
+        ItemDisplayText: =ThisItem.Value
+        Items: =Distinct(colDeskAccess, Lower(Email_Text))
+        OnChange: |-
+            =// Resolve the impersonated user's record
+            Set(varTargetEmail, Self.Selected.Value);
+            Set(varIsImpersonating, varTargetEmail <> varRealEmail);
+            
+            Set(
+                varDeskAccessControl_record,
+                LookUp(colDeskAccess, Lower(Email_Text) = varTargetEmail)
+            );
+            
+            // Access level (same fallback as OnStart)
+            Set(
+                userAccessLevel_text,
+                Coalesce(varDeskAccessControl_record.AccessLevel_Text, "AccessDenied")
+            );
+            
+            // Admin flag — mirror OnStart exactly
+            Set(user_isAdmin, userAccessLevel_text = "AppAdmin");
+            
+            // Optional: mirror the O365 profile of the impersonated user so
+            // forms that read varUser_details also follow the switch
+            Set(
+                varUser_details,
+                Office365Users.UserProfileV2(varTargetEmail)
+            );
+            
+            // Rebuild the menu with the same Switch you use in OnStart
+            Switch(
+                true,
+                userAccessLevel_text in ["SuperUser","Manager","ServiceChief","ProjectLeader","AppAdmin"],
+                ClearCollect(colMenu,
+                    { Name: "Home",    Icon: Icon.DetailList,      Page: Dashboard,     Visible: true },
+                    { Name: "My Bookings",  Icon: Icon.Person,          Page: MyAppts,       Visible: true },
+                    { Name: "Create New",         Icon: Icon.Add,             Page: POCSUPERVISOR, Visible: true },
+                    { Name: "Manage Rooms", Icon: Icon.ComputerDesktop, Page: ManageDesks,   Visible: true }
+                ),
+                userAccessLevel_text = "User",
+                ClearCollect(colMenu,
+                    { Name: "Home",   Icon: Icon.DetailList, Page: Dashboard,     Visible: true },
+                    { Name: "My Bookings", Icon: Icon.Person,     Page: MyAppts,       Visible: true },
+                    { Name: "Create New",        Icon: Icon.Add,        Page: POCSUPERVISOR, Visible: true }
+                ),
+                userAccessLevel_text = "View-only",
+                ClearCollect(colMenu,
+                    { Name: "Home",   Icon: Icon.DetailList, Page: Dashboard,     Visible: true },
+                    { Name: "My Bookings",  Icon: Icon.Person,          Page: MyAppts,       Visible: true }
+                ),
+                ClearCollect(colMenu, [])
+            );
+        SelectMultiple: =false
+        ValidationState: =ValidationState.None
+        Visible: =user_isAdmin || User().Email = "Kyle.Coder@va.gov"
+        Width: =284
+        X: =176
+        Y: =- Self.Height - 5
+        ZIndex: =14
+
+    Preloader_1 As Preloader:
+        Height: =Parent.Height
+        Visible: =varTimer
+        Width: =Parent.Width
+        ZIndex: =15
 
     Label8 As label:
         BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(255, 255, 255, 1)
+        Color: |-
+            =If(
+                Preloader_1.Visible,
+                RGBA(1, 1, 1, 1),
+                !Preloader_1.Visible,
+                RGBA(255, 255, 255, 1)
+            )
         DisabledColor: =RGBA(166, 166, 166, 1)
         Font: =App.Theme.Font
         FontWeight: =FontWeight.Semibold
         Height: =45
-        Text: =varGetRepo_ProjectVersion
+        Text: =varRepoVersion
         Width: =75
         X: =15
-        ZIndex: =14
+        ZIndex: =16
 

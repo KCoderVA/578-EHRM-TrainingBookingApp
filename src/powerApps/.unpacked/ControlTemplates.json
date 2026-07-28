@@ -1,4 +1,18 @@
 {
+  "addMedia": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/addMedia",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "addMedia",
+    "OverridableProperties": {},
+    "Version": "2.2.1"
+  },
   "appinfo": {
     "CustomGroupControlTemplateName": "",
     "FirstParty": true,
@@ -26,6 +40,20 @@
     "Name": "AppTest",
     "OverridableProperties": {},
     "Version": "1.0"
+  },
+  "attachments": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/attachments",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "attachments",
+    "OverridableProperties": {},
+    "Version": "2.3.0"
   },
   "button": {
     "CustomGroupControlTemplateName": "",
@@ -296,6 +324,48 @@
     "Name": "label",
     "OverridableProperties": {},
     "Version": "2.5.1"
+  },
+  "modernButton": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/modernButton",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "modernButton",
+    "OverridableProperties": {},
+    "Version": "1.0.0"
+  },
+  "modernCombobox": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/modernCombobox",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "modernCombobox",
+    "OverridableProperties": {},
+    "Version": "1.1.1"
+  },
+  "modernDropdown": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/modernDropdown",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "modernDropdown",
+    "OverridableProperties": {},
+    "Version": "1.0.2"
   },
   "pdfViewer": {
     "CustomGroupControlTemplateName": "",

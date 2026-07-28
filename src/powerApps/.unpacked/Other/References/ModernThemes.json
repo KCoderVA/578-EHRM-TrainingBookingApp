@@ -3,6 +3,19 @@
     {
       "EntityName": "PowerAppsTheme",
       "ThemeName": "PowerAppsTheme"
+    },
+    {
+      "BasePaletteColor": "#003F72",
+      "EntityName": "VA-theme",
+      "Font": "'Segoe UI', 'Open Sans', sans-serif",
+      "HueTorsion": 0,
+      "ThemeName": "VA-theme",
+      "ThemePrimaryColorLocked": false,
+      "Vibrancy": 0
+    },
+    {
+      "EntityName": "SharePointTheme",
+      "ThemeName": "SharePointTheme"
     }
   ]
 }

@@ -24,7 +24,7 @@ ComponentDefinitions:
         Default: |-
           =Table(
               {
-                  Name: "Dashboard",
+                  Name: "Home",
                   Icon: Icon.DetailList,
                   Page: App.ActiveScreen,
                   Visible:true
@@ -42,7 +42,7 @@ ComponentDefinitions:
                   Visible:true
               },
               {
-                  Name: "Book",
+                  Name: "Create New",
                   Icon: Icon.Add,
                   Page: App.ActiveScreen,
                   Visible:true
@@ -50,6 +50,7 @@ ComponentDefinitions:
           )
     Properties:
       Height: =120
+      Width: =608
     Children:
       - Gallery4:
           Control: Gallery@2.15.0
@@ -58,25 +59,41 @@ ComponentDefinitions:
             AccessibleLabel: ="Footer tabs"
             BorderColor: =RGBA(32, 54, 71, 1)
             DelayItemLoading: =false
+            Fill: |-
+              =If(
+                  App.ActiveScreen.Name = "Dashboard",
+                  RGBA(0, 63, 114, 0.7),
+                  App.ActiveScreen.Name <> "Dashboard",
+                  RGBA(0, 0, 0, 0)
+              )
             FocusedBorderThickness: =0
-            Height: =115
+            Height: =Parent.Height - (Self.Y * 2)
             Items: =Tabs.Items
             LoadingSpinner: =LoadingSpinner.None
             LoadingSpinnerColor: =Gallery4.BorderColor
             OnSelect: =Navigate(ThisItem.Page)
+            ShowScrollbar: =false
             TabIndex: =1
-            TemplateSize: =151
-            Width: =638
-            X: =1
+            TemplatePadding: =1
+            TemplateSize: =Tabs.Width / 4
+            Width: =Tabs.Width
+            Y: =Rectangle1.Height + Rectangle1.Y
           Children:
             - Label10:
                 Control: Label@2.5.1
                 Properties:
                   Align: =LayoutAlignItems.Center
                   BorderColor: =RGBA(32, 54, 71, 1)
+                  Color: |-
+                    =//RGBA(0, 0, 0, 1)
+                    If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        RGBA(255, 255, 255, 1),
+                        RGBA(0, 0, 0, 1)
+                    )
                   FocusedBorderColor: =Label10.BorderColor
                   Font: =Font.'Open Sans'
-                  Height: =52
+                  Height: =46
                   HoverBorderColor: =Label10.BorderColor
                   HoverColor: =Label10.Color
                   HoverFill: =Label10.Fill
@@ -87,17 +104,23 @@ ComponentDefinitions:
                   Size: =16
                   Text: =ThisItem.Name
                   Visible: =ThisItem.Visible
-                  Width: =137
-                  X: =4
-                  Y: =48
+                  Width: =Parent.TemplateWidth
+                  X: =(Parent.TemplateWidth / 2) - (Self.Width / 2)
+                  Y: =Parent.TemplateHeight - Self.Height
             - Icon10:
                 Control: Classic/Icon@2.5.0
                 Properties:
                   BorderColor: =RGBA(32, 54, 71, 1)
-                  Color: =RGBA(0, 0, 0, 1)
+                  Color: |-
+                    =//RGBA(0, 0, 0, 1)
+                    If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        RGBA(255, 255, 255, 1),
+                        RGBA(0, 0, 0, 1)
+                    )
                   DisabledFill: =Icon10.Fill
                   FocusedBorderColor: =Icon10.BorderColor
-                  Height: =40
+                  Height: =60
                   HoverBorderColor: =ColorFade(Icon10.BorderColor, 20%)
                   HoverColor: =ColorFade(Icon10.Color, 20%)
                   HoverFill: =Icon10.Fill
@@ -107,13 +130,58 @@ ComponentDefinitions:
                   PressedColor: =ColorFade(Icon10.Color, -20%)
                   PressedFill: =Icon10.Fill
                   Visible: =ThisItem.Visible
-                  Width: =40
-                  X: =56
-                  Y: =8
+                  Width: =60
+                  X: =(Parent.TemplateWidth / 2) - (Self.Width / 2)
+                  Y: =2
+            - Button8:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  AutoDisableOnSelect: =false
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  BorderThickness: =6
+                  Fill: =RGBA(255, 255, 255, 0)
+                  Height: =Parent.TemplateHeight - 10
+                  HoverBorderColor: |-
+                    =If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        Color.White,
+                        App.ActiveScreen.Name <> "Dashboard",
+                        RGBA(9, 33, 98, 1)
+                    )
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: |-
+                    =If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        ColorFade(RGBA(0, 131, 190, .8),50%),
+                        App.ActiveScreen.Name <> "Dashboard",
+                        RGBA(255, 255, 255, .5)
+                    )
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  RadiusBottomLeft: =15
+                  RadiusBottomRight: =15
+                  RadiusTopLeft: =15
+                  RadiusTopRight: =15
+                  Text: =
+                  Visible: |-
+                    =true
+                    /*
+                    If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        true,
+                        false
+                    )
+                    */
+                  Width: =Parent.TemplateWidth - 10
+                  X: =5
+                  Y: =5
       - Rectangle1:
           Control: Rectangle@2.3.0
           Properties:
             BorderColor: =RGBA(128, 128, 128, 1)
             Fill: =RGBA(128, 128, 128, 1)
             Height: =2
-            Width: =640
+            Width: =Tabs.Width

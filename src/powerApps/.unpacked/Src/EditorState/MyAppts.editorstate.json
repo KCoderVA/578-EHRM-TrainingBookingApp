@@ -1162,7 +1162,7 @@
         {
           "Category": "Design",
           "PropertyName": "Y",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -2513,7 +2513,7 @@
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "If(upSelected,\n    SortByColumns(\n        Filter(\n            'Desk Reservations',\n            'Reserved By'.Email = currentUser.Email && 'Check Out From Number' >= Value(\n                Text(\n                    Today(),\n                    \"yyyymmddhmm\"\n                )\n            )\n        ),\n        \"CheckOutFromNumber\",\n        SortOrder.Ascending\n    ),\n    //Else\n    SortByColumns(\n        Filter(\n            'Desk Reservations',\n            'Reserved By'.Email = currentUser.Email && 'Check Out From Number' < Value(\n                Text(\n                    Today(),\n                    \"yyyymmddhmm\"\n                )\n            )\n        ),\n        \"CheckOutFromNumber\",\n        SortOrder.Descending\n    )\n)",
+          "AutoRuleBindingString": "",
           "InvariantPropertyName": "Items",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
@@ -8283,7 +8283,7 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",

@@ -34,14 +34,24 @@ ComponentDefinitions:
         Description: Default End Date
         RaiseOnReset: true
         DataType: DateAndTime
-        Default: =Now()
+        Default: |-
+          =If(
+              !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Now(),
+              varPopUp_ClassPicker_scenarioDate,
+              Now()
+          )
       DefaultStartDate:
         PropertyKind: Input
         DisplayName: Default Start Date
         Description: Default Start Date
         RaiseOnReset: true
         DataType: DateAndTime
-        Default: =Now()
+        Default: |-
+          =If(
+              !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Now(),
+              varPopUp_ClassPicker_scenarioDate,
+              Now()
+          )
       EndDate:
         PropertyKind: Output
         DisplayName: End Date
@@ -97,7 +107,12 @@ ComponentDefinitions:
       EndDate: =If(Calendar.SelectRange, _selectedEnd, _selectedStart)
       Height: =445
       SelectedDates: |-
-        =Table({DateValue: Today()})
+        =If(
+            Self.StartDate = Self.DefaultStartDate,
+            Table({DateValue: Self.DefaultStartDate}),
+            Self.StartDate = Today(),
+            Table({DateValue: Today()})
+        )
       StartDate: =_selectedStart
       Width: =400
     Children:

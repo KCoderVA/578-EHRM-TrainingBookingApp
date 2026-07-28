@@ -1132,7 +1132,7 @@
       "MetaDataIDKey": "",
       "Name": "grpDeskLocation",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 37,
+      "ParentIndex": 38,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -1236,7 +1236,7 @@
       "MetaDataIDKey": "",
       "Name": "grpMap_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 39,
+      "ParentIndex": 37,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -1288,7 +1288,7 @@
       "MetaDataIDKey": "",
       "Name": "grpRoomPicture",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 38,
+      "ParentIndex": 39,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -7246,7 +7246,7 @@
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "Table(\n    {\n        Name: \"Dashboard\",\n        Icon: Icon.DetailList,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"My Appts\",\n        Icon: Icon.Person,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n     {\n        Name: \"Manage Desks\",\n        Icon: Icon.ComputerDesktop,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"Book\",\n        Icon: Icon.Add,\n        Page: App.ActiveScreen,\n        Visible:true\n    }\n)",
+          "AutoRuleBindingString": "",
           "InvariantPropertyName": "Items",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
@@ -7301,7 +7301,7 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",

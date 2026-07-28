@@ -3,16 +3,130 @@ App As appinfo:
     MinScreenHeight: =320
     MinScreenWidth: =320
     OnStart: |-
-        =Set(
-            varGetRepo_ProjectVersion, 
-            "0.3.4"
-            //GitHub.SearchGithubWithQuery({query:("https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/releases/latest")})
-            //GitHub.GetReference("KCoderVA", "578-EHRM-TrainingBookingApp", "tags/")
-            //GitHub.GetMilestones("KCoderVA", "578-EHRM-TrainingBookingApp",{page:("https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/releases/latest")})
-            //PowerAppsforMakers.GetApp("d0958d55-fe85-425c-83f6-03c659bf4079")
-            //PowerAppsforMakers.GetAppVersions("f14182d6-e4ef-42bf-8dd2-0a628377cb77",{'$top':("50")})
-        );
-    StartScreen: =
+        =// ============================================================
+        // 1. Initialization & Setup
+        // ============================================================
+        // Set initialization loading screen
+            Set(varTimer, true);
+        // Real signed-in identity — never changes, cannot be spoofed
+            Set(varRealEmail, Lower(User().Email));
+            Set(varRealEntraID, User().EntraObjectId);
+        // The pseudonym identity of the user the app is currently "acting as" (defaults to the real user until changed).
+            Set(varTargetEmail, varRealEmail);
+            Set(varTargetEntraID, varRealEntraID);
+            Set(varIsImpersonating,
+                If(
+                    varTargetEmail = "kyle.coder@va.gov",
+                    false,
+                    varTargetEmail <> "kyle.coder@va.gov" && varRealEmail = varTargetEmail,
+                    true,
+                    false
+                )
+            );
+        // Refresh SharePoint list/data sources, then ClearCollect newest info
+            Refresh(DeskAccessControl);
+            ClearCollect(colDeskAccess, DeskAccessControl);
+            ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+            ClearCollect(colMenu, []);
+            ClearCollect(CollectionRecurrence, []);
+        // Declare global app rules
+            Set(varRepoVersion, "0.8.12");
+            Set(user_isAdmin, false);
+        
+        // ============================================================
+        // 2. Find the target user's existing record (if any)
+        // ============================================================
+            Set(
+                varDeskAccessControl_record,
+                LookUp(colDeskAccess, Lower(Email_Text) = varTargetEmail)
+            );
+            Set(varUserExists, !IsBlank(varDeskAccessControl_record));
+        
+        // ============================================================
+        // 3. If missing, add them as default "User", then re-lookup.
+        //    Only ever writes for the REAL user (never while impersonating,
+        //    which at OnStart is always the case, but guarded for safety).
+        // ============================================================
+            If(
+                !varUserExists && varTargetEmail = varRealEmail,
+                Patch(
+                    DeskAccessControl,
+                    Defaults(DeskAccessControl),
+                    {
+                        Email_Text: varTargetEmail,
+                        AccessLevel_Text: "User",
+                        AccessLevel_Choice: { Value: "User" },
+                        'utcNow()_value': Now(),
+                        Id_Text: varTargetEntraID,
+                        AccessStart_dateTime: Now(),
+                        Approver_Email_Text: varRealEmail,
+                        Manager_Email_Text: Lower(Office365Users.Manager(varTargetEntraID).Mail),
+                        Title: varTargetEntraID
+                    }
+                );
+                Refresh(DeskAccessControl);
+                ClearCollect(colDeskAccess, DeskAccessControl);
+                Set(
+                    varDeskAccessControl_record,
+                    LookUp(colDeskAccess, Lower(Email_Text) = varTargetEmail)
+                )
+            );
+        
+        // ============================================================
+        // 4. Resolve access level (fallback to AccessDenied if blank)
+        // ============================================================
+            Set(
+                userAccessLevel_text,
+                Coalesce(varDeskAccessControl_record.AccessLevel_Text, "AccessDenied")
+            );
+        
+        // ============================================================
+        // 5. Elevated / admin flag
+        // ============================================================
+            Set(
+                user_isAdmin,
+                userAccessLevel_text = "AppAdmin"
+            );
+        
+        // ============================================================
+        // 6. Build the navigation menu based on level
+        // ============================================================
+            Switch(
+                true,
+        
+                // Elevated roles: full menu
+                userAccessLevel_text in [
+                    "SuperUser", "Manager", "ServiceChief", "ProjectLeader", "AppAdmin"
+                ],
+                ClearCollect(
+                    colMenu,
+                    { Name: "Home",    Icon: Icon.DetailList,       Page: Dashboard,      Visible: true },
+                    { Name: "My Bookings",  Icon: Icon.Person,           Page: MyAppts,        Visible: true },
+                    { Name: "Create New",         Icon: Icon.Add,              Page: POCSUPERVISOR,  Visible: true },
+                    { Name: "Manage Rooms", Icon: Icon.ComputerDesktop,  Page: ManageDesks,    Visible: true }
+                ),
+        
+                // Standard user
+                userAccessLevel_text = "User",
+                ClearCollect(
+                    colMenu,
+                    { Name: "Home",   Icon: Icon.DetailList, Page: Dashboard,     Visible: true },
+                    { Name: "My Bookings", Icon: Icon.Person,     Page: MyAppts,       Visible: true },
+                    { Name: "Create New",        Icon: Icon.Add,        Page: POCSUPERVISOR, Visible: true }
+                ),
+        
+                // View-only
+                userAccessLevel_text = "View-only",
+                ClearCollect(
+                    colMenu,
+                    { Name: "Home",   Icon: Icon.DetailList, Page: Dashboard, Visible: true },
+                    { Name: "My Bookings", Icon: Icon.Person,     Page: MyAppts,   Visible: true }
+                ),
+        
+                // AccessDenied or anything else: empty menu
+                ClearCollect(colMenu, [])
+            );
+    StartScreen: =Dashboard
     Theme: =PowerAppsTheme
 
     Host As hostControl.DefaultHostControlVariant:

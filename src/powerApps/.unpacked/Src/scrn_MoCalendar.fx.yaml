@@ -4,7 +4,7 @@ scrn_MoCalendar As screen:
     OnVisible: |-
         =Set(
             _dateSelected2,
-            _CurrentDate2
+            Today()
         );
         Set(
             _firstDayOfMonth2,
@@ -71,24 +71,6 @@ scrn_MoCalendar As screen:
         );
         colRoomFilter
 
-    Rectangle7_3 As rectangle:
-        BorderColor: =App.Theme.Colors.Darker40
-        Fill: =App.Theme.Colors.Primary
-        Height: =640
-        Width: =62
-        ZIndex: =1
-
-    Icon3_3 As icon.Home:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =App.Theme.Colors.Darker30
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(244, 244, 244, 1)
-        Height: =58
-        Icon: =Icon.Home
-        OnSelect: =Navigate(Dashboard)
-        Width: =62
-        ZIndex: =2
-
     Label12_3 As label:
         Align: =Align.Center
         BorderColor: =App.Theme.Colors.Darker40
@@ -99,10 +81,18 @@ scrn_MoCalendar As screen:
         Height: =35
         Size: =21
         Text: =Text(_firstDayOfMonth2, "mmmm yyyy")
+        Visible: =false
         Width: =920
         X: =126
         Y: =23
-        ZIndex: =6
+        ZIndex: =1
+
+    Rectangle7_3 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =App.Theme.Colors.Primary
+        Height: =640
+        Width: =62
+        ZIndex: =2
 
     TextCanvas1_3 As Text:
         Align: ="Start"
@@ -123,13 +113,13 @@ scrn_MoCalendar As screen:
         Text: ="Select Calendar View"
         Tooltip: =""
         VerticalAlign: =""
-        Visible: =true
+        Visible: =false
         Weight: ='TextCanvas.Weight'.Semibold
         Width: =194
         Wrap: =true
         X: =800
         Y: =27
-        ZIndex: =8
+        ZIndex: =3
 
     Container7 As groupContainer.manualLayoutContainer:
         DropShadow: =DropShadow.Light
@@ -144,79 +134,30 @@ scrn_MoCalendar As screen:
         RadiusTopRight: =4
         Width: =1074
         X: =62
-        ZIndex: =13
-
-        Label11_3 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Bold
-            Height: =27
-            Size: =20
-            Text: ="Monthly Calendar"
-            Width: =1045
-            X: =1
-            ZIndex: =1
+        ZIndex: =4
 
         Rectangle8_3 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(102, 182, 227, 1)
-            Height: =77
-            Width: =1048
-            X: =13
-            Y: =27
+            Fill: =RGBA(0, 63, 114, 1)
+            Height: =75
+            Width: =Parent.Width
+            ZIndex: =1
+
+        HtmlText6 As htmlViewer:
+            AutoHeight: =true
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Height: =Rectangle8_3.Height
+            HtmlText: |-
+                ="<div style='color: #FFFFFF; font-size: 28px; font-weight: bold;'><center>" & Text(_firstDayOfMonth2, "mmmm - yyyy")
+                & "</div><div style='color: #0083BE; font-size: 20px; font-weight: bold; font-style: italic;'><center>" & "Monthly Calendar</div>"
+            Size: =25
+            Width: =Rectangle8_3.Width
+            X: =Rectangle8_3.X
+            Y: =Rectangle8_3.Y
             ZIndex: =2
 
-        Label12_4 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(255, 255, 255, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Bold
-            Height: =35
-            Size: =21
-            Text: =Text(_firstDayOfMonth2, "mmmm yyyy")
-            Width: =920
-            X: =64
-            Y: =27
-            ZIndex: =3
-
-        Icon7_3 As icon:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =App.Theme.Colors.Darker30
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(244, 244, 244, 1)
-            Icon: =Icon.ChevronLeft
-            OnSelect: |-
-                =Set(_firstDayOfMonth2, DateAdd(_firstDayOfMonth2, -1, TimeUnit.Months));
-                Set(_FirstDayinView2, DateAdd(_firstDayOfMonth2, -(Weekday(_firstDayOfMonth2) - 2 + 1), TimeUnit.Days));
-                Set(_LastDayOfMonth2, DateAdd(DateAdd(_firstDayOfMonth2, 1, TimeUnit.Months), -1, TimeUnit.Days));
-                If(_MinDate > _firstDayOfMonth2, Set(_MinDate, _firstDayOfMonth2))
-            Y: =27
-            ZIndex: =4
-
-        Icon5_3 As icon:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =App.Theme.Colors.Darker30
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(244, 244, 244, 1)
-            Height: =67
-            Icon: =Icon.ChevronRight
-            OnSelect: |-
-                =Set(_firstDayOfMonth2, DateAdd(_firstDayOfMonth2, 1, TimeUnit.Months));
-                Set(_FirstDayinView2, DateAdd(_firstDayOfMonth2, -(Weekday(_firstDayOfMonth2) - 2 + 1), TimeUnit.Days));
-                Set(_LastDayOfMonth2, DateAdd(DateAdd(_firstDayOfMonth2, 1, TimeUnit.Months), -1, TimeUnit.Days));
-                If(_LastDayOfMonth2 > _MaxDate, Set(_MaxDate,_LastDayOfMonth2));
-            Width: =61
-            X: =1011
-            Y: =27
-            ZIndex: =5
-
         TextCanvas1_4 As Text:
-            Align: ="Start"
+            Align: ='TextCanvas.Align'.Center
             AutoHeight: =false
             BorderColor: =
             BorderStyle: =""
@@ -231,27 +172,29 @@ scrn_MoCalendar As screen:
             Height: =35
             Size: =16
             TabIndex: =0
-            Text: ="Select Calendar View"
+            Text: |-
+                ="Change Calendar View:"
             Tooltip: =""
-            VerticalAlign: =""
+            VerticalAlign: =VerticalAlign.Top
             Visible: =true
             Weight: ='TextCanvas.Weight'.Semibold
-            Width: =194
+            Width: =200
             Wrap: =true
-            X: =737
-            Y: =43
-            ZIndex: =6
+            X: =(Icon5_3.X - Self.Width) - (Parent.Width / 10)
+            Y: =Dropdown2_2.Y
+            ZIndex: =3
 
         Button1_2 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            Color: =App.Theme.Colors.PrimaryForeground
+            BorderColor: =App.Theme.Colors.Lighter10
+            BorderThickness: =3
+            Color: =App.Theme.Colors.Darker50
             DisabledBorderColor: =RGBA(244, 244, 244, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =App.Theme.Colors.Primary
+            Fill: =App.Theme.Colors.Lighter70
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
-            Height: =32
+            Height: =Dropdown2_2.Height - TextCanvas1_4.Height
             HoverBorderColor: =App.Theme.Colors.Darker10
             HoverColor: =App.Theme.Colors.PrimaryForeground
             HoverFill: =App.Theme.Colors.Darker10
@@ -261,21 +204,22 @@ scrn_MoCalendar As screen:
             PressedFill: =App.Theme.Colors.Darker40
             Size: =16
             Text: ="Weekly"
-            Width: =97
-            X: =680
-            Y: =67
-            ZIndex: =7
+            Width: =120
+            X: =(((TextCanvas1_4.X - Self.Width) + Self.Width) - 25)
+            Y: =TextCanvas1_4.Y + TextCanvas1_4.Height
+            ZIndex: =4
 
         Button4_4 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            Color: =App.Theme.Colors.PrimaryForeground
+            BorderColor: =App.Theme.Colors.Lighter10
+            BorderThickness: =3
+            Color: =App.Theme.Colors.Darker50
             DisabledBorderColor: =RGBA(244, 244, 244, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =App.Theme.Colors.Primary
+            Fill: =App.Theme.Colors.Lighter70
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
-            Height: =33
+            Height: =Dropdown2_2.Height - TextCanvas1_4.Height
             HoverBorderColor: =App.Theme.Colors.Darker10
             HoverColor: =App.Theme.Colors.PrimaryForeground
             HoverFill: =App.Theme.Colors.Darker10
@@ -285,72 +229,54 @@ scrn_MoCalendar As screen:
             PressedFill: =App.Theme.Colors.Darker40
             Size: =14
             Text: ="Daily"
-            Width: =111
-            X: =793
-            Y: =67
-            ZIndex: =8
+            Width: =120
+            X: =((TextCanvas1_4.X + TextCanvas1_4.Width) - Self.Width) + 25
+            Y: =TextCanvas1_4.Y + TextCanvas1_4.Height
+            ZIndex: =5
 
-        Icon4_3 As icon:
+        Dropdown2_2 As dropdown:
             BorderColor: =App.Theme.Colors.Darker40
-            Color: =App.Theme.Colors.Darker30
+            ChevronBackground: =App.Theme.Colors.Primary
+            ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+            ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+            ChevronFill: =App.Theme.Colors.PrimaryForeground
+            ChevronHoverBackground: =App.Theme.Colors.Darker10
+            ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(244, 244, 244, 1)
-            Icon: =Icon.Print
-            OnSelect: |-
-                =UpdateContext({hideForPDF: true});
-                Set(
-                    PDFPrint,
-                    PDF(
-                        Container7,
-                        {
-                            PaperSize: PaperSize.A4,
-                            PaperOrientation: PaperOrientation.Landscape
-                        }
-                    )
-                );
-                UpdateContext({hideForPDF: false});
-                Print();
-                Navigate(PDFScreen);
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Font: =App.Theme.Font
+            Height: =Icon7_3.Height
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Items: |-
+                =colRoomFilter
+                //'Desk Reservations'.TitlecolRoomFilter
+            PressedColor: =App.Theme.Colors.PrimaryForeground
+            PressedFill: =App.Theme.Colors.Darker30
+            SelectionColor: =App.Theme.Colors.PrimaryForeground
+            SelectionFill: =App.Theme.Colors.Primary
+            Size: =21
             Visible: =!hideForPDF
-            X: =931
-            Y: =28
-            ZIndex: =9
-
-        Gallery2_2 As gallery.galleryHorizontal:
-            '#CopilotOverlayLabel': ="Filtered"
-            BorderColor: =App.Theme.Colors.Darker40
-            BorderThickness: =1
-            Height: =65
-            Items: =Calendar.WeekdaysShort()
-            TemplatePadding: =0
-            TemplateSize: =150
-            Width: =1048
-            WrapCount: =0
-            X: =13
-            Y: =104
-            ZIndex: =10
-
-            Label13_3 As label:
-                Align: =Align.Center
-                BorderColor: =App.Theme.Colors.Darker40
-                BorderThickness: =1
-                Color: =RGBA(0, 0, 0, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Fill: =If(ThisItem.Value="Sun" || ThisItem.Value="Sat", RGBA(204, 204, 204, 1), RGBA(0,0,0,0))
-                FocusedBorderThickness: =1
-                Font: =App.Theme.Font
-                Height: =44
-                OnSelect: =Select(Parent)
-                PaddingBottom: =0
-                PaddingRight: =0
-                PaddingTop: =0
-                Text: =ThisItem.Value
-                ZIndex: =1
+            Width: =229
+            X: =Icon7_3.X + Icon7_3.Width
+            Y: =Icon7_3.Y
+            ZIndex: =6
 
         Gallery8_1 As gallery.galleryVertical:
             '#CopilotOverlayLabel': ="Filtered"
             BorderColor: =App.Theme.Colors.Darker40
-            Height: =469
+            BorderThickness: =3
+            DisplayMode: |-
+                =If(
+                    (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
+                        DisplayMode.Edit,
+                    (userAccessLevel_text = "View-only" || "View-only"),
+                        DisplayMode.View,
+                    (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                        DisplayMode.Disabled
+                )
+            Height: =Parent.Height - Self.Y
             Items: |-
                 =[
                     0,
@@ -390,36 +316,43 @@ scrn_MoCalendar As screen:
                     34
                 ]
             Layout: =Layout.Vertical
+            ShowScrollbar: =false
             TemplatePadding: =0
             TemplateSize: =105
-            Width: =1061
+            Width: =Gallery2_2.Width
             WrapCount: =7
-            X: =13
-            Y: =169
-            ZIndex: =11
+            X: =Gallery2_2.X
+            Y: =Gallery2_2.Y + Gallery2_2.Height
+            ZIndex: =7
 
             Circle1_1 As circle:
                 BorderColor: =App.Theme.Colors.Darker40
                 Fill: =RGBA(0, 121, 187, 1)
                 Height: =35
                 OnSelect: =Set(_dateSelected2, DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                Visible: =If(DateAdd(_FirstDayinView2, ThisItem.Value) = _CurrentDate2, true, false)
+                Visible: =If(DateAdd(_FirstDayinView2, ThisItem.Value) = Today(), true, false)
                 Width: =35
                 ZIndex: =1
 
             Rectangle6_1 As rectangle:
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderThickness: =If(DateAdd(_FirstDayinView2, ThisItem.Value) = _dateSelected2, 3, 1)
-                Fill: =If(Abs(Label18_1.Text - ThisItem.Value) > 10 ,RGBA(241, 241, 241, 1), RGBA(0, 0, 0, 0))
+                Fill: |-
+                    =If(
+                        Abs(Label18_1.Text - ThisItem.Value) > 10,
+                        RGBA(110, 110, 110, 1),
+                        RGBA(0, 0, 0, 0)
+                    )
                 Height: =105
                 OnSelect: =Set(_dateSelected2, DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                Width: =Gallery2_2.TemplateWidth
                 ZIndex: =2
 
             Label18_1 As label:
                 Align: =Align.Center
                 BorderColor: =App.Theme.Colors.Darker40
                 Color: |
-                    =If(DateAdd(_FirstDayinView2, ThisItem.Value) = _CurrentDate2, RGBA(255, 255, 255, 1), RGBA(0, 0, 0, 1))
+                    =If(DateAdd(_FirstDayinView2, ThisItem.Value) = Today(), RGBA(255, 255, 255, 1), RGBA(0, 0, 0, 1))
                 DisabledColor: =RGBA(166, 166, 166, 1)
                 Font: =App.Theme.Font
                 Height: =23
@@ -432,30 +365,77 @@ scrn_MoCalendar As screen:
             Gallery10_2 As gallery.galleryVertical:
                 '#CopilotOverlayLabel': ="Filtered"
                 BorderColor: =App.Theme.Colors.Darker40
+                DisplayMode: |-
+                    =If(
+                        (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
+                            DisplayMode.Edit,
+                        (userAccessLevel_text = "View-only" || "View-only"),
+                            DisplayMode.View,
+                        (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                            DisplayMode.Disabled
+                    )
                 Height: =105
                 Items: |-
-                    =//SortByColumns(Filter('Desk Reservations',(DateValue(Text('Check Out From'))<= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
-                    //(DateValue(Text('Check Out To'))>= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))),"Title",SortOrder.Ascending)
-                    
-                    
-                    SortByColumns(
-                        Filter(
-                            'Desk Reservations',
-                            (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
-                            (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
-                            (
-                                Dropdown2_2.Selected.Title = "All" ||
-                                DeskFloor = Dropdown2_2.Selected.Title
+                    =If(
+                        (userAccessLevel_text = "AppAdmin"),
+                                Filter(
+                                    'Desk Reservations',
+                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
+                                    (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
+                                    (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
+                                ),
+                        (userAccessLevel_text = ("SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief")),
+                            SortByColumns(
+                                Filter(
+                                    'Desk Reservations',
+                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
+                                    (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
+                                    (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
+                                ),
+                                "Title",
+                                SortOrder.Ascending
+                            ),
+                        (userAccessLevel_text = "User"),
+                            SortByColumns(
+                                Filter(
+                                    'Desk Reservations',
+                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
+                                    && (Lower('Created By'.Email) = Lower(varTargetEmail) || Lower('Reserved By'.Email) = Lower(varTargetEmail))
+                                ),
+                                "Title",
+                                SortOrder.Ascending
+                            ),
+                        (userAccessLevel_text = ("View-Only" || "View-only")),
+                            SortByColumns(
+                                Filter(
+                                    'Desk Reservations',
+                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
+                                    && (Lower('Created By'.Email) = Lower(varTargetEmail) || Lower('Reserved By'.Email) = Lower(varTargetEmail))
+                                ),
+                                "Title",
+                                SortOrder.Ascending
+                            ),
+                        (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                                    SortByColumns(
+                                Filter(
+                                    'Desk Reservations',
+                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
+                                    && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
+                                ),
+                                "Title",
+                                SortOrder.Ascending
                             )
-                        ),
-                        "Title",
-                        SortOrder.Ascending
                     )
                 Layout: =Layout.Vertical
                 TemplatePadding: =0
                 TemplateSize: =63
                 Visible: =If(Month(DateAdd(_firstDayOfMonth2, ThisItem.Value,TimeUnit.Days))= 1 ||Weekday(DateAdd(_firstDayOfMonth2, ThisItem.Value,TimeUnit.Days))= Today(),false, true)
-                Width: =150
+                Width: =Parent.TemplateWidth
                 ZIndex: =4
 
                 Label21_2 As label:
@@ -464,84 +444,221 @@ scrn_MoCalendar As screen:
                     DisabledColor: =RGBA(166, 166, 166, 1)
                     DisplayMode: |-
                         =If(
-                            ThisItem.'Created By'.DisplayName = "Admin",
-                            DisplayMode.Edit,
-                            DisplayMode.View
+                            (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
+                                DisplayMode.Edit,
+                            (userAccessLevel_text = "View-only" || "View-only"),
+                                DisplayMode.View,
+                            (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                                DisplayMode.Disabled
                         )
-                        //ThisItem.'Created By'.Email = varUser.Email || isUserAdminSPList &&
                     Font: =App.Theme.Font
                     FontWeight: =FontWeight.Bold
                     Height: =43
+                    HoverBorderColor: =App.Theme.Colors.Darker50
+                    HoverColor: =App.Theme.Colors.Darker50
+                    HoverFill: =App.Theme.Colors.Lighter70
                     OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
                     Size: =8
                     Text: |-
-                        =Concatenate(ThisItem.Title," " & "to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM"))
+                        =Concatenate(
+                            ThisItem.'Reserved By'.Email,
+                            " 
+                            for ",
+                            ThisItem.DeskText,
+                            " 
+                            @ ",
+                            Text(ThisItem.'Check Out To', "hh:mm AM/PM")
+                        )
                         
                         //&& Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)
-                    Y: =20
+                    Visible: =false
+                    Width: =Parent.Width
+                    Y: |-
+                        =If(
+                            Circle1_1.Visible,
+                            Circle1_1.Height,
+                            Label18_1.Height
+                        )
                     ZIndex: =1
 
                 Button6_1 As button:
+                    Align: =Align.Left
                     BorderColor: =App.Theme.Colors.Primary
-                    Color: =RGBA(0, 0, 0, 0)
+                    Color: =App.Theme.Colors.Darker50
                     DisabledBorderColor: =RGBA(244, 244, 244, 1)
                     DisabledColor: =RGBA(166, 166, 166, 1)
                     DisabledFill: =RGBA(244, 244, 244, 1)
                     DisplayMode: |-
-                        =DisplayMode.Edit
-                        /*If(
-                            User().Email = varUser.Email,
-                            DisplayMode.Edit,
-                            DisplayMode.View
-                        )*/
-                        
-                        /*If(
-                            User().Email,
-                            DisplayMode.View & If(User().Email, "Admin", DisplayMode.Edit
-                        ))*/
-                    Fill: =RGBA(0, 0, 0, 0)
+                        =If(
+                            (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
+                                DisplayMode.Edit,
+                            (userAccessLevel_text = "View-only" || "View-only"),
+                                DisplayMode.View,
+                            (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                                DisplayMode.Disabled
+                        )
+                    Fill: =App.Theme.Colors.Lighter80
                     Font: =App.Theme.Font
                     FontWeight: =FontWeight.Semibold
-                    Height: =43
-                    HoverBorderColor: =App.Theme.Colors.Darker10
-                    HoverColor: =RGBA(0, 0, 0, 0)
-                    HoverFill: =ColorFade(RGBA(0, 0, 0, 0), -20%)
+                    Height: =45
+                    HoverBorderColor: =App.Theme.Colors.Darker50
+                    HoverColor: =App.Theme.Colors.Darker50
+                    HoverFill: =App.Theme.Colors.Lighter60
                     OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
                     PressedBorderColor: =App.Theme.Colors.Darker40
                     PressedColor: =Self.Color
                     PressedFill: =App.Theme.Colors.Darker40
-                    Size: =24
-                    Text: =""
-                    Width: =150
-                    Y: =20
+                    Size: =7
+                    Text: =Label21_2.Text
+                    VerticalAlign: =VerticalAlign.Top
+                    Width: =Parent.Width - 10
+                    X: =5
+                    Y: =Label21_2.Y + 3
                     ZIndex: =2
 
-        Dropdown2_2 As dropdown:
+        Gallery2_2 As gallery.galleryHorizontal:
+            '#CopilotOverlayLabel': ="Filtered"
             BorderColor: =App.Theme.Colors.Darker40
-            ChevronBackground: =App.Theme.Colors.Primary
-            ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
-            ChevronDisabledFill: =RGBA(244, 244, 244, 1)
-            ChevronFill: =App.Theme.Colors.PrimaryForeground
-            ChevronHoverBackground: =App.Theme.Colors.Darker10
-            ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+            BorderThickness: =3
+            DisplayMode: |-
+                =If(
+                    (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
+                        DisplayMode.Edit,
+                    (userAccessLevel_text = "View-only" || "View-only"),
+                        DisplayMode.View,
+                    (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                        DisplayMode.Disabled
+                )
+            Height: =Label13_3.Height
+            Items: =Calendar.WeekdaysShort()
+            ShowScrollbar: =false
+            TemplatePadding: =0
+            TemplateSize: =Self.Width / 7
+            Width: =Parent.Width - (Self.X * 2)
+            WrapCount: =0
+            Y: =Rectangle8_3.Y + Rectangle8_3.Height
+            ZIndex: =8
+
+            Label13_3 As label:
+                Align: =Align.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderThickness: =3
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Fill: =If(ThisItem.Value="Sun" || ThisItem.Value="Sat", RGBA(204, 204, 204, 1), RGBA(0,0,0,0))
+                FocusedBorderThickness: =1
+                Font: =App.Theme.Font
+                Height: =44
+                OnSelect: =Select(Parent)
+                PaddingBottom: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Text: =ThisItem.Value
+                Width: =Parent.Width / 7
+                ZIndex: =1
+
+        Icon5_3 As icon:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =App.Theme.Colors.Lighter70
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Font: =App.Theme.Font
-            Height: =50
-            HoverColor: =RGBA(0, 0, 0, 1)
-            HoverFill: =App.Theme.Colors.Lighter70
-            Items: |-
-                =colRoomFilter
-                //'Desk Reservations'.TitlecolRoomFilter
-            PressedColor: =App.Theme.Colors.PrimaryForeground
-            PressedFill: =App.Theme.Colors.Darker30
-            SelectionColor: =App.Theme.Colors.PrimaryForeground
-            SelectionFill: =App.Theme.Colors.Primary
-            Size: =21
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: |
+                =HtmlText6.Height / 1.5
+            Icon: =Icon.ChevronRight
+            OnSelect: |-
+                =Set(_firstDayOfMonth2, DateAdd(_firstDayOfMonth2, 1, TimeUnit.Months));
+                Set(_FirstDayinView2, DateAdd(_firstDayOfMonth2, -(Weekday(_firstDayOfMonth2) - 2 + 1), TimeUnit.Days));
+                Set(_LastDayOfMonth2, DateAdd(DateAdd(_firstDayOfMonth2, 1, TimeUnit.Months), -1, TimeUnit.Days));
+                If(_LastDayOfMonth2 > _MaxDate, Set(_MaxDate,_LastDayOfMonth2));
+            Width: =61
+            X: =Parent.Width - Self.Width
+            Y: =(HtmlText6.Height / 2) - (Self.Height / 2)
+            ZIndex: =9
+
+        Icon4_3 As icon:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =App.Theme.Colors.Lighter70
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: |
+                =HtmlText6.Height / 1.5
+            Icon: =Icon.Print
+            OnSelect: |-
+                =UpdateContext({hideForPDF: true});
+                Set(
+                    PDFPrint,
+                    PDF(
+                        Container7,
+                        {
+                            PaperSize: PaperSize.A4,
+                            PaperOrientation: PaperOrientation.Landscape
+                        }
+                    )
+                );
+                UpdateContext({hideForPDF: false});
+                Print();
+                Navigate(PDFScreen);
             Visible: =!hideForPDF
-            Width: =229
-            X: =95
-            Y: =30
-            ZIndex: =12
+            X: =0 - Self.Width
+            Y: =(HtmlText6.Height / 2) - (Self.Height / 2)
+            ZIndex: =10
+
+        Icon7_3 As icon:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =App.Theme.Colors.Lighter70
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: |
+                =HtmlText6.Height / 1.5
+            Icon: =Icon.ChevronLeft
+            OnSelect: |-
+                =Set(_firstDayOfMonth2, DateAdd(_firstDayOfMonth2, -1, TimeUnit.Months));
+                Set(_FirstDayinView2, DateAdd(_firstDayOfMonth2, -(Weekday(_firstDayOfMonth2) - 2 + 1), TimeUnit.Days));
+                Set(_LastDayOfMonth2, DateAdd(DateAdd(_firstDayOfMonth2, 1, TimeUnit.Months), -1, TimeUnit.Days));
+                If(_MinDate > _firstDayOfMonth2, Set(_MinDate, _firstDayOfMonth2))
+            X: =HtmlText6.X
+            Y: =(HtmlText6.Height / 2) - (Self.Height / 2)
+            ZIndex: =11
+
+    Icon4_4 As icon:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =App.Theme.Colors.Lighter70
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(244, 244, 244, 1)
+        Height: =Icon3_3.Width
+        Icon: =Icon.Print
+        OnSelect: |-
+            =UpdateContext({hideForPDF: true});
+            Set(
+                PDFPrint,
+                PDF(
+                    Container7,
+                    {
+                        PaperSize: PaperSize.Letter,
+                        PaperOrientation: PaperOrientation.Landscape
+                    }
+                )
+            );
+            UpdateContext({hideForPDF: false});
+            Print();
+            Navigate(PDFScreen);
+        Visible: =!hideForPDF
+        Width: =Icon3_3.Width
+        X: =Icon3_3.X
+        Y: |
+            =Icon3_3.Y + Icon3_3.Height + (Self.X * 2)
+        ZIndex: =5
+
+    Icon3_3 As icon.Home:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =App.Theme.Colors.Lighter70
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(244, 244, 244, 1)
+        Height: =Self.Width
+        Icon: =Icon.Home
+        OnSelect: =Navigate(Dashboard)
+        Width: =Rectangle7_3.Width - Self.X
+        X: =3
+        Y: =3
+        ZIndex: =6
 

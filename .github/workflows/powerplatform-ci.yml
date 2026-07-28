@@ -139,7 +139,7 @@ jobs:
           $errors = 0
           Get-ChildItem -Path "src/powerApps/.unpacked" -Recurse -Filter "*.json" | ForEach-Object {
             try {
-              Get-Content $_.FullName -Raw | ConvertFrom-Json | Out-Null
+              Get-Content $_.FullName -Raw | ConvertFrom-Json -AsHashTable | Out-Null
             } catch {
               Write-Error "Invalid JSON: $($_.FullName) — $_"
               $errors++

@@ -28,17 +28,17 @@ Confirm As screen:
         BorderColor: =App.Theme.Colors.Darker40
         DelayItemLoading: =true
         Fill: =RGBA(255, 255, 255, 1)
-        Height: =315
+        Height: =text_Value3.Height + text_Value3.Y + 50
         Items: |-
             =//CollectionRecurrence
             colCombinedRecurrence
         Layout: =Layout.Vertical
         LoadingSpinner: =LoadingSpinner.Data
-        TemplateSize: =175
+        TemplateSize: =200
         Visible: =!varAccept3 And !varAccept4
-        Width: =507
-        X: =314
-        Y: =255
+        Width: =800
+        X: =(Parent.Width / 2) - (Self.Width / 2)
+        Y: =lblReview_1.Y + lblReview_1.Height + 10
         ZIndex: =1
 
         Rectangle12 As rectangle:
@@ -48,10 +48,226 @@ Confirm As screen:
             OnSelect: =Select(Parent)
             Width: =537
             Y: =Gallery3_1.TemplateHeight
-            ZIndex: =1
+            ZIndex: =2
 
-        TextCanvas7_4 As Text:
+        text_Value7 As Text:
+            Align: ="Start"
             AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: =varPopUp_ClassPicker_scenarioLocation
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =true
+            Weight: ="Regular"
+            Width: =text_Key7.Width
+            Wrap: =true
+            X: =text_Key7.X
+            Y: =text_Key7.Y + text_Key7.Height
+            ZIndex: =3
+
+        text_Key7 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =RGBA(180, 214, 250, 1)
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: ="Scenario Location"
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =!varAccept3 And !varAccept4
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =text_Key1.Width * 2
+            Wrap: =true
+            X: =text_Value6.X
+            Y: =text_Value6.Y + text_Value6.Height + 10
+            ZIndex: =4
+
+        text_Value6 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: =varPopUp_ClassPicker_scenarioRole
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =true
+            Weight: ="Regular"
+            Width: =text_Key6.Width
+            Wrap: =true
+            X: =text_Key6.X
+            Y: =text_Key6.Y + text_Key6.Height
+            ZIndex: =5
+
+        text_Key6 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =RGBA(180, 214, 250, 1)
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: ="Scenario Name"
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =!varAccept3 And !varAccept4
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =text_Key1.Width * 2
+            Wrap: =true
+            X: =text_Value1.X
+            Y: =text_Value4.Y + text_Value4.Height + 10
+            ZIndex: =6
+
+        text_Value5 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: =varPopUp_ClassPicker_scenarioName
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =false
+            Weight: ="Regular"
+            Width: =text_Key5.Width
+            Wrap: =true
+            X: =text_Key5.X
+            Y: =text_Key5.Y + text_Key5.Height
+            ZIndex: =7
+
+        text_Value4 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: =varPopUp_ClassPicker_scenarioName
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =true
+            Weight: ="Regular"
+            Width: =text_Key4.Width
+            Wrap: =true
+            X: =text_Key4.X
+            Y: =text_Key4.Y + text_Key4.Height
+            ZIndex: =8
+
+        text_Key5 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =RGBA(180, 214, 250, 1)
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: ="End Date/Time"
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =false
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =text_Key4.Width
+            Wrap: =true
+            X: =text_Key4.X + text_Key4.Width
+            Y: =text_Key4.Y
+            ZIndex: =9
+
+        text_Key4 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =RGBA(180, 214, 250, 1)
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: ="Scenario Name"
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =!varAccept3 And !varAccept4
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =text_Key1.Width * 2
+            Wrap: =true
+            X: =text_Value1.X
+            Y: =text_Value1.Y + text_Value1.Height + 10
+            ZIndex: =10
+
+        text_Value3 As Text:
+            AutoHeight: =true
             BorderColor: =
             DisplayMode: =DisplayMode.Edit
             Fill: =
@@ -63,115 +279,116 @@ Confirm As screen:
                 & "
                 Selected Location: "
                 & varSelectedDesk.CombinedLocationDetails_multilinePlainText
-            Width: =236
-            X: =261
-            Y: =2
-            ZIndex: =2
+            Width: =text_Key3.Width
+            X: =text_Key3.X
+            Y: =text_Key3.Y + text_Key3.Height
+            ZIndex: =11
 
-        TextCanvas7_3 As Text:
+        text_Value2 As Text:
             BorderColor: =
             DisplayMode: =DisplayMode.Edit
             Fill: =
             FontColor: =
             Height: =20
             Text: =ThisItem.EndDateTime
-            Width: =113
-            X: =132
-            Y: =2
-            ZIndex: =3
+            Width: =text_Key2.Width
+            X: =text_Key2.X
+            Y: =text_Key2.Y + text_Key2.Height
+            ZIndex: =12
 
-        TextCanvas7_2 As Text:
+        text_Value1 As Text:
             BorderColor: =
             DisplayMode: =DisplayMode.Edit
             Fill: =
             FontColor: =
             Height: =20
             Text: =ThisItem.StartDateTime
-            Width: =111
+            Width: =150
+            X: =text_Key1.X
+            Y: =text_Key1.Y + text_Key1.Height
+            ZIndex: =13
+
+        text_Key3 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =RGBA(180, 214, 250, 1)
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: ="Room Location & Desk Assignment"
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =!varAccept3 And !varAccept4
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =300
+            Wrap: =true
+            X: =text_Key2.X + text_Key2.Width
+            Y: =text_Key2.Y
+            ZIndex: =14
+
+        text_Key2 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =RGBA(180, 214, 250, 1)
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: ="End Date/Time"
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =!varAccept3 And !varAccept4
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =text_Key1.Width
+            Wrap: =true
+            X: =text_Key1.X + text_Key2.Width
+            Y: =text_Key1.Y
+            ZIndex: =15
+
+        text_Key1 As Text:
+            Align: ="Start"
+            AutoHeight: =false
+            BorderColor: =
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Fill: =RGBA(180, 214, 250, 1)
+            Font: =""
+            FontColor: =
+            FontItalic: =false
+            FontStrikethrough: =false
+            FontUnderline: =false
+            Height: =20
+            Size: =14
+            TabIndex: =0
+            Text: ="Start Date/Time"
+            Tooltip: =""
+            VerticalAlign: =""
+            Visible: =!varAccept3 And !varAccept4
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: |
+                =150
+            Wrap: =true
             X: =0
-            Y: =2
-            ZIndex: =4
-
-    TextCanvas8_4 As Text:
-        Align: ="Start"
-        AutoHeight: =false
-        BorderColor: =
-        BorderStyle: =""
-        ContentLanguage: =""
-        DisplayMode: =DisplayMode.Edit
-        Fill: =RGBA(180, 214, 250, 1)
-        Font: =""
-        FontColor: =
-        FontItalic: =false
-        FontStrikethrough: =false
-        FontUnderline: =false
-        Height: =20
-        Size: =14
-        TabIndex: =0
-        Text: ="Room Location & Desk Assignment"
-        Tooltip: =""
-        VerticalAlign: =""
-        Visible: =!varAccept3 And !varAccept4
-        Weight: ='TextCanvas.Weight'.Bold
-        Width: =246
-        Wrap: =true
-        X: =575
-        Y: =235
-        ZIndex: =2
-
-    TextCanvas8_3 As Text:
-        Align: ="Start"
-        AutoHeight: =false
-        BorderColor: =
-        BorderStyle: =""
-        ContentLanguage: =""
-        DisplayMode: =DisplayMode.Edit
-        Fill: =RGBA(180, 214, 250, 1)
-        Font: =""
-        FontColor: =
-        FontItalic: =false
-        FontStrikethrough: =false
-        FontUnderline: =false
-        Height: =20
-        Size: =14
-        TabIndex: =0
-        Text: ="End Date/Time"
-        Tooltip: =""
-        VerticalAlign: =""
-        Visible: =!varAccept3 And !varAccept4
-        Weight: ='TextCanvas.Weight'.Bold
-        Width: =130
-        Wrap: =true
-        X: =445
-        Y: =235
-        ZIndex: =3
-
-    TextCanvas8_2 As Text:
-        Align: ="Start"
-        AutoHeight: =false
-        BorderColor: =
-        BorderStyle: =""
-        ContentLanguage: =""
-        DisplayMode: =DisplayMode.Edit
-        Fill: =RGBA(180, 214, 250, 1)
-        Font: =""
-        FontColor: =
-        FontItalic: =false
-        FontStrikethrough: =false
-        FontUnderline: =false
-        Height: =20
-        Size: =14
-        TabIndex: =0
-        Text: ="Start Date/Time"
-        Tooltip: =""
-        VerticalAlign: =""
-        Visible: =!varAccept3 And !varAccept4
-        Weight: ='TextCanvas.Weight'.Bold
-        Width: =131
-        Wrap: =true
-        X: =314
-        Y: =235
-        ZIndex: =4
+            Y: =0
+            ZIndex: =16
 
     lblReview As label:
         Align: =Align.Center
@@ -183,7 +400,7 @@ Confirm As screen:
         Italic: =true
         LineHeight: =1
         Size: =18
-        Text: ="Please review your desk reservation details and press Confirm to proceed with your reservation or press Back to make changes."
+        Text: ="Please review your reservation details and press Confirm to proceed with your reservation or press Back to make changes."
         Visible: =!varAccept3 And !varAccept4
         Width: =675
         X: =(Parent.Width - Self.Width) / 2
@@ -218,7 +435,7 @@ Confirm As screen:
                 =//Set(varAccept2,false);Set(varAccept, true);
                 If(varAccept3,
                     Set(varAccept3, false);
-                    Set(varAccept4, true),
+                    Set(varAccept4, false),
                     If(varAccept4,
                         Set(varAccept4, false)
                     )
@@ -245,23 +462,22 @@ Confirm As screen:
                 =If(varAccept3,
                     "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:14px; border-radius:5px;'>
                     <ul style='padding-left:20px;'>
-                        <li>The EHRM Training Room is intended solely for EHRM-related training, meetings, and activities. Any other use is prohibited unless expressly authorized.</li>
-                        <li>Contact Battle Creek Change Leadership Team (CLT) for Audio/Visual needs at extension 35268 or email <a href='mailto:vhabacclt@va.gov' style='color:#add8e6;'>vhabacclt@va.gov</a>.</li>
-                        <li>If you have any issues with EHRM equipment, please contact OI&amp;T at ext. 35480.</li>
-                        <li>Ensure that the room is left in an orderly condition.</li>
-                        <li>Ensure the room set up has been put back in the initial arrangement.</li>
-                        <li>Data Protection: Users must comply with VA policies on data protection, especially regarding PHI, PII, and VA sensitive data.</li>
-                        <li>Confidentiality: Do not leave sensitive information unattended. Log off computers and close documents when not in use.</li>
-                        <li>Capacity: Do not exceed the room’s maximum occupancy limit.</li>
-                        <li>Emergency Procedures: Familiarize yourself with emergency exits and procedures.</li>
+                        <li>I have tested and confirmed I have sandbox access: <a href='https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx?csf=1&web=1&e=ohGdcr&CID=a04e3960-c7fe-4688-8185-144525372e55' style='color:#add8e6;'>Log into Sandbox</a></li>
+                        <li>I understand the training location is in Building #20 and I must provide my own transportation. <a href='https://dvagov.sharepoint.com/sites/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp/_layouts/15/embed.aspx?UniqueId=aad2f1c2-d6cb-4926-966d-a210006fbc5b' style='color:#add8e6;'>Link to Campus Map</a>.</li>
+                        <li>Download the training materials: <a href='https://dvagov.sharepoint.com/sites/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp/_layouts/15/embed.aspx?UniqueId=aad2f1c2-d6cb-4926-966d-a210006fbc5b' style='color:#add8e6;'>TEMP_BROKEN_Link</a>.</li>
+                        <li>The EHRM Training Rooms are intended solely for EHRM-related training, meetings, and activities. Any other use is prohibited unless expressly authorized.</li>
+                        <li>If you have any issues with EHRM equipment, please contact OI&T at ext. <a href='tel:+18556734357' style='color:#add8e6;'>44357 (1-855-673-4357)</a>.</li>
+                        <li>Ensure that the room is left in an orderly condition.​</li>
+                        <li>Ensure the room set up has been put back in the initial arrangement.​</li>
+                        <li>Capacity: Do not exceed the room’s maximum occupancy limit.​</li>
                     </ul>
-                    <p style='margin-top:15px;'>For questions contact <a href='mailto:vhabacclt@va.gov' style='color:#add8e6;'>vhabacclt@va.gov</a>.</p>
+                    <p style='margin-top:15px;'>For questions contact <a href='mailto:HinesEHRMCLT@va.gov.' style='color:#add8e6;'>HinesEHRMCLT@va.gov.</a>.</p>
                 
                 <div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px; text-align: center'>
                     By acknowledging this, you accept responsibility for the EHRM training workstation/Desk and ensuring the room is returned to its original state.
                 </div>",
                     //Else
-                    "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:40px; border-radius:5px; text-align: center'>By acknowledging this, you accept responsibility for the EHRM VILT workstation and ensuring the desk is returned to its original state.</div>"
+                    "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:40px; border-radius:5px; text-align: center'>By acknowledging this, you accept responsibility for the EHRM VILT workstation & ensuring the desk/room is returned to its original state.</div>"
                 )
             Size: =13
             Width: =Parent.Width

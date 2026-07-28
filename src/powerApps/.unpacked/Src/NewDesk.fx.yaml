@@ -35,7 +35,7 @@ NewDesk As screen:
         Items: |-
             =Table(
                 {
-                    Name: "Dashboard",
+                    Name: "Home",
                     Icon: Icon.DetailList,
                     Page: Dashboard,        
                     Visible:true
@@ -53,7 +53,7 @@ NewDesk As screen:
                     Visible:true
                 },
                 {
-                    Name: "Book",
+                    Name: "Create New",
                     Icon: Icon.Add,
                     Page: chkWeekDays,
                     Visible:true

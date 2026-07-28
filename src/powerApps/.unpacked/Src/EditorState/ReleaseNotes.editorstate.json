@@ -1185,7 +1185,7 @@
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "Table(\n    {\n        Name: \"Dashboard\",\n        Icon: Icon.DetailList,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"My Appts\",\n        Icon: Icon.Person,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n     {\n        Name: \"Manage Desks\",\n        Icon: Icon.ComputerDesktop,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"Book\",\n        Icon: Icon.Add,\n        Page: App.ActiveScreen,\n        Visible:true\n    }\n)",
+          "AutoRuleBindingString": "",
           "InvariantPropertyName": "Items",
           "IsLockable": false,
           "NameMapSourceSchema": "?"

@@ -1,0 +1,163 @@
+<widget xmlns="http://openajax.org/metadata" xmlns:appMagic="http://schemas.microsoft.com/appMagic" spec="1.0" id="http://microsoft.com/appmagic/modernDropdown" name="modernDropdown" jsClass="AppMagic.Controls.ModernDropdownControl" version="1.0.2" styleable="true" enabledForFeatureGate="Controls.ModernDropdownControl" runtimeCost="1">
+  <author name="Microsoft AppMagic" />
+  <license type="text/html"><![CDATA[<p>Copyright (C) Microsoft Corporation. All rights reserved.</p>]]></license>
+  <description><![CDATA[Modern Fluent v9 Dropdown control (single-select).]]></description>
+  <requires>
+    <require type="javascript" src="/openSource/modified/pcfplatformlibs/fluent_9_4_0.js" />
+    <require type="javascript" src="/ctrllib/shared/js/PowerAppsControlsFluentIcons.js" />
+    <require type="javascript" src="js/modernDropdown.js" />
+    <require type="other" src="/ctrllib/combobox/data/ComboBoxSample.xlsx" authoringOnly="true" />
+  </requires>
+  <appMagic:capabilities contextualViewsEnabled="true" autoDisabledViewState="true" isVersionFlexible="true" passThisItemThrough="true" supportsResettableProperties="true" />
+  <appMagic:accessibilityChecks controlIsInteractive="true" />
+  <content><![CDATA[]]></content>
+  <properties>
+    <property name="ItemDisplayText" localizedName="##dropdown_ItemDisplayText##" datatype="string" direction="in" defaultValue="ThisItem.Value1" isExpr="true">
+      <title>Display label text</title>
+      <appMagic:category>data</appMagic:category>
+      <appMagic:displayName>##dropdown_ItemDisplayText_DisplayName##</appMagic:displayName>
+      <appMagic:tooltip>##dropdown_ItemDisplayText_Tooltip##</appMagic:tooltip>
+      <appMagic:isConstrainedToSimpleExpressions />
+      <appMagic:selfThisItemScopeAccess />
+      <appMagic:autoBind>true</appMagic:autoBind>
+    </property>
+    <property name="Items" localizedName="##dropdown_Items##" datatype="Array" direction="in" isPrimaryInputProperty="true">
+      <title>List items</title>
+      <appMagic:category>data</appMagic:category>
+      <appMagic:displayName>##dropdown_Items_DisplayName##</appMagic:displayName>
+      <appMagic:sampleDataSource name="ComboBoxSample" location="/ctrllib/combobox/data/ComboBoxSample.xlsx" />
+      <appMagic:tooltip>##dropdown_Items_Tooltip##</appMagic:tooltip>
+      <appMagic:thisItemInput />
+    </property>
+    <property name="Default" localizedName="##dropdown_Default##" datatype="object" direction="in" isTypeBoundToPrimaryInput="true">
+      <title>Default selected item</title>
+      <appMagic:category>data</appMagic:category>
+      <appMagic:displayName>##dropdown_Default_DisplayName##</appMagic:displayName>
+      <appMagic:tooltip>##dropdown_Default_Tooltip##</appMagic:tooltip>
+    </property>
+    <property name="Selected" localizedName="##dropdown_Selected##" datatype="object" direction="out" isPrimaryOutputProperty="true">
+      <title>Selected item that is going to be passed through</title>
+      <appMagic:passThroughReference>Items</appMagic:passThroughReference>
+      <appMagic:category>data</appMagic:category>
+      <appMagic:excludeFromReachability />
+    </property>
+  </properties>
+  <appMagic:includeProperties>
+    <!-- Data -->
+    <appMagic:includeProperty name="AccessibleLabel" />
+    <appMagic:includeProperty name="ValidationState" />
+    <appMagic:includeProperty name="Required" direction="in" />
+    <appMagic:includeProperty name="ContentLanguage" />
+    <!-- Design -->
+    <appMagic:includeProperty name="Appearance" />
+    <appMagic:includeProperty name="BasePaletteColor" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="Fill" defaultValue="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="BorderColor" defaultValue="" isExpr="true" />
+    <appMagic:includeProperty name="BorderStyle" defaultValue="" isExpr="false" />
+    <appMagic:includeProperty name="BorderThickness" defaultValue="" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="RadiusTopLeft" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="RadiusTopRight" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="RadiusBottomLeft" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="RadiusBottomRight" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="Color" defaultValue="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="Font" defaultValue="" nullDefault="" isExpr="false" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="FontWeight" nullDefault="" />
+    <appMagic:includeProperty name="Size" defaultValue="14" phoneDefaultValue="24" />
+    <appMagic:includeProperty name="Italic" defaultValue="false" />
+    <appMagic:includeProperty name="Underline" defaultValue="false" />
+    <appMagic:includeProperty name="Strikethrough" defaultValue="false" />
+    <appMagic:includeProperty name="PaddingTop" defaultValue="" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="PaddingRight" defaultValue="" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="PaddingBottom" defaultValue="" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="PaddingLeft" defaultValue="" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="X" />
+    <appMagic:includeProperty name="Y" />
+    <appMagic:includeProperty name="Width" defaultValue="320" phoneDefaultValue="560" webDefaultValue="260" />
+    <appMagic:includeProperty name="Height" defaultValue="32" phoneDefaultValue="64" webDefaultValue="32" />
+    <appMagic:includeProperty name="DisplayMode" />
+    <appMagic:includeProperty name="Visible" />
+    <!-- Behavior -->
+    <appMagic:includeProperty name="OnChange" direction="in" isPrimaryBehaviorProperty="true" />
+    <!--Hidden properties -->
+    <appMagic:includeProperty name="maximumHeight" defaultValue="768" />
+    <appMagic:includeProperty name="maximumWidth" defaultValue="1366" />
+    <appMagic:includeProperty name="minimumHeight" defaultValue="30" />
+    <appMagic:includeProperty name="minimumWidth" defaultValue="10" />
+  </appMagic:includeProperties>
+  <!--Property Dependencies -->
+  <appMagic:propertyDependencies>
+    <appMagic:propertyDependency input="Items" output="Selected" />
+    <appMagic:propertyDependency input="Default" output="Selected" />
+    <appMagic:propertyDependency input="Required" output="Selected" />
+  </appMagic:propertyDependencies>
+  <appMagic:insertMetadata>
+    <appMagic:category name="Input" priority="20" />
+  </appMagic:insertMetadata>
+  <!-- Display metadata providing property visibility, order, sections, and grouping in UI (e.g. properties panel) -->
+  <appMagic:displayMetadata>
+    <!-- General -->
+    <appMagic:section type="GeneralSection">
+      <appMagic:property name="Items" labelOverride="##ControlSidebar_PropertiesPanel_Datasource_Displayname##" serverProvidesValue="true" shouldAutoBind="true" computedValueType="NativeCdsDataSourceName" />
+      <appMagic:dataSourceSelectionCallout dataSourcePropertyName="Items" />
+      <appMagic:configureCdsViews propertyToReplace="Items" />
+      <appMagic:configureProperty propertyInvariantName="DependentItems" ruleToSet="Items" shouldAutoBind="true" computedValueType="DataSourceName" />
+      <appMagic:property name="ItemDisplayText" />
+      <appMagic:property name="Default" />
+      <appMagic:property name="AccessibleLabel" />
+    </appMagic:section>
+    <!-- Behavior -->
+    <appMagic:section type="BehaviorSection">
+      <appMagic:property name="DisplayMode" />
+      <appMagic:property name="Visible" />
+    </appMagic:section>
+    <!-- Size and Position -->
+    <appMagic:section type="SizeAndPositioningSection">
+      <appMagic:propertyGroup name="Position">
+        <appMagic:property name="X" />
+        <appMagic:property name="Y" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Size">
+        <appMagic:property name="Width" />
+        <appMagic:property name="Height" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Padding">
+        <appMagic:property name="PaddingTop" labelOverride="##Padding_Top_Title##" />
+        <appMagic:property name="PaddingRight" labelOverride="##Padding_Right_Title##" />
+        <appMagic:property name="PaddingBottom" labelOverride="##Padding_Bottom_Title##" />
+        <appMagic:property name="PaddingLeft" labelOverride="##Padding_Left_Title##" />
+      </appMagic:propertyGroup>
+    </appMagic:section>
+    <!-- Style and Theme -->
+    <appMagic:section type="StyleAndThemeSection">
+      <appMagic:property name="Appearance" />
+      <appMagic:property name="BasePaletteColor" displayType="ColorPalette" />
+      <appMagic:property name="Font" displayType="FontEnum" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="Size" labelOverride="##FontSize_Property##" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="Color" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="Fill" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="FontWeight" displayType="EnumIcon" itemsOrder="Bold;Semibold;Normal;Lighter" />
+      <appMagic:propertyGroup name="Style">
+        <appMagic:property name="Italic" displayType="ToggleButton" />
+        <appMagic:property name="Underline" displayType="ToggleButton" />
+        <appMagic:property name="Strikethrough" displayType="ToggleButton" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Border">
+        <appMagic:property name="BorderStyle" />
+        <appMagic:property name="BorderThickness" />
+        <appMagic:property name="BorderColor" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Radius">
+        <appMagic:property name="RadiusTopLeft" labelOverride="##Radius_TopLeft_Title##" />
+        <appMagic:property name="RadiusTopRight" labelOverride="##Radius_TopRight_Title##" />
+        <appMagic:property name="RadiusBottomLeft" labelOverride="##Radius_BottomLeft_Title##" />
+        <appMagic:property name="RadiusBottomRight" labelOverride="##Radius_BottomRight_Title##" />
+      </appMagic:propertyGroup>
+    </appMagic:section>
+  </appMagic:displayMetadata>
+  <appMagic:conversion from="1.0.0" to="1.0.1">
+    <!-- display metadata update: removed non-existent IsSearchable property from behavior section -->
+  </appMagic:conversion>
+  <appMagic:conversion from="1.0.1" to="1.0.2">
+    <!-- Metadata update: add isResettableToManifestDefault and isLinkableToParentTheme attributes to BasePaletteColor -->
+  </appMagic:conversion>
+</widget>
