@@ -49,8 +49,7 @@
   - **Power Apps Canvas App** (`src\powerApps\`) - Responsive mobile-first UI
   - **Power Automate Flows** (`src\powerAutomate\`) - Automated request approval routing, dynamic user access population, and AI safety chatbot integration
   - **SharePoint Lists** (`src\sharePoint\`) - Secure data storage with privacy controls and comprehensive audit trails
-  - **Power BI** (`src\powerBI\`) - Interactive leadership dashboards & reports
-  - **SQL** (`src\sql\`) - database scripts, stored procedures, and data integrity checks
+  - **Analytics** (`src\analytics\powerBI\`, `src\analytics\sql\`) - Power BI leadership dashboards/reports and SQL database scripts, stored procedures, and data integrity checks
   - **Developer Tools\Scripts** (`src\scripts\`) - PowerShell and other scripts for ALM, CI/CD, and environment management
   - **Power Platform Solution** (`src\solution.xml`) - Managed solution package with publisher prefix "vah" (VA Healthcare)
 

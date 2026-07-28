@@ -1,12 +1,12 @@
 # EHRM Training & Booking App (Station 578)
 
-[![Release](https://img.shields.io/badge/release-v0.3.7-blue)](CHANGELOG.md)
+[![Release](https://img.shields.io/badge/release-v0.3.8-blue)](CHANGELOG.md)
 
 This repository contains the **unpacked (source-controlled)** Microsoft Power Platform assets, documentation, and ALM helpers for the EHRM Training & Booking App used at Edward Hines Jr. VA Hospital (Station #578), VISN12.
 
 ## Current versions
 
-- **Project release (repo)**: v0.3.7 (2026-07-17) — see [CHANGELOG.md](CHANGELOG.md)
+- **Project release (repo)**: v0.3.8 (2026-07-28) — see [CHANGELOG.md](CHANGELOG.md)
 - **Canvas app (component)**: v0.3.4 *(unchanged)* — see [src/powerApps/README.md](src/powerApps/README.md)
 - **Power Automate (component)**: `AppUserList` v0.1.0 *(unchanged)* — see [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md)
 
@@ -15,8 +15,8 @@ This repository contains the **unpacked (source-controlled)** Microsoft Power Pl
 - [src/](src/) — unpacked, human-reviewable source artifacts
   - Canvas app: [src/powerApps/](src/powerApps/) (unpacked source lives under `.unpacked/`)
   - Power Automate: [src/powerAutomate/](src/powerAutomate/)
-  - SharePoint samples: [src/sharePoint/](src/sharePoint/)
-  - SQL scaffolding: [src/sql/](src/sql/)
+  - SharePoint lists/search config: [src/sharePoint/](src/sharePoint/)
+  - Analytics (Power BI + SQL): [src/analytics/](src/analytics/)
   - Scripts/hooks: [src/scripts/](src/scripts/)
 - `config/` — architecture notes, runbooks, environment templates, and tooling helpers *(git-ignored as of v0.3.6; local-only)*
 - [docs/](docs/) — public project docs (status, release notes, security, contributors)

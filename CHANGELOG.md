@@ -19,6 +19,57 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.3.8] - 2026-07-28
+
+### Added
+
+- **`src/analytics/`** — New repository component for reporting/data-analysis, replacing the previously-aspirational (never populated) flat `src/powerBI/` and `src/sql/` placeholders described in `copilot-instructions.md`:
+  - **`src/analytics/powerBI/.pbit/Signup Tool.pbit`** — First tracked Power BI report template (sign-up/attendance analytics).
+  - **`src/analytics/powerBI/.pbix/`**, **`src/analytics/powerBI/local/`**, **`src/analytics/sql/procedures/`**, **`src/analytics/sql/queries/`**, **`src/analytics/sql/local/`** — Scaffolded subfolders (currently empty; local-only where applicable).
+  - **`src/analytics/README.md`** — New component README documenting the Power BI / SQL structure and current (early-stage) status.
+- **`src/sharePoint/`** — Restructured SharePoint component (see "Changed" below for what it replaces):
+  - **`src/sharePoint/list/{deskAccessControl,deskReservations,desks}/local/`** — Raw list export data (CSV/XLSX), local-only/git-ignored.
+  - **`src/sharePoint/list/schedule/`** — New 4th list scaffold (no schema exported yet; staged from `SULL_Jesse_Brown_Schedule_7.10.26 - Integrated.xlsx`) in support of the ongoing "desk reservation" → "training booking" terminology migration.
+  - **`src/sharePoint/searchConfig/SearchConfiguration.xml`** — New tracked SharePoint search configuration export.
+  - **`src/sharePoint/README.md`** — New component README documenting the `list/<listName>/local/` structure, list status table, and provenance of the prior flat layout.
+- **`assets/images/Spinner.gif`** — New loading-spinner UI asset.
+- **`assets/images/mascot_banner_croppedHighRes.png`** — Higher-resolution variant of the existing cropped mascot banner (`mascot_banner_cropped.png`).
+- **`assets/local/`** — New local-only staging area (git-ignored) for raw screen recordings, e.g. a ~106 MB app walkthrough video (`video/SU LL Sign up APP EHRMIO.webm`).
+- **`docs/release-notes/v0.3.8_commitMessage.md`**, **`v0.3.8_pullRequest.md`**, **`v0.3.8_releaseNotes.md`** — Fresh v0.3.8 release artifact stubs (populated for this release).
+
+### Changed
+
+- **`VERSION`** — 0.3.7 → 0.3.8
+- **`README.md`** — Release badge updated v0.3.7 → v0.3.8; release date updated to 2026-07-28; "Repository layout" section updated to reference `src/analytics/` and clarify `src/sharePoint/` now covers lists + search config.
+- **`.gitignore`** — Repository hygiene follow-up:
+  - Added **§11 `**/local/`** — a generic rule ignoring any folder literally named `local` anywhere in the repo (covers `assets/local/`, `src/analytics/{powerBI,sql}/local/`, `src/sharePoint/list/*/local/`, and any future local-only folder), closing the gap that previously left files like the `.webm` recording above completely untracked by any rule.
+  - Updated the stale §3 (`config/`) and §10 (data files) comments — both previously noted "N files remain tracked pending `git rm --cached`"; confirmed via `git ls-files` that this cleanup was already completed (0 tracked files under `config/` or `src/sharePoint/` at HEAD), so the notes now describe the resolved state instead of a pending action.
+  - Updated the §10 negation example path from the old flat `src/sharePoint/Desks/Desks.csv` to the new `src/sharePoint/list/desks/local/Desks.csv`.
+  - `Last updated` bumped to 2026-07-28.
+- **`src/sharePoint/`** — Superseded the flat per-list sample layout (`Desk Reservations/`, `DeskAccessControl/`, `Desks/`) with the `list/<listName>/local/` + `searchConfig/` structure described above. The prior layout was already archived locally to `archive/src/sharePoint/` and was never tracked in git under its new paths (the previously-tracked sanitized CSVs at the old paths had already been untracked in a prior cleanup pass).
+- **`src/powerAutomate/AppUserList/README.md`** — Updated the `DeskAccessControl.csv` sample path reference from the old `src/sharePoint/DeskAccessControl/DeskAccessControl.csv` to the new `src/sharePoint/list/deskAccessControl/local/DeskAccessControl.csv`.
+- **`src/powerApps/README.md`** — Markdown table formatting normalized (column widths/spacing only; no content change).
+- **`docs/PROJECT_STATUS.md`** — Comprehensive refresh (had not been updated since v0.3.6, despite two intervening releases): status summary and release history table brought current through v0.3.8; repository contents/exclusions sections corrected to match the resolved `.gitignore` tracking state and new `src/analytics/` + `src/sharePoint/` structure; data model section updated to mention the new `Schedule` list scaffold.
+- **`.github/copilot-instructions.md`** — "Core Project/Workspace Components" list updated: the separate aspirational `Power BI (src\powerBI\)` and `SQL (src\sql\)` bullets are consolidated into a single `Analytics (src\analytics\powerBI\, src\analytics\sql\)` line reflecting the structure actually adopted.
+- **`config/`** — Local-only architecture/runbook/tooling folder relocated to `archive/src/config/` per the project's archive conventions (folder is fully git-ignored; this is a local filesystem change only, not a tracked-content change).
+
+### Removed
+
+- **`docs/release-notes/v0.3.7_commitMessage.md`** — Rotated out of the live `docs/release-notes/` folder as part of the v0.3.7 → v0.3.8 artifact cycle.
+- **`docs/release-notes/v0.3.7_pullRequest.md`** — Rotated out (same cycle).
+- **`docs/release-notes/v0.3.7_releaseNotes.md`** — Rotated out (same cycle).
+
+### Notes
+
+- Release type: **Maintenance/Patch** — repository restructuring (SharePoint + new Analytics component), asset additions, and documentation catch-up; no functional changes to Canvas app or Power Automate.
+- Canvas app baseline remains v0.3.4 (unchanged). A substantially updated Canvas app (targeted v0.8.14 in the Power Apps web editor) is in progress but has not yet been exported/unpacked into `src/powerApps/`; it will be evaluated and documented in a future release once available.
+- `AppUserList` flow baseline remains v0.1.0 (unchanged).
+- Resolves the "pending tracking cleanup" item first raised in the v0.3.6 entry and tracked in `docs/release-notes/v0.3.7_priorityWorklist.md` §5.1: `config/` and `src/sharePoint/*.csv` are now confirmed fully untracked from git (no `git rm --cached` action remains outstanding).
+- Addresses `v0.3.7_priorityWorklist.md` §5.2 ("Core Components" claim reconciliation) via Path A (making Power BI/SQL real, under a consolidated `src/analytics/` grouping) rather than the alternative of demoting them to a "planned" list.
+- **Security gap still open** (carried forward from v0.3.7, tracked in `v0.3.7_priorityWorklist.md` §1.1): New unknown users are still auto-granted `User` access instead of `AccessDenied` in the Canvas app RBAC default. No Canvas app changes are included in v0.3.8; this remains targeted for the next Canvas app update.
+
+---
+
 ## [0.3.7] - 2026-07-17
 
 ### Added
