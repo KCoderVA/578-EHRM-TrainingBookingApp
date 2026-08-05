@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="15px" viewBox="0 0 12 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Buliding Pass</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Homepage_WFBb" transform="translate(-64.000000, -474.000000)">
+            <g id="Group-6" transform="translate(37.000000, 254.000000)">
+                <g id="Facility-/-status" transform="translate(27.000000, 220.000000)">
+                    <g id="Buliding-Pass">
+                        <g id="Group" transform="translate(0.500000, 0.000000)">
+                            <g id="Facility-/-white-mini">
+                                <g id="Facility">
+                                    <g id="Group-5">
+                                        <g id="Building-Icon">
+                                            <path d="M7.1783218,0.637188209 L1.76165514,0.637188209 C1.62358395,0.637188209 1.51165514,0.749117021 1.51165514,0.887188209 L1.51165514,13.6371882 L1.51165514,13.6371882 L9.51165514,13.6371882 L9.51165514,0.887188209 C9.51165514,0.749117021 9.39972632,0.637188209 9.26165514,0.637188209 L7.1783218,0.637188209 L7.1783218,0.637188209 Z" id="Path-4" stroke="#FE635B" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <line x1="0" y1="13.75" x2="11" y2="13.75" id="Line-5" stroke="#FE635B" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                                            <path d="M5.14048523,12.5034014 L5.75205243,12.5034014 C5.89012362,12.5034014 6.00205243,12.6153302 6.00205243,12.7534014 L6.00205243,13.6371882 L6.00205243,13.6371882 L4.89048523,13.6371882 L4.89048523,12.7534014 C4.89048523,12.6153302 5.00241404,12.5034014 5.14048523,12.5034014 Z" id="Rectangle" fill="#FE635B"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                            <rect id="Rectangle" fill="#FE635B" x="4" y="6" width="1" height="1" rx="0.25"></rect>
+                            <rect id="Rectangle-Copy-2" fill="#FE635B" x="4" y="8" width="1" height="1" rx="0.25"></rect>
+                            <rect id="Rectangle-Copy" fill="#FE635B" x="6" y="6" width="1" height="1" rx="0.25"></rect>
+                            <rect id="Rectangle-Copy-3" fill="#FE635B" x="6" y="8" width="1" height="1" rx="0.25"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

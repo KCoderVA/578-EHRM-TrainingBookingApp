@@ -67,7 +67,7 @@ Screens:
             AccessibleLabel: ="Desk Name Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             BorderThickness: =1
-            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.Title,Blank())
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.ItemID_title,Blank())
             Font: =Font.'Segoe UI'
             Height: =35
             Size: =18
@@ -80,7 +80,7 @@ Screens:
             AccessibleLabel: ="Floor Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             BorderThickness: =1
-            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.'Room Location',Blank())
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomLocation,Blank())
             Font: =Font.'Segoe UI'
             Height: =35
             Size: =18
@@ -102,7 +102,7 @@ Screens:
             AccessibleLabel: ="Map Link Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             BorderThickness: =1
-            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.'Map Link',Blank())
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.MapLink,Blank())
             Font: =Font.'Segoe UI'
             Height: =32
             Size: =18
@@ -182,7 +182,7 @@ Screens:
             Fill: =RGBA(135, 78, 181, 1)
             Height: =35
             HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: "=Set(\n    submitItem,\n    Patch(\n        Desks,\n        Coalesce(\n            varManageSelectedDesk,\n            Defaults(Desks)\n        ),\n        {\n            Title: tbNameDesk_2.Text,\n            Asset: ddAsset_1.SelectedText,\n            'Room Location': tbFloorDesk_2.Text,\n            Active: toggleActive_1.Value,\n            'Map Link': tbMapDesk_2.Text,\n            'Desk Location': tbDeskLocation_2.Text,\n            RoomPicture: tbRoomPhoto_1.Text,            \n            Description: tbDescrDesk_2.Text,\n            'Projector/TV':If(Checkbox1_5.Value = true,\"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/vtel.png\",Blank()),\n            VTel: If(Checkbox1_4.Value = true, \"https://dvagov.sharepoint.com/sites/vhaaugroom/SiteAssets/images/projector.png\",Blank()),\n            'Smart Board': If(Checkbox1_3.Value = true,\"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/smartboard.png\",Blank())\n            \n        }\n    )\n);\nIf(\n    IsBlankOrError(submitItem),\n    Notify(\n        \"Something went wrong. Your item has not been submitted.\" & Last(Errors(Desks)).Message,\n        NotificationType.Error,\n        10000\n    ),\n    Notify(\n        \"Your item has been submitted. (ID: \" & submitItem.ID & \")\",\n        NotificationType.Success,\n        5000\n    );\n    Set(\n        currentItem,\n        submitItem\n    )\n);\nReset(tbFloorDesk_2);\nReset(tbNameDesk_2);\nReset(toggleActive_1);\nReset(tbDescrDesk_2);\nReset(tbMapDesk_2);\nReset(tbDeskLocation_2);\nReset(tbRoomPhoto_1);\nNavigate(ManageDesks)\n"
+            OnSelect: "=Set(\n    submitItem,\n    Patch(\n        Desks,\n        Coalesce(\n            varManageSelectedDesk,\n            Defaults(Desks)\n        ),\n        {\n            ItemID_title: tbNameDesk_2.Text,\n            Asset: ddAsset_1.SelectedText,\n            'Room Location': tbFloorDesk_2.Text,\n            Active: toggleActive_1.Value,\n            'Map Link': tbMapDesk_2.Text,\n            'Desk Location': tbDeskLocation_2.Text,\n            RoomPicture: tbRoomPhoto_1.Text,            \n            Description: tbDescrDesk_2.Text,\n            'Projector/TV':If(Checkbox1_5.Value = true,\"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/vtel.png\",Blank()),\n            VTel: If(Checkbox1_4.Value = true, \"https://dvagov.sharepoint.com/sites/vhaaugroom/SiteAssets/images/projector.png\",Blank()),\n            'Smart Board': If(Checkbox1_3.Value = true,\"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/smartboard.png\",Blank())\n            \n        }\n    )\n);\nIf(\n    IsBlankOrError(submitItem),\n    Notify(\n        \"Something went wrong. Your item has not been submitted.\" & Last(Errors(Desks)).Message,\n        NotificationType.Error,\n        10000\n    ),\n    Notify(\n        \"Your item has been submitted. (ID: \" & submitItem.ID & \")\",\n        NotificationType.Success,\n        5000\n    );\n    Set(\n        currentItem,\n        submitItem\n    )\n);\nReset(tbFloorDesk_2);\nReset(tbNameDesk_2);\nReset(toggleActive_1);\nReset(tbDescrDesk_2);\nReset(tbMapDesk_2);\nReset(tbDeskLocation_2);\nReset(tbRoomPhoto_1);\nNavigate(ManageDesks)\n"
             Text: ="Update"
             Width: =260
             X: =571
@@ -229,7 +229,7 @@ Screens:
             AccessibleLabel: ="RoomPicture Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             BorderThickness: =1
-            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomPicture,Blank())
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomLocation0,Blank())
             Font: =Font.'Segoe UI'
             Height: =30
             HintText: ="Link to Room Picture"
@@ -252,7 +252,7 @@ Screens:
             AccessibleLabel: ="DeskLocation Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             BorderThickness: =1
-            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.'Desk Location',Blank())
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.DeskLocation,Blank())
             Font: =Font.'Segoe UI'
             Height: =30
             HintText: ="Link to Room Picture"
@@ -284,7 +284,7 @@ Screens:
           Group: grpMap_3
           Properties:
             Height: =579
-            Image: =varManageSelectedDesk.'Map Link'
+            Image: =varManageSelectedDesk.MapLink
             ImagePosition: =ImagePosition.Fill
             Visible: =showMap
             Width: =575
@@ -341,7 +341,7 @@ Screens:
           Group: grpMap_4
           Properties:
             Height: =579
-            Image: =varManageSelectedDesk.'Desk Location'
+            Image: =varManageSelectedDesk.DeskLocation
             Visible: =showLocation
             Width: =575
             X: =35
@@ -372,7 +372,7 @@ Screens:
           Properties:
             Default: |+
               =If(
-                  varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.'Smart Board'),
+                  varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.SmartBoard),
                   true,
                   false
               )
@@ -404,7 +404,7 @@ Screens:
           Properties:
             Default: |+
               =If(
-                  varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.'Projector/TV'),
+                  varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.Projector_x002f_TV),
                   true,
                   false
               )
@@ -420,7 +420,7 @@ Screens:
           Group: grpMap_5
           Properties:
             Height: =579
-            Image: =varManageSelectedDesk.RoomPicture
+            Image: =varManageSelectedDesk.RoomLocation0
             ImagePosition: =ImagePosition.Fill
             Visible: =showRoom
             Width: =575

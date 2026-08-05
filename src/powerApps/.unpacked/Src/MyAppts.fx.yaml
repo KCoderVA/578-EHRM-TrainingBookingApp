@@ -23,10 +23,8 @@ MyAppts As screen:
                         )
                         && //'Check Out From' <= Today(),DeskFloor,
                         Or(
-                            'Check Out From' <= Today(),
-                            IsBlank(Active_choice.Value),
-                            Active_choice.Value = "false",
-                            DeskFloor
+                            reservationStart_datetime <= Today(),
+                            !IsBlank(RoomReservation)
                         )
                     ),
                     "CheckOutFrom",
@@ -34,6 +32,8 @@ MyAppts As screen:
                 ),
                 500
             )
+            
+            
             
             
             // TEMPLATE VERSION'S PREVIOUS FORMULA VALUE:
@@ -337,18 +337,18 @@ MyAppts As screen:
                     Filter(
                         'Desk Reservations',
                         (
-                            Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
-                            // || Lower('Created By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
+                            Lower(submitterEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
+                            || Lower(studentEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
                         )
                         && //'Check Out From' <= Today(),DeskFloor,
                         Or(
-                            'Check Out From' >= Today(),
-                            !IsBlank(Active_choice.Value),
-                            Active_choice.Value = "true",
-                            DeskFloor
+                            //'Check Out From' >= Today(),
+                            reservationStart_datetime >= Today(),
+                            !IsBlank(RoomReservation)
+                            //DeskFloor
                         )            
                     ),
-                    "CheckOutFrom",
+                    "reservationStart_datetime",
                     SortOrder.Ascending
                 ),
                 500
@@ -405,6 +405,45 @@ MyAppts As screen:
             Y: =10
             ZIndex: =3
 
+        Title2_14 As label:
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =10
+            PaddingRight: =10
+            PaddingTop: =0
+            Size: =16
+            Text: |-
+                =Text(ThisItem.reservationStart_datetime)
+                //Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM")
+            VerticalAlign: =VerticalAlign.Top
+            Width: =314
+            X: =537
+            Y: =60
+            ZIndex: =4
+
+        Label2 As label:
+            Align: =Align.Center
+            AutoHeight: =true
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            OnSelect: =Select(Parent)
+            Size: =16
+            Text: =" to "
+            Visible: =Title2_7.Visible
+            Width: =43
+            X: =623
+            Y: =35
+            ZIndex: =5
+
         Title2_7 As label:
             Color: =RGBA(0, 0, 0, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
@@ -418,13 +457,13 @@ MyAppts As screen:
             PaddingTop: =0
             Size: =16
             Text: |-
-                =Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM")
-                //Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)ThisItem.'Check Out From'
+                =Text(ThisItem.reservationStart_datetime)
+                //Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM")
             VerticalAlign: =VerticalAlign.Top
             Width: =314
             X: =537
             Y: =15
-            ZIndex: =4
+            ZIndex: =6
 
         Icon2 As icon.OpenInNewWindow:
             BorderColor: =App.Theme.Colors.Darker40
@@ -443,7 +482,7 @@ MyAppts As screen:
             Width: =46
             X: =860
             Y: =3
-            ZIndex: =5
+            ZIndex: =7
 
         Icon2_2 As icon:
             BorderColor: =App.Theme.Colors.Darker40
@@ -463,7 +502,7 @@ MyAppts As screen:
             Width: =46
             X: =860
             Y: =Parent.TemplateHeight - Self.Height - 3
-            ZIndex: =6
+            ZIndex: =8
 
         Title2_5 As label:
             Align: =Align.Center
@@ -483,28 +522,7 @@ MyAppts As screen:
             Width: =383
             X: =127
             Y: =10
-            ZIndex: =7
-
-        Title2_13 As label:
-            Align: =Align.Center
-            Color: =RGBA(135, 78, 181, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Bold
-            Height: =30
-            OnSelect: =Select(Parent)
-            PaddingBottom: =0
-            PaddingLeft: =0
-            PaddingRight: =0
-            PaddingTop: =0
-            Size: =16
-            Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd"))
-            VerticalAlign: =VerticalAlign.Top
-            Visible: =Title2_12.Visible
-            Width: =54
-            X: =172
-            Y: =10
-            ZIndex: =8
+            ZIndex: =9
 
         Title2_12 As label:
             Align: =Align.Center
@@ -518,30 +536,13 @@ MyAppts As screen:
             PaddingLeft: =0
             PaddingRight: =0
             PaddingTop: =0
-            Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]mmm"))
+            Text: =Upper(Text(DateTimeValue(ThisItem.reservationStart_datetime),"[$-en-US]yyyy"))
             VerticalAlign: =VerticalAlign.Top
-            Visible: =If(Upper(Text(DateTimeValue(ThisItem.'Check Out From Text'),"[$-en-US]dd")) = Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd")), false, true)
+            Visible: =Title2_4.Visible
             Width: =58
-            X: =127
-            Y: =10
-            ZIndex: =9
-
-        Label2 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =30
-            OnSelect: =Select(Parent)
-            Size: =16
-            Text: =" to "
-            Visible: =Title2_12.Visible
-            Width: =43
-            X: =98
-            Y: =10
-            ZIndex: =10
+            X: =25
+            Y: =35
+            ZIndex: =11
 
         Title2_6 As label:
             Align: =Align.Center
@@ -561,7 +562,7 @@ MyAppts As screen:
             Width: =40
             X: =Title2_4.X + Title2_4.Width
             Y: =10
-            ZIndex: =11
+            ZIndex: =12
 
         Title2_4 As label:
             Align: =Align.Center
@@ -580,7 +581,7 @@ MyAppts As screen:
             VerticalAlign: =VerticalAlign.Top
             Width: =60
             Y: =10
-            ZIndex: =12
+            ZIndex: =13
 
         Button3_3 As button:
             BorderColor: =RGBA(109, 49, 162, 1)
@@ -610,7 +611,7 @@ MyAppts As screen:
             Width: =142
             X: =Parent.Width - Self.Width - 10
             Y: =Parent.TemplateHeight - Self.Height - 10
-            ZIndex: =13
+            ZIndex: =14
 
     rectSeperator As rectangle:
         BorderColor: =App.Theme.Colors.Darker40

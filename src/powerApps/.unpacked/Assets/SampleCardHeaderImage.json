@@ -1,0 +1,12 @@
+{
+  "Content": "Image",
+  "FileName": "/ctrllib/modernCard/images/SampleCardHeaderImage.svg",
+  "IsSampleData": true,
+  "IsWritable": false,
+  "Name": "SampleCardHeaderImage",
+  "Path": "/ctrllib/modernCard/images/SampleCardHeaderImage.svg",
+  "ResourceKind": "Uri",
+  "RootPath": "ms-appx:///ctrllib/modernCard/images/SampleCardHeaderImage.svg",
+  "Schema": "i",
+  "Type": "ResourceInfo"
+}

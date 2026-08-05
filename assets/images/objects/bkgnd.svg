@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="360px" height="793px" viewBox="0 0 360 793" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60.1 (88133) - https://sketch.com -->
+    <title>bkgnd</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="108 -6.25277607e-13 468 -6.25277607e-13 468 874.12844 108 874.12844"></polygon>
+        <filter x="-9.4%" y="-3.7%" width="118.9%" height="107.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.407843137   0 0 0 0 0.760784314   0 0 0 0 0.831372549  0 0 0 0.118389423 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="New" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Homepage_WFHb">
+            <g id="Header-/-Option-2">
+                <g id="Header-/-Option-1">
+                    <g id="Combined-Shape">
+                        <g id="bkgnd" transform="translate(-108.000000, 0.000000)">
+                            <g id="Rectangle">
+                                <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                                <use fill="#007991" fill-rule="evenodd" xlink:href="#path-1"></use>
+                            </g>
+                            <path d="M487.09515,358.704621 C430.34404,313.31466 380.874082,304.975423 338.685276,333.686912 C275.402068,376.754144 229.764565,451.343861 130.052884,442.981981 C30.3412028,434.6201 -16.6143287,505.547802 5.29424625,542.499079 C27.2028212,579.450356 -20.1729589,709.241356 152.911914,658.140359 C325.996787,607.039362 430.277864,652.517927 462.162487,674.586726 C494.047109,696.655526 746.646768,608.862834 628.957456,493.448905 C550.497914,416.506286 503.210479,371.591525 487.09515,358.704621 Z" id="Path-2" fill="#88C4D0" style="mix-blend-mode: soft-light;" opacity="0.322614397"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

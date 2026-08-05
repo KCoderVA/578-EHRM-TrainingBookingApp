@@ -579,7 +579,7 @@
         {
           "Category": "Design",
           "PropertyName": "TemplatePadding",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -1548,7 +1548,7 @@
           "Category": "Data",
           "NameMap": "{\"Icon\":\"Icon\",\"Name\":\"Name\",\"Page\":\"Page\",\"Visible\":\"Visible\"}",
           "PropertyName": "Items",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Data",
@@ -1573,7 +1573,7 @@
         {
           "Category": "Design",
           "PropertyName": "Width",
-          "RuleProviderType": "System"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",

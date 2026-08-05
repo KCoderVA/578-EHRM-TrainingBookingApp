@@ -87,7 +87,7 @@ Screens:
                   PaddingRight: =10
                   PaddingTop: =0
                   Size: =16
-                  Text: =ThisItem.Title
+                  Text: =ThisItem.ItemID_title
                   VerticalAlign: =VerticalAlign.Top
                   Width: =300
                   X: =2
@@ -106,7 +106,7 @@ Screens:
                   PaddingTop: =0
                   Size: =16
                   Text: |-
-                    ="Training Room: " & ThisItem.'Room Location'
+                    ="Training Room: " & ThisItem.RoomLocation
                   VerticalAlign: =VerticalAlign.Top
                   Width: =250
                   X: =268
@@ -272,7 +272,7 @@ Screens:
                   PaddingRight: =0
                   PaddingTop: =0
                   Size: =24
-                  Text: =ThisItem.Title
+                  Text: =ThisItem.ItemID_title
                   VerticalAlign: =VerticalAlign.Top
                   Width: =616
                   Y: =10
@@ -290,7 +290,7 @@ Screens:
                   PaddingTop: =0
                   Size: =24
                   Text: |-
-                    ="Floor: " & ThisItem.'Room Location'
+                    ="Floor: " & ThisItem.RoomLocation
                   VerticalAlign: =VerticalAlign.Top
                   Width: =340
                   X: =705

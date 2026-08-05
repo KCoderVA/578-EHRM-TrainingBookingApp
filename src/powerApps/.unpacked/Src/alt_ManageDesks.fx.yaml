@@ -99,7 +99,7 @@ alt_ManageDesks As screen:
                                 {
                                     ItemType_text: "Desk",
                                     Description_multilinePlainText: "placeholder: Description_multilinePlainText",
-                                    DeskNumber_number: Value(Right(Title, 2)),
+                                    DeskNumber_number: Value(Right(ItemID_title, 2)),
                                     DeskName_text: ("Desk " & DeskNumber_number)
                                 }
                             )
@@ -304,7 +304,7 @@ alt_ManageDesks As screen:
                     DelayItemLoading: =true
                     Fill: |-
                         =If(
-                            currentItem.Title = Title1_5.Text,
+                            currentItem.ItemID_title = Title1_5.Text,
                             RGBA(0, 180, 233, 1),
                             RGBA(250, 250, 250, 1)
                         )
@@ -378,7 +378,7 @@ alt_ManageDesks As screen:
                         PaddingRight: =0
                         PaddingTop: =0
                         TabIndex: =0
-                        Text: =ThisItem.Title
+                        Text: =ThisItem.ItemID_title
                         VerticalAlign: =VerticalAlign.Top
                         Width: =Parent.TemplateWidth - 112
                         Y: |-
@@ -534,7 +534,7 @@ alt_ManageDesks As screen:
                         Text: |-
                             =If(
                                 IsBlankOrError(RecordsGallery1_1.Selected.ItemType_text),
-                                currentItem.Title,
+                                currentItem.ItemID_title,
                                 IsBlankOrError(RecordsGallery1_1.Selected.ItemType_text)
                             )
                         VerticalAlign: =VerticalAlign.Top
@@ -703,7 +703,7 @@ alt_ManageDesks As screen:
                             DataField: ="{Identifier}"
                             Default: =ThisItem.Identifier
                             DisplayMode: =DisplayMode.View
-                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,'{Identifier}')
+                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Identifier)
                             Fill: =RGBA(0, 0, 0, 0)
                             Height: =40
                             Required: =false
@@ -749,7 +749,7 @@ alt_ManageDesks As screen:
                             DataField: ="{Name}"
                             Default: =ThisItem.Name
                             DisplayMode: =DisplayMode.View
-                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,'{Name}')
+                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Name)
                             Fill: =RGBA(0, 0, 0, 0)
                             Height: =40
                             Required: =false
@@ -1066,7 +1066,7 @@ alt_ManageDesks As screen:
                             DataField: ="Description_multilineText"
                             Default: =ThisItem.Description_multilinePlainText
                             DisplayMode: =Parent.DisplayMode
-                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Description_multilineText)
+                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Description_multilinePlainText)
                             Fill: =RGBA(0, 0, 0, 0)
                             Height: =50
                             LayoutHeight: =0
@@ -1075,7 +1075,7 @@ alt_ManageDesks As screen:
                             LayoutY: =0
                             maximumHeight: =11360
                             maximumWidth: =640
-                            MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Description_multilineText)
+                            MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Description_multilinePlainText)
                             minimumHeight: =20
                             minimumWidth: =20
                             Required: =false
@@ -3311,7 +3311,7 @@ alt_ManageDesks As screen:
                             DataField: ="CombinedLocationDetails_multilin"
                             Default: =ThisItem.CombinedLocationDetails_multilinePlainText
                             DisplayMode: =Parent.DisplayMode
-                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,CombinedLocationDetails_multilin)
+                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,CombinedLocationDetails_multilinePlainText)
                             Fill: =RGBA(0, 0, 0, 0)
                             Height: =50
                             LayoutHeight: =0
@@ -3320,7 +3320,7 @@ alt_ManageDesks As screen:
                             LayoutY: =0
                             maximumHeight: =11360
                             maximumWidth: =640
-                            MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, CombinedLocationDetails_multilin)
+                            MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, CombinedLocationDetails_multilinePlainText)
                             minimumHeight: =20
                             minimumWidth: =20
                             Required: =false
@@ -5252,7 +5252,7 @@ alt_ManageDesks As screen:
                             DataField: ="TrainingCoordEmail_multiPersonGr"
                             Default: =ThisItem.TrainingCoordEmail_multiPersonGroups
                             DisplayMode: =Parent.DisplayMode
-                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,TrainingCoordEmail_multiPersonGr)
+                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,TrainingCoordEmail_multiPersonGroups)
                             Fill: =RGBA(0, 0, 0, 0)
                             Height: =50
                             LayoutHeight: =0
@@ -5336,7 +5336,7 @@ alt_ManageDesks As screen:
                                 HoverColor: =RGBA(50, 49, 48, 1)
                                 HoverFill: =RGBA(245, 245, 245, 1)
                                 InputTextPlaceholder: ="Find items"
-                                Items: =Choices([@Desks].TrainingCoordEmail_multiPersonGr)
+                                Items: =Choices([@Desks].TrainingCoordEmail_multiPersonGroups)
                                 PaddingBottom: =10
                                 PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                                 PaddingRight: =10
@@ -5345,7 +5345,7 @@ alt_ManageDesks As screen:
                                 PressedColor: =RGBA(255, 255, 255, 1)
                                 PressedFill: =RGBA(0, 120, 212, 1)
                                 SearchFields: =["Claims"]
-                                SearchItems: =Choices(Desks.TrainingCoordEmail_multiPersonGr,DataCardValue32_1.SearchText)
+                                SearchItems: =Choices(Desks.TrainingCoordEmail_multiPersonGroups,DataCardValue32_1.SearchText)
                                 SelectionFill: =RGBA(0, 120, 212, 1)
                                 Size: =21
                                 Tooltip: =Parent.DisplayName
@@ -6902,9 +6902,9 @@ alt_ManageDesks As screen:
                             BorderThickness: =0
                             ContentLanguage: =""
                             DataField: ="Title"
-                            Default: =ThisItem.Title
+                            Default: =ThisItem.ItemID_title
                             DisplayMode: =Parent.DisplayMode
-                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Title)
+                            DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,ItemID_title)
                             Fill: =RGBA(0, 0, 0, 0)
                             Height: =50
                             LayoutHeight: =0
@@ -6913,7 +6913,7 @@ alt_ManageDesks As screen:
                             LayoutY: =0
                             maximumHeight: =11360
                             maximumWidth: =640
-                            MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Title)
+                            MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, ItemID_title)
                             minimumHeight: =20
                             minimumWidth: =20
                             Required: =true
@@ -7162,7 +7162,7 @@ alt_ManageDesks As screen:
                             BorderThickness: =0
                             ContentLanguage: =""
                             DataField: ="DeskLocation"
-                            Default: =ThisItem.'Desk Location'
+                            Default: =ThisItem.DeskLocation
                             DisplayMode: =Parent.DisplayMode
                             DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,DeskLocation)
                             Fill: =RGBA(0, 0, 0, 0)
@@ -7290,7 +7290,7 @@ alt_ManageDesks As screen:
                             BorderThickness: =0
                             ContentLanguage: =""
                             DataField: ="RoomLocation"
-                            Default: =ThisItem.'Room Location'
+                            Default: =ThisItem.RoomLocation
                             DisplayMode: =Parent.DisplayMode
                             DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,RoomLocation)
                             Fill: =RGBA(0, 0, 0, 0)
@@ -7687,7 +7687,7 @@ alt_ManageDesks As screen:
                             BorderThickness: =0
                             ContentLanguage: =""
                             DataField: ="RoomLocation0"
-                            Default: =ThisItem.RoomPicture
+                            Default: =ThisItem.RoomLocation0
                             DisplayMode: =Parent.DisplayMode
                             DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,RoomLocation0)
                             Fill: =RGBA(0, 0, 0, 0)
@@ -8612,7 +8612,7 @@ alt_ManageDesks As screen:
                             BorderThickness: =0
                             ContentLanguage: =""
                             DataField: ="Projector_x002f_TV"
-                            Default: =ThisItem.'Projector/TV'
+                            Default: =ThisItem.Projector_x002f_TV
                             DisplayMode: =Parent.DisplayMode
                             DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Projector_x002f_TV)
                             Fill: =RGBA(0, 0, 0, 0)
@@ -8740,7 +8740,7 @@ alt_ManageDesks As screen:
                             BorderThickness: =0
                             ContentLanguage: =""
                             DataField: ="SmartBoard"
-                            Default: =ThisItem.'Smart Board'
+                            Default: =ThisItem.SmartBoard
                             DisplayMode: =Parent.DisplayMode
                             DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,SmartBoard)
                             Fill: =RGBA(0, 0, 0, 0)
@@ -8868,7 +8868,7 @@ alt_ManageDesks As screen:
                             BorderThickness: =0
                             ContentLanguage: =""
                             DataField: ="MapLink"
-                            Default: =ThisItem.'Map Link'
+                            Default: =ThisItem.MapLink
                             DisplayMode: =Parent.DisplayMode
                             DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,MapLink)
                             Fill: =RGBA(0, 0, 0, 0)
@@ -8996,7 +8996,7 @@ alt_ManageDesks As screen:
                             BorderThickness: =0
                             ContentLanguage: =""
                             DataField: ="{Attachments}"
-                            Default: =ThisItem.Attachments
+                            Default: =ThisItem.'{Attachments}'
                             DisplayMode: =Parent.DisplayMode
                             DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,'{Attachments}')
                             Fill: =RGBA(0, 0, 0, 0)
@@ -9079,7 +9079,7 @@ alt_ManageDesks As screen:
                                 Font: =Font.'Segoe UI'
                                 Height: |-
                                     =If(
-                                        IsBlankOrError(ThisItem.Attachments) || IsEmpty(ThisItem.Attachments),
+                                        IsBlankOrError(ThisItem.'{Attachments}') || IsEmpty(ThisItem.'{Attachments}'),
                                         90,
                                         560
                                     )

@@ -367,6 +367,34 @@
     "OverridableProperties": {},
     "Version": "1.0.2"
   },
+  "modernText": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/modernText",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "modernText",
+    "OverridableProperties": {},
+    "Version": "1.0.0"
+  },
+  "modernTextInput": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/modernTextInput",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "modernTextInput",
+    "OverridableProperties": {},
+    "Version": "1.1.1"
+  },
   "pdfViewer": {
     "CustomGroupControlTemplateName": "",
     "FirstParty": true,

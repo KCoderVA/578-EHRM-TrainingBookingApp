@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-
 <?xml version="1.0" encoding="utf-8"?>
 <ImportExportXml version="9.2.0000.0000" SolutionPackageVersion="9.2.0000.0000"
     languagecode="1033" generatedBy="EHRMTrainingBooking">
@@ -24,10 +23,10 @@ limitations under the License.
         </LocalizedNames>
         <Descriptions>
             <Description
-                description="v0.3.4: Role-based access control with 8-tier permission model (SuperUser/AppAdmin/Manager/ServiceChief/ProjectLeader/User/View-only/AccessDenied), intelligent scheduling with 15-minute boundary rounding and live conflict detection, appointment cancellation confirmation modal, new Daily Calendar screen (scrn_DailyCal), app version tracking variable, Office 365 Users connector integration (MyProfileV2/ManagerV2/UserProfileV2). Includes prior enhancements: AppUserList Power Automate flow for dynamic user access population. Complete Power Platform solution for EHRM training room scheduling and booking at VA facility 578."
+                description="v0.9.26: Complete Power Platform solution for EHRM training scheduling and booking at VA facility 578. Every booking is persisted as a full training-registration record - the Desk Reservations SharePoint list captures submitter and student identities, training scenario/role/session/location, and columns supporting a trainer-approval and automated-reminder workflow. Includes app-wide 8-tier role-based access control (SuperUser/AppAdmin/Manager/ServiceChief/ProjectLeader/User/View-only/AccessDenied) resolved in App.OnStart, admin impersonation, zero-touch user onboarding, an attendee people-picker for booking on behalf of others, intelligent scheduling with 15-minute boundary rounding and live conflict detection, and Office 365 Outlook/Users connector integration (MyProfileV2/ManagerV2/UserProfileV2). Includes the AppUserList Power Automate flow for dynamic user access population."
                 languagecode="1033" />
         </Descriptions>
-        <Version>0.3.4</Version>
+        <Version>0.9.26</Version>
         <Managed>1</Managed>
         <Publisher>
             <UniqueName>VAHealthcare</UniqueName>
@@ -54,15 +53,12 @@ limitations under the License.
         <RootComponents>
             <!-- Canvas App -->
             <RootComponent type="300" schemaName="vah_EHRMTrainingBookingApp" behavior="0" />
-
             <!-- Power Automate Flows -->
             <RootComponent type="29" schemaName="vah_AppUserList" behavior="0" />
-
             <!-- Connection References -->
             <RootComponent type="35" schemaName="vah_SharePointConnection" behavior="0" />
             <RootComponent type="35" schemaName="vah_OutlookConnection" behavior="0" />
             <RootComponent type="35" schemaName="vah_O365UsersConnection" behavior="0" />
-
             <!-- Environment Variables -->
             <RootComponent type="380" schemaName="vah_SharePointSiteUrl" behavior="0" />
             <RootComponent type="380" schemaName="vah_NotificationEmailFrom" behavior="0" />

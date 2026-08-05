@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="45px" height="38px" viewBox="0 0 45 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Facility search</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="0.874934677 0.669128226 2.16096774 0.669128226 2.16096774 16.1946524 0.874934677 16.1946524"></polygon>
+    </defs>
+    <g id="New" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Homepage_WFBa" transform="translate(-33.000000, -308.000000)">
+            <g id="Facility-search" transform="translate(32.000000, 309.000000)">
+                <g id="Group-45" transform="translate(1.000000, 8.000000)">
+                    <line x1="17.5320085" y1="0.0584677419" x2="17.5320085" y2="28.0622944" id="Stroke-1" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="24.9797581" y1="4.57681976" x2="19.5130242" y2="3.70214234" id="Stroke-3" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <polyline id="Stroke-4" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" points="26.5750153 7.89557742 28.5816282 8.11424677 33.1093702 8.60432339 34.9616282 8.79598065"></polyline>
+                    <line x1="24.9797581" y1="7.72848831" x2="19.5130242" y2="7.12393185" id="Stroke-6" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="33.1088556" y1="11.2657867" x2="28.5811137" y2="11.0226778" id="Stroke-7" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="24.9797581" y1="10.8287052" x2="19.5130242" y2="10.5199956" id="Stroke-8" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="33.1088556" y1="13.9413992" x2="28.5811137" y2="13.9156734" id="Stroke-9" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="24.9797581" y1="13.9163165" x2="19.5130242" y2="13.8893044" id="Stroke-10" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="33.1088556" y1="16.5918004" x2="28.5811137" y2="16.8233327" id="Stroke-11" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="24.9797581" y1="17.0026415" x2="19.5130242" y2="17.2727625" id="Stroke-12" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="33.1088556" y1="19.2800185" x2="28.5811137" y2="19.7417968" id="Stroke-13" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="24.9797581" y1="20.1153355" x2="19.5130242" y2="20.6697266" id="Stroke-14" stroke="#FE635B" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="33.1088556" y1="21.9681081" x2="28.5811137" y2="22.6884306" id="Stroke-15" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="15.5511214" y1="3.70252823" x2="10.0843875" y2="4.57720565" id="Stroke-16" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="15.5511214" y1="7.12431774" x2="10.0843875" y2="7.72887419" id="Stroke-17" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="15.5511214" y1="10.5196097" x2="10.0843875" y2="10.8283194" id="Stroke-18" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="15.5511214" y1="13.889819" x2="10.0843875" y2="13.916831" id="Stroke-19" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="15.5511214" y1="17.2726339" x2="10.0843875" y2="17.0025129" id="Stroke-20" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="15.5511214" y1="20.6693407" x2="10.0843875" y2="20.1149496" id="Stroke-21" stroke="#FE635B" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <g id="Group-39" transform="translate(0.000000, 0.058947)">
+                        <polyline id="Stroke-22" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" points="14.5801008 27.2867548 14.5801008 23.8806581 11.2280282 23.3597105 11.2280282 26.6281742"></polyline>
+                        <polyline id="Stroke-24" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" points="23.8359887 26.6285601 23.8359887 23.3600964 20.4852024 23.8797577 20.4852024 27.2871407"></polyline>
+                        <line x1="8.48964476" y1="6.73119234" x2="0.64327379" y2="7.72163589" id="Stroke-28" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="8.48964476" y1="26.0117839" x2="0.64327379" y2="24.3666185" id="Stroke-30" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <line x1="0.645074597" y1="7.72600927" x2="0.645074597" y2="24.3693198" id="Stroke-32" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                        <polyline id="Stroke-34" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" points="26.5750153 26.0117839 28.5816282 25.5885944 33.1093702 24.6367395 34.9616282 24.2508524"></polyline>
+                        <polygon id="Stroke-26" stroke="#FE5D55" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round" points="26.5750153 1.98426653 26.5750153 26.0121698 17.5323944 28.0059198 8.48977339 26.0121698 8.48977339 1.98426653 17.5323944 0.00337943548"></polygon>
+                        <g id="Group-38" transform="translate(33.443548, 8.068548)">
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <g id="Clip-37"></g>
+                            <polyline id="Stroke-36" stroke="#FFB1AD" stroke-linecap="round" stroke-linejoin="round" mask="url(#mask-2)" points="1.51807984 16.1946524 1.51807984 16.1817895 1.51807984 15.1270315 1.51807984 13.5577573 1.51807984 12.5029992 1.51807984 10.9594508 1.51807984 9.90340645 1.51807984 8.37400726 1.51807984 7.344975 1.51807984 5.81428952 1.51807984 4.78525726 1.51807984 3.24170887 1.51807984 2.21267661 1.51807984 0.669128226"></polyline>
+                        </g>
+                    </g>
+                    <line x1="6.61178952" y1="10.8287052" x2="2.53424919" y2="11.0602375" id="Stroke-40" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="6.61178952" y1="13.7353355" x2="2.53424919" y2="13.7623476" id="Stroke-41" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="6.61178952" y1="16.6433806" x2="2.53424919" y2="16.4620137" id="Stroke-42" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="6.61178952" y1="19.5626165" x2="2.53424919" y2="19.1638665" id="Stroke-43" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <line x1="6.61178952" y1="22.5082214" x2="2.53424919" y2="21.8779391" id="Stroke-44" stroke="#FFB1AD" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                </g>
+                <g id="Group-3" transform="translate(-1.000000, -5.000000)">
+                    <g id="Group-7" transform="translate(27.042417, 23.882115) rotate(-60.000000) translate(-27.042417, -23.882115) translate(13.042417, 1.882115)">
+                        <ellipse id="Oval" stroke="#FFFFFF" stroke-width="3.5" cx="13.8564409" cy="13.9841323" rx="13.6522023" ry="13.7398593"></ellipse>
+                        <ellipse id="Oval" stroke="#007991" stroke-width="1.5" cx="13.8564409" cy="13.9841323" rx="13.6522023" ry="13.7398593"></ellipse>
+                        <line x1="7.97741377" y1="32.0089929" x2="20.8364432" y2="39.433157" id="Line-7" stroke="#007991" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(14.406929, 35.721075) rotate(60.000000) translate(-14.406929, -35.721075) "></line>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

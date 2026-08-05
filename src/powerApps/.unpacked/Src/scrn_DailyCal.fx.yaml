@@ -67,7 +67,7 @@ scrn_DailyCal As screen:
                     Desks,
                     Asset.Value = "Room"
                 ),
-                Title
+                ItemID_title
             )
         );
 
@@ -573,7 +573,7 @@ scrn_DailyCal As screen:
                 DisabledBorderColor: =RGBA(166, 166, 166, 1)
                 DisabledFill: =RGBA(244, 244, 244, 1)
                 Height: =415
-                Image: =LookUp(Desks,Title = varSelectedReservation.DeskText).RoomPicture
+                Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation0
                 ImagePosition: =ImagePosition.Stretch
                 Visible: =showMap
                 Width: =1022
@@ -700,7 +700,7 @@ scrn_DailyCal As screen:
             AccessibleLabel: ="Floor Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             Color: =RGBA(0, 0, 0, 1)
-            Default: =LookUp(Desks,Title = varSelectedReservation.DeskText).'Room Location'
+            Default: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
@@ -785,7 +785,7 @@ scrn_DailyCal As screen:
             Default: |-
                 =
                 
-                varSelectedReservation.'Reason for desk reservation'
+                varSelectedReservation.Reasonfordeskreservation
                 //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)

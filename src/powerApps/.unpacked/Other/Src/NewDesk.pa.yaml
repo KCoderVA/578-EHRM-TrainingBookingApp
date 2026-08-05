@@ -103,7 +103,7 @@ Screens:
             AccessibleLabel: ="Desk Name Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             BorderThickness: =1
-            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.Title,Blank())
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.ItemID_title,Blank())
             Font: =Font.'Segoe UI'
             Height: =36
             HintText: ="Room# Or Room#-Desk#"
@@ -126,7 +126,7 @@ Screens:
             AccessibleLabel: ="Floor Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             BorderThickness: =1
-            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.'Room Location',Blank())
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomLocation,Blank())
             Font: =Font.'Segoe UI'
             Height: =30
             HintText: ="C4077 or Item"
@@ -149,7 +149,7 @@ Screens:
             AccessibleLabel: ="Map Link Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             BorderThickness: =1
-            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.'Map Link',Blank())
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.MapLink,Blank())
             Font: =Font.'Segoe UI'
             Height: =30
             HintText: ="Link to Map Picture"
@@ -198,7 +198,7 @@ Screens:
                       Desks,
                       Defaults(Desks),
                       {
-                          Title: tbNameDesk.Text,
+                          ItemID_title: tbNameDesk.Text,
                           Asset: ddAsset.SelectedText,
                           'Room Location': tbFloorDesk.Text,
                           //DeskLocation: tbDeskLocation.Text,
@@ -304,7 +304,7 @@ Screens:
             AccessibleLabel: ="Map Link Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             BorderThickness: =1
-            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomPicture,Blank())
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomLocation0,Blank())
             Font: =Font.'Segoe UI'
             Height: =30
             HintText: ="Link to Room Picture"
@@ -336,7 +336,7 @@ Screens:
           Group: grpMap_1
           Properties:
             Height: =546
-            Image: =varManageSelectedDesk.'Map Link'
+            Image: =varManageSelectedDesk.MapLink
             ImagePosition: =ImagePosition.Fill
             Visible: =showMap
             Width: =609
@@ -371,7 +371,7 @@ Screens:
           Group: grpDeskLocation
           Properties:
             Height: =546
-            Image: =varManageSelectedDesk.'Desk Location'
+            Image: =varManageSelectedDesk.DeskLocation
             Visible: =showDesk
             Width: =609
             X: =41
@@ -417,7 +417,7 @@ Screens:
           Group: grpRoomPicture
           Properties:
             Height: =546
-            Image: =varManageSelectedDesk.RoomPicture
+            Image: =varManageSelectedDesk.RoomLocation0
             Visible: =showRoom
             Width: =609
             X: =61
@@ -470,7 +470,7 @@ Screens:
           Properties:
             Default: |+
               =If(
-                  varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.'Projector/TV'),
+                  varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.Projector_x002f_TV),
                   true,
                   false
               )

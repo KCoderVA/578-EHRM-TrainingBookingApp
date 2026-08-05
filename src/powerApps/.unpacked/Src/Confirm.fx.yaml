@@ -8,9 +8,21 @@ Confirm As screen:
             AddColumns(
                 CollectionRecurrence,
                 Floor,
-                First(colSelectedDesks).Title
+                First(colSelectedDesks).FloorNumber_number
             )
         );
+        ClearCollect(
+            col_EventCombinedDetails,
+            Patch(
+                First(colSelectedDesks),
+                First(colCombinedRecurrence)
+            )
+        );
+        ClearCollect(
+            col_EventBuildDetails,
+            Filter('Desk Reservations', false)
+        );
+        
         // Get the highest RecurrenceID in the list (returns blank if none exist)
         Set(
             varRecurrenceID,
@@ -28,13 +40,13 @@ Confirm As screen:
         BorderColor: =App.Theme.Colors.Darker40
         DelayItemLoading: =true
         Fill: =RGBA(255, 255, 255, 1)
-        Height: =text_Value3.Height + text_Value3.Y + 50
+        Height: =(text_Value3.Height + text_Value3.Y + 50)
         Items: |-
             =//CollectionRecurrence
             colCombinedRecurrence
         Layout: =Layout.Vertical
         LoadingSpinner: =LoadingSpinner.Data
-        TemplateSize: =200
+        TemplateSize: =250
         Visible: =!varAccept3 And !varAccept4
         Width: =800
         X: =(Parent.Width / 2) - (Self.Width / 2)
@@ -63,14 +75,14 @@ Confirm As screen:
             FontItalic: =false
             FontStrikethrough: =false
             FontUnderline: =false
-            Height: =20
-            Size: =14
+            Height: =25
+            Size: =18
             TabIndex: =0
-            Text: =varPopUp_ClassPicker_scenarioLocation
+            Text: =var_Attendees
             Tooltip: =""
             VerticalAlign: =""
             Visible: =true
-            Weight: ="Regular"
+            Weight: ='TextCanvas.Weight'.Bold
             Width: =text_Key7.Width
             Wrap: =true
             X: =text_Key7.X
@@ -87,18 +99,19 @@ Confirm As screen:
             Fill: =RGBA(180, 214, 250, 1)
             Font: =""
             FontColor: =
-            FontItalic: =false
+            FontItalic: =true
             FontStrikethrough: =false
             FontUnderline: =false
             Height: =20
             Size: =14
             TabIndex: =0
-            Text: ="Scenario Location"
+            Text: |-
+                ="Selected EMPLOYEE:"
             Tooltip: =""
             VerticalAlign: =""
             Visible: =!varAccept3 And !varAccept4
-            Weight: ='TextCanvas.Weight'.Bold
-            Width: =text_Key1.Width * 2
+            Weight: ='TextCanvas.Weight'.Regular
+            Width: =text_Key4.Width
             Wrap: =true
             X: =text_Value6.X
             Y: =text_Value6.Y + text_Value6.Height + 10
@@ -117,14 +130,14 @@ Confirm As screen:
             FontItalic: =false
             FontStrikethrough: =false
             FontUnderline: =false
-            Height: =20
-            Size: =14
+            Height: =25
+            Size: =18
             TabIndex: =0
             Text: =varPopUp_ClassPicker_scenarioRole
             Tooltip: =""
             VerticalAlign: =""
             Visible: =true
-            Weight: ="Regular"
+            Weight: ='TextCanvas.Weight'.Bold
             Width: =text_Key6.Width
             Wrap: =true
             X: =text_Key6.X
@@ -141,18 +154,19 @@ Confirm As screen:
             Fill: =RGBA(180, 214, 250, 1)
             Font: =""
             FontColor: =
-            FontItalic: =false
+            FontItalic: =true
             FontStrikethrough: =false
             FontUnderline: =false
             Height: =20
             Size: =14
             TabIndex: =0
-            Text: ="Scenario Name"
+            Text: |-
+                ="Selected ROLE:"
             Tooltip: =""
             VerticalAlign: =""
             Visible: =!varAccept3 And !varAccept4
-            Weight: ='TextCanvas.Weight'.Bold
-            Width: =text_Key1.Width * 2
+            Weight: ='TextCanvas.Weight'.Regular
+            Width: =text_Key4.Width
             Wrap: =true
             X: =text_Value1.X
             Y: =text_Value4.Y + text_Value4.Height + 10
@@ -171,14 +185,14 @@ Confirm As screen:
             FontItalic: =false
             FontStrikethrough: =false
             FontUnderline: =false
-            Height: =20
-            Size: =14
+            Height: =25
+            Size: =18
             TabIndex: =0
             Text: =varPopUp_ClassPicker_scenarioName
             Tooltip: =""
             VerticalAlign: =""
             Visible: =false
-            Weight: ="Regular"
+            Weight: ='TextCanvas.Weight'.Bold
             Width: =text_Key5.Width
             Wrap: =true
             X: =text_Key5.X
@@ -198,14 +212,14 @@ Confirm As screen:
             FontItalic: =false
             FontStrikethrough: =false
             FontUnderline: =false
-            Height: =20
-            Size: =14
+            Height: =25
+            Size: =18
             TabIndex: =0
             Text: =varPopUp_ClassPicker_scenarioName
             Tooltip: =""
             VerticalAlign: =""
             Visible: =true
-            Weight: ="Regular"
+            Weight: ='TextCanvas.Weight'.Bold
             Width: =text_Key4.Width
             Wrap: =true
             X: =text_Key4.X
@@ -222,7 +236,7 @@ Confirm As screen:
             Fill: =RGBA(180, 214, 250, 1)
             Font: =""
             FontColor: =
-            FontItalic: =false
+            FontItalic: =true
             FontStrikethrough: =false
             FontUnderline: =false
             Height: =20
@@ -232,7 +246,7 @@ Confirm As screen:
             Tooltip: =""
             VerticalAlign: =""
             Visible: =false
-            Weight: ='TextCanvas.Weight'.Bold
+            Weight: ='TextCanvas.Weight'.Regular
             Width: =text_Key4.Width
             Wrap: =true
             X: =text_Key4.X + text_Key4.Width
@@ -249,36 +263,34 @@ Confirm As screen:
             Fill: =RGBA(180, 214, 250, 1)
             Font: =""
             FontColor: =
-            FontItalic: =false
+            FontItalic: =true
             FontStrikethrough: =false
             FontUnderline: =false
             Height: =20
             Size: =14
             TabIndex: =0
-            Text: ="Scenario Name"
+            Text: |-
+                ="Selected SCENARIO:"
             Tooltip: =""
             VerticalAlign: =""
             Visible: =!varAccept3 And !varAccept4
-            Weight: ='TextCanvas.Weight'.Bold
-            Width: =text_Key1.Width * 2
+            Weight: ='TextCanvas.Weight'.Regular
+            Width: =text_Key1.Width + text_Key2.Width
             Wrap: =true
             X: =text_Value1.X
             Y: =text_Value1.Y + text_Value1.Height + 10
             ZIndex: =10
 
         text_Value3 As Text:
-            AutoHeight: =true
+            AutoHeight: =false
             BorderColor: =
             DisplayMode: =DisplayMode.Edit
             Fill: =
             FontColor: =
-            Height: =173
-            Text: |-
-                ="Selected Training: "
-                & varMeetCat
-                & "
-                Selected Location: "
-                & varSelectedDesk.CombinedLocationDetails_multilinePlainText
+            Height: =200
+            Size: =20
+            Text: =varSelectedDesk.CombinedLocationDetails_multilinePlainText
+            Weight: ='TextCanvas.Weight'.Bold
             Width: =text_Key3.Width
             X: =text_Key3.X
             Y: =text_Key3.Y + text_Key3.Height
@@ -289,8 +301,10 @@ Confirm As screen:
             DisplayMode: =DisplayMode.Edit
             Fill: =
             FontColor: =
-            Height: =20
-            Text: =ThisItem.EndDateTime
+            Height: =25
+            Size: =18
+            Text: =var_secondHalfTime
+            Weight: ='TextCanvas.Weight'.Bold
             Width: =text_Key2.Width
             X: =text_Key2.X
             Y: =text_Key2.Y + text_Key2.Height
@@ -301,9 +315,11 @@ Confirm As screen:
             DisplayMode: =DisplayMode.Edit
             Fill: =
             FontColor: =
-            Height: =20
-            Text: =ThisItem.StartDateTime
-            Width: =150
+            Height: =25
+            Size: =18
+            Text: =var_Date //ThisItem.StartDateTime
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =text_Key1.Width
             X: =text_Key1.X
             Y: =text_Key1.Y + text_Key1.Height
             ZIndex: =13
@@ -318,7 +334,7 @@ Confirm As screen:
             Fill: =RGBA(180, 214, 250, 1)
             Font: =""
             FontColor: =
-            FontItalic: =false
+            FontItalic: =true
             FontStrikethrough: =false
             FontUnderline: =false
             Height: =20
@@ -328,8 +344,8 @@ Confirm As screen:
             Tooltip: =""
             VerticalAlign: =""
             Visible: =!varAccept3 And !varAccept4
-            Weight: ='TextCanvas.Weight'.Bold
-            Width: =300
+            Weight: ='TextCanvas.Weight'.Regular
+            Width: =350
             Wrap: =true
             X: =text_Key2.X + text_Key2.Width
             Y: =text_Key2.Y
@@ -345,20 +361,21 @@ Confirm As screen:
             Fill: =RGBA(180, 214, 250, 1)
             Font: =""
             FontColor: =
-            FontItalic: =false
+            FontItalic: =true
             FontStrikethrough: =false
             FontUnderline: =false
             Height: =20
             Size: =14
             TabIndex: =0
-            Text: ="End Date/Time"
+            Text: |-
+                ="Training Time:"
             Tooltip: =""
             VerticalAlign: =""
             Visible: =!varAccept3 And !varAccept4
-            Weight: ='TextCanvas.Weight'.Bold
-            Width: =text_Key1.Width
+            Weight: ='TextCanvas.Weight'.Regular
+            Width: =text_Key1.Width * 2
             Wrap: =true
-            X: =text_Key1.X + text_Key2.Width
+            X: =text_Key1.X + text_Key1.Width
             Y: =text_Key1.Y
             ZIndex: =15
 
@@ -372,19 +389,19 @@ Confirm As screen:
             Fill: =RGBA(180, 214, 250, 1)
             Font: =""
             FontColor: =
-            FontItalic: =false
+            FontItalic: =true
             FontStrikethrough: =false
             FontUnderline: =false
             Height: =20
             Size: =14
             TabIndex: =0
-            Text: ="Start Date/Time"
+            Text: |-
+                ="Training Date:"
             Tooltip: =""
             VerticalAlign: =""
             Visible: =!varAccept3 And !varAccept4
-            Weight: ='TextCanvas.Weight'.Bold
-            Width: |
-                =150
+            Weight: ='TextCanvas.Weight'.Regular
+            Width: =120
             Wrap: =true
             X: =0
             Y: =0
@@ -399,89 +416,15 @@ Confirm As screen:
         Height: =60
         Italic: =true
         LineHeight: =1
-        Size: =18
-        Text: ="Please review your reservation details and press Confirm to proceed with your reservation or press Back to make changes."
+        Size: =16
+        Text: |-
+            ="Please review your reservation details, before clicking 'SUBMIT'......
+            (or go 'Back' to make changes)"
         Visible: =!varAccept3 And !varAccept4
         Width: =675
         X: =(Parent.Width - Self.Width) / 2
         Y: =150
-        ZIndex: =5
-
-    Container2 As groupContainer.manualLayoutContainer:
-        Height: =482
-        LayoutGridColumnMinWidth: =0
-        LayoutGridColumns: =6
-        LayoutGridRowMinHeight: =0
-        LayoutGridRows: =6
-        RadiusBottomLeft: =4
-        RadiusBottomRight: =4
-        RadiusTopLeft: =4
-        RadiusTopRight: =4
-        Visible: =varAccept3 Or varAccept4 ///varAccept2
-        Width: =854
-        X: =164
-        Y: =158
-        ZIndex: =7
-
-        ButtonCanvas2 As Button:
-            BasePaletteColor: =RGBA(5, 102, 178, 1)
-            BorderColor: =
-            DisplayMode: =DisplayMode.Edit
-            Font: =Font.Arial
-            FontColor: =
-            FontSize: =32
-            Height: =90
-            OnSelect: |-
-                =//Set(varAccept2,false);Set(varAccept, true);
-                If(varAccept3,
-                    Set(varAccept3, false);
-                    Set(varAccept4, false),
-                    If(varAccept4,
-                        Set(varAccept4, false)
-                    )
-                )
-            Text: |-
-                =If(varAccept3,
-                    "Accept Terms 
-                        & Conditions",
-                    //Else
-                    "Aknowledge My
-                    Responsibility"
-                )
-            Width: =277
-            X: =(Parent.Width / 2) - (Self.Width / 2)
-            Y: =Parent.Height - Self.Height - 10
-            ZIndex: =2
-
-        HtmlText3 As htmlViewer:
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            Fill: =RGBA(0, 0, 0, 0)
-            Font: =App.Theme.Font
-            Height: =392
-            HtmlText: |-
-                =If(varAccept3,
-                    "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:14px; border-radius:5px;'>
-                    <ul style='padding-left:20px;'>
-                        <li>I have tested and confirmed I have sandbox access: <a href='https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx?csf=1&web=1&e=ohGdcr&CID=a04e3960-c7fe-4688-8185-144525372e55' style='color:#add8e6;'>Log into Sandbox</a></li>
-                        <li>I understand the training location is in Building #20 and I must provide my own transportation. <a href='https://dvagov.sharepoint.com/sites/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp/_layouts/15/embed.aspx?UniqueId=aad2f1c2-d6cb-4926-966d-a210006fbc5b' style='color:#add8e6;'>Link to Campus Map</a>.</li>
-                        <li>Download the training materials: <a href='https://dvagov.sharepoint.com/sites/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp/_layouts/15/embed.aspx?UniqueId=aad2f1c2-d6cb-4926-966d-a210006fbc5b' style='color:#add8e6;'>TEMP_BROKEN_Link</a>.</li>
-                        <li>The EHRM Training Rooms are intended solely for EHRM-related training, meetings, and activities. Any other use is prohibited unless expressly authorized.</li>
-                        <li>If you have any issues with EHRM equipment, please contact OI&T at ext. <a href='tel:+18556734357' style='color:#add8e6;'>44357 (1-855-673-4357)</a>.</li>
-                        <li>Ensure that the room is left in an orderly condition.​</li>
-                        <li>Ensure the room set up has been put back in the initial arrangement.​</li>
-                        <li>Capacity: Do not exceed the room’s maximum occupancy limit.​</li>
-                    </ul>
-                    <p style='margin-top:15px;'>For questions contact <a href='mailto:HinesEHRMCLT@va.gov.' style='color:#add8e6;'>HinesEHRMCLT@va.gov.</a>.</p>
-                
-                <div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px; text-align: center'>
-                    By acknowledging this, you accept responsibility for the EHRM training workstation/Desk and ensuring the room is returned to its original state.
-                </div>",
-                    //Else
-                    "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:40px; border-radius:5px; text-align: center'>By acknowledging this, you accept responsibility for the EHRM VILT workstation & ensuring the desk/room is returned to its original state.</div>"
-                )
-            Size: =13
-            Width: =Parent.Width
-            ZIndex: =5
+        ZIndex: =2
 
     Image2_4 As image:
         BorderColor: =App.Theme.Colors.Darker40
@@ -491,7 +434,7 @@ Confirm As screen:
         Image: =abstractBackground
         ImagePosition: =ImagePosition.Fill
         Width: =Parent.Width
-        ZIndex: =8
+        ZIndex: =3
 
     btnConfirm_2 As button:
         BorderColor: =App.Theme.Colors.Primary
@@ -506,37 +449,43 @@ Confirm As screen:
         HoverBorderColor: =App.Theme.Colors.Darker10
         HoverColor: =App.Theme.Colors.PrimaryForeground
         HoverFill: =ColorFade(Self.Fill, -20%)
-        OnSelect: |+
-            =// ——————————————————————————————————————————————
+        OnSelect: |-
+            =// ———————————————————————————————————————————————————————————————————————————————————————————————————————
             // 1) Save item(s) to Outlook
             Office365Outlook.V4CalendarPostItem(
                 LookUp(Office365Outlook.CalendarGetTables().value, DisplayName = "Calendar").Name, // current user's Outlook Calendar
-                varTitle, // subject
-                varEventStartTime, // Start time,
-                varEventEndTime, // End time
-                "(UTC-06:00) Central Time",  // Time zone
-                {
-                    // Main properties
-                    requiredAttendees: varAttendees,
-                    //optionalAttendees: varOptionalAttendees,
-                    ///resourceAttendees: "room@yourdomain.com", // Update with your room/resource email or variable
-                    body: varEmailBody,
-                    categories: varMeetCat,       
-                    location: varSelectedDesk.CombinedLocationDetails_multilinePlainText, // Need proper value
-                    importance: varImportance, // low, normal, high
-                    isAllDay: false, // true if all day
-                    recurrence: varRecurrence, // "weekly", "daily", etc.
-                    selectedDaysOfWeek: varWeekday,
-                    recurrenceEnd: Text(DateValue(varEndDate), "yyyy-mm-dd"), // "2025-06-08"
-                    numberOfOccurences: Value(recurPeriodTxt.Text), // integer
-                    reminderMinutesBeforeStart: varReminder, // integer
-                    isReminderOn: If(varReminder > 0, true, false), // or false
-                    showAs: "busy", // free, tentative, busy, oof, workingElsewhere, unknown
-                    responseRequested: true, // or true for RSVP
-                    sensitivity: "normal" // normal, personal, private, confidential
-                }
+                //Subject
+                    Concatenate(
+                        "EHRM Learning Lab Scenario - ",
+                        var_reservationScenario //varTitle
+                    ),
+                //Start Date/Time
+                    varEventStartTime,
+                //End Date/Time
+                    varEventEndTime,
+                //Event Timezone
+                "(UTC-06:00) Central Time",
+                //Main properties
+                    {
+                            requiredAttendees: var_Attendees, //varAttendees,
+                            //optionalAttendees: varOptionalAttendees,
+                            body: varEmailBody,
+                            categories: varMeetCat,      
+                            location: varSelectedDesk.CombinedLocationDetails_multilinePlainText, // Need proper value
+                            importance: varImportance, // low, normal, high
+                            isAllDay: false, // true if all day
+                            recurrence: varRecurrence, // "weekly", "daily", etc.
+                            selectedDaysOfWeek: varWeekday,
+                            recurrenceEnd: Text(DateValue(varEndDate), "yyyy-mm-dd"), // "2025-06-08"
+                            numberOfOccurences: Value(recurPeriodTxt.Text), // integer
+                            reminderMinutesBeforeStart: varReminder, // integer
+                            isReminderOn: If(varReminder > 0, true, false), // or false
+                            showAs: "busy", // free, tentative, busy, oof, workingElsewhere, unknown
+                            responseRequested: true, // or true for RSVP
+                            sensitivity: "normal" // normal, personal, private, confidential
+                    }
             );
-            
+            //////////////////////////////////////////////////////////////////////////////////////////////
             // ——————————————————————————————————————————————
             // 2) Patch to SharePoint list, For each recurrence date…
             ForAll(
@@ -551,41 +500,63 @@ Confirm As screen:
                         'Desk Reservations',
                         Defaults('Desk Reservations'),
                         {
-                            // simple string concatenation for Title
-                            Title: DataCardValue3.Selected.DisplayName & " – " &  varMeetCat & " @ " & Text(
-                                rec.StartDateTime,
-                                "[$-en-US]mm/dd/yyyy hh:mm AM/PM" 
-                            ),
-                            DeskText: varMeetCat, 
-                            'Check Out From': rec.StartDateTime,
-                            'Check Out To': rec.EndDateTime,
-                            'Check Out From Text': Text(rec.StartDateTime),
-                            'Check Out To Text': Text(rec.EndDateTime),
-                            // use the people‐picker cards directly (they include Department, etc.)
-                            'Reserved By': DataCardValue3.Selected,
-                            Manager: DataCardValue7.Selected,
-                            Service: DataCardValue8.Text,
-                            'Reason for desk reservation': DataCardValue1.Text,
-                            Asset: desk.Asset,
-                            DeskFloor: If(
-                                desk.Asset.Value = "Desk",
-                                desk.'Room Location',
-                                ""
-                            ),
-                            IsRecurring: If(varRecurrence = "None", false, true),
+                            // New Columns:
+                            Title: var_Attendees & " – " &  var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")",
+                            submitterName_text: Office365Users.MyProfileV2().displayName,
+                            submitterEmail_text: Lower(Office365Users.MyProfileV2().mail),
+                            submitterService_text: Office365Users.MyProfileV2().department & " - " &Office365Users.MyProfileV2().companyName,
+                            studentName_text: Office365Users.UserProfileV2(var_Attendees).displayName,
+                            studentEmail_text: Lower(Office365Users.UserProfileV2(var_Attendees).mail),
+                            studentService_text: var_Service,
+                            studentTitle_text: Office365Users.UserProfileV2(var_Attendees).jobTitle,
+                            studentManagerEmail_text: Lower(Office365Users.ManagerV2(var_Attendees).mail),
+                            reservationRole_text: var_reservationRole,
+                            reservationScenario_text: var_reservationScenario,
+                            reservationStart_datetime: varEventStartTime,
+                            reservationEnd_datetime: varEventEndTime,
+                            reservationDesk_text: Blank(),
+                            reservationRoom_text: "Room #" & var_reservationRoomNumber,
+                            reservationFloor_text: "Floor #" & var_reservationFloorNumber,
+                            reservationBuilding_text: "Building #" & var_reservationBuildingNumber,
+                            reservationDivision_text: var_reservationDivision,
+                            reservationAgreementBody_multilinetext: var_reservationAgreementBody,
+                            reservationDescription_multilinetext: var_reservationScenario & " (" & var_reservationRole & ")",
+                            reservationComments_multilinetext: Blank(),
+                            reservationInviteBody_multilinetext: varEmailBody,
+                            reservationInviteOptionalAttendees_multilinetext: var_OptionalAttendees,
+            
+                            // OLD Columns:
+                            //'Reserved By': Office365Users.MyProfileV2().displayName,
+                            MeetingCategory: var_MeetingCategory,
+                            DeskText: var_reservationScenario & " (" & var_reservationRole & ")",
+                            Description: var_reservationScenario & " (" & var_reservationRole & ")",
+                            //OptionalAttendees: var_OptionalAttendees,
+                            //Active_choice: true,
+                            'Check Out To': varEventEndTime,
+                            'Check Out From': varEventStartTime,
+                            'Check Out To Text': Text(var_EndTime),
+                            'Check Out From Text': Text(var_StartTime),
+                            //'Check Out To Number': Value(var_EndTime)
+                            //'Check Out From Number': Value(var_StartTime),
+                            Service: var_Service,
+                            RoomReservation: true,
+                            //Manager: Lower(Office365Users.UserProfileV2(var_ManagerEmail).mail),
+                            //Asset: "Desk",
                             //RecurrenceFrequency: varRecurrence,
-                            RecurrenceEndDate: DateValue(varEndDate),
-                            ///RecurrenceDayName: varFirstDayName,
-                            ///RecurrenceTimes: varRecurringtimes,
+                            RecurrenceEndDate: Blank(),
                             RecurrenceID: varRecurrenceID,
-                            MeetingCategory: varMeetCat,
-                            Description: varDescription,
-                            //OptionalAttendees: OptionAttendeesPP.Selected,
-                            Floor: varSelectedDesk.FloorNumber_number
+                            RecurrenceDayName: Blank(),
+                            RecurrenceTimes: Blank(),
+                            RecurrencePattern: Blank(),
+                            IsRecurring: true,
+                            OutlookEventID: Blank(),
+                            OutlookSeriesID: Blank(),
+                            ParentReservationID: Blank()
                         }
                     )   
                 )
             );
+            
             
             // ——————————————————————————————————————————————
             // 3) Clean up & navigate
@@ -603,15 +574,12 @@ Confirm As screen:
                 Clear(colSelectedDesks),
                 Clear(CollectionRecurrence),
                 Clear(colDeskChckRecur),
-                Clear(colBookedDesks),
                 Clear(colCombinedRecurrence),
                 Clear(wkDays),
                 Clear(wkDaysTemp)
             );
             
             Navigate(Success)
-            
-            
         PressedBorderColor: =App.Theme.Colors.Darker40
         PressedColor: =Self.Color
         PressedFill: =App.Theme.Colors.Darker40
@@ -621,8 +589,8 @@ Confirm As screen:
         Visible: =!varAccept3 And !varAccept4
         Width: =200
         X: =(Parent.Width - Self.Width) / 2
-        Y: =Gallery3_1.Y + Gallery3_1.Height + 15
-        ZIndex: =9
+        Y: =Parent.Height - Self.Height - 50
+        ZIndex: =4
 
     lblLookGood As label:
         Align: =Align.Center
@@ -644,7 +612,7 @@ Confirm As screen:
                 )
             )
         Width: =1136
-        ZIndex: =10
+        ZIndex: =5
 
     btnBackConfirm As button:
         BorderColor: =App.Theme.Colors.Primary
@@ -659,7 +627,9 @@ Confirm As screen:
         HoverBorderColor: =App.Theme.Colors.Darker10
         HoverColor: =App.Theme.Colors.PrimaryForeground
         HoverFill: =ColorFade(Self.Fill, -20%)
-        OnSelect: =Back();Set(varAccept,true)
+        OnSelect: |-
+            =Set(varAccept,true);
+            Navigate(POCSUPERVISOR); //Back();
         PressedBorderColor: =App.Theme.Colors.Darker40
         PressedColor: =Self.Color
         PressedFill: =App.Theme.Colors.Darker40
@@ -668,7 +638,7 @@ Confirm As screen:
         Width: =200
         X: =(Parent.Width - Self.Width) / 2
         Y: =70
-        ZIndex: =11
+        ZIndex: =6
 
     lblReview_1 As label:
         Align: =Align.Center
@@ -690,5 +660,235 @@ Confirm As screen:
         Width: =675
         X: =lblReview.X
         Y: =lblReview.Y + lblReview.Height
-        ZIndex: =12
+        ZIndex: =7
+
+    Container6 As groupContainer.gridLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Height: =400
+        LayoutGap: =8
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =2
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =1
+        LayoutMode: =LayoutMode.Grid
+        PaddingBottom: =8
+        PaddingLeft: =8
+        PaddingRight: =8
+        PaddingTop: =8
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =false
+        Width: =997
+        X: =66
+        Y: =230
+        ZIndex: =8
+
+        Form4 As form.ModernForm:
+            BorderColor: =App.Theme.Colors.Darker40
+            DataSource: =col_EventCombinedDetails
+            Height: =DataCard2.Height + DataCard3.Height + DataCard4.Height + DataCard5.Height
+            LayoutGridColumnEnd: =
+            LayoutGridColumnStart: =
+            LayoutGridRowEnd: =
+            LayoutGridRowStart: =
+            Width: =500
+            X: =40
+            Y: =40
+            ZIndex: =2
+
+            DataCard2 As typedDataCard.blankCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DisplayMode: =DisplayMode.Edit
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =Text2.Height + TextInput1.Height + 5
+                Width: =487
+                X: =0
+                Y: =0
+                ZIndex: =1
+
+                TextInput1 As modernTextInput:
+                    Appearance: =Appearance.FilledDarker
+                    Default: =ThisItem.RoomNumber_number
+                    Height: =64
+                    Placeholder: ="Enter text"
+                    TriggerOutput: =TriggerOutput.Keypress
+                    ValidationState: =ValidationState.None
+                    Width: =560
+                    Y: =Text2.Y + Text2.Height
+                    ZIndex: =1
+
+                Text2 As modernText:
+                    Height: =50
+                    Text: ="Scenario"
+                    Width: =200
+                    ZIndex: =2
+
+            DataCard3 As typedDataCard.blankCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DisplayMode: =DisplayMode.Edit
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =100
+                Width: =487
+                X: =0
+                Y: =DataCard2.Y + DataCard2.Height
+                ZIndex: =1
+
+            DataCard4 As typedDataCard.blankCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DisplayMode: =DisplayMode.Edit
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =100
+                Width: =487
+                X: =0
+                Y: =DataCard3.Y + DataCard2.Height
+                ZIndex: =1
+
+            DataCard5 As typedDataCard.blankCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DisplayMode: =DisplayMode.Edit
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =100
+                Width: =487
+                X: =0
+                Y: =DataCard4.Y + DataCard2.Height
+                ZIndex: =1
+
+        Form5 As form.ModernForm:
+            BorderColor: =App.Theme.Colors.Darker40
+            DataSource: =col_EventBuildDetails
+            Height: =400
+            LayoutGridColumnEnd: =
+            LayoutGridColumnStart: =
+            LayoutGridRowEnd: =
+            LayoutGridRowStart: =
+            Width: =640
+            X: =40
+            Y: =40
+            ZIndex: =3
+
+            DataCard6 As typedDataCard.blankCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DisplayMode: =DisplayMode.Edit
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =225
+                Width: =487
+                X: =0
+                Y: =0
+                ZIndex: =1
+
+            DataCard7 As typedDataCard.blankCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DisplayMode: =DisplayMode.Edit
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =225
+                Width: =487
+                X: =0
+                Y: =1
+                ZIndex: =1
+
+    Container2 As groupContainer.manualLayoutContainer:
+        Height: =482
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =varAccept3 Or varAccept4 ///varAccept2
+        Width: =854
+        X: =164
+        Y: =158
+        ZIndex: =9
+
+        ButtonCanvas2 As Button:
+            BasePaletteColor: =RGBA(5, 102, 178, 1)
+            BorderColor: =
+            DisplayMode: =DisplayMode.Edit
+            Font: =Font.Arial
+            FontColor: =
+            FontSize: =32
+            Height: =90
+            OnSelect: |-
+                =//Set(varAccept2,false);Set(varAccept, true);
+                If(varAccept3,
+                    Set(varAccept3, false);
+                    Set(varAccept4, false),
+                    If(varAccept4,
+                        Set(varAccept4, false)
+                    )
+                );
+                Set(var_reservationAgreementBody, HtmlText3.HtmlText);
+            Text: |-
+                =If(varAccept3,
+                    "Accept Terms 
+                        & Conditions",
+                    //Else
+                    "Aknowledge My
+                    Responsibility"
+                )
+            Width: =277
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =Parent.Height - Self.Height - 10
+            ZIndex: =2
+
+        HtmlText3 As htmlViewer:
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Font: =App.Theme.Font
+            Height: =392
+            HtmlText: |-
+                =If(
+                    varAccept3,
+                    If(
+                        IsBlankOrError(varPopUp_ClassPicker_scenarioSplit) || IsBlankOrError(varPopUp_ClassPicker_scenarioName),
+                        "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:14px; border-radius:5px;'>
+                            <ul style='padding-left:20px;'>
+                            <li>I have tested and confirmed I have sandbox access: <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx?csf=1&web=1&e=ohGdcr&CID=a04e3960-c7fe-4688-8185-144525372e55"" style='color:#add8e6;'>Log into Sandbox</a></li>
+                            <li>I understand the training location is in Building #20 and I must provide my own transportation. <a href=""https://dvagov.sharepoint.com/:i:/s/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp/IQBaKx0HJ0METY3KdSl-dDo0AVVZRsTdnR80aX1kEjowr_U?e=edHt9o"" style='color:#add8e6;'>Link to Campus Map</a>.</li>
+                            <li>Download the training materials: <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"">Learning Lab Training Materials Library</a>.</li>,
+                            <li>The EHRM Training Rooms are intended solely for EHRM-related training, meetings, and activities. Any other use is prohibited unless expressly authorized.</li>
+                            <li>If you have any issues with EHRM equipment, please contact OI&T at ext. <a href=""tel:+18556734357"" style='color:#add8e6;'>44357 (1-855-673-4357)</a>.</li>
+                            <li>Ensure that the room is left in an orderly condition.​</li>
+                            <li>Ensure the room set up has been put back in the initial arrangement.​</li>
+                            <li>Capacity: Do not exceed the room’s maximum occupancy limit.​</li>
+                        </ul>
+                        <p style='margin-top:15px;'>For questions contact <a href=""mailto:VHAHINInformaticsTrainingAndSupport@va.gov"" style='color:#add8e6;'>VHAHINInformaticsTrainingAndSupport@va.gov.</a>.</p>
+                
+                        <div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px; text-align: center'>
+                        By acknowledging this, you accept responsibility for the EHRM training workstation/Desk and ensuring the room is returned to its original state.
+                        </div>",
+                    // ELSE IF !IsBlankOrError(varPopUp_ClassPicker_scenarioSplit) || !IsBlankOrError(varPopUp_ClassPicker_scenarioName)
+                        "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:14px; border-radius:5px;'>
+                            <ul style='padding-left:20px;'>
+                            <li>I have tested and confirmed I have sandbox access: <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx?csf=1&web=1&e=ohGdcr&CID=a04e3960-c7fe-4688-8185-144525372e55"" style='color:#add8e6;'>Log into Sandbox</a></li>
+                            <li>I understand the training location is in Building #20 and I must provide my own transportation. <a href=""https://dvagov.sharepoint.com/:i:/s/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp/IQBaKx0HJ0METY3KdSl-dDo0AVVZRsTdnR80aX1kEjowr_U?e=edHt9o"" style='color:#add8e6;'>Link to Campus Map</a>.</li>
+                            <li>Download the training materials: <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=" & varPopUp_ClassPicker_scenarioSplit & "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603""> " & varPopUp_ClassPicker_scenarioName & " Scenario Documents</a>.</li>
+                            <li>The EHRM Training Rooms are intended solely for EHRM-related training, meetings, and activities. Any other use is prohibited unless expressly authorized.</li>
+                            <li>If you have any issues with EHRM equipment, please contact OI&T at ext. <a href=""tel:+18556734357"" style='color:#add8e6;'>44357 (1-855-673-4357)</a>.</li>
+                            <li>Ensure that the room is left in an orderly condition.​</li>
+                            <li>Ensure the room set up has been put back in the initial arrangement.​</li>
+                            <li>Capacity: Do not exceed the room’s maximum occupancy limit.​</li>
+                        </ul>
+                        <p style='margin-top:15px;'>For questions contact <a href=""mailto:VHAHINInformaticsTrainingAndSupport@va.gov"" style='color:#add8e6;'>VHAHINInformaticsTrainingAndSupport@va.gov.</a>.</p>
+                
+                        <div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px; text-align: center'>
+                        By acknowledging this, you accept responsibility for the EHRM training workstation/Desk and ensuring the room is returned to its original state.
+                        </div>"
+                    ),
+                    // ELSE IF
+                    "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:40px; border-radius:5px; text-align: center'>By acknowledging this, you accept responsibility for the EHRM VILT workstation & ensuring the desk/room is returned to its original state.</div>"
+                )
+            Size: =13
+            Width: =Parent.Width
+            ZIndex: =5
 

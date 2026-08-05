@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="31px" viewBox="0 0 36 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Badge / pass</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Homepage_WFBb" transform="translate(-162.000000, -137.000000)" stroke="#007991" stroke-width="0.75">
+            <g id="Badge-/-Pass-whole---white" transform="translate(147.000000, 122.000000)">
+                <g id="Badge-/-pass" transform="translate(16.000000, 16.000000)">
+                    <g id="Group-11">
+                        <g id="Badge-/-Pass-access">
+                            <g id="Badge" transform="translate(0.172308, 0.077984)">
+                                <path d="M9.00580734,6.46790444 L2,6.46790444 C0.8954305,6.46790444 -1.3527075e-16,7.36333494 0,8.46790444 L0,27.10557 C1.3527075e-16,28.2101395 0.8954305,29.10557 2,29.10557 L31.9969227,29.10557 C33.1014922,29.10557 33.9969227,28.2101395 33.9969227,27.10557 L33.9969227,8.46790444 C33.9969227,7.36333494 33.1014922,6.46790444 31.9969227,6.46790444 L21.7071011,6.46790444" id="Path-3" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <rect id="Rectangle" x="14.0676922" y="0" width="7.03384608" height="9.70185666" rx="1"></rect>
+                                <ellipse id="Oval" cx="24.6184613" cy="15.091777" rx="3.51692304" ry="3.23395222"></ellipse>
+                                <line x1="5.97590988" y1="20.4816974" x2="15.1256284" y2="20.4816974" id="Line-3" stroke-linecap="round" stroke-linejoin="round"></line>
+                                <line x1="5.98444162" y1="24.5241377" x2="20.978635" y2="24.2546417" id="Line-3-Copy" stroke-linecap="round" stroke-linejoin="round"></line>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

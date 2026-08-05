@@ -7,13 +7,10 @@
       "RevisionNumber": 1
     },
     "ConnectedDataSourceInfoNameMapping": {
-      "{Attachments}": "Attachments",
-      "{Attachments}@odata.type": "{Attachments} ({Attachments}@odata.type)",
       "{ContentType}": "Content type",
       "{ContentType}#Id": "Content type Id",
       "{FilenameWithExtension}": "File name with extension",
       "{FullPath}": "Full Path",
-      "{HasAttachments}": "Has attachments",
       "{Identifier}": "Identifier",
       "{IsFolder}": "IsFolder",
       "{Link}": "Link to item",
@@ -75,6 +72,7 @@
       "MySite_Text": "MySite_Text",
       "NetworkAccount_Text": "NetworkAccount_Text",
       "OData__ColorTag": "Color Tag",
+      "OData__FormSourceId_0": "Created Via",
       "OfficeLocation_Text": "OfficeLocation_Text",
       "OverdueAccessReview_Choice": "AccessReviewOverdue_Choice",
       "OverdueAccessReview_Choice#Id": "AccessReviewOverdue_Choice Id",

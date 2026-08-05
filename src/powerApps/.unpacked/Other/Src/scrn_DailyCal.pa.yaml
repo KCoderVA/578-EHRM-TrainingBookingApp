@@ -75,7 +75,7 @@ Screens:
                     Desks,
                     Asset.Value = "Room"
                 ),
-                Title
+                ItemID_title
             )
         );
     Children:
@@ -463,7 +463,7 @@ Screens:
                 Group: grpMap_9
                 Properties:
                   Height: =415
-                  Image: =LookUp(Desks,Title = varSelectedReservation.DeskText).RoomPicture
+                  Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation0
                   ImagePosition: =ImagePosition.Stretch
                   Visible: =showMap
                   Width: =1022
@@ -550,7 +550,7 @@ Screens:
                   AccessibleLabel: ="Floor Input"
                   BorderColor: =RGBA(179, 179, 179, 1)
                   BorderThickness: =1
-                  Default: =LookUp(Desks,Title = varSelectedReservation.DeskText).'Room Location'
+                  Default: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation
                   DisplayMode: =DisplayMode.View
                   Fill: =RGBA(0, 0, 0, 0)
                   Font: =Font.'Segoe UI'
@@ -605,7 +605,7 @@ Screens:
                   Default: |-
                     =
 
-                    varSelectedReservation.'Reason for desk reservation'
+                    varSelectedReservation.Reasonfordeskreservation
                     //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
                   DisplayMode: =DisplayMode.View
                   Font: =Font.'Segoe UI'

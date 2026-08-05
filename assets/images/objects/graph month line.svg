@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="121px" height="2px" viewBox="0 0 121 2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 60.1 (88133) - https://sketch.com -->
+    <title>graph month line</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="My-Weekly-Activity" transform="translate(-16.000000, -57.000000)" stroke="#009BB9">
+            <line x1="16.5" y1="58" x2="136.5" y2="58" id="graph-month-line"></line>
+        </g>
+    </g>
+</svg>

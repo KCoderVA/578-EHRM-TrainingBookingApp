@@ -108,7 +108,7 @@
       "MetaDataIDKey": "",
       "Name": "btnBackDesk",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 4,
+      "ParentIndex": 5,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -415,7 +415,7 @@
       "MetaDataIDKey": "",
       "Name": "btnContinueDesk",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 5,
+      "ParentIndex": 6,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -716,7 +716,7 @@
       "MetaDataIDKey": "",
       "Name": "btnContinueDesk_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 6,
+      "ParentIndex": 7,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -2531,7 +2531,7 @@
         {
           "Category": "Design",
           "PropertyName": "Fill",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",
@@ -2658,7 +2658,7 @@
       "MetaDataIDKey": "",
       "Name": "Dropdown1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 14,
+      "ParentIndex": 15,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -2907,7 +2907,14 @@
           "IsLockable": false,
           "NameMapSourceSchema": "?"
         },
-        "Default",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "\"EHRM Training Rooms\"",
+          "InvariantPropertyName": "Default",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "Reset",
         "AllowEmptySelection",
         "SelectionColor",
@@ -2971,7 +2978,14 @@
         "TabIndex",
         "DisplayMode",
         "OnSelect",
-        "OnChange",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "colRoomLocations",
+          "InvariantPropertyName": "OnChange",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "minimumWidth",
         "minimumHeight",
         "maximumWidth",
@@ -2989,19 +3003,19 @@
       "MetaDataIDKey": "",
       "Name": "Dropdown1_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 15,
+      "ParentIndex": 16,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
           "Category": "Data",
-          "NameMap": "{\"Value\":\"Result\"}",
+          "NameMap": "{\"Value\":\"Value\"}",
           "PropertyName": "Items",
           "RuleProviderType": "Unknown"
         },
         {
           "Category": "Data",
           "PropertyName": "Default",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
@@ -3276,7 +3290,7 @@
         {
           "Category": "Behavior",
           "PropertyName": "OnChange",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         }
       ],
       "StyleName": "defaultDropdownStyle",
@@ -3358,6 +3372,14 @@
           "InvariantPropertyName": "Selectable",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
+        },
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "Default",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
         }
       ],
       "GalleryTemplateChildName": "galleryTemplate3",
@@ -3372,7 +3394,7 @@
       "MetaDataIDKey": "",
       "Name": "galleryAvailDesk",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 19,
+      "ParentIndex": 20,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3399,6 +3421,11 @@
           "Category": "Data",
           "PropertyName": "Selectable",
           "RuleProviderType": "User"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "Default",
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -3593,7 +3620,7 @@
       "MetaDataIDKey": "",
       "Name": "grpMap",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 25,
+      "ParentIndex": 26,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3645,7 +3672,7 @@
       "MetaDataIDKey": "",
       "Name": "grpMap_6",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 26,
+      "ParentIndex": 27,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3697,7 +3724,7 @@
       "MetaDataIDKey": "",
       "Name": "grpMap_7",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 27,
+      "ParentIndex": 28,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3749,7 +3776,7 @@
       "MetaDataIDKey": "",
       "Name": "grpNoResults",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 28,
+      "ParentIndex": 29,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -3859,7 +3886,7 @@
       "MetaDataIDKey": "",
       "Name": "Icon1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 22,
+      "ParentIndex": 23,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -4084,7 +4111,7 @@
       "MetaDataIDKey": "",
       "Name": "Icon1_8",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 10,
+      "ParentIndex": 11,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -4309,7 +4336,7 @@
       "MetaDataIDKey": "",
       "Name": "Icon1_9",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 18,
+      "ParentIndex": 19,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -4768,7 +4795,7 @@
       "MetaDataIDKey": "",
       "Name": "Image5",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 20,
+      "ParentIndex": 21,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -5010,13 +5037,13 @@
       "MetaDataIDKey": "",
       "Name": "Image5_8",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 9,
+      "ParentIndex": 10,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
           "Category": "Data",
           "PropertyName": "Image",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
@@ -5252,13 +5279,13 @@
       "MetaDataIDKey": "",
       "Name": "Image5_9",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 21,
+      "ParentIndex": 22,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
           "Category": "Data",
           "PropertyName": "Image",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",
@@ -5496,7 +5523,7 @@
       "MetaDataIDKey": "",
       "Name": "Label5",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 23,
+      "ParentIndex": 24,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -5716,7 +5743,7 @@
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "\"Text\"",
+          "AutoRuleBindingString": "",
           "InvariantPropertyName": "Text",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
@@ -5785,7 +5812,7 @@
       "MetaDataIDKey": "",
       "Name": "Label5_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 24,
+      "ParentIndex": 25,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -6646,7 +6673,7 @@
       "MetaDataIDKey": "",
       "Name": "Label9",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 16,
+      "ParentIndex": 17,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -6947,7 +6974,7 @@
       "MetaDataIDKey": "",
       "Name": "Label9_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 17,
+      "ParentIndex": 18,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -7286,7 +7313,7 @@
       "MetaDataIDKey": "",
       "Name": "lblDateDesk",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 12,
+      "ParentIndex": 13,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -7609,7 +7636,7 @@
       "MetaDataIDKey": "",
       "Name": "lblSelectDesk",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
+      "ParentIndex": 3,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -7935,7 +7962,7 @@
       "MetaDataIDKey": "",
       "Name": "lblSelectDesk_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 11,
+      "ParentIndex": 12,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -8255,7 +8282,7 @@
       "MetaDataIDKey": "",
       "Name": "lblSelectDesk_2",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 3,
+      "ParentIndex": 4,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -9009,10 +9036,147 @@
         {
           "Category": "Behavior",
           "PropertyName": "OnSelect",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         }
       ],
       "StyleName": "defaultIconStyle",
+      "Type": "ControlInfo"
+    },
+    "Preloader_3": {
+      "AllowAccessToGlobals": true,
+      "ControlPropertyState": [
+        "Fill",
+        "Height",
+        "Width",
+        "X",
+        "Y",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "Visible",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
+        "ChildTabPriority",
+        "EnableChildFocus",
+        "ContentLanguage",
+        "AnimatedGIF",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "Text",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
+        "IsLoading",
+        "Styles",
+        "Color",
+        "OnReset",
+        "ZIndex"
+      ],
+      "HasDynamicProperties": false,
+      "IsAutoGenerated": false,
+      "IsComponentDefinition": false,
+      "IsDataControl": false,
+      "IsFromScreenLayout": false,
+      "IsGroupControl": false,
+      "IsLocked": false,
+      "LayoutName": "",
+      "Metadata": {
+        "AllowAccessToGlobals": false,
+        "AllowCustomization": true,
+        "Description": ""
+      },
+      "MetaDataIDKey": "",
+      "Name": "Preloader_3",
+      "OptimizeForDevices": "Off",
+      "ParentIndex": 1,
+      "PersistMetaDataIDKey": false,
+      "Properties": [
+        {
+          "Category": "Data",
+          "PropertyName": "ContentLanguage",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "AnimatedGIF",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "Text",
+          "RuleProviderType": "User"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "IsLoading",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "Styles",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Data",
+          "PropertyName": "Color",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "Fill",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "Height",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "Width",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "X",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "Y",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "Visible",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "ChildTabPriority",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "EnableChildFocus",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Design",
+          "PropertyName": "ZIndex",
+          "RuleProviderType": "Unknown"
+        },
+        {
+          "Category": "Behavior",
+          "PropertyName": "OnReset",
+          "RuleProviderType": "System"
+        }
+      ],
+      "StyleName": "",
       "Type": "ControlInfo"
     },
     "Radio3": {
@@ -9073,7 +9237,7 @@
       "MetaDataIDKey": "",
       "Name": "Radio3",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 1,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -9322,7 +9486,7 @@
       "MetaDataIDKey": "",
       "Name": "Rectangle3",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 7,
+      "ParentIndex": 8,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -9473,7 +9637,7 @@
       "MetaDataIDKey": "",
       "Name": "Rectangle3_11",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 8,
+      "ParentIndex": 9,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -9624,7 +9788,7 @@
       "MetaDataIDKey": "",
       "Name": "Rectangle3_12",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 13,
+      "ParentIndex": 14,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {

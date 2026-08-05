@@ -4,33 +4,46 @@ chkWeekDays As screen:
     LoadingSpinnerColor: =App.Theme.Colors.Primary
     OnVisible: |-
         =UpdateContext(
-        {
-            varDefaultTime: With(
-                {
-                    CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
-                    CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
-                },
-                // Construct a pure Time value from the corrected hour and minute.
-                Time(CorrectedHour, CorrectedMinute, 0)
-            ),
-            Date: With(
-                {
-                    CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
-                    CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
-                },
-                // Construct a pure Time value from the corrected hour and minute.
-                Date(
-                    Year(varPopUp_ClassPicker_scenarioDate),
-                    Month(varPopUp_ClassPicker_scenarioDate),
-                    Day(varPopUp_ClassPicker_scenarioDate)
-                )
-            )
-        }
+            {
+                varDefaultTime: var_StartTime
+            }
         );
+        
+        
+        
+        /*
+        UpdateContext(
+            {
+                varDefaultTime: With(
+                    {
+                        CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
+                        CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
+                    },
+                    // Construct a pure Time value from the corrected hour and minute.
+                    Time(CorrectedHour, CorrectedMinute, 0)
+                ),
+                Date: With(
+                    {
+                        CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
+                        CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
+                    },
+                    // Construct a pure Time value from the corrected hour and minute.
+                    Date(
+                        Year(varPopUp_ClassPicker_scenarioDate),
+                        Month(varPopUp_ClassPicker_scenarioDate),
+                        Day(varPopUp_ClassPicker_scenarioDate)
+                    )
+                )
+            }
+        );
+        */
         Reset(Calendar_1);
         Reset(TimeFromdd);
         Reset(TimeTodd);
         Select(calClickBtn);
+        
+        ////  KYLE:   temporarily bypass this calendar selection screen
+        //Select(ContinueDatebtn);
         
         /*
         UpdateContext({
@@ -136,6 +149,12 @@ chkWeekDays As screen:
                     )
                 )
             );
+            
+            Navigate(Confirm);
+            
+            
+            
+            /*
             If(
                 false And false,
                 Notify(
@@ -167,8 +186,8 @@ chkWeekDays As screen:
                                     ])
                                 ),
                                 Asset,
-                                Title,
-                                'Room Location'
+                                ItemID_title,
+                                RoomLocation
                             ),
                             Title,
                             DeskText,
@@ -189,14 +208,17 @@ chkWeekDays As screen:
                 Distinct(
                     Filter(
                         Desks,
-                        !(Asset.Value in [
+                        Asset.Value in [
                             "Desk",
                             "Item"
                         ])
                     ),
-                    Title
+                    ItemID_title
                 )
             );
+            */
+            
+            
             /*
             Set(varInterval2, Text(ddRecurrenceFrequency.Selected.Value));
             Set(varFirstDayName, Text(Min(CollectionRecurrence, StartDateTime), "dddd"));
@@ -204,7 +226,8 @@ chkWeekDays As screen:
             Set(varStartDate,Text(Min(CollectionRecurrence, StartDateTime), "[$-en-US]yyyy-mm-ddTHH:mm:ss"));
             Set(varReEndDate, Text(Max(CollectionRecurrence, EndDateTime), "[$-en-US]mm-dd-yyy"));
             */
-            Navigate(DeskSelect)
+            
+            //Navigate(DeskSelect)
         PressedBorderColor: =App.Theme.Colors.Darker40
         PressedColor: =Self.Color
         PressedFill: =App.Theme.Colors.Darker40
@@ -282,6 +305,30 @@ chkWeekDays As screen:
             Width: =Parent.Width
             ZIndex: =5
 
+    Preloader_2 As Preloader:
+        ChildTabPriority: =true
+        ContentLanguage: =""
+        EnableChildFocus: =true
+        Height: =Parent.Height
+        Text: =
+        Visible: =true
+        Width: =Parent.Width
+        ZIndex: =19
+
+    Text3 As modernText:
+        Align: =Align.Center
+        Color: =RGBA(9, 33, 98, 1)
+        FontWeight: =FontWeight.Bold
+        Height: =Preloader_2.Height
+        Italic: =true
+        Size: =40
+        Text: ="Loading . . . . ."
+        Visible: =Preloader_2.Visible
+        Width: =Preloader_2.Width
+        X: =Preloader_2.X
+        Y: =Preloader_2.Y
+        ZIndex: =20
+
     Group3 As group:
         Height: =5
         Width: =5
@@ -303,6 +350,34 @@ chkWeekDays As screen:
             Y: =TextCanvas8.Y + TextCanvas8.Height
             ZIndex: =2
 
+            TextCanvas7_2 As Text:
+                Align: ="Center"
+                AutoHeight: =false
+                BorderColor: =
+                BorderStyle: =""
+                ContentLanguage: =""
+                DisplayMode: =DisplayMode.Edit
+                Fill: =
+                Font: =""
+                FontColor: =
+                FontItalic: =true
+                FontStrikethrough: =false
+                FontUnderline: =false
+                Height: =TextCanvas7.Height
+                Size: =12
+                TabIndex: =0
+                Text: |-
+                    ="Duration:  " & var_Duration
+                Tooltip: =""
+                VerticalAlign: =""
+                Visible: =true
+                Weight: ="Regular"
+                Width: =TextCanvas7.Width + TextCanvas7_1.Width
+                Wrap: =true
+                X: =TextCanvas7.X
+                Y: =TextCanvas7.Y + TextCanvas7.Height
+                ZIndex: =2
+
             TextCanvas7_1 As Text:
                 BorderColor: =
                 DisplayMode: =DisplayMode.Edit
@@ -314,7 +389,7 @@ chkWeekDays As screen:
                 Width: =120
                 X: =TextCanvas7.X + TextCanvas7.Width
                 Y: =0
-                ZIndex: =1
+                ZIndex: =3
 
             TextCanvas7 As Text:
                 BorderColor: =
@@ -327,7 +402,7 @@ chkWeekDays As screen:
                 Width: =120
                 X: =0
                 Y: =0
-                ZIndex: =2
+                ZIndex: =4
 
         SelectTimeSlotlb_1 As label:
             Align: =Align.Center
@@ -352,24 +427,21 @@ chkWeekDays As screen:
             BorderRadius: =1
             DaysAheadRestriction: =390
             DefaultEndDate: |-
-                =varPopUp_ClassPicker_scenarioDate
-                /*
-                If(
-                    !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Blank(),
-                        varPopUp_ClassPicker_scenarioDate,
+                =If(
+                    (!IsBlankOrError(var_Date) || var_Date <> Blank()),
+                        var_Date, //varPopUp_ClassPicker_scenarioDate,
                         Now()
                 )
-                */
             DefaultStartDate: |-
                 =If(
-                    !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Blank(),
-                        varPopUp_ClassPicker_scenarioDate,
+                    (!IsBlankOrError(var_Date) || var_Date <> Blank()),
+                        var_Date, //varPopUp_ClassPicker_scenarioDate,
                         Now()
                 )
             OnChangeCal: |-
                 =// Calculate the default end time (60 mins after start time) and store it in a variable
                 //Set(varDefaultEndTime, DateAdd(TimeFromdd.Selected.Value, 60, TimeUnit.Minutes));
-                Set(varDefaultEndTime, varPopUp_ClassPicker_scenarioEndTime);
+                Set(varDefaultEndTime, var_EndTime); //varPopUp_ClassPicker_scenarioEndTime);
                 
                 // Reset the end time dropdown to apply the new default
                 Reset(TimeTodd);
@@ -860,9 +932,9 @@ chkWeekDays As screen:
                 ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
                 Default: |-
                     =If(
-                        !IsBlankOrError(varPopUp_ClassPicker_scenarioEndTime) || varPopUp_ClassPicker_scenarioEndTime <> Blank(),
-                            varPopUp_ClassPicker_scenarioEndTime,
-                            Now()
+                        !IsBlankOrError(var_EndTime) || var_EndTime <> Blank(),
+                            var_EndTime,
+                            varDefaultEndTime
                     )
                 DisabledBorderColor: =RGBA(166, 166, 166, 1)
                 DisabledColor: =RGBA(166, 166, 166, 1)
@@ -927,13 +999,11 @@ chkWeekDays As screen:
                 ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
                 Default: |-
                     =If(
-                        !IsBlankOrError(varPopUp_ClassPicker_scenarioStartTime) || varPopUp_ClassPicker_scenarioStartTime <> Blank(),
-                            varDefaultTime,
-                            varPopUp_ClassPicker_scenarioStartTime
+                        !IsBlankOrError(var_StartTime) || var_StartTime <> Blank(),
+                            var_StartTime,
+                            varDefaultTime
                             //Now()
                     )
-                    // TimeValue(DateAdd(DateValue(Today())+Time(Hour(Now()),RoundUp(Minute(Now())/15,0)*15,0),If(Minute(Today())>=0&&Minute(Now())<15,0,15),TimeUnit.Minutes))
-                    //"9:00 AM"
                 DisabledBorderColor: =RGBA(166, 166, 166, 1)
                 DisabledColor: =RGBA(166, 166, 166, 1)
                 DisabledFill: =RGBA(244, 244, 244, 1)
@@ -1166,7 +1236,8 @@ chkWeekDays As screen:
                     Fill: =ColorFade(Color.Gray, .5)
                     Height: =2
                     OnSelect: =Select(Parent)
-                    Width: =656
+                    Width: |
+                        =Parent.Width - 10
                     ZIndex: =1
 
                 lbl_valueReservationPOCdepartment As Text:
@@ -1337,7 +1408,7 @@ chkWeekDays As screen:
                 VerticalAlign: =""
                 Visible: =true
                 Weight: ='TextCanvas.Weight'.Bold
-                Width: =153
+                Width: =155
                 Wrap: =true
                 X: =lbl_Desk.X + lbl_Desk.Width
                 Y: =lbl_Desk.Y
@@ -1432,7 +1503,7 @@ chkWeekDays As screen:
                 VerticalAlign: =""
                 Visible: =true
                 Weight: ='TextCanvas.Weight'.Bold
-                Width: =Parent.Width - Self.X
+                Width: =200
                 Wrap: =true
                 X: =lbl_EndTime.X + lbl_EndTime.Width
                 Y: =lbl_Desk.Y
@@ -1461,12 +1532,12 @@ chkWeekDays As screen:
                 Text: ="Room Location"
                 Tooltip: =""
                 VerticalAlign: =""
-                Visible: =false
+                Visible: =true
                 Weight: ='TextCanvas.Weight'.Bold
-                Width: =180
+                Width: =218
                 Wrap: =true
-                X: =372
-                Y: =187
+                X: =498
+                Y: =lbl_CheckedOutBy.Y
                 ZIndex: =7
 
         ctn_Recurrance As groupContainer.manualLayoutContainer:
@@ -2353,4 +2424,39 @@ chkWeekDays As screen:
                     )
                 Y: =ddRecurrenceFrequency.Y + ddRecurrenceFrequency.Height
                 ZIndex: =26
+
+    Timer4 As timer:
+        AutoStart: =true
+        BorderColor: =App.Theme.Colors.Primary
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Duration: =1000
+        Fill: =App.Theme.Colors.Primary
+        Font: =App.Theme.Font
+        Height: =31
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =App.Theme.Colors.Darker10
+        OnTimerEnd: |-
+            =If(
+                Self.Visible,
+                Notify("TESTING! The control named 'Timer4' has ended, and the page typically would now self-navigate forward to the 'Confirm' screen at this time.........",NotificationType.Information, 1000),
+                ""
+            );
+            Select(ContinueDatebtn);
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Visible: |-
+            =If(
+                Lower(User().Email) = "kyle.coder@va.gov",
+                true,
+                false
+            )
+        Width: =280
+        X: =434
+        Y: =609
+        ZIndex: =21
 
