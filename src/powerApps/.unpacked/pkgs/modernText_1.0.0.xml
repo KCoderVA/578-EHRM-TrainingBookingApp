@@ -1,0 +1,136 @@
+<widget xmlns="http://openajax.org/metadata" xmlns:appMagic="http://schemas.microsoft.com/appMagic" spec="1.0" id="http://microsoft.com/appmagic/modernText" name="modernText" jsClass="AppMagic.Controls.ModernTextControl" version="1.0.0" styleable="true" runtimeCost="1">
+  <author name="Microsoft AppMagic" />
+  <license type="text/html"><![CDATA[<p>TODO:  Need license text here.</p>]]></license>
+  <description><![CDATA[Control description here.]]></description>
+  <requires>
+    <require type="javascript" src="/openSource/modified/pcfplatformlibs/fluent_9_4_0.js" />
+    <require type="javascript" src="js/modernText.js" />
+  </requires>
+  <appMagic:capabilities contextualViewsEnabled="true" autoDisabledViewState="true" isVersionFlexible="true" />
+  <appMagic:accessibilityChecks controlIsInteractive="true" />
+  <content><![CDATA[]]></content>
+  <properties>
+    <property name="AutoHeight" localizedName="##CommonProperties_AutoHeight##" datatype="Boolean" defaultValue="false">
+      <title>AutoHeight</title>
+      <appMagic:helperUI>boolean</appMagic:helperUI>
+      <appMagic:category>design</appMagic:category>
+      <appMagic:displayName>##CommonProperties_AutoHeight_DisplayName##</appMagic:displayName>
+      <appMagic:tooltip>##CommonProperties_AutoHeight_Tooltip##</appMagic:tooltip>
+    </property>
+    <property name="Wrap" localizedName="##label_Wrap##" datatype="Boolean" defaultValue="true" nullDefault="false">
+      <title>Wrap</title>
+      <appMagic:helperUI>boolean</appMagic:helperUI>
+      <appMagic:category>design</appMagic:category>
+      <appMagic:displayName>##label_Wrap_DisplayName##</appMagic:displayName>
+      <appMagic:tooltip>##label_Wrap_Tooltip##</appMagic:tooltip>
+    </property>
+  </properties>
+  <appMagic:includeProperties>
+    <!-- Data -->
+    <appMagic:includeProperty name="Text" defaultValue="##Label_DefaultValue_Text##" isExpr="true" isPrimaryInputProperty="true" isPrimaryOutputProperty="true">
+      <appMagic:autoBind>true</appMagic:autoBind>
+    </appMagic:includeProperty>
+    <appMagic:includeProperty name="ContentLanguage" />
+    <!-- Design -->
+    <appMagic:includeProperty name="Fill" defaultValue="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="BorderColor" defaultValue="" isExpr="true" />
+    <appMagic:includeProperty name="BorderStyle" defaultValue="" isExpr="false" />
+    <appMagic:includeProperty name="BorderThickness" defaultValue="" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="RadiusTopLeft" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="RadiusTopRight" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="RadiusBottomLeft" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="RadiusBottomRight" defaultValue="" nullDefault="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="FontWeight" nullDefault="" />
+    <appMagic:includeProperty name="Font" defaultValue="" nullDefault="" isExpr="false" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="Size" defaultValue="15" phoneDefaultValue="26" />
+    <appMagic:includeProperty name="Italic" defaultValue="false" />
+    <appMagic:includeProperty name="Underline" defaultValue="false" />
+    <appMagic:includeProperty name="Strikethrough" defaultValue="false" />
+    <appMagic:includeProperty name="Align" />
+    <appMagic:includeProperty name="VerticalAlign" defaultValue="%VerticalAlign.RESERVED%.Middle" isExpr="true" />
+    <appMagic:includeProperty name="Color" defaultValue="" isExpr="true" isResettableToManifestDefault="true" isLinkableToParentTheme="true" />
+    <appMagic:includeProperty name="PaddingTop" defaultValue="5" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="PaddingRight" defaultValue="5" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="PaddingBottom" defaultValue="5" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="PaddingLeft" defaultValue="5" nullDefault="" isExpr="true" />
+    <appMagic:includeProperty name="X" />
+    <appMagic:includeProperty name="Y" />
+    <appMagic:includeProperty name="Width" defaultValue="150" phoneDefaultValue="200" webDefaultValue="260" />
+    <appMagic:includeProperty name="Height" defaultValue="32" phoneDefaultValue="50" webDefaultValue="32" canBeCompressed="false" />
+    <appMagic:includeProperty name="Visible" />
+    <appMagic:includeProperty name="DisplayMode" />
+    <!-- Accessibility -->
+    <appMagic:includeProperty name="AccessibleLabel" />
+    <!-- Behavior -->
+    <appMagic:includeProperty name="OnSelect" direction="in" />
+    <!--Hidden properties -->
+    <appMagic:includeProperty name="maximumHeight" defaultValue="768" />
+    <appMagic:includeProperty name="maximumWidth" defaultValue="1366" />
+    <appMagic:includeProperty name="minimumHeight" defaultValue="30" />
+    <appMagic:includeProperty name="minimumWidth" defaultValue="10" />
+  </appMagic:includeProperties>
+  <!--Property Dependencies -->
+  <appMagic:propertyDependencies>
+    <appMagic:propertyDependency input="AutoHeight" output="Height" />
+  </appMagic:propertyDependencies>
+  <appMagic:insertMetadata>
+    <appMagic:category name="Display" priority="10" />
+  </appMagic:insertMetadata>
+  <!-- Display metadata providing property visibility, order, sections, and grouping in UI (e.g. properties panel) -->
+  <appMagic:displayMetadata>
+    <!-- General section -->
+    <appMagic:section type="GeneralSection">
+      <appMagic:property name="Text" />
+      <appMagic:property name="AccessibleLabel" />
+    </appMagic:section>
+    <!-- Behavior section -->
+    <appMagic:section type="BehaviorSection">
+      <appMagic:property name="Wrap" />
+      <appMagic:property name="Visible" />
+    </appMagic:section>
+    <!-- Size and Position section -->
+    <appMagic:section type="SizeAndPositioningSection">
+      <appMagic:property name="AutoHeight" />
+      <appMagic:propertyGroup name="Position">
+        <appMagic:property name="X" />
+        <appMagic:property name="Y" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Size">
+        <appMagic:property name="Width" />
+        <appMagic:property name="Height" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Padding">
+        <appMagic:property name="PaddingTop" labelOverride="##Padding_Top_Title##" />
+        <appMagic:property name="PaddingBottom" labelOverride="##Padding_Bottom_Title##" />
+        <appMagic:property name="PaddingLeft" labelOverride="##Padding_Left_Title##" />
+        <appMagic:property name="PaddingRight" labelOverride="##Padding_Right_Title##" />
+      </appMagic:propertyGroup>
+    </appMagic:section>
+    <!-- Style and Theme section -->
+    <appMagic:section type="StyleAndThemeSection">
+      <appMagic:property name="Font" displayType="FontEnum" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="Size" labelOverride="##FontSize_Property##" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="Align" displayType="EnumButtons" itemsOrder="Left;Center;Right;Justify" labelOverride="##FontAlign_Property##" showInFloatie="true" floatieDisplayType="FaceplateIconEnum" showInCommandBar="true" />
+      <appMagic:property name="VerticalAlign" displayType="EnumIcon" itemsOrder="Top;Middle;Bottom" />
+      <appMagic:property name="Color" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="Fill" showInFloatie="true" showInCommandBar="true" />
+      <appMagic:property name="FontWeight" displayType="EnumIcon" itemsOrder="Bold;Semibold;Normal;Lighter" />
+      <appMagic:propertyGroup name="Style">
+        <appMagic:property name="Italic" displayType="ToggleButton" />
+        <appMagic:property name="Underline" displayType="ToggleButton" />
+        <appMagic:property name="Strikethrough" displayType="ToggleButton" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Border">
+        <appMagic:property name="BorderStyle" />
+        <appMagic:property name="BorderThickness" />
+        <appMagic:property name="BorderColor" />
+      </appMagic:propertyGroup>
+      <appMagic:propertyGroup name="Radius">
+        <appMagic:property name="RadiusTopLeft" labelOverride="##Radius_TopLeft_Title##" />
+        <appMagic:property name="RadiusTopRight" labelOverride="##Radius_TopRight_Title##" />
+        <appMagic:property name="RadiusBottomLeft" labelOverride="##Radius_BottomLeft_Title##" />
+        <appMagic:property name="RadiusBottomRight" labelOverride="##Radius_BottomRight_Title##" />
+      </appMagic:propertyGroup>
+    </appMagic:section>
+  </appMagic:displayMetadata>
+</widget>

@@ -17,26 +17,26 @@ POCSUPERVISOR As screen:
                     Set(varPopUp_ClassPicker_scenarioStartTime, Blank()),
                     Set(varPopUp_ClassPicker_scenarioEndTime, Blank()),
                     Set(varPopUp_ClassPicker_scenarioLocation, Blank()),
-                    Reset(Dropdown3),
-                    Reset(Dropdown3_1),
-                    Reset(Dropdown3_2),
-                    Reset(Dropdown3_3)
+                    Reset(dropdown_ScenarioPicker),
+                    Reset(dropdown_RolePicker),
+                    Reset(dropdown_DateTimePicker),
+                    Reset(dropdown_LocationPicker)
                 ),
             varPopUp_ClassPicker = 1 || !IsBlankOrError(varPopUp_ClassPicker),
                 Concurrent(
                     Set(varPopUp_ClassPicker, 1),
-                    Set(varPopUp_ClassPicker_scenario, Dropdown3.Selected.Value),
-                    Set(varPopUp_ClassPicker_scenarioName, Text(Dropdown3.Selected.Value)),
-                    Set(varPopUp_ClassPicker_scenarioSplit, Substitute(Text(Dropdown3.Selected.Value), " ", "%20")),
-                    Set(varPopUp_ClassPicker_scenarioRole, Dropdown3_1.Selected.Value),
-                    Set(varPopUp_ClassPicker_scenarioDateTime, Dropdown3_2.Selected.Value),
+                    Set(varPopUp_ClassPicker_scenario, dropdown_ScenarioPicker.Selected.Value),
+                    Set(varPopUp_ClassPicker_scenarioName, Text(dropdown_ScenarioPicker.Selected.Value)),
+                    Set(varPopUp_ClassPicker_scenarioSplit, Substitute(Text(dropdown_ScenarioPicker.Selected.Value), " ", "%20")),
+                    Set(varPopUp_ClassPicker_scenarioRole, dropdown_RolePicker.Selected.Value),
+                    Set(varPopUp_ClassPicker_scenarioDateTime, dropdown_DateTimePicker.Selected.Value),
                     With(
                         {
-                            DatePart: Match(Dropdown3_2.Selected.Value, "\d{2}/\d{2}/\d{4}").FullMatch,
-                            StartTimePart: Match(Dropdown3_2.Selected.Value, "\d{1,2}:\d{2} [APM]{2}").FullMatch,
-                            EndTimePart: Last(MatchAll(Dropdown3_2.Selected.Value, "\d{1,2}:\d{2} [APM]{2}")).FullMatch,
-                            StartTimeDay24h: Last(MatchAll(Dropdown3_2.Selected.Value, "[APM]{2}")).FullMatch,
-                            EndTimeDay24h: Last(MatchAll(Dropdown3_2.Selected.Value, "[APM]{2}")).FullMatch
+                            DatePart: Match(dropdown_DateTimePicker.Selected.Value, "\d{2}/\d{2}/\d{4}").FullMatch,
+                            StartTimePart: Match(dropdown_DateTimePicker.Selected.Value, "\d{1,2}:\d{2} [APM]{2}").FullMatch,
+                            EndTimePart: Last(MatchAll(dropdown_DateTimePicker.Selected.Value, "\d{1,2}:\d{2} [APM]{2}")).FullMatch,
+                            StartTimeDay24h: Last(MatchAll(dropdown_DateTimePicker.Selected.Value, "[APM]{2}")).FullMatch,
+                            EndTimeDay24h: Last(MatchAll(dropdown_DateTimePicker.Selected.Value, "[APM]{2}")).FullMatch
                         },
                         Concurrent(
                             Set(varPopUp_ClassPicker_scenarioDate,
@@ -62,10 +62,10 @@ POCSUPERVISOR As screen:
                                 )
                             ),
                             Set(varPopUp_ClassPicker_scenarioEnd24,EndTimeDay24h),
-                            Set(varPopUp_ClassPicker_scenarioDayOfWeek, First(Split(Dropdown3_2.Selected.Value, " ")).Value)
+                            Set(varPopUp_ClassPicker_scenarioDayOfWeek, First(Split(dropdown_DateTimePicker.Selected.Value, " ")).Value)
                         )
                     ),
-                    Set(varPopUp_ClassPicker_scenarioLocation, Dropdown3_3.Selected.Value)
+                    Set(varPopUp_ClassPicker_scenarioLocation, dropdown_LocationPicker.Selected.Value)
                 )
         )
     Width: =Max(App.Width, App.DesignWidth)
@@ -145,7 +145,7 @@ POCSUPERVISOR As screen:
                     =With(
                         {
                             // Step 1: Get the manager profile based on the email of the user selected in the first dropdown.
-                            managerProfile: Office365Users.ManagerV2(DataCardValue3.Selected.Email)
+                            managerProfile: Office365Users.ManagerV2(varTargetEntraID)
                         },
                         // Step 2: If a manager is found, build the record in the format your combobox expects.
                         If(
@@ -261,26 +261,32 @@ POCSUPERVISOR As screen:
                 BorderThickness: =2
                 Color: =RGBA(0, 0, 0, 1)
                 Default: |-
-                    =If(
-                        !IsBlank(DataCardValue3),
-                            If(
-                                IsBlank(Office365Users.UserProfileV2(DataCardValue3.Selected.Email).department),
-                                "",
-                                Office365Users.UserProfileV2(DataCardValue3.Selected.Email).department & ", "
-                                )
-                            & If(
-                                IsBlank(Office365Users.UserProfileV2(DataCardValue3.Selected.Email).officeLocation),
-                                "",
-                                Office365Users.UserProfileV2(DataCardValue3.Selected.Email).officeLocation & ", "
-                                )
-                        & If(
-                                IsBlank(Office365Users.UserProfileV2(DataCardValue3.Selected.Email).companyName),
-                                "",
-                                Office365Users.UserProfileV2(DataCardValue3.Selected.Email).companyName & ";"
-                            ),
-                        // DataCardValue3.Selected.Department,
-                        Parent.Default
+                    =TrimEnds(
+                        Concatenate(
+                            Office365Users.MyProfileV2().department,
+                            " ",
+                            Office365Users.MyProfileV2().officeLocation,
+                            " ",
+                            Office365Users.MyProfileV2().companyName
+                        )
                     )
+                    /*
+                    If(
+                        IsBlankOrError(DataCardValue3), // || IsBlankOrError(DataCardValue3.Selected.Email),
+                            //then
+                            Parent.Default,
+                        IsBlankOrError(Office365Users.MyProfileV2().department) & IsBlankOrError(Office365Users.MyProfileV2().officeLocation),
+                            //then
+                            Parent.Default,
+                        !IsBlankOrError(Office365Users.MyProfileV2().department) & IsBlankOrError(Office365Users.MyProfileV2().officeLocation),
+                            //then
+                            Concatenate(Office365Users.MyProfileV2().department, "; "),
+                        IsBlankOrError(Office365Users.MyProfileV2().department) & !IsBlankOrError(Office365Users.MyProfileV2().officeLocation),
+                            Concatenate(Office365Users.MyProfileV2().officeLocation, "; "),
+                        !IsBlankOrError(Office365Users.MyProfileV2().department) & !IsBlankOrError(Office365Users.MyProfileV2().officeLocation),
+                            Concatenate(Office365Users.MyProfileV2().department, "; ", Office365Users.MyProfileV2().officeLocation, "; ")
+                    )
+                    */
                 DelayOutput: =true
                 DisabledBorderColor: =RGBA(166, 166, 166, 1)
                 DisabledColor: =RGBA(166, 166, 166, 1)
@@ -553,6 +559,8 @@ POCSUPERVISOR As screen:
                     
                     ]
                     */
+                OnChange: =
+                OnSelect: =Set(var_MeetingCategory, Self.Selected.Value)
                 PressedColor: =App.Theme.Colors.PrimaryForeground
                 PressedFill: =App.Theme.Colors.Darker30
                 SearchFields: =["Value"]
@@ -569,13 +577,13 @@ POCSUPERVISOR As screen:
         "'Reason for desk reservation_DataCard1' As typedDataCard.textualEditCard":
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
-            DataField: ="Reasonfordeskreservation"
-            Default: =ThisItem.'Reason for desk reservation'
+            DataField: ="reservationJustification_multilinetext"
+            Default: =ThisItem.reservationJustification_multilinetext
             DisplayMode: =Parent.DisplayMode
-            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Reason for desk reservation')
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,reservationJustification_multilinetext) //DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Reasonfordeskreservation)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =127
-            MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, 'Reason for desk reservation')
+            MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Description)
             Required: =false
             Update: =DataCardValue1.Text
             Visible: =false
@@ -670,13 +678,13 @@ POCSUPERVISOR As screen:
         Description_DataCard2 As typedDataCard.textualEditCard:
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
-            DataField: ="Description"
-            Default: =ThisItem.Description
+            DataField: ="reservationDescription_multilinetext" // "Description"
+            Default: =ThisItem.reservationDescription_multilinetext //ThisItem.Description
             DisplayMode: =Parent.DisplayMode
-            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Description)
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,reservationDescription_multilinetext) //DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Description)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =266
-            MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Description)
+            MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, reservationDescription_multilinetext) //DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Description)
             Required: =false
             Update: =DataCardValue13.Text
             Visible: |-
@@ -791,6 +799,838 @@ POCSUPERVISOR As screen:
                 Y: =DataCardValue13.Y
                 ZIndex: =5
 
+        OptionalAttendees_DataCard1 As typedDataCard.comboBoxEditCard:
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="OptionalAttendees"
+            Default: =ThisItem.OptionalAttendees
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,OptionalAttendees)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =50
+            Required: =false
+            Update: =DataCardValue16.Selected
+            Visible: =false
+            Width: =568
+            X: =0
+            Y: =4
+            ZIndex: =1
+
+            DataCardKey17 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =21
+                Text: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =30
+                Y: =10
+                ZIndex: =1
+
+            DataCardValue16 As combobox:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                DefaultSelectedItems: =Parent.Default
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayFields: =["Claims"]
+                DisplayMode: =Parent.DisplayMode
+                Font: =App.Theme.Font
+                Height: =70
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                Items: =Choices([@'Desk Reservations'].OptionalAttendees)
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SearchFields: =["Claims"]
+                SearchItems: =Choices('Desk Reservations'.OptionalAttendees,DataCardValue16.SearchText)
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                SelectMultiple: =false
+                Size: =21
+                Tooltip: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardKey17.Y + DataCardKey17.Height + 5
+                ZIndex: =2
+
+            ErrorMessage15 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardValue16.Y + DataCardValue16.Height
+                ZIndex: =3
+
+            StarVisible15 As label:
+                Align: =Align.Center
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =DataCardKey17.Height
+                Size: =21
+                Text: ="*"
+                Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey17.Y
+                ZIndex: =4
+
+        Active_choice_DataCard1 As typedDataCard.comboBoxEditCard:
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="Active_choice"
+            Default: =ThisItem.Active_choice
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Active_choice)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =50
+            Required: =false
+            Update: =DataCardValue17.Selected
+            Visible: =false
+            Width: =568
+            X: =1
+            Y: =4
+            ZIndex: =1
+
+            DataCardKey18 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =21
+                Text: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =30
+                Y: =10
+                ZIndex: =1
+
+            DataCardValue17 As combobox:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                DefaultSelectedItems: =Parent.Default
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayFields: =["Value"]
+                DisplayMode: =Parent.DisplayMode
+                Font: =App.Theme.Font
+                Height: =70
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                Items: =Choices([@'Desk Reservations'].Active_choice)
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SearchFields: =["Value"]
+                SearchItems: =Choices('Desk Reservations'.Active_choice,DataCardValue17.SearchText)
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                SelectMultiple: =false
+                Size: =21
+                Tooltip: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardKey18.Y + DataCardKey18.Height + 5
+                ZIndex: =2
+
+            ErrorMessage16 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardValue17.Y + DataCardValue17.Height
+                ZIndex: =3
+
+            StarVisible16 As label:
+                Align: =Align.Center
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =DataCardKey18.Height
+                Size: =21
+                Text: ="*"
+                Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey18.Y
+                ZIndex: =4
+
+        Title_DataCard2 As typedDataCard.textualEditCard:
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="Title"
+            Default: =ThisItem.Title
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Title)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =50
+            MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Title)
+            Required: =true
+            Update: =DataCardValue19.Text
+            Visible: =false
+            Width: =568
+            X: =0
+            Y: =5
+            ZIndex: =1
+
+            DataCardKey20 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =21
+                Text: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =30
+                Y: =10
+                ZIndex: =1
+
+            DataCardValue19 As text:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                BorderThickness: =2
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =Parent.Default
+                DelayOutput: =true
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =Parent.DisplayMode
+                FocusedBorderThickness: =4
+                Font: =App.Theme.Font
+                Height: =70
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                MaxLength: =Parent.MaxLength
+                PaddingLeft: =5
+                RadiusBottomLeft: =0
+                RadiusBottomRight: =0
+                RadiusTopLeft: =0
+                RadiusTopRight: =0
+                Size: =21
+                Tooltip: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardKey20.Y + DataCardKey20.Height + 5
+                ZIndex: =2
+
+            ErrorMessage18 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardValue19.Y + DataCardValue19.Height
+                ZIndex: =3
+
+            StarVisible18 As label:
+                Align: =Align.Center
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =DataCardKey20.Height
+                Size: =21
+                Text: ="*"
+                Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey20.Y
+                ZIndex: =4
+
+        "'Check Out From_DataCard1' As typedDataCard.dateTimeEditCard":
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="CheckOutFrom"
+            Default: =ThisItem.'Check Out From'
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Check Out From')
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =50
+            Required: =false
+            Update: =If(Not IsBlank(DateValue1.SelectedDate), DateTime(Year(DateValue1.SelectedDate), Month(DateValue1.SelectedDate), Day(DateValue1.SelectedDate), Value(HourValue1.Selected.Value), Value(MinuteValue1.Selected.Value), 0))
+            Visible: =false
+            Width: =568
+            X: =1
+            Y: =5
+            ZIndex: =1
+
+            DataCardKey21 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =21
+                Text: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =30
+                Y: =10
+                ZIndex: =1
+
+            DateValue1 As datepicker:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                CalendarHeaderFill: =App.Theme.Colors.Primary
+                Color: =RGBA(0, 0, 0, 1)
+                DefaultDate: =Parent.Default
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =Parent.DisplayMode
+                EndYear: =Year(Today())+100
+                Font: =App.Theme.Font
+                Height: =70
+                HoverDateFill: =App.Theme.Colors.Lighter70
+                IconBackground: =App.Theme.Colors.Primary
+                IconFill: =App.Theme.Colors.PrimaryForeground
+                IsEditable: =true
+                PaddingBottom: =0
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                SelectedDateFill: =App.Theme.Colors.Primary
+                Size: =24
+                StartYear: =1899
+                Tooltip: =Parent.DisplayName
+                Width: =(Parent.Width - 60) / 2
+                X: =30
+                Y: =DataCardKey21.Y + DataCardKey21.Height + 5
+                ZIndex: =2
+
+            HourValue1 As dropdown:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                Default: =Text(Hour(Parent.Default),"00")
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =Parent.DisplayMode
+                Font: =App.Theme.Font
+                Height: =DateValue1.Height
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
+                PaddingBottom: =5
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                PaddingRight: =5
+                PaddingTop: =5
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                Size: =21
+                Tooltip: =Parent.DisplayName
+                Width: =DateValue1.Width / 2 - 10
+                X: =DateValue1.X + DateValue1.Width + 10
+                Y: =DateValue1.Y
+                ZIndex: =3
+
+            Separator2 As label:
+                Align: =Align.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =HourValue1.Height
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =21
+                Text: |-
+                    =":"
+                Width: =10
+                Wrap: =false
+                X: =HourValue1.X + HourValue1.Width
+                Y: =HourValue1.Y
+                ZIndex: =4
+
+            MinuteValue1 As dropdown:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                Default: =Text(Minute(Parent.Default),"00")
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =Parent.DisplayMode
+                Font: =App.Theme.Font
+                Height: =HourValue1.Height
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"]
+                PaddingBottom: =5
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                PaddingRight: =5
+                PaddingTop: =5
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                Size: =21
+                Tooltip: =Parent.DisplayName
+                Width: =HourValue1.Width
+                X: =HourValue1.X + HourValue1.Width + Separator2.Width
+                Y: =HourValue1.Y
+                ZIndex: =5
+
+            ErrorMessage19 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =HourValue1.Y + HourValue1.Height
+                ZIndex: =6
+
+            StarVisible19 As label:
+                Align: =Align.Center
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =DataCardKey21.Height
+                Size: =21
+                Text: ="*"
+                Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey21.Y
+                ZIndex: =7
+
+        "'Check Out To_DataCard1' As typedDataCard.dateTimeEditCard":
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="CheckOutTo"
+            Default: =ThisItem.'Check Out To'
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Check Out To')
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =50
+            Required: =false
+            Update: =If(Not IsBlank(DateValue2.SelectedDate), DateTime(Year(DateValue2.SelectedDate), Month(DateValue2.SelectedDate), Day(DateValue2.SelectedDate), Value(HourValue2.Selected.Value), Value(MinuteValue2.Selected.Value), 0))
+            Visible: =false
+            Width: =568
+            X: =0
+            Y: =6
+            ZIndex: =1
+
+            DataCardKey22 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =21
+                Text: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =30
+                Y: =10
+                ZIndex: =1
+
+            DateValue2 As datepicker:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                CalendarHeaderFill: =App.Theme.Colors.Primary
+                Color: =RGBA(0, 0, 0, 1)
+                DefaultDate: =Parent.Default
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =Parent.DisplayMode
+                EndYear: =Year(Today())+100
+                Font: =App.Theme.Font
+                Height: =70
+                HoverDateFill: =App.Theme.Colors.Lighter70
+                IconBackground: =App.Theme.Colors.Primary
+                IconFill: =App.Theme.Colors.PrimaryForeground
+                IsEditable: =true
+                PaddingBottom: =0
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                SelectedDateFill: =App.Theme.Colors.Primary
+                Size: =24
+                StartYear: =1899
+                Tooltip: =Parent.DisplayName
+                Width: =(Parent.Width - 60) / 2
+                X: =30
+                Y: =DataCardKey22.Y + DataCardKey22.Height + 5
+                ZIndex: =2
+
+            HourValue2 As dropdown:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                Default: =Text(Hour(Parent.Default),"00")
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =Parent.DisplayMode
+                Font: =App.Theme.Font
+                Height: =DateValue2.Height
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
+                PaddingBottom: =5
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                PaddingRight: =5
+                PaddingTop: =5
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                Size: =21
+                Tooltip: =Parent.DisplayName
+                Width: =DateValue2.Width / 2 - 10
+                X: =DateValue2.X + DateValue2.Width + 10
+                Y: =DateValue2.Y
+                ZIndex: =3
+
+            Separator8 As label:
+                Align: =Align.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =HourValue2.Height
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =21
+                Text: |-
+                    =":"
+                Width: =10
+                Wrap: =false
+                X: =HourValue2.X + HourValue2.Width
+                Y: =HourValue2.Y
+                ZIndex: =4
+
+            MinuteValue2 As dropdown:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                Default: =Text(Minute(Parent.Default),"00")
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =Parent.DisplayMode
+                Font: =App.Theme.Font
+                Height: =HourValue2.Height
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"]
+                PaddingBottom: =5
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                PaddingRight: =5
+                PaddingTop: =5
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                Size: =21
+                Tooltip: =Parent.DisplayName
+                Width: =HourValue2.Width
+                X: =HourValue2.X + HourValue2.Width + Separator8.Width
+                Y: =HourValue2.Y
+                ZIndex: =5
+
+            ErrorMessage20 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =HourValue2.Y + HourValue2.Height
+                ZIndex: =6
+
+            StarVisible20 As label:
+                Align: =Align.Center
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =DataCardKey22.Height
+                Size: =21
+                Text: ="*"
+                Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey22.Y
+                ZIndex: =7
+
+        RoomReservation_DataCard1 As typedDataCard.toggleEditCard:
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="RoomReservation"
+            Default: =ThisItem.RoomReservation
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,RoomReservation)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =50
+            Required: =false
+            Update: =DataCardValue21.Value
+            Visible: =false
+            Width: =568
+            X: =1
+            Y: =6
+            ZIndex: =1
+
+            DataCardKey24 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =21
+                Text: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =30
+                Y: =10
+                ZIndex: =1
+
+            DataCardValue21 As toggleSwitch:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =Parent.Default
+                DisplayMode: =Parent.DisplayMode
+                FalseFill: =RGBA(128, 130, 133, 1)
+                Font: =App.Theme.Font
+                HandleFill: =RGBA(255, 255, 255, 1)
+                Height: =49
+                Size: =21
+                Tooltip: =Parent.DisplayName
+                TrueFill: =App.Theme.Colors.Primary
+                Width: =154
+                X: =30
+                Y: =DataCardKey24.Y + DataCardKey24.Height + 5
+                ZIndex: =2
+
+            ErrorMessage22 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardValue21.Y + DataCardValue21.Height
+                ZIndex: =3
+
+            StarVisible22 As label:
+                Align: =Align.Center
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =DataCardKey24.Height
+                Size: =21
+                Text: ="*"
+                Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey24.Y
+                ZIndex: =4
+
+        Asset_DataCard2 As typedDataCard.comboBoxEditCard:
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            DataField: ="Asset"
+            Default: =ThisItem.Asset
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Asset)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =50
+            Required: =false
+            Update: =DataCardValue23.Selected
+            Visible: =false
+            Width: =568
+            X: =0
+            Y: =7
+            ZIndex: =1
+
+            DataCardKey26 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Size: =21
+                Text: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: =30
+                Y: =10
+                ZIndex: =1
+
+            DataCardValue23 As combobox:
+                BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                DefaultSelectedItems: =Parent.Default
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayFields: =["Value"]
+                DisplayMode: =Parent.DisplayMode
+                Font: =App.Theme.Font
+                Height: =70
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                Items: =Choices([@'Desk Reservations'].Asset)
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SearchFields: =["Value"]
+                SearchItems: =Choices('Desk Reservations'.Asset,DataCardValue23.SearchText)
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                SelectMultiple: =false
+                Size: =21
+                Tooltip: =Parent.DisplayName
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardKey26.Y + DataCardKey26.Height + 5
+                ZIndex: =2
+
+            ErrorMessage24 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardValue23.Y + DataCardValue23.Height
+                ZIndex: =3
+
+            StarVisible24 As label:
+                Align: =Align.Center
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =DataCardKey26.Height
+                Size: =21
+                Text: ="*"
+                Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey26.Y
+                ZIndex: =4
+
         "'Reserved By_DataCard1' As typedDataCard.comboBoxEditCard":
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
@@ -887,6 +1727,13 @@ POCSUPERVISOR As screen:
                 HoverFill: =App.Theme.Colors.Lighter70
                 InputTextPlaceholder: ="Find people..."
                 Items: =Choices([@'Desk Reservations'].'Reserved By')
+                OnSelect: |-
+                    ={
+                        Claims: "i:0#.f|membership|" & Office365Users.UserProfileV2(varTargetEntraID).displayName,
+                        DisplayName: Office365Users.UserProfileV2(varTargetEntraID).displayName,
+                        Email: Office365Users.UserProfileV2(varTargetEntraID).mail
+                    };
+                    Set(var_Attendees, Self.Selected.Email);
                 PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                 PressedColor: =App.Theme.Colors.PrimaryForeground
                 PressedFill: =App.Theme.Colors.Darker30
@@ -909,21 +1756,34 @@ POCSUPERVISOR As screen:
         DisabledBorderColor: =RGBA(244, 244, 244, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
-        DisplayMode: =If(Form1.Valid, DisplayMode.Edit,DisplayMode.Disabled)
+        DisplayMode: |-
+            =If(
+                Form1.Valid,
+                    DisplayMode.Edit,
+                !IsBlank(var_MeetingCategory) || !IsBlankOrError(DropdownCanvas1.SelectedItems),
+                    DisplayMode.Edit,
+                DisplayMode.Disabled
+            )
         Fill: =RGBA(15, 108, 189, 1)
         Font: =App.Theme.Font
-        FontWeight: =FontWeight.Semibold
+        FontWeight: =FontWeight.Bold
         Height: =45
         HoverBorderColor: =App.Theme.Colors.Darker10
         HoverColor: =App.Theme.Colors.PrimaryForeground
         HoverFill: =ColorFade(Self.Fill, -20%)
         OnSelect: |-
             =// 1. Set global variables
-            Set(varAttendees, Concat(DataCardValue3.SelectedItems, Email, ";")); // CBPeoplepicker
+            //Set(varAttendees, Concat(DataCardValue3.SelectedItems, Email, ";")); // CBPeoplepicker
+            Set(var_Attendees, Concat(DataCardValue3.SelectedItems, Email, ";")); // CBPeoplepicker
             //Set(varOptionalAttendees, Concat(OptionAttendeesPP.SelectedItems, Email, ";"));
-            Set(varMeetCat, DropdownCanvas1.Selected.Value);
-            Set(varReservePOC, DataCardValue7.Selected.Email); // CBMPeoplepicker
-            Set(varTitle, "Hines EHRM Training Room & Desk Reservation"); //DataCardValue8.Text); // TBService
+            Set(var_OptionalAttendees, Concat(DataCardValue16.SelectedItems, Email, ";"));
+            //Set(varMeetCat, DropdownCanvas1.Selected.Value);
+            Set(var_MeetingCategory, DropdownCanvas1.Selected.Value);
+            //Set(varReservePOC, DataCardValue7.Selected.Email); // CBMPeoplepicker
+            Set(var_ManagerEmail, DataCardValue7.Selected.Email);
+            Set(varTitle, "Hines EHRM Training Room & Desk Reservation");
+            //DataCardValue8.Text); // TBService
+            Set(var_Service, DataCardValue8.Text); 
             Set(varDescription, DataCardValue1.Text); // RDReason 
             Set(
                 varEmailBody,
@@ -1031,77 +1891,13 @@ POCSUPERVISOR As screen:
         Width: =Parent.Width
         ZIndex: =8
 
-        ctn_PopUp_ClassPicker_Location As groupContainer.manualLayoutContainer:
-            DropShadow: =DropShadow.Light
-            Height: |-
-                =If(
-                    IsBlankOrError(Dropdown3_2.Selected) || Dropdown3_2.Selected.Value = Blank(),
-                    0,
-                    (Dropdown3_3.Height + HtmlText7_3.Height + 5)
-                )
-            LayoutGridColumnMinWidth: =0
-            LayoutGridColumns: =6
-            LayoutGridRowMinHeight: =0
-            LayoutGridRows: =6
-            maximumHeight: =11360
-            maximumWidth: =640
-            RadiusBottomLeft: =4
-            RadiusBottomRight: =4
-            RadiusTopLeft: =4
-            RadiusTopRight: =4
-            Visible: |-
-                =If(
-                    IsBlankOrError(Dropdown3_2.Selected) || Dropdown3_2.Selected.Value = Blank(),
-                    false,
-                    true
-                )
-            Width: =ctn_PopUp_ClassPicker_Scenario.Width
-            X: =ctn_PopUp_ClassPicker_Scenario.X
-            Y: =ctn_PopUp_ClassPicker_DateTime.Y + ctn_PopUp_ClassPicker_DateTime.Height + 5
-            ZIndex: =1
-
-            Dropdown3_3 As modernDropdown:
-                Appearance: =Appearance.FilledDarker
-                BorderStyle: =""
-                Font: =""
-                Height: =48
-                ItemDisplayText: =ThisItem.Value
-                Items: |-
-                    =[
-                        "Building 20 - Room 204",
-                        "Building 20 - Room 205",
-                        "Building 20 - Room 209",
-                        "Building 20 - Room 210",
-                        "Virtual",
-                        "Virtual CBOC"
-                    ]
-                OnChange: =Set(varPopUp_ClassPicker_scenarioLocation, Self.Selected.Value);
-                Required: =false
-                Size: =24
-                ValidationState: =ValidationState.None
-                Width: =Parent.Width - Self.X - 10
-                X: =HtmlText7_3.X + 10
-                Y: =HtmlText7_3.Y + HtmlText7_3.Height
-                ZIndex: =1
-
-            HtmlText7_3 As htmlViewer:
-                AutoHeight: =true
-                DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                Height: =70
-                HtmlText: |-
-                    ="Pick a <b>LOCATION</b> that <b>" & varDeskAccessControl_record.GivenName_Text & "</b> will physically attend this training:"
-                Size: =14
-                Width: =Parent.Width
-                ZIndex: =2
-
         ctn_PopUp_ClassPicker_DateTime As groupContainer.manualLayoutContainer:
             DropShadow: =DropShadow.Light
             Height: |-
                 =If(
-                    IsBlankOrError(Dropdown3_1.Selected) || Dropdown3_1.Selected.Value = Blank(),
+                    IsBlankOrError(dropdown_RolePicker.Selected) || dropdown_RolePicker.Selected.Value = Blank(),
                     0,
-                    (Dropdown3_2.Height + HtmlText7_2.Height + 5)
+                    (dropdown_DateTimePicker.Height + HtmlText7_2.Height + 5)
                 )
             LayoutGridColumnMinWidth: =0
             LayoutGridColumns: =6
@@ -1115,258 +1911,351 @@ POCSUPERVISOR As screen:
             RadiusTopRight: =4
             Visible: |-
                 =If(
-                    IsBlankOrError(Dropdown3_1.Selected) || Dropdown3_1.Selected.Value = Blank(),
+                    IsBlankOrError(dropdown_LocationPicker.Selected) || dropdown_LocationPicker.Selected.Value = Blank(),
                     false,
                     true
                 )
             Width: =ctn_PopUp_ClassPicker_Scenario.Width
-            X: =ctn_PopUp_ClassPicker_Scenario.X
-            Y: =ctn_PopUp_ClassPicker_Role.Y + ctn_PopUp_ClassPicker_Role.Height + 5
-            ZIndex: =2
+            X: =ctn_PopUp_ClassPicker_Role.X
+            Y: =ctn_PopUp_ClassPicker_Location.Y + ctn_PopUp_ClassPicker_Location.Height + 5
+            ZIndex: =1
 
-            Dropdown3_2 As modernDropdown:
+            dropdown_DateTimePicker As modernDropdown:
                 Appearance: =Appearance.FilledDarker
                 BorderStyle: =""
                 Font: =""
                 Height: =48
                 ItemDisplayText: =ThisItem.Value
                 Items: |-
-                    =[
-                        "Friday 10/30/2026 @ 1:00 PM - 2:30 PM",
-                        "Friday 10/30/2026 @ 10:30 AM - 12:00 PM",
-                        "Friday 10/30/2026 @ 2:30 PM - 4:00 PM",
-                        "Friday 10/30/2026 @ 3:00 PM - 4:00 PM",
-                        "Friday 10/30/2026 @ 8:30 AM - 1:00 PM",
-                        "Friday 10/30/2026 @ 8:30 AM - 10:00 AM",
-                        "Friday 10/30/2026 @ 8:30 AM - 12:30 PM",
-                        "Friday 10/30/2026 @ 8:30 AM - 2:00 PM",
-                        "Friday 10/30/2026 @ 8:30 AM - 2:30 PM",
-                        "Friday 11/06/2026 @ 1:00 PM - 2:00 PM",
-                        "Friday 11/06/2026 @ 1:30 PM - 3:00 PM",
-                        "Friday 11/06/2026 @ 1:30 PM - 4:00 PM",
-                        "Friday 11/06/2026 @ 12:30 PM - 4:00 PM",
-                        "Friday 11/06/2026 @ 8:30 AM - 1:00 PM",
-                        "Friday 11/06/2026 @ 8:30 AM - 12:00 PM",
-                        "Friday 11/06/2026 @ 8:30 AM - 12:30 PM",
-                        "Friday 11/13/2026 @ 1:00 PM - 4:00 PM",
-                        "Friday 11/13/2026 @ 10:30 AM - 12:00 PM",
-                        "Friday 11/13/2026 @ 12:00 PM - 2:30 PM",
-                        "Friday 11/13/2026 @ 12:00 PM - 4:00 PM",
-                        "Friday 11/13/2026 @ 12:30 PM - 2:00 PM",
-                        "Friday 11/13/2026 @ 2:00 PM - 4:00 PM",
-                        "Friday 11/13/2026 @ 2:30 PM - 4:00 PM",
-                        "Friday 11/13/2026 @ 3:00 PM - 4:00 PM",
-                        "Friday 11/13/2026 @ 8:30 AM - 10:00 AM",
-                        "Friday 11/13/2026 @ 8:30 AM - 11:00 AM",
-                        "Friday 11/13/2026 @ 8:30 AM - 11:30 AM",
-                        "Friday 11/13/2026 @ 8:30 AM - 12:30 PM",
-                        "Friday 11/13/2026 @ 9:00 AM - 1:30 PM",
-                        "Friday 11/20/2026 @ 1:30 PM - 3:00 PM",
-                        "Friday 11/20/2026 @ 11:00 AM - 1:00 PM",
-                        "Friday 11/20/2026 @ 11:00 AM - 12:30 PM",
-                        "Friday 11/20/2026 @ 11:30 AM - 1:30 PM",
-                        "Friday 11/20/2026 @ 12:30 PM - 2:30 PM",
-                        "Friday 11/20/2026 @ 2:00 PM - 4:00 PM",
-                        "Friday 11/20/2026 @ 3:00 PM - 4:00 PM",
-                        "Friday 11/20/2026 @ 8:30 AM - 10:00 AM",
-                        "Friday 11/20/2026 @ 8:30 AM - 10:30 AM",
-                        "Friday 11/20/2026 @ 8:30 AM - 11:00 AM",
-                        "Friday 11/20/2026 @ 8:30 AM - 12:00 PM",
-                        "Friday 12/04/2026 @ 1:30 PM - 4:00 PM",
-                        "Friday 12/04/2026 @ 10:30 AM - 12:00 PM",
-                        "Friday 12/04/2026 @ 11:00 AM - 1:00 PM",
-                        "Friday 12/04/2026 @ 3:00 PM - 4:00 PM",
-                        "Friday 12/04/2026 @ 8:30 AM - 1:00 PM",
-                        "Friday 12/04/2026 @ 8:30 AM - 10:00 AM",
-                        "Friday 12/04/2026 @ 8:30 AM - 10:30 AM",
-                        "Monday 10/26/2026 @ 1:30 PM - 3:00 PM",
-                        "Monday 10/26/2026 @ 10:30 AM - 12:00 PM",
-                        "Monday 10/26/2026 @ 11:00 AM - 3:30 PM",
-                        "Monday 10/26/2026 @ 2:00 PM - 4:00 PM",
-                        "Monday 10/26/2026 @ 7:30 PM - 9:00 PM",
-                        "Monday 10/26/2026 @ 8:30 AM - 1:30 PM",
-                        "Monday 11/02/2026 @ 1:30 PM - 4:00 PM",
-                        "Monday 11/02/2026 @ 11:00 AM - 1:00 PM",
-                        "Monday 11/02/2026 @ 11:30 AM - 1:30 PM",
-                        "Monday 11/02/2026 @ 12:00 PM - 1:30 PM",
-                        "Monday 11/02/2026 @ 2:00 PM - 4:00 PM",
-                        "Monday 11/02/2026 @ 2:30 PM - 4:00 PM",
-                        "Monday 11/02/2026 @ 7:00 PM - 9:00 PM",
-                        "Monday 11/02/2026 @ 8:30 AM - 1:30 PM",
-                        "Monday 11/02/2026 @ 8:30 AM - 10:30 AM",
-                        "Monday 11/02/2026 @ 8:30 AM - 11:00 AM",
-                        "Monday 11/02/2026 @ 8:30 AM - 11:30 AM",
-                        "Monday 11/02/2026 @ 8:30 AM - 2:00 PM",
-                        "Monday 11/09/2026 @ 1:00 PM - 2:00 PM",
-                        "Monday 11/09/2026 @ 1:30 PM - 4:00 PM",
-                        "Monday 11/09/2026 @ 10:30 AM - 12:30 PM",
-                        "Monday 11/09/2026 @ 2:30 PM - 4:00 PM",
-                        "Monday 11/09/2026 @ 7:00 PM - 8:00 PM",
-                        "Monday 11/09/2026 @ 8:30 AM - 1:00 PM",
-                        "Monday 11/09/2026 @ 8:30 AM - 10:00 AM",
-                        "Monday 11/09/2026 @ 8:30 AM - 12:30 PM",
-                        "Monday 11/16/2026 @ 1:30 PM - 2:30 PM",
-                        "Monday 11/16/2026 @ 1:30 PM - 4:00 PM",
-                        "Monday 11/16/2026 @ 11:00 AM - 1:00 PM",
-                        "Monday 11/16/2026 @ 11:30 AM - 1:30 PM",
-                        "Monday 11/16/2026 @ 12:00 PM - 4:00 PM",
-                        "Monday 11/16/2026 @ 2:00 PM - 4:00 PM",
-                        "Monday 11/16/2026 @ 3:00 PM - 4:00 PM",
-                        "Monday 11/16/2026 @ 8:30 AM - 1:00 PM",
-                        "Monday 11/16/2026 @ 8:30 AM - 10:30 AM",
-                        "Monday 11/16/2026 @ 8:30 AM - 11:00 AM",
-                        "Monday 11/16/2026 @ 8:30 AM - 11:30 AM",
-                        "Monday 11/23/2026 @ 8:30 AM - 4:00 PM",
-                        "Monday 11/30/2026 @ 1:00 PM - 2:00 PM",
-                        "Monday 11/30/2026 @ 1:30 PM - 3:30 PM",
-                        "Monday 11/30/2026 @ 11:00 AM - 1:00 PM",
-                        "Monday 11/30/2026 @ 12:30 PM - 1:30 PM",
-                        "Monday 11/30/2026 @ 2:00 PM - 4:00 PM",
-                        "Monday 11/30/2026 @ 2:30 PM - 4:00 PM",
-                        "Monday 11/30/2026 @ 8:30 AM - 10:00 AM",
-                        "Monday 11/30/2026 @ 8:30 AM - 10:30 AM",
-                        "Monday 11/30/2026 @ 8:30 AM - 11:00 AM",
-                        "Monday 12/07/2026 @ 11:30 AM - 1:30 PM",
-                        "Monday 12/07/2026 @ 12:30 PM - 4:00 PM",
-                        "Monday 12/07/2026 @ 2:00 PM - 4:00 PM",
-                        "Monday 12/07/2026 @ 2:30 PM - 4:00 PM",
-                        "Monday 12/07/2026 @ 8:30 AM - 10:30 AM",
-                        "Monday 12/07/2026 @ 8:30 AM - 11:00 AM",
-                        "Monday 12/07/2026 @ 8:30 AM - 12:00 PM",
-                        "Thursday 10/29/2026 @ 1:00 PM - 4:00 PM",
-                        "Thursday 10/29/2026 @ 2:00 PM - 4:00 PM",
-                        "Thursday 10/29/2026 @ 2:30 PM - 3:30 PM",
-                        "Thursday 10/29/2026 @ 3:00 PM - 4:00 PM",
-                        "Thursday 10/29/2026 @ 7:00 PM - 10:30 PM",
-                        "Thursday 10/29/2026 @ 8:30 AM - 10:30 AM",
-                        "Thursday 10/29/2026 @ 8:30 AM - 12:30 PM",
-                        "Thursday 10/29/2026 @ 8:30 AM - 2:30 PM",
-                        "Thursday 11/05/2026 @ 1:30 PM - 4:00 PM",
-                        "Thursday 11/05/2026 @ 11:00 AM - 1:00 PM",
-                        "Thursday 11/05/2026 @ 2:30 PM - 4:00 PM",
-                        "Thursday 11/05/2026 @ 7:00 PM - 11:30 PM",
-                        "Thursday 11/05/2026 @ 8:30 AM - 1:00 PM",
-                        "Thursday 11/05/2026 @ 8:30 AM - 1:30 PM",
-                        "Thursday 11/05/2026 @ 8:30 AM - 10:30 AM",
-                        "Thursday 11/05/2026 @ 8:30 AM - 2:30 PM",
-                        "Thursday 11/12/2026 @ 1:00 PM - 4:00 PM",
-                        "Thursday 11/12/2026 @ 1:30 PM - 4:00 PM",
-                        "Thursday 11/12/2026 @ 11:00 AM - 12:30 PM",
-                        "Thursday 11/12/2026 @ 12:00 PM - 4:00 PM",
-                        "Thursday 11/12/2026 @ 8:30 AM - 1:00 PM",
-                        "Thursday 11/12/2026 @ 8:30 AM - 10:30 AM",
-                        "Thursday 11/12/2026 @ 8:30 AM - 11:30 AM",
-                        "Thursday 11/19/2026 @ 1:00 PM - 2:00 PM",
-                        "Thursday 11/19/2026 @ 1:00 PM - 4:00 PM",
-                        "Thursday 11/19/2026 @ 1:30 PM - 4:00 PM",
-                        "Thursday 11/19/2026 @ 11:00 AM - 1:00 PM",
-                        "Thursday 11/19/2026 @ 2:00 PM - 4:00 PM",
-                        "Thursday 11/19/2026 @ 2:30 PM - 4:00 PM",
-                        "Thursday 11/19/2026 @ 8:30 AM - 1:00 PM",
-                        "Thursday 11/19/2026 @ 8:30 AM - 10:00 AM",
-                        "Thursday 11/19/2026 @ 8:30 AM - 10:30 AM",
-                        "Thursday 11/19/2026 @ 8:30 AM - 12:30 PM",
-                        "Thursday 12/03/2026 @ 1:00 PM - 3:00 PM",
-                        "Thursday 12/03/2026 @ 1:30 PM - 4:00 PM",
-                        "Thursday 12/03/2026 @ 11:00 AM - 12:30 PM",
-                        "Thursday 12/03/2026 @ 2:30 PM - 4:00 PM",
-                        "Thursday 12/03/2026 @ 8:30 AM - 10:30 AM",
-                        "Tuesday 10/27/2026 @ 1:30 PM - 4:00 PM",
-                        "Tuesday 10/27/2026 @ 10:00 AM - 11:00 AM",
-                        "Tuesday 10/27/2026 @ 10:30 AM - 2:30 PM",
-                        "Tuesday 10/27/2026 @ 11:00 AM - 1:00 PM",
-                        "Tuesday 10/27/2026 @ 11:30 AM - 1:30 PM",
-                        "Tuesday 10/27/2026 @ 2:00 PM - 4:00 PM",
-                        "Tuesday 10/27/2026 @ 2:30 PM - 3:30 PM",
-                        "Tuesday 10/27/2026 @ 7:00 PM - 9:00 PM",
-                        "Tuesday 10/27/2026 @ 8:30 AM - 1:30 PM",
-                        "Tuesday 10/27/2026 @ 8:30 AM - 10:30 AM",
-                        "Tuesday 10/27/2026 @ 8:30 AM - 9:30 AM",
-                        "Tuesday 11/03/2026 @ 11:30 AM - 4:00 PM",
-                        "Tuesday 11/03/2026 @ 12:30 PM - 4:00 PM",
-                        "Tuesday 11/03/2026 @ 2:30 PM - 4:00 PM",
-                        "Tuesday 11/03/2026 @ 7:00 PM - 9:00 PM",
-                        "Tuesday 11/03/2026 @ 8:30 AM - 10:00 AM",
-                        "Tuesday 11/03/2026 @ 8:30 AM - 12:00 PM",
-                        "Tuesday 11/03/2026 @ 8:30 AM - 2:00 PM",
-                        "Tuesday 11/03/2026 @ 9:00 AM - 1:30 PM",
-                        "Tuesday 11/10/2026 @ 1:30 PM - 4:00 PM",
-                        "Tuesday 11/10/2026 @ 2:00 PM - 4:00 PM",
-                        "Tuesday 11/10/2026 @ 3:00 PM - 4:00 PM",
-                        "Tuesday 11/10/2026 @ 7:00 PM - 8:30 PM",
-                        "Tuesday 11/10/2026 @ 8:30 AM - 1:00 PM",
-                        "Tuesday 11/10/2026 @ 8:30 AM - 12:30 PM",
-                        "Tuesday 11/10/2026 @ 8:30 AM - 2:30 PM",
-                        "Tuesday 11/17/2026 @ 1:00 PM - 4:00 PM",
-                        "Tuesday 11/17/2026 @ 1:30 PM - 4:00 PM",
-                        "Tuesday 11/17/2026 @ 12:00 PM - 1:30 PM",
-                        "Tuesday 11/17/2026 @ 2:00 PM - 4:00 PM",
-                        "Tuesday 11/17/2026 @ 8:30 AM - 1:00 PM",
-                        "Tuesday 11/17/2026 @ 8:30 AM - 11:30 AM",
-                        "Tuesday 11/17/2026 @ 8:30 AM - 12:30 PM",
-                        "Tuesday 12/01/2026 @ 1:00 PM - 4:00 PM",
-                        "Tuesday 12/01/2026 @ 1:30 PM - 3:30 PM",
-                        "Tuesday 12/01/2026 @ 10:30 AM - 12:00 PM",
-                        "Tuesday 12/01/2026 @ 3:00 PM - 4:00 PM",
-                        "Tuesday 12/01/2026 @ 8:30 AM - 1:00 PM",
-                        "Tuesday 12/01/2026 @ 8:30 AM - 12:30 PM",
-                        "Tuesday 12/01/2026 @ 8:30 AM - 2:00 PM",
-                        "Tuesday 12/08/2026 @ 10:30 AM - 12:00 PM",
-                        "Tuesday 12/08/2026 @ 11:00 AM - 12:00 PM",
-                        "Tuesday 12/08/2026 @ 11:30 AM - 1:30 PM",
-                        "Tuesday 12/08/2026 @ 12:30 PM - 2:00 PM",
-                        "Tuesday 12/08/2026 @ 2:00 PM - 4:00 PM",
-                        "Tuesday 12/08/2026 @ 2:30 PM - 4:00 PM",
-                        "Tuesday 12/08/2026 @ 8:30 AM - 10:00 AM",
-                        "Tuesday 12/08/2026 @ 8:30 AM - 10:30 AM",
-                        "Wednesday 10/28/2026 @ 11:00 AM - 12:00 PM",
-                        "Wednesday 10/28/2026 @ 12:30 PM - 2:00 PM",
-                        "Wednesday 10/28/2026 @ 12:30 PM - 2:30 PM",
-                        "Wednesday 10/28/2026 @ 2:30 PM - 3:30 PM",
-                        "Wednesday 10/28/2026 @ 2:30 PM - 4:00 PM",
-                        "Wednesday 10/28/2026 @ 3:00 PM - 4:00 PM",
-                        "Wednesday 10/28/2026 @ 7:00 PM - 9:00 PM",
-                        "Wednesday 10/28/2026 @ 8:30 AM - 1:00 PM",
-                        "Wednesday 10/28/2026 @ 8:30 AM - 10:30 AM",
-                        "Wednesday 10/28/2026 @ 8:30 AM - 12:00 PM",
-                        "Wednesday 10/28/2026 @ 8:30 AM - 12:30 PM",
-                        "Wednesday 10/28/2026 @ 8:30 AM - 2:30 PM",
-                        "Wednesday 11/04/2026 @ 1:30 PM - 2:30 PM",
-                        "Wednesday 11/04/2026 @ 11:00 AM - 1:00 PM",
-                        "Wednesday 11/04/2026 @ 2:30 PM - 4:00 PM",
-                        "Wednesday 11/04/2026 @ 3:00 PM - 4:00 PM",
-                        "Wednesday 11/04/2026 @ 7:00 PM - 8:30 PM",
-                        "Wednesday 11/04/2026 @ 8:30 AM - 1:00 PM",
-                        "Wednesday 11/04/2026 @ 8:30 AM - 10:30 AM",
-                        "Wednesday 11/04/2026 @ 8:30 AM - 12:30 PM",
-                        "Wednesday 11/04/2026 @ 8:30 AM - 2:00 PM",
-                        "Wednesday 11/11/2026 @ 8:30 AM - 4:00 PM",
-                        "Wednesday 11/18/2026 @ 1:00 PM - 4:00 PM",
-                        "Wednesday 11/18/2026 @ 12:30 PM - 1:30 PM",
-                        "Wednesday 11/18/2026 @ 8:30 AM - 1:00 PM",
-                        "Wednesday 11/18/2026 @ 8:30 AM - 12:00 PM",
-                        "Wednesday 11/18/2026 @ 8:30 AM - 12:30 PM",
-                        "Wednesday 12/02/2026 @ 1:30 PM - 3:30 PM",
-                        "Wednesday 12/02/2026 @ 1:30 PM - 4:00 PM",
-                        "Wednesday 12/02/2026 @ 2:30 PM - 4:00 PM",
-                        "Wednesday 12/02/2026 @ 3:00 PM - 4:00 PM",
-                        "Wednesday 12/02/2026 @ 8:30 AM - 12:30 PM",
-                        "Wednesday 12/02/2026 @ 9:00 AM - 1:00 PM",
-                        "Wednesday 12/02/2026 @ 9:00 AM - 1:30 PM",
-                        "Wednesday 12/02/2026 @ 9:00 AM - 2:30 PM",
-                        "Wednesday 12/09/2026 @ 1:30 PM - 4:00 PM",
-                        "Wednesday 12/09/2026 @ 10:00 AM - 11:30 AM",
-                        "Wednesday 12/09/2026 @ 11:00 AM - 1:00 PM",
-                        "Wednesday 12/09/2026 @ 11:00 AM - 1:30 PM",
-                        "Wednesday 12/09/2026 @ 12:00 PM - 1:30 PM",
-                        "Wednesday 12/09/2026 @ 2:30 PM - 4:00 PM",
-                        "Wednesday 12/09/2026 @ 3:00 PM - 4:00 PM",
-                        "Wednesday 12/09/2026 @ 8:30 AM - 10:00 AM",
-                        "Wednesday 12/09/2026 @ 8:30 AM - 10:30 AM",
-                        "Wednesday 12/09/2026 @ 8:30 AM - 9:30 AM"
-                    ]
+                    =    [
+                            "Monday 10/26/2026 @ 8:30 AM - 1:30 PM",
+                            "Monday 10/26/2026 @ 10:30 AM - 12:00 PM",
+                            "Monday 10/26/2026 @ 11:00 AM - 3:30 PM",
+                            "Monday 10/26/2026 @ 1:30 PM - 3:00 PM",
+                            "Monday 10/26/2026 @ 2:00 PM - 4:00 PM",
+                            "Monday 10/26/2026 @ 7:30 PM - 9:00 PM",
+                            "Tuesday 10/27/2026 @ 8:30 AM - 1:30 PM",
+                            "Tuesday 10/27/2026 @ 8:30 AM - 10:30 AM",
+                            "Tuesday 10/27/2026 @ 8:30 AM - 9:30 AM",
+                            "Tuesday 10/27/2026 @ 10:00 AM - 11:00 AM",
+                            "Tuesday 10/27/2026 @ 10:30 AM - 2:30 PM",
+                            "Tuesday 10/27/2026 @ 11:00 AM - 1:00 PM",
+                            "Tuesday 10/27/2026 @ 11:30 AM - 1:30 PM",
+                            "Tuesday 10/27/2026 @ 1:30 PM - 4:00 PM",
+                            "Tuesday 10/27/2026 @ 2:00 PM - 4:00 PM",
+                            "Tuesday 10/27/2026 @ 2:30 PM - 3:30 PM",
+                            "Tuesday 10/27/2026 @ 7:00 PM - 9:00 PM",
+                            "Wednesday 10/28/2026 @ 8:30 AM - 1:00 PM",
+                            "Wednesday 10/28/2026 @ 8:30 AM - 10:30 AM",
+                            "Wednesday 10/28/2026 @ 8:30 AM - 12:00 PM",
+                            "Wednesday 10/28/2026 @ 8:30 AM - 12:30 PM",
+                            "Wednesday 10/28/2026 @ 8:30 AM - 2:30 PM",
+                            "Wednesday 10/28/2026 @ 11:00 AM - 12:00 PM",
+                            "Wednesday 10/28/2026 @ 12:30 PM - 2:00 PM",
+                            "Wednesday 10/28/2026 @ 12:30 PM - 2:30 PM",
+                            "Wednesday 10/28/2026 @ 2:30 PM - 3:30 PM",
+                            "Wednesday 10/28/2026 @ 2:30 PM - 4:00 PM",
+                            "Wednesday 10/28/2026 @ 3:00 PM - 4:00 PM",
+                            "Wednesday 10/28/2026 @ 7:00 PM - 9:00 PM",
+                            "Thursday 10/29/2026 @ 8:30 AM - 10:30 AM",
+                            "Thursday 10/29/2026 @ 8:30 AM - 12:30 PM",
+                            "Thursday 10/29/2026 @ 8:30 AM - 2:30 PM",
+                            "Thursday 10/29/2026 @ 1:00 PM - 4:00 PM",
+                            "Thursday 10/29/2026 @ 2:00 PM - 4:00 PM",
+                            "Thursday 10/29/2026 @ 2:30 PM - 3:30 PM",
+                            "Thursday 10/29/2026 @ 3:00 PM - 4:00 PM",
+                            "Thursday 10/29/2026 @ 7:00 PM - 10:30 PM",
+                            "Friday 10/30/2026 @ 8:30 AM - 1:00 PM",
+                            "Friday 10/30/2026 @ 8:30 AM - 10:00 AM",
+                            "Friday 10/30/2026 @ 8:30 AM - 12:30 PM",
+                            "Friday 10/30/2026 @ 8:30 AM - 2:00 PM",
+                            "Friday 10/30/2026 @ 8:30 AM - 2:30 PM",
+                            "Friday 10/30/2026 @ 10:30 AM - 12:00 PM",
+                            "Friday 10/30/2026 @ 1:00 PM - 2:30 PM",
+                            "Friday 10/30/2026 @ 2:30 PM - 4:00 PM",
+                            "Friday 10/30/2026 @ 3:00 PM - 4:00 PM",
+                            "Monday 11/02/2026 @ 8:30 AM - 1:30 PM",
+                            "Monday 11/02/2026 @ 8:30 AM - 10:30 AM",
+                            "Monday 11/02/2026 @ 8:30 AM - 11:00 AM",
+                            "Monday 11/02/2026 @ 8:30 AM - 11:30 AM",
+                            "Monday 11/02/2026 @ 8:30 AM - 2:00 PM",
+                            "Monday 11/02/2026 @ 11:00 AM - 1:00 PM",
+                            "Monday 11/02/2026 @ 11:30 AM - 1:30 PM",
+                            "Monday 11/02/2026 @ 12:00 PM - 1:30 PM",
+                            "Monday 11/02/2026 @ 1:30 PM - 4:00 PM",
+                            "Monday 11/02/2026 @ 2:00 PM - 4:00 PM",
+                            "Monday 11/02/2026 @ 2:30 PM - 4:00 PM",
+                            "Monday 11/02/2026 @ 7:00 PM - 9:00 PM",
+                            "Tuesday 11/03/2026 @ 8:30 AM - 10:00 AM",
+                            "Tuesday 11/03/2026 @ 8:30 AM - 12:00 PM",
+                            "Tuesday 11/03/2026 @ 8:30 AM - 2:00 PM",
+                            "Tuesday 11/03/2026 @ 9:00 AM - 1:30 PM",
+                            "Tuesday 11/03/2026 @ 11:30 AM - 4:00 PM",
+                            "Tuesday 11/03/2026 @ 12:30 PM - 4:00 PM",
+                            "Tuesday 11/03/2026 @ 2:30 PM - 4:00 PM",
+                            "Tuesday 11/03/2026 @ 7:00 PM - 9:00 PM",
+                            "Wednesday 11/04/2026 @ 8:30 AM - 1:00 PM",
+                            "Wednesday 11/04/2026 @ 8:30 AM - 10:30 AM",
+                            "Wednesday 11/04/2026 @ 8:30 AM - 12:30 PM",
+                            "Wednesday 11/04/2026 @ 8:30 AM - 2:00 PM",
+                            "Wednesday 11/04/2026 @ 11:00 AM - 1:00 PM",
+                            "Wednesday 11/04/2026 @ 1:30 PM - 2:30 PM",
+                            "Wednesday 11/04/2026 @ 2:30 PM - 4:00 PM",
+                            "Wednesday 11/04/2026 @ 3:00 PM - 4:00 PM",
+                            "Wednesday 11/04/2026 @ 7:00 PM - 8:30 PM",
+                            "Thursday 11/05/2026 @ 8:30 AM - 1:00 PM",
+                            "Thursday 11/05/2026 @ 8:30 AM - 1:30 PM",
+                            "Thursday 11/05/2026 @ 8:30 AM - 10:30 AM",
+                            "Thursday 11/05/2026 @ 8:30 AM - 2:30 PM",
+                            "Thursday 11/05/2026 @ 11:00 AM - 1:00 PM",
+                            "Thursday 11/05/2026 @ 1:30 PM - 4:00 PM",
+                            "Thursday 11/05/2026 @ 2:30 PM - 4:00 PM",
+                            "Thursday 11/05/2026 @ 7:00 PM - 11:30 PM",
+                            "Friday 11/06/2026 @ 8:30 AM - 1:00 PM",
+                            "Friday 11/06/2026 @ 8:30 AM - 12:00 PM",
+                            "Friday 11/06/2026 @ 8:30 AM - 12:30 PM",
+                            "Friday 11/06/2026 @ 12:30 PM - 4:00 PM",
+                            "Friday 11/06/2026 @ 1:00 PM - 2:00 PM",
+                            "Friday 11/06/2026 @ 1:30 PM - 3:00 PM",
+                            "Friday 11/06/2026 @ 1:30 PM - 4:00 PM",
+                            "Monday 11/09/2026 @ 8:30 AM - 1:00 PM",
+                            "Monday 11/09/2026 @ 8:30 AM - 10:00 AM",
+                            "Monday 11/09/2026 @ 8:30 AM - 12:30 PM",
+                            "Monday 11/09/2026 @ 10:30 AM - 12:30 PM",
+                            "Monday 11/09/2026 @ 1:00 PM - 2:00 PM",
+                            "Monday 11/09/2026 @ 1:30 PM - 4:00 PM",
+                            "Monday 11/09/2026 @ 2:30 PM - 4:00 PM",
+                            "Monday 11/09/2026 @ 7:00 PM - 8:00 PM",
+                            "Tuesday 11/10/2026 @ 8:30 AM - 1:00 PM",
+                            "Tuesday 11/10/2026 @ 8:30 AM - 12:30 PM",
+                            "Tuesday 11/10/2026 @ 8:30 AM - 2:30 PM",
+                            "Tuesday 11/10/2026 @ 1:30 PM - 4:00 PM",
+                            "Tuesday 11/10/2026 @ 2:00 PM - 4:00 PM",
+                            "Tuesday 11/10/2026 @ 3:00 PM - 4:00 PM",
+                            "Tuesday 11/10/2026 @ 7:00 PM - 8:30 PM",
+                            "Wednesday 11/11/2026 @ 8:30 AM - 4:00 PM",
+                            "Thursday 11/12/2026 @ 8:30 AM - 1:00 PM",
+                            "Thursday 11/12/2026 @ 8:30 AM - 10:30 AM",
+                            "Thursday 11/12/2026 @ 8:30 AM - 11:30 AM",
+                            "Thursday 11/12/2026 @ 11:00 AM - 12:30 PM",
+                            "Thursday 11/12/2026 @ 12:00 PM - 4:00 PM",
+                            "Thursday 11/12/2026 @ 1:00 PM - 4:00 PM",
+                            "Thursday 11/12/2026 @ 1:30 PM - 4:00 PM",
+                            "Friday 11/13/2026 @ 8:30 AM - 10:00 AM",
+                            "Friday 11/13/2026 @ 8:30 AM - 11:00 AM",
+                            "Friday 11/13/2026 @ 8:30 AM - 11:30 AM",
+                            "Friday 11/13/2026 @ 8:30 AM - 12:30 PM",
+                            "Friday 11/13/2026 @ 9:00 AM - 1:30 PM",
+                            "Friday 11/13/2026 @ 10:30 AM - 12:00 PM",
+                            "Friday 11/13/2026 @ 12:00 PM - 2:30 PM",
+                            "Friday 11/13/2026 @ 12:00 PM - 4:00 PM",
+                            "Friday 11/13/2026 @ 12:30 PM - 2:00 PM",
+                            "Friday 11/13/2026 @ 1:00 PM - 4:00 PM",
+                            "Friday 11/13/2026 @ 2:00 PM - 4:00 PM",
+                            "Friday 11/13/2026 @ 2:30 PM - 4:00 PM",
+                            "Friday 11/13/2026 @ 3:00 PM - 4:00 PM",
+                            "Monday 11/16/2026 @ 8:30 AM - 1:00 PM",
+                            "Monday 11/16/2026 @ 8:30 AM - 10:30 AM",
+                            "Monday 11/16/2026 @ 8:30 AM - 11:00 AM",
+                            "Monday 11/16/2026 @ 8:30 AM - 11:30 AM",
+                            "Monday 11/16/2026 @ 11:00 AM - 1:00 PM",
+                            "Monday 11/16/2026 @ 11:30 AM - 1:30 PM",
+                            "Monday 11/16/2026 @ 12:00 PM - 4:00 PM",
+                            "Monday 11/16/2026 @ 1:30 PM - 2:30 PM",
+                            "Monday 11/16/2026 @ 1:30 PM - 4:00 PM",
+                            "Monday 11/16/2026 @ 2:00 PM - 4:00 PM",
+                            "Monday 11/16/2026 @ 3:00 PM - 4:00 PM",
+                            "Tuesday 11/17/2026 @ 8:30 AM - 1:00 PM",
+                            "Tuesday 11/17/2026 @ 8:30 AM - 11:30 AM",
+                            "Tuesday 11/17/2026 @ 8:30 AM - 12:30 PM",
+                            "Tuesday 11/17/2026 @ 12:00 PM - 1:30 PM",
+                            "Tuesday 11/17/2026 @ 1:00 PM - 4:00 PM",
+                            "Tuesday 11/17/2026 @ 1:30 PM - 4:00 PM",
+                            "Tuesday 11/17/2026 @ 2:00 PM - 4:00 PM",
+                            "Wednesday 11/18/2026 @ 8:30 AM - 1:00 PM",
+                            "Wednesday 11/18/2026 @ 8:30 AM - 12:00 PM",
+                            "Wednesday 11/18/2026 @ 8:30 AM - 12:30 PM",
+                            "Wednesday 11/18/2026 @ 12:30 PM - 1:30 PM",
+                            "Wednesday 11/18/2026 @ 1:00 PM - 4:00 PM",
+                            "Thursday 11/19/2026 @ 8:30 AM - 1:00 PM",
+                            "Thursday 11/19/2026 @ 8:30 AM - 10:00 AM",
+                            "Thursday 11/19/2026 @ 8:30 AM - 10:30 AM",
+                            "Thursday 11/19/2026 @ 8:30 AM - 12:30 PM",
+                            "Thursday 11/19/2026 @ 11:00 AM - 1:00 PM",
+                            "Thursday 11/19/2026 @ 1:00 PM - 2:00 PM",
+                            "Thursday 11/19/2026 @ 1:00 PM - 4:00 PM",
+                            "Thursday 11/19/2026 @ 1:30 PM - 4:00 PM",
+                            "Thursday 11/19/2026 @ 2:00 PM - 4:00 PM",
+                            "Thursday 11/19/2026 @ 2:30 PM - 4:00 PM",
+                            "Friday 11/20/2026 @ 8:30 AM - 10:00 AM",
+                            "Friday 11/20/2026 @ 8:30 AM - 10:30 AM",
+                            "Friday 11/20/2026 @ 8:30 AM - 11:00 AM",
+                            "Friday 11/20/2026 @ 8:30 AM - 12:00 PM",
+                            "Friday 11/20/2026 @ 11:00 AM - 1:00 PM",
+                            "Friday 11/20/2026 @ 11:00 AM - 12:30 PM",
+                            "Friday 11/20/2026 @ 11:30 AM - 1:30 PM",
+                            "Friday 11/20/2026 @ 12:30 PM - 2:30 PM",
+                            "Friday 11/20/2026 @ 1:30 PM - 3:00 PM",
+                            "Friday 11/20/2026 @ 2:00 PM - 4:00 PM",
+                            "Friday 11/20/2026 @ 3:00 PM - 4:00 PM",
+                            "Monday 11/23/2026 @ 8:30 AM - 4:00 PM",
+                            "Monday 11/30/2026 @ 8:30 AM - 10:00 AM",
+                            "Monday 11/30/2026 @ 8:30 AM - 10:30 AM",
+                            "Monday 11/30/2026 @ 8:30 AM - 11:00 AM",
+                            "Monday 11/30/2026 @ 11:00 AM - 1:00 PM",
+                            "Monday 11/30/2026 @ 12:30 PM - 1:30 PM",
+                            "Monday 11/30/2026 @ 1:00 PM - 2:00 PM",
+                            "Monday 11/30/2026 @ 1:30 PM - 3:30 PM",
+                            "Monday 11/30/2026 @ 2:00 PM - 4:00 PM",
+                            "Monday 11/30/2026 @ 2:30 PM - 4:00 PM",
+                            "Tuesday 12/01/2026 @ 8:30 AM - 1:00 PM",
+                            "Tuesday 12/01/2026 @ 8:30 AM - 12:30 PM",
+                            "Tuesday 12/01/2026 @ 8:30 AM - 2:00 PM",
+                            "Tuesday 12/01/2026 @ 10:30 AM - 12:00 PM",
+                            "Tuesday 12/01/2026 @ 1:00 PM - 4:00 PM",
+                            "Tuesday 12/01/2026 @ 1:30 PM - 3:30 PM",
+                            "Tuesday 12/01/2026 @ 3:00 PM - 4:00 PM",
+                            "Wednesday 12/02/2026 @ 8:30 AM - 12:30 PM",
+                            "Wednesday 12/02/2026 @ 9:00 AM - 1:00 PM",
+                            "Wednesday 12/02/2026 @ 9:00 AM - 1:30 PM",
+                            "Wednesday 12/02/2026 @ 9:00 AM - 2:30 PM",
+                            "Wednesday 12/02/2026 @ 1:30 PM - 3:30 PM",
+                            "Wednesday 12/02/2026 @ 1:30 PM - 4:00 PM",
+                            "Wednesday 12/02/2026 @ 2:30 PM - 4:00 PM",
+                            "Wednesday 12/02/2026 @ 3:00 PM - 4:00 PM",
+                            "Thursday 12/03/2026 @ 8:30 AM - 10:30 AM",
+                            "Thursday 12/03/2026 @ 11:00 AM - 12:30 PM",
+                            "Thursday 12/03/2026 @ 1:00 PM - 3:00 PM",
+                            "Thursday 12/03/2026 @ 1:30 PM - 4:00 PM",
+                            "Thursday 12/03/2026 @ 2:30 PM - 4:00 PM",
+                            "Friday 12/04/2026 @ 8:30 AM - 1:00 PM",
+                            "Friday 12/04/2026 @ 8:30 AM - 10:00 AM",
+                            "Friday 12/04/2026 @ 8:30 AM - 10:30 AM",
+                            "Friday 12/04/2026 @ 10:30 AM - 12:00 PM",
+                            "Friday 12/04/2026 @ 11:00 AM - 1:00 PM",
+                            "Friday 12/04/2026 @ 1:30 PM - 4:00 PM",
+                            "Friday 12/04/2026 @ 3:00 PM - 4:00 PM",
+                            "Monday 12/07/2026 @ 8:30 AM - 10:30 AM",
+                            "Monday 12/07/2026 @ 8:30 AM - 11:00 AM",
+                            "Monday 12/07/2026 @ 8:30 AM - 12:00 PM",
+                            "Monday 12/07/2026 @ 11:30 AM - 1:30 PM",
+                            "Monday 12/07/2026 @ 12:30 PM - 4:00 PM",
+                            "Monday 12/07/2026 @ 2:00 PM - 4:00 PM",
+                            "Monday 12/07/2026 @ 2:30 PM - 4:00 PM",
+                            "Tuesday 12/08/2026 @ 8:30 AM - 10:00 AM",
+                            "Tuesday 12/08/2026 @ 8:30 AM - 10:30 AM",
+                            "Tuesday 12/08/2026 @ 10:30 AM - 12:00 PM",
+                            "Tuesday 12/08/2026 @ 11:00 AM - 12:00 PM",
+                            "Tuesday 12/08/2026 @ 11:30 AM - 1:30 PM",
+                            "Tuesday 12/08/2026 @ 12:30 PM - 2:00 PM",
+                            "Tuesday 12/08/2026 @ 2:00 PM - 4:00 PM",
+                            "Tuesday 12/08/2026 @ 2:30 PM - 4:00 PM",
+                            "Wednesday 12/09/2026 @ 8:30 AM - 10:00 AM",
+                            "Wednesday 12/09/2026 @ 8:30 AM - 10:30 AM",
+                            "Wednesday 12/09/2026 @ 8:30 AM - 9:30 AM",
+                            "Wednesday 12/09/2026 @ 10:00 AM - 11:30 AM",
+                            "Wednesday 12/09/2026 @ 11:00 AM - 1:00 PM",
+                            "Wednesday 12/09/2026 @ 11:00 AM - 1:30 PM",
+                            "Wednesday 12/09/2026 @ 12:00 PM - 1:30 PM",
+                            "Wednesday 12/09/2026 @ 1:30 PM - 4:00 PM",
+                            "Wednesday 12/09/2026 @ 2:30 PM - 4:00 PM",
+                            "Wednesday 12/09/2026 @ 3:00 PM - 4:00 PM"
+                        ]
                 OnChange: |-
                     =Set(varPopUp_ClassPicker_scenarioDateTime, Self.Selected.Value);
+                    Set(var_reservationFullDateTime, Self.Selected.Value);
+                        Set(
+                            var_DayOfWeek,
+                            First(Split(var_reservationFullDateTime, " ")).Value
+                        );
+                        Set(
+                            var_Date,
+                            Date(
+                                Year(Index(Split(var_reservationFullDateTime, " "), 2).Value),
+                                Month(Index(Split(var_reservationFullDateTime, " "), 2).Value),
+                                Day(Index(Split(var_reservationFullDateTime, " "), 2).Value)
+                            )
+                        );
+                        Set(
+                            var_secondHalfTime,
+                            Trim(Last(Split(var_reservationFullDateTime, "@")).Value)
+                            );
+                        Set(
+                            var_StartTime,
+                            Time(
+                                Hour(Trim(First(Split(var_secondHalfTime, "-")).Value)),
+                                Minute(Trim(First(Split(var_secondHalfTime, "-")).Value)),
+                                Second(Trim(First(Split(var_secondHalfTime, "-")).Value))
+                            )
+                        );
+                        Set(
+                            var_EndTime,
+                            Time(
+                                Hour(Trim(Last(Split(var_secondHalfTime, "-")).Value)),
+                                Minute(Trim(Last(Split(var_secondHalfTime, "-")).Value)),
+                                Second(Trim(Last(Split(var_secondHalfTime, "-")).Value))
+                            )
+                        );
+                    Set(
+                        var_firstHalfDuration,
+                            DateAdd(DateTimeValue(var_Date & " " & var_EndTime), 0) - DateTimeValue(var_Date & " " & var_StartTime)
+                    );
+                    Set(
+                        var_Duration,
+                        With(
+                            { totalMinutes: Round(var_firstHalfDuration * 24 * 60, 0) },
+                            Text(RoundDown(totalMinutes / 60, 0), "00") & "h " & 
+                            Text(Mod(totalMinutes, 60), "00") & "m"
+                        )
+                    )
+                    
+                    
+                    /*
+                    Set(
+                        var_Date,
+                        Filter(
+                            Split(Self.Selected.Value, " "),
+                            First(
+                                StartsWith(
+                                    Split(Self.Selected.Value, " "),
+                                    ("1" || "2" || "3" || "4" || "5" || "6" || "7" || "8" || "9" || "0")
+                                )
+                            )
+                        )
+                    );
+                    Set(
+                        var_StartTime,
+                        Filter(
+                            Split(Self.Selected.Value, " "),
+                            Last(
+                                FirstN(
+                                    StartsWith(
+                                        Split(Self.Selected.Value, " "),
+                                        ("1" || "2" || "3" || "4" || "5" || "6" || "7" || "8" || "9" || "0")
+                                    ),
+                                    2
+                                )
+                            )
+                        )
+                    );
+                    Set(
+                        var_EndTime,
+                        Filter(
+                            Split(Self.Selected.Value, " "),
+                            Last(
+                                StartsWith(
+                                    Split(Self.Selected.Value, " "),
+                                    ("1" || "2" || "3" || "4" || "5" || "6" || "7" || "8" || "9" || "0")
+                                )
+                            )
+                        )
+                    );
+                    */
+                    
+                    
+                    //   "Friday 10/30/2026 @ 1:00 PM - 2:30 PM",
+                    
+                    /*
                     With(
                         {
                             // 1. Matches the date pattern using RegEx (Captures Month/Day/Year)
@@ -1415,6 +2304,7 @@ POCSUPERVISOR As screen:
                             Set(varPopUp_ClassPicker_scenarioDayOfWeek, First(Split(Self.Selected.Value, " ")).Value)
                         )
                     );
+                    */
                 Required: =false
                 Size: =24
                 ValidationState: =ValidationState.None
@@ -1446,13 +2336,13 @@ POCSUPERVISOR As screen:
                 Text: ="*"
                 Visible: |-
                     =If(
-                        IsBlankOrError(Dropdown3_2.Selected) || Dropdown3_2.Selected.Value = Blank(),
+                        IsBlankOrError(dropdown_DateTimePicker.Selected) || dropdown_DateTimePicker.Selected.Value = Blank(),
                         true,
                         false
                     )
                 Width: |-
                     =If(
-                        IsBlankOrError(Dropdown3_2.Selected) || Dropdown3_2.Selected.Value = Blank(),
+                        IsBlankOrError(dropdown_DateTimePicker.Selected) || dropdown_DateTimePicker.Selected.Value = Blank(),
                         33,
                         0
                     )
@@ -1460,13 +2350,13 @@ POCSUPERVISOR As screen:
                 Y: =Label3.Y
                 ZIndex: =27
 
-        ctn_PopUp_ClassPicker_Role As groupContainer.manualLayoutContainer:
+        ctn_PopUp_ClassPicker_Location As groupContainer.manualLayoutContainer:
             DropShadow: =DropShadow.Light
             Height: |-
                 =If(
-                    IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
+                    IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
                     0,
-                    (HtmlText7_1.Height + Dropdown3_1.Height + 5)
+                    (dropdown_LocationPicker.Height + HtmlText7_3.Height + 5)
                 )
             LayoutGridColumnMinWidth: =0
             LayoutGridColumns: =6
@@ -1480,16 +2370,422 @@ POCSUPERVISOR As screen:
             RadiusTopRight: =4
             Visible: |-
                 =If(
-                    IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
+                    IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
                     false,
                     true
                 )
             Width: =ctn_PopUp_ClassPicker_Scenario.Width
-            X: =ctn_PopUp_ClassPicker_Scenario.X
-            Y: =ctn_PopUp_ClassPicker_Scenario.Height + ctn_PopUp_ClassPicker_Scenario.Y + 5
+            X: =ctn_PopUp_ClassPicker_Role.X
+            Y: =ctn_PopUp_ClassPicker_Scenario.Y + ctn_PopUp_ClassPicker_Scenario.Height + 5
+            ZIndex: =2
+
+            dropdown_LocationPicker As modernDropdown:
+                Appearance: =Appearance.FilledDarker
+                BorderStyle: =""
+                Font: =""
+                Height: =48
+                ItemDisplayText: =ThisItem.Value
+                Items: |-
+                    =[
+                        "Building 20 - Room 204",
+                        "Building 20 - Room 205",
+                        "Building 20 - Room 209",
+                        "Building 20 - Room 210",
+                        "Virtual",
+                        "Virtual CBOC"
+                    ]
+                OnChange: |-
+                    =Set(varPopUp_ClassPicker_scenarioLocation, Self.Selected.Value);
+                    Set(var_reservationFullLocation, Self.Selected.Value);
+                    If(
+                        (Len(Self.Selected.Value) >= 14),
+                            Set(
+                                var_reservationRoomNumber,
+                                Text(
+                                    Last(
+                                        Filter(
+                                            Split(
+                                                Self.Selected.Value,
+                                                " "
+                                                ),
+                                                IsNumeric(Value)
+                                        )
+                                    ).Value
+                                )
+                            );
+                            Set(var_reservationFloorNumber, "2");
+                            Set(
+                                var_reservationBuildingNumber,
+                                Text(
+                                    First(
+                                        Filter(
+                                            Split(
+                                                Self.Selected.Value,
+                                                " "
+                                            ),
+                                            IsNumeric(Value)
+                                        )
+                                    ).Value
+                                )
+                                
+                            );
+                            Set(var_reservationDivision, "Edward Hines Jr. VA Hospital"),
+                        (Len(Self.Selected.Value) <= 13),
+                            Set(var_reservationRoomNumber, "Virtual CBOC");
+                            Set(var_reservationFloorNumber, "Virtual CBOC");
+                            Set(var_reservationBuildingNumber, "Virtual CBOC");
+                            Set(var_reservationDivision, "Edward Hines Jr. VA Hospital"),
+                        (Len(Self.Selected.Value) <= 8),
+                            Set(var_reservationRoomNumber, "Virtual");
+                            Set(var_reservationFloorNumber, "Virtual");
+                            Set(var_reservationBuildingNumber, "Virtual");
+                            Set(var_reservationDivision, "Edward Hines Jr. VA Hospital")
+                    );
+                    
+                    ClearCollect(
+                        colSelectedDesks,
+                        Filter(
+                            Desks,
+                            DeskNumber_number = 1 && RoomNumber_number = Value(var_reservationRoomNumber)
+                        )
+                    );
+                    
+                    /*
+                    If(
+                        ((IsBlankOrError(Dropdown1) || IsBlankOrError(Dropdown1.SelectedText.Value) || IsBlankOrError(Dropdown1.Selected))
+                        && (IsBlankOrError(Dropdown1_1) || IsBlankOrError(Dropdown1_1.SelectedText.Value) || IsBlankOrError(Dropdown1_1.Selected))),
+                            Filter(
+                                Desks,
+                                (Active_text = "yes" || Active_boolean = true),
+                                (DeskNumber_number <> Blank())
+                            ),
+                        ((!IsBlankOrError(Dropdown1) || !IsBlankOrError(Dropdown1.SelectedText.Value) || !IsBlankOrError(Dropdown1.Selected))
+                        && (IsBlankOrError(Dropdown1_1) || IsBlankOrError(Dropdown1_1.SelectedText.Value) || IsBlankOrError(Dropdown1_1.Selected))),
+                            Filter(
+                                Desks,
+                                (Active_text = "yes" || Active_boolean = true),
+                                (DeskNumber_number <> Blank()),
+                                (Dropdown1.SelectedText.Value = BuildingName_text)
+                            ),
+                        ((IsBlankOrError(Dropdown1) || IsBlankOrError(Dropdown1.SelectedText.Value) || IsBlankOrError(Dropdown1.Selected))
+                        && (!IsBlankOrError(Dropdown1_1) || !IsBlankOrError(Dropdown1_1.SelectedText.Value) || !IsBlankOrError(Dropdown1_1.Selected))),
+                            Filter(
+                                Desks,
+                                (Active_text = "yes" || Active_boolean = true),
+                                (DeskNumber_number <> Blank()),
+                                (Dropdown1_1.Selected.Value = RoomNumber_number)
+                            ),
+                        ((!IsBlankOrError(Dropdown1) || !IsBlankOrError(Dropdown1.SelectedText.Value) || !IsBlankOrError(Dropdown1.Selected))
+                        && (!IsBlankOrError(Dropdown1_1) || !IsBlankOrError(Dropdown1_1.SelectedText.Value) || !IsBlankOrError(Dropdown1_1.Selected))),
+                            Filter(
+                                Desks,
+                                (Active_text = "yes" || Active_boolean = true),
+                                (DeskNumber_number <> Blank()),
+                                (Dropdown1_1.Selected.Value = RoomNumber_number),
+                                (Dropdown1.SelectedText.Value = BuildingName_text)
+                            ),
+                        Blank()
+                    )
+                    */
+                Required: =false
+                Size: =24
+                ValidationState: =ValidationState.None
+                Width: =Parent.Width - Self.X - 10
+                X: =HtmlText7_3.X + 10
+                Y: =HtmlText7_3.Y + HtmlText7_3.Height
+                ZIndex: =1
+
+            HtmlText7_3 As htmlViewer:
+                AutoHeight: =true
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =70
+                HtmlText: |-
+                    ="Pick a <b>LOCATION</b> that <b>" & varDeskAccessControl_record.GivenName_Text & "</b> will physically attend this training:"
+                Size: =14
+                Width: =Parent.Width
+                ZIndex: =2
+
+        ctn_PopUp_ClassPicker_Scenario As groupContainer.manualLayoutContainer:
+            DropShadow: =DropShadow.Light
+            Height: =HtmlText7.Height + dropdown_ScenarioPicker.Height + HtmlText8.Height + 5
+            LayoutGridColumnMinWidth: =0
+            LayoutGridColumns: =6
+            LayoutGridRowMinHeight: =0
+            LayoutGridRows: =6
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            Visible: |-
+                =If(
+                    IsBlankOrError(dropdown_RolePicker.Selected) || dropdown_RolePicker.Selected.Value = Blank(),
+                    false,
+                    true
+                )
+            Width: =Parent.Width - 30
+            X: =ctn_PopUp_ClassPicker_Role.X
+            Y: =ctn_PopUp_ClassPicker_Role.Height + ctn_PopUp_ClassPicker_Role.Y + 10
             ZIndex: =3
 
-            Dropdown3_1 As modernDropdown:
+            HtmlText8 As htmlViewer:
+                AutoHeight: =true
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: |-
+                    =If(
+                        IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                        0,
+                        70
+                    )
+                HtmlText: |-
+                    =If(
+                        IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                        "<center><i>Click here to open the <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"">Learning Lab training material library</a> in another browser window...",
+                        "<center><i>Click here to open the <a href=" & var_scenarioTrainingMaterialsURL & "> " & Upper(varPopUp_ClassPicker_scenarioName) & "</a> training scenario materials in another browser window..."
+                    )
+                OnSelect: |-
+                    =If(
+                        IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                        Launch("https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx", LaunchTarget.New, ""),
+                        Launch(
+                            Concatenate(
+                                "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=",
+                                varPopUp_ClassPicker_scenarioSplit,
+                                "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603"
+                            ),
+                            LaunchTarget.New, ""
+                        )
+                    )
+                Size: =20
+                Width: =dropdown_ScenarioPicker.Width
+                X: =dropdown_ScenarioPicker.X
+                Y: =dropdown_ScenarioPicker.Y + dropdown_ScenarioPicker.Height
+                ZIndex: =1
+
+            dropdown_ScenarioPicker As modernDropdown:
+                Appearance: =Appearance.FilledDarker
+                Height: =48
+                ItemDisplayText: =ThisItem.Value
+                Items: |-
+                    =[
+                        "Anatomic Pathology",
+                        "Anesthesia",
+                        "Audiology Hearing Aid Check",
+                        "Behavioral Health - Inpatient",
+                        "Behavioral Health - Outpatient",
+                        "Between Visit Encounter",
+                        "Blind Rehabilitation",
+                        "Blood Bank",
+                        "Caregiver Support Program",
+                        "Case Management to Primary Care to Mental Health",
+                        "Clinical Contact Center",
+                        "Clinical Resource Hub",
+                        "Coding Health Information Management",
+                        "Community Care Referral",
+                        "Community Living Center - Leave of Absence",
+                        "Community Living Center - Pre-Admission Screening",
+                        "Community Living Center Admission",
+                        "Consult to Dietitian",
+                        "Dental Care with Follow Up",
+                        "Dentistry Simple",
+                        "Ear Nose Throat Visit",
+                        "Emergency Department",
+                        "Emergency Department to Intensive Care Unit Admission",
+                        "Eye Care Visit",
+                        "Gastroenterology",
+                        "General Laboratory",
+                        "Health Resource Center",
+                        "Holiday",
+                        "Home and Community Based Care",
+                        "Home Based Primary Care - Discipline Visits",
+                        "Home Based Primary Care - Nurse and Provider Visit",
+                        "Homeless Services and Programs",
+                        "Infection Control Worklist",
+                        "Infection Prevention",
+                        "Inpatient Nurse",
+                        "Inpatient Pharmacy",
+                        "Insurance Verification",
+                        "Intensive Care Unit to Discharge",
+                        "Long-Acting Injectables",
+                        "Mental Health New Visit",
+                        "Microbiology",
+                        "Nurse Visit",
+                        "Occupational Therapy",
+                        "Oncology Infusion Visit",
+                        "Oncology Office Visit",
+                        "Orthopedic Clinic with Physical Therapy",
+                        "Orthopedic Referral",
+                        "Orthotics and Prosthetics",
+                        "Outpatient Billing with Revenue Utilization Review",
+                        "Outpatient Case Management",
+                        "Outpatient Hemodialysis",
+                        "Outpatient Palliative Care",
+                        "Palliative Care Consult",
+                        "Patient Accounting",
+                        "Pharmacist Provider",
+                        "Pharmacy Outpatient",
+                        "Pharmacy Supply Chain - Electronic Purchase Orders",
+                        "Pharmacy Supply Chain Receiving",
+                        "Pharmacy Technician",
+                        "Physical Medicine and Rehabilitation",
+                        "Physical Therapy",
+                        "Podiatry",
+                        "Primary Care Established",
+                        "Primary Care Focused",
+                        "Primary Care Mental Health Integration",
+                        "Primary Care to Primary Care Mental Health Integration",
+                        "Primary Care with Home Telehealth Referral",
+                        "Primary Care with Lab and Pharmacy",
+                        "Primary Care with Podiatry and Wound Care",
+                        "Primary Care with Pulmonary and Cardiothoracic Surgery",
+                        "Primary Care with Radiology",
+                        "Primary Care with Referral Management and Clinical Resource Hub - Day 1",
+                        "Primary Care with Referral Management and Clinical Resource Hub - Day 2",
+                        "Primary Care with Spinal Cord Injuries and Disorders and Physical Therapy",
+                        "Primary Care with Suicidal Ideation",
+                        "Pulmonology",
+                        "Radiology",
+                        "Recreation Therapy",
+                        "Release of Information Specialist",
+                        "Research Initial Visit",
+                        "Residential Rehabilitation Treatment Program",
+                        "Residential Rehabilitation Treatment Program Admission",
+                        "Respiratory Therapy",
+                        "Scenario 1 - Mr. Frank - Day 1",
+                        "Scenario 1 - Mr. Frank - Day 2",
+                        "Scenario 2 - Mr. Lee - Day 1",
+                        "Scenario 2 - Mr. Lee - Day 2",
+                        "Scenario 3 - Ms. White - Day 1",
+                        "Scenario 3 - Ms. White - Day 2",
+                        "Social Work Inpatient",
+                        "Solid Organ Transplant Referral",
+                        "Specialty Care Office Visit",
+                        "Speech Language Pathology",
+                        "Spinal Cord Injury Home Care",
+                        "Standard Surgery - Day 1",
+                        "Standard Surgery - Day 2",
+                        "Tele-Health Visit",
+                        "Tele-Imaging",
+                        "Urgent Care",
+                        "Women's Health & Gynecology Procedure",
+                        "Women's Health Visit",
+                        "Wound Care",
+                    
+                    ]
+                OnChange: |-
+                    =Set(varPopUp_ClassPicker_scenarioName, Self.Selected.Value);
+                    Set(varPopUp_ClassPicker_scenarioSplit, Substitute(Text(Self.Selected.Value), " ", "%20"));
+                    Set(var_reservationScenario, Self.Selected.Value);
+                    If(
+                        (IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank()),
+                            Set(var_scenarioTrainingMaterialsURL, "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"),
+                            Set(var_scenarioTrainingMaterialsURL, 
+                                Concatenate(
+                                    "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=",
+                                    var_reservationScenario,
+                                    "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603"
+                                )
+                            )
+                    );
+                ValidationState: =ValidationState.None
+                Width: =Parent.Width - Self.X - 10
+                X: =HtmlText7.X + 10
+                Y: =HtmlText7.Y + HtmlText7.Height
+                ZIndex: =2
+
+            HtmlText7 As htmlViewer:
+                AutoHeight: =true
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =70
+                HtmlText: |-
+                    ="Pick a <b>SCENARIO</b> for <b>" & varDeskAccessControl_record.GivenName_Text & "'s</b> Learning Lab:"
+                Size: =14
+                Width: =Parent.Width - Self.X
+                X: =Label3.X + Label3.Width
+                ZIndex: =3
+
+            Button9 As button:
+                BorderColor: =RGBA(0, 0, 0, 0)
+                Color: =App.Theme.Colors.PrimaryForeground
+                DisabledBorderColor: =RGBA(244, 244, 244, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                Fill: =RGBA(0, 0, 0, 0)
+                Font: =App.Theme.Font
+                Height: =HtmlText8.Height + 2
+                HoverBorderColor: =RGBA(9, 33, 98, 1)
+                HoverColor: =App.Theme.Colors.PrimaryForeground
+                HoverFill: =RGBA(9, 33, 98, 0.25)
+                OnSelect: =Select(HtmlText8)
+                PressedBorderColor: =
+                PressedColor: =Self.Color
+                PressedFill: =App.Theme.Colors.Darker40
+                RadiusBottomLeft: =15
+                RadiusBottomRight: =15
+                RadiusTopLeft: =15
+                RadiusTopRight: =15
+                Size: =20
+                Text: =
+                Width: =HtmlText8.Width + 4
+                X: =HtmlText8.X - 2
+                Y: =HtmlText8.Y - 1
+                ZIndex: =5
+
+            Label3 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =33
+                Size: =30
+                Text: ="*"
+                Visible: |-
+                    =If(
+                        IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                        true,
+                        false
+                    )
+                Width: |-
+                    =If(
+                        IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                        33,
+                        0
+                    )
+                ZIndex: =6
+
+        ctn_PopUp_ClassPicker_Role As groupContainer.manualLayoutContainer:
+            DropShadow: =DropShadow.Light
+            Height: |-
+                =If(
+                    ctn_PopUp_ClassPicker_Header.Visible,
+                    (HtmlText7_1.Height + dropdown_RolePicker.Height + 5),
+                    0
+                )
+            LayoutGridColumnMinWidth: =0
+            LayoutGridColumns: =6
+            LayoutGridRowMinHeight: =0
+            LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            Visible: |-
+                =If(
+                    ctn_PopUp_ClassPicker_Header.Visible,
+                    true,
+                    false
+                )
+            Width: =ctn_PopUp_ClassPicker_Scenario.Width
+            X: =15
+            Y: =ctn_PopUp_ClassPicker_Header.Height + ctn_PopUp_ClassPicker_Header.Y + 10
+            ZIndex: =4
+
+            dropdown_RolePicker As modernDropdown:
                 Appearance: =Appearance.FilledDarker
                 BorderStyle: =""
                 Font: =""
@@ -1670,7 +2966,9 @@ POCSUPERVISOR As screen:
                         "Wound Care Provider",
                         "Wound Care Provider "
                     ]
-                OnChange: =Set(varPopUp_ClassPicker_scenarioRole, Self.Selected.Value);
+                OnChange: |
+                    =Set(varPopUp_ClassPicker_scenarioRole, Self.Selected.Value);
+                    Set(var_reservationRole, Self.Selected.Value);
                 Required: =false
                 Size: =24
                 ValidationState: =ValidationState.None
@@ -1702,251 +3000,19 @@ POCSUPERVISOR As screen:
                 Text: ="*"
                 Visible: |-
                     =If(
-                        IsBlankOrError(Dropdown3_1.Selected) || Dropdown3_1.Selected.Value = Blank(),
+                        IsBlankOrError(dropdown_RolePicker.Selected) || dropdown_RolePicker.Selected.Value = Blank(),
                         true,
                         false
                     )
                 Width: |-
                     =If(
-                        IsBlankOrError(Dropdown3_1.Selected) || Dropdown3_1.Selected.Value = Blank(),
+                        IsBlankOrError(dropdown_RolePicker.Selected) || dropdown_RolePicker.Selected.Value = Blank(),
                         33,
                         0
                     )
                 X: =Label3.X
                 Y: =Label3.Y
                 ZIndex: =26
-
-        ctn_PopUp_ClassPicker_Scenario As groupContainer.manualLayoutContainer:
-            DropShadow: =DropShadow.Light
-            Height: =HtmlText7.Height + Dropdown3.Height + HtmlText8.Height + 5
-            LayoutGridColumnMinWidth: =0
-            LayoutGridColumns: =6
-            LayoutGridRowMinHeight: =0
-            LayoutGridRows: =6
-            RadiusBottomLeft: =4
-            RadiusBottomRight: =4
-            RadiusTopLeft: =4
-            RadiusTopRight: =4
-            Width: =Parent.Width - 30
-            X: =15
-            Y: =ctn_PopUp_ClassPicker_Header.Height + ctn_PopUp_ClassPicker_Header.Y + 10
-            ZIndex: =4
-
-            HtmlText8 As htmlViewer:
-                AutoHeight: =true
-                DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                Height: |-
-                    =If(
-                        IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
-                        0,
-                        70
-                    )
-                HtmlText: |-
-                    =If(
-                        IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
-                        "<center><i>Click here to open the <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"">Learning Lab training material library</a> in another browser window...",
-                        "<center><i>Click here to open the <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=" & varPopUp_ClassPicker_scenarioSplit & "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603""> " & varPopUp_ClassPicker_scenarioName & "</a> Learning Lab training materials in another browser window..."
-                    )
-                OnSelect: |-
-                    =If(
-                        IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
-                        Launch("https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx", LaunchTarget.New, ""),
-                        Launch(
-                            Concatenate(
-                                "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=",
-                                varPopUp_ClassPicker_scenarioSplit,
-                                "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603"
-                            ),
-                            LaunchTarget.New, ""
-                        )
-                    )
-                Size: =20
-                Width: =Dropdown3.Width
-                X: =Dropdown3.X
-                Y: =Dropdown3.Y + Dropdown3.Height
-                ZIndex: =1
-
-            Dropdown3 As modernDropdown:
-                Appearance: =Appearance.FilledDarker
-                Height: =48
-                ItemDisplayText: =ThisItem.Value
-                Items: |-
-                    =[
-                        "Anatomic Pathology",
-                        "Anesthesia",
-                        "Audiology Hearing Aid Check",
-                        "Behavioral Health - Inpatient",
-                        "Behavioral Health - Outpatient",
-                        "Between Visit Encounter",
-                        "Blind Rehabilitation",
-                        "Blood Bank",
-                        "Caregiver Support Program",
-                        "Case Management to Primary Care to Mental Health",
-                        "Clinical Contact Center",
-                        "Clinical Resource Hub",
-                        "Coding Health Information Management",
-                        "Community Care Referral",
-                        "Community Living Center - Leave of Absence",
-                        "Community Living Center - Pre-Admission Screening",
-                        "Community Living Center Admission",
-                        "Consult to Dietitian",
-                        "Dental Care with Follow Up",
-                        "Dentistry Simple",
-                        "Ear Nose Throat Visit",
-                        "Emergency Department",
-                        "Emergency Department to Intensive Care Unit Admission",
-                        "Eye Care Visit",
-                        "Gastroenterology",
-                        "General Laboratory",
-                        "Health Resource Center",
-                        "Holiday",
-                        "Home and Community Based Care",
-                        "Home Based Primary Care - Discipline Visits",
-                        "Home Based Primary Care - Nurse and Provider Visit",
-                        "Homeless Services and Programs",
-                        "Infection Control Worklist",
-                        "Infection Prevention",
-                        "Inpatient Nurse",
-                        "Inpatient Pharmacy",
-                        "Insurance Verification",
-                        "Intensive Care Unit to Discharge",
-                        "Long-Acting Injectables",
-                        "Mental Health New Visit",
-                        "Microbiology",
-                        "Nurse Visit",
-                        "Occupational Therapy",
-                        "Oncology Infusion Visit",
-                        "Oncology Office Visit",
-                        "Orthopedic Clinic with Physical Therapy",
-                        "Orthopedic Referral",
-                        "Orthotics and Prosthetics",
-                        "Outpatient Billing with Revenue Utilization Review",
-                        "Outpatient Case Management",
-                        "Outpatient Hemodialysis",
-                        "Outpatient Palliative Care",
-                        "Palliative Care Consult",
-                        "Patient Accounting",
-                        "Pharmacist Provider",
-                        "Pharmacy Outpatient",
-                        "Pharmacy Supply Chain - Electronic Purchase Orders",
-                        "Pharmacy Supply Chain Receiving",
-                        "Pharmacy Technician",
-                        "Physical Medicine and Rehabilitation",
-                        "Physical Therapy",
-                        "Podiatry",
-                        "Primary Care Established",
-                        "Primary Care Focused",
-                        "Primary Care Mental Health Integration",
-                        "Primary Care to Primary Care Mental Health Integration",
-                        "Primary Care with Home Telehealth Referral",
-                        "Primary Care with Lab and Pharmacy",
-                        "Primary Care with Podiatry and Wound Care",
-                        "Primary Care with Pulmonary and Cardiothoracic Surgery",
-                        "Primary Care with Radiology",
-                        "Primary Care with Referral Management and Clinical Resource Hub - Day 1",
-                        "Primary Care with Referral Management and Clinical Resource Hub - Day 2",
-                        "Primary Care with Spinal Cord Injuries and Disorders and Physical Therapy",
-                        "Primary Care with Suicidal Ideation",
-                        "Pulmonology",
-                        "Radiology",
-                        "Recreation Therapy",
-                        "Release of Information Specialist",
-                        "Research Initial Visit",
-                        "Residential Rehabilitation Treatment Program",
-                        "Residential Rehabilitation Treatment Program Admission",
-                        "Respiratory Therapy",
-                        "Scenario 1 - Mr. Frank - Day 1",
-                        "Scenario 1 - Mr. Frank - Day 2",
-                        "Scenario 2 - Mr. Lee - Day 1",
-                        "Scenario 2 - Mr. Lee - Day 2",
-                        "Scenario 3 - Ms. White - Day 1",
-                        "Scenario 3 - Ms. White - Day 2",
-                        "Social Work Inpatient",
-                        "Solid Organ Transplant Referral",
-                        "Specialty Care Office Visit",
-                        "Speech Language Pathology",
-                        "Spinal Cord Injury Home Care",
-                        "Standard Surgery - Day 1",
-                        "Standard Surgery - Day 2",
-                        "Tele-Health Visit",
-                        "Tele-Imaging",
-                        "Urgent Care",
-                        "Women's Health & Gynecology Procedure",
-                        "Women's Health Visit",
-                        "Wound Care",
-                    
-                    ]
-                OnChange: |-
-                    =Set(varPopUp_ClassPicker_scenarioName, Self.Selected.Value);
-                    Set(varPopUp_ClassPicker_scenarioSplit, Substitute(Text(Self.Selected.Value), " ", "%20"));
-                ValidationState: =ValidationState.None
-                Width: =Parent.Width - Self.X - 10
-                X: =HtmlText7.X + 10
-                Y: =HtmlText7.Y + HtmlText7.Height
-                ZIndex: =2
-
-            HtmlText7 As htmlViewer:
-                AutoHeight: =true
-                DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                Height: =70
-                HtmlText: |-
-                    ="Pick a <b>SCENARIO</b> for <b>" & varDeskAccessControl_record.GivenName_Text & "'s</b> Learning Lab:"
-                Size: =14
-                Width: =Parent.Width - Self.X
-                X: =Label3.X + Label3.Width
-                ZIndex: =3
-
-            Button9 As button:
-                BorderColor: =RGBA(0, 0, 0, 0)
-                Color: =App.Theme.Colors.PrimaryForeground
-                DisabledBorderColor: =RGBA(244, 244, 244, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                DisabledFill: =RGBA(244, 244, 244, 1)
-                Fill: =RGBA(0, 0, 0, 0)
-                Font: =App.Theme.Font
-                Height: =HtmlText8.Height + 2
-                HoverBorderColor: =RGBA(9, 33, 98, 1)
-                HoverColor: =App.Theme.Colors.PrimaryForeground
-                HoverFill: =RGBA(9, 33, 98, 0.25)
-                OnSelect: =Select(HtmlText8)
-                PressedBorderColor: =
-                PressedColor: =Self.Color
-                PressedFill: =App.Theme.Colors.Darker40
-                RadiusBottomLeft: =15
-                RadiusBottomRight: =15
-                RadiusTopLeft: =15
-                RadiusTopRight: =15
-                Size: =20
-                Text: =
-                Width: =HtmlText8.Width + 4
-                X: =HtmlText8.X - 2
-                Y: =HtmlText8.Y - 1
-                ZIndex: =5
-
-            Label3 As label:
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =RGBA(168, 0, 0, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Bold
-                Height: =33
-                Size: =30
-                Text: ="*"
-                Visible: |-
-                    =If(
-                        IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
-                        true,
-                        false
-                    )
-                Width: |-
-                    =If(
-                        IsBlankOrError(Dropdown3.Selected) || Dropdown3.Selected.Value = Blank(),
-                        33,
-                        0
-                    )
-                ZIndex: =6
 
         ctn_PopUp_ClassPicker_Header As groupContainer.manualLayoutContainer:
             DropShadow: =DropShadow.Light
@@ -1987,7 +3053,7 @@ POCSUPERVISOR As screen:
                 DisabledFill: =RGBA(244, 244, 244, 1)
                 DisplayMode: |-
                     =If(
-                        IsBlankOrError(Dropdown3_3.Selected) || Dropdown3_3.Selected.Value = Blank(),
+                        IsBlankOrError(dropdown_LocationPicker.Selected) || dropdown_LocationPicker.Selected.Value = Blank(),
                         DisplayMode.Disabled,
                         DisplayMode.Edit
                     )
@@ -1999,11 +3065,67 @@ POCSUPERVISOR As screen:
                 HoverColor: =App.Theme.Colors.PrimaryForeground
                 HoverFill: =ColorFade(Self.Fill, -20%)
                 OnSelect: |-
-                    =// 1. Set global variables
-                    Set(varAttendees, Concat(DataCardValue3.SelectedItems, Email, ";")); //e.g. "Kyle.Coder@va.gov;"
-                    Set(varOptionalAttendees, Concat(DataCardValue7.SelectedItems, Email, ";")); //e.g. "Bradley.Lomax@va.gov;"
+                    =Set(var_reservationRole, dropdown_RolePicker.Selected.Value);
+                    Set(var_reservationScenario, dropdown_ScenarioPicker.Selected.Value);
+                    If(
+                        (IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank()),
+                        Set(var_scenarioTrainingMaterialsURL, "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"),
+                        Set(var_scenarioTrainingMaterialsURL, 
+                            Concatenate(
+                                "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=",
+                                var_reservationScenario,
+                                "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603"
+                            )
+                        )
+                    );
+                    Set(varPopUp_ClassPicker_scenarioLocation, dropdown_LocationPicker.Selected.Value);
+                    Set(var_reservationFullLocation, dropdown_LocationPicker.Selected.Value);
+                    If(
+                        (Len(dropdown_LocationPicker.Selected.Value) >= 14),
+                            Set(
+                                var_reservationBuildingNumber,
+                                Text(
+                                    First(
+                                        Filter(
+                                            Split(
+                                                dropdown_LocationPicker.Selected.Value,
+                                                " "
+                                            ),
+                                            IsNumeric(Value)
+                                        )
+                                    ).Value
+                                )
+                                
+                            );
+                            Set(
+                                var_reservationRoomNumber,
+                                Text(
+                                    Last(
+                                        Filter(
+                                            Split(
+                                                dropdown_LocationPicker.Selected.Value,
+                                                " "
+                                                ),
+                                                IsNumeric(Value)
+                                        )
+                                    ).Value
+                                )
+                            ),
+                        (Len(dropdown_LocationPicker.Selected.Value) <= 13),
+                            Set(var_reservationRoomNumber, "Virtual"),
+                        (Len(dropdown_LocationPicker.Selected.Value) <= 8),
+                            Set(var_reservationBuildingNumber, "Virtual")
+                    );
+                    Set(var_Attendees, Concat(DataCardValue3.SelectedItems, Email, ";"));
+                    Set(var_OptionalAttendees, Concat(DataCardValue7.SelectedItems, Email, ";"));
+                    
+                    
+                    
+                    // 1. Set global variables
+                    Set(varAttendees, Concat(DataCardValue3.SelectedItems, Email, ";")); //e.g. "First1.Last1@va.gov;"
+                    Set(varOptionalAttendees, Concat(DataCardValue7.SelectedItems, Email, ";")); //e.g. "First2.Last2@va.gov;"
                     Set(varMeetCat, DropdownCanvas1.Selected.Value);  //e.g. "Super User Learning Lab"
-                    Set(varReservePOC, DataCardValue7.Selected.Email); //e.g. "Bradley.Lomax@va.gov;"
+                    Set(varReservePOC, DataCardValue7.Selected.Email); //e.g. "First2.Last2@va.gov;"
                     Set(varTitle, "Hines EHRM Training Room & Desk Reservation"); //DataCardValue8.Text); // TBService
                     Set(varDescription, DataCardValue1.Text); // RDReason 
                     Set(
@@ -2028,6 +3150,15 @@ POCSUPERVISOR As screen:
                     Set(varURLName, "578 EHRM Training App");
                     Set(varPopUp_ClassPicker, 1);
                     
+                    If(varAccept3,
+                        Set(varAccept3, false);
+                        Set(varAccept4, false),
+                        If(varAccept4,
+                            Set(varAccept4, false)
+                        )
+                    );
+                    
+                    //Navigate(Confirm)
                     Navigate(chkWeekDays)
                 PressedBorderColor: =App.Theme.Colors.Darker40
                 PressedColor: =Self.Color
@@ -2104,22 +3235,161 @@ POCSUPERVISOR As screen:
                 You may not proceed until you provide an answer to all required questions!"
             Visible: |-
                 =If(
-                    (IsBlankOrError(Dropdown3_2.Selected) || Dropdown3_2.Selected.Value = Blank())
-                    || !ctn_PopUp_ClassPicker_Location.Visible,
+                    (IsBlankOrError(dropdown_LocationPicker.Selected) || dropdown_LocationPicker.Selected.Value = Blank()) || !ctn_PopUp_ClassPicker_DateTime.Visible,
                     true,
                     false
                 )
             Width: =1136
             Y: =536
-            ZIndex: =25
+            ZIndex: =6
 
     Button1 As modernButton:
         Height: =50
         OnSelect: |-
-            =Reset(Dropdown3);
-            Reset(Dropdown3_1);
-            Reset(Dropdown3_2);
-            Reset(Dropdown3_3);
+            =Set(varPopUp_ClassPicker, 0);
+            Reset(DataCardValue3);
+            Reset(DataCardValue7);
+            Reset(DataCardValue8);
+            Reset(DropdownCanvas1);
+            Reset(dropdown_RolePicker);
+            Reset(dropdown_ScenarioPicker);
+            Reset(dropdown_LocationPicker);
+            Reset(dropdown_DateTimePicker);
+            ResetForm(Form1);
+            
+            
+            Set(_allRoomsConcat, Blank());
+            Set(_calendarVisible, Blank());
+            Set(_dateSelected, Blank());
+            Set(_dateSelected2, Blank());
+            Set(_firstDayInView, Blank());
+            Set(_FirstDayinView2, Blank());
+            Set(_firstDayOfMonth, Blank());
+            Set(_firstDayOfMonth2, Blank());
+            Set(_firstDayofWeek2, Blank());
+            Set(_lastDayOfMonth, Blank());
+            Set(_LastDayOfMonth2, Blank());
+            Set(_maxDate, Blank());
+            Set(_MaxDate, Blank());
+            Set(_MaxDate2, Blank());
+            Set(_minDate, Blank());
+            Set(_MinDate, Blank());
+            Set(_MinDate2, Blank());
+            Set(_myCalendarName, Blank());
+            Set(_myScheduledMeeting, Blank());
+            Set(_noRoomLists, Blank());
+            Set(_roomListSelected, Blank());
+            Set(_selectedMeetingTime, Blank());
+            Set(_selectedRoom, Blank());
+            Set(_selectedRoomList, Blank());
+            Set(_selectedUser, Blank());
+            Set(_showDetails, Blank());
+            Set(_showMeetingTimes, Blank());
+            Set(currentItem, Blank());
+            Set(endByDate, Blank());
+            Set(gv_item, Blank());
+            Set(maxOccurrence, Blank());
+            Set(NthWeekdayRecord, Blank());
+            Set(numWorkDays, Blank());
+            Set(PDFPrint, Blank());
+            Set(startWeekday, Blank());
+            Set(submitItem, Blank());
+            //Set(user_isAdmin, Blank());
+            //Set(userAccessLevel_text, Blank());
+            Set(var_Attendees, Blank());
+            //Set(var_AuthorInfo, Blank();
+            Set(var_Date, Blank());
+            Set(var_DayOfWeek, Blank());
+            Set(var_Duration, Blank());
+            Set(var_EndTime, Blank());
+            Set(var_firstHalfDuration, Blank());
+            Set(var_ManagerEmail, Blank());
+            Set(var_MeetingCategory, Blank());
+            Set(var_OptionalAttendees, Blank());
+            Set(var_reservationBuildingNumber, Blank());
+            Set(var_reservationDivision, Blank());
+            Set(var_reservationFloorNumber, Blank());
+            Set(var_reservationFullDateTime, Blank());
+            Set(var_reservationFullLocation, Blank());
+            Set(var_reservationRole, Blank());
+            Set(var_reservationRoomNumber, Blank());
+            Set(var_reservationScenario, Blank());
+            Set(var_scenarioTrainingMaterialsURL, Blank());
+            Set(var_secondHalfTime, Blank());
+            Set(var_StartTime, Blank());
+            Set(varAccept, Blank());
+            Set(varAccept3, Blank());
+            Set(varAccept4, Blank());
+            Set(varAttendees, Blank());
+            Set(varCancelContainer, Blank());
+            Set(varDaily, Blank());
+            Set(varDefaultEndTime, Blank());
+            Set(varDescription, Blank());
+            //Set(varDeskAccessControl_record, Blank());
+            Set(varDeskMode, Blank());
+            Set(varEmailBody, Blank());
+            Set(varEndDate, Blank());
+            Set(varEventEndTime, Blank());
+            Set(varEventStartTime, Blank());
+            Set(varImportance, Blank());
+            Set(varIsImpersonating, Blank());
+            Set(varManageSelectedDesk, Blank());
+            Set(varMeetCat, Blank());
+            Set(varOptionalAttendees, Blank());
+            Set(varPopUp_ClassPicker, Blank());
+            Set(varPopUp_ClassPicker_scenarioDate, Blank());
+            Set(varPopUp_ClassPicker_scenarioDateTime, Blank());
+            Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank());
+            Set(varPopUp_ClassPicker_scenarioEnd24, Blank());
+            Set(varPopUp_ClassPicker_scenarioEndTime, Blank());
+            Set(varPopUp_ClassPicker_scenarioLocation, Blank());
+            Set(varPopUp_ClassPicker_scenarioName, Blank());
+            Set(varPopUp_ClassPicker_scenarioRole, Blank());
+            Set(varPopUp_ClassPicker_scenarioSplit, Blank());
+            Set(varPopUp_ClassPicker_scenarioStart24, Blank());
+            Set(varPopUp_ClassPicker_scenarioStartTime, Blank());
+            //Set(varRealEmail, Blank());
+            //Set(varRealEntraID, Blank());
+            Set(varRecurrence, Blank());
+            Set(varRecurrenceID, Blank());
+            Set(varReminder, Blank());
+            //Set(varRepoVersion, Blank());
+            Set(varReservePOC, Blank());
+            Set(varScreenReset, Blank());
+            Set(varSelectedDesk, Blank());
+            Set(varSelectedReservation, Blank());
+            Set(varSelectedStartDate, Blank());
+            Set(varsmartboardck, Blank());
+            //Set(varTargetEmail, Blank());
+            //Set(varTargetEntraID, Blank());
+            Set(varTimer, Blank());
+            Set(varTitle, Blank());
+            Set(varURL, Blank());
+            Set(varURLName, Blank());
+            Set(varUserExists, Blank());
+            //Set(varUser_details, Blank());
+            Set(varWeekday, Blank());
+            Clear(AllRooms);
+            Clear(AvailableRooms);
+            Clear(AvailableRoomsOptimal);
+            Clear(col_selectedRecord);
+            Clear(colCombinedRecurrence);
+            Clear(colDates);
+            //Clear(colDeskAccess);
+            Clear(colDeskChckRecur);
+            //Clear(colMenu);
+            Clear(colRoomFilter);
+            Clear(colSelectedDesks);
+            Clear(colSmartboard);
+            //Clear(colUser_details);
+            Clear(MeetingTimes);
+            Clear(MyPeople);
+            Clear(RoomsLists);
+            Clear(RoomTimeSuggestions);
+            //Clear(varUser_details);
+            Clear(WeekdaysOnly);
+            Clear(wkDays);
+            Clear(wkDaysTemp);
         Text: ="RESET"
         Visible: =user_isAdmin
         Width: =176

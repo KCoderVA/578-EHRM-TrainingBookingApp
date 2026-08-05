@@ -22,8 +22,8 @@ Everything under a `local/` subfolder is **local-only and git-ignored by design*
 | List | Folder | Status |
 |---|---|---|
 | `DeskAccessControl` | `list/deskAccessControl/` | Active — drives Canvas app RBAC (`AccessLevel_Text` column) |
-| `Desk Reservations` | `list/deskReservations/` | Active — booking records |
-| `Desks` | `list/desks/` | Active — bookable location/room inventory |
+| `Desk Reservations` | `list/deskReservations/` | Active — booking records. **Expanded in Canvas app v0.9.26** into a full training-registration record: ~40 columns added (`submitter*`, `student*`, `reservation*` scenario/role/session/location, narrative bodies, `trainer*` approval, `reminder*` tracking); 3 legacy columns removed (`DeskFloor`, `Floor`, `Reason for desk reservation`). The `trainer*`/`reminder*` families are written blank by the app and are the contract for companion Power Automate flows. See [src/powerApps/v0.9.26_recentChangesSummary.md](../powerApps/v0.9.26_recentChangesSummary.md) §7. |
+| `Desks` | `list/desks/` | Active — bookable location/room inventory. **Normalized in v0.9.26** to typed `*_choice`/`*_text`/`*_boolean` columns (legacy untyped duplicates removed). |
 | `Schedule` | `list/schedule/` | **New/planned** — scaffold only; no list schema exported yet. Staged from `SULL_Jesse_Brown_Schedule_7.10.26 - Integrated.xlsx` in support of the ongoing "desk reservation" → "training booking" terminology migration (see [docs/PROJECT_STATUS.md](../../docs/PROJECT_STATUS.md)) |
 
 ## Provenance / prior structure

@@ -32,10 +32,8 @@ Screens:
                           )
                           && //'Check Out From' <= Today(),DeskFloor,
                           Or(
-                              'Check Out From' <= Today(),
-                              IsBlank(Active_choice.Value),
-                              Active_choice.Value = "false",
-                              DeskFloor
+                              reservationStart_datetime <= Today(),
+                              !IsBlank(RoomReservation)
                           )
                       ),
                       "CheckOutFrom",
@@ -43,6 +41,8 @@ Screens:
                   ),
                   500
               )
+
+
 
 
               // TEMPLATE VERSION'S PREVIOUS FORMULA VALUE:
@@ -303,18 +303,18 @@ Screens:
                       Filter(
                           'Desk Reservations',
                           (
-                              Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
-                              // || Lower('Created By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
+                              Lower(submitterEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
+                              || Lower(studentEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
                           )
                           && //'Check Out From' <= Today(),DeskFloor,
                           Or(
-                              'Check Out From' >= Today(),
-                              !IsBlank(Active_choice.Value),
-                              Active_choice.Value = "true",
-                              DeskFloor
+                              //'Check Out From' >= Today(),
+                              reservationStart_datetime >= Today(),
+                              !IsBlank(RoomReservation)
+                              //DeskFloor
                           )            
                       ),
-                      "CheckOutFrom",
+                      "reservationStart_datetime",
                       SortOrder.Ascending
                   ),
                   500
@@ -356,6 +356,40 @@ Screens:
                   Width: =142
                   X: =Parent.Width - Self.Width - 10
                   Y: =10
+            - Title2_14:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =16
+                  Text: |-
+                    =Text(ThisItem.reservationStart_datetime)
+                    //Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM")
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =314
+                  X: =537
+                  Y: =60
+            - Label2:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  AutoHeight: =true
+                  FontWeight: =FontWeight.Semibold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  Size: =16
+                  Text: =" to "
+                  Visible: =Title2_7.Visible
+                  Width: =43
+                  X: =623
+                  Y: =35
             - Title2_7:
                 Control: Label@2.5.1
                 Properties:
@@ -370,8 +404,8 @@ Screens:
                   PaddingTop: =0
                   Size: =16
                   Text: |-
-                    =Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM")
-                    //Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)ThisItem.'Check Out From'
+                    =Text(ThisItem.reservationStart_datetime)
+                    //Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM")
                   VerticalAlign: =VerticalAlign.Top
                   Width: =314
                   X: =537
@@ -427,27 +461,6 @@ Screens:
                   Width: =383
                   X: =127
                   Y: =10
-            - Title2_13:
-                Control: Label@2.5.1
-                Properties:
-                  Align: =Align.Center
-                  BorderColor: =RGBA(0, 0, 0, 1)
-                  Color: =RGBA(135, 78, 181, 1)
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Bold
-                  Height: =30
-                  OnSelect: =Select(Parent)
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =16
-                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd"))
-                  VerticalAlign: =VerticalAlign.Top
-                  Visible: =Title2_12.Visible
-                  Width: =54
-                  X: =172
-                  Y: =10
             - Title2_12:
                 Control: Label@2.5.1
                 Properties:
@@ -462,25 +475,12 @@ Screens:
                   PaddingRight: =0
                   PaddingTop: =0
                   Size: =14
-                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]mmm"))
+                  Text: =Upper(Text(DateTimeValue(ThisItem.reservationStart_datetime),"[$-en-US]yyyy"))
                   VerticalAlign: =VerticalAlign.Top
-                  Visible: =If(Upper(Text(DateTimeValue(ThisItem.'Check Out From Text'),"[$-en-US]dd")) = Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd")), false, true)
+                  Visible: =Title2_4.Visible
                   Width: =58
-                  X: =127
-                  Y: =10
-            - Label2:
-                Control: Label@2.5.1
-                Properties:
-                  Align: =Align.Center
-                  FontWeight: =FontWeight.Semibold
-                  Height: =30
-                  OnSelect: =Select(Parent)
-                  Size: =16
-                  Text: =" to "
-                  Visible: =Title2_12.Visible
-                  Width: =43
-                  X: =98
-                  Y: =10
+                  X: =25
+                  Y: =35
             - Title2_6:
                 Control: Label@2.5.1
                 Properties:

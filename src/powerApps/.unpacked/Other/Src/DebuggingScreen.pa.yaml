@@ -48,7 +48,7 @@ Screens:
                   PaddingRight: =0
                   PaddingTop: =0
                   Size: =18
-                  Text: =ThisItem.Title
+                  Text: =ThisItem.ItemID_title
                   VerticalAlign: =VerticalAlign.Top
                   Width: =Title1.Width
                   X: =24
@@ -89,7 +89,7 @@ Screens:
                   PaddingRight: =0
                   PaddingTop: =0
                   Size: =20
-                  Text: =ThisItem.'Room Location'
+                  Text: =ThisItem.RoomLocation
                   VerticalAlign: =VerticalAlign.Top
                   Width: =400
                   X: =24
@@ -109,9 +109,9 @@ Screens:
                 IsLocked: true
                 Properties:
                   DataField: ="Title"
-                  Default: =ThisItem.Title
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Title)
-                  MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Title)
+                  Default: =ThisItem.ItemID_title
+                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,ItemID_title)
+                  MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, ItemID_title)
                   Required: =true
                   Update: =DataCardValue2.Text
                   X: =0
@@ -265,8 +265,8 @@ Screens:
                 IsLocked: true
                 Properties:
                   DataField: ="MapLink"
-                  Default: =ThisItem.'Map Link'
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,'Map Link')
+                  Default: =ThisItem.MapLink
+                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,MapLink)
                   Required: =false
                   Update: =DataCardValue5.Text
                   X: =0
@@ -418,9 +418,9 @@ Screens:
                 IsLocked: true
                 Properties:
                   DataField: ="Floor"
-                  Default: =ThisItem.'Room Location'
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,'Room Location')
-                  MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, 'Room Location')
+                  Default: =ThisItem.RoomLocation
+                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,RoomLocation)
+                  MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, RoomLocation)
                   Required: =false
                   Update: =DataCardValue9.Text
                   X: =0
@@ -573,8 +573,8 @@ Screens:
                 IsLocked: true
                 Properties:
                   DataField: ="DeskLocation"
-                  Default: =ThisItem.'Desk Location'
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,'Desk Location')
+                  Default: =ThisItem.DeskLocation
+                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,DeskLocation)
                   Required: =false
                   Update: =DataCardValue11.Text
                   X: =0

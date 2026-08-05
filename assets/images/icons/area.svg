@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Icon / Area</title>
+    <g id="Visual-Designs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Pass-_-After-arrival-time-expires" transform="translate(-64.000000, -509.000000)" stroke="#FE635B">
+            <g id="Group-6" transform="translate(35.000000, 243.000000)">
+                <g id="Group-3" transform="translate(29.822695, 263.000000)">
+                    <g id="Area" transform="translate(0.000000, 4.000000)">
+                        <path d="M0,3.2 L0,0.8 C0,0.3584 0.368567376,0 0.822695035,0 L3.29078014,0" id="Stroke-1"></path>
+                        <path d="M9.04964539,0 L11.5177305,0 C11.9718582,0 12.3404255,0.3584 12.3404255,0.8 L12.3404255,3.2" id="Stroke-3"></path>
+                        <path d="M12.3404255,8.8 L12.3404255,11.2 C12.3404255,11.6416 11.9718582,12 11.5177305,12 L9.04964539,12" id="Stroke-5"></path>
+                        <path d="M3.29078014,12 L0.822695035,12 C0.368567376,12 0,11.6416 0,11.2 L0,8.8" id="Stroke-7"></path>
+                        <path d="M6.17021277,3.2 C7.76048227,3.2 9.04964539,4.4536 9.04964539,6 C9.04964539,7.5464 7.76048227,8.8 6.17021277,8.8 C4.57994326,8.8 3.29078014,7.5464 3.29078014,6 C3.29078014,4.4536 4.57994326,3.2 6.17021277,3.2 Z" id="Stroke-9"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -13,33 +13,46 @@ Screens:
       Height: =Max(App.Height, App.DesignHeight)
       OnVisible: |-
         =UpdateContext(
-        {
-            varDefaultTime: With(
-                {
-                    CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
-                    CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
-                },
-                // Construct a pure Time value from the corrected hour and minute.
-                Time(CorrectedHour, CorrectedMinute, 0)
-            ),
-            Date: With(
-                {
-                    CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
-                    CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
-                },
-                // Construct a pure Time value from the corrected hour and minute.
-                Date(
-                    Year(varPopUp_ClassPicker_scenarioDate),
-                    Month(varPopUp_ClassPicker_scenarioDate),
-                    Day(varPopUp_ClassPicker_scenarioDate)
-                )
-            )
-        }
+            {
+                varDefaultTime: var_StartTime
+            }
         );
+
+
+
+        /*
+        UpdateContext(
+            {
+                varDefaultTime: With(
+                    {
+                        CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
+                        CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
+                    },
+                    // Construct a pure Time value from the corrected hour and minute.
+                    Time(CorrectedHour, CorrectedMinute, 0)
+                ),
+                Date: With(
+                    {
+                        CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
+                        CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
+                    },
+                    // Construct a pure Time value from the corrected hour and minute.
+                    Date(
+                        Year(varPopUp_ClassPicker_scenarioDate),
+                        Month(varPopUp_ClassPicker_scenarioDate),
+                        Day(varPopUp_ClassPicker_scenarioDate)
+                    )
+                )
+            }
+        );
+        */
         Reset(Calendar_1);
         Reset(TimeFromdd);
         Reset(TimeTodd);
         Select(calClickBtn);
+
+        ////  KYLE:   temporarily bypass this calendar selection screen
+        //Select(ContinueDatebtn);
 
         /*
         UpdateContext({
@@ -84,6 +97,18 @@ Screens:
             X: =SelectTimeSlotlb_1.X
             Y: =TextCanvas8.Y + TextCanvas8.Height
           Children:
+            - TextCanvas7_2:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ="Center"
+                  FontItalic: =true
+                  Height: =TextCanvas7.Height
+                  Size: =12
+                  Text: |-
+                    ="Duration:  " & var_Duration
+                  Width: =TextCanvas7.Width + TextCanvas7_1.Width
+                  X: =TextCanvas7.X
+                  Y: =TextCanvas7.Y + TextCanvas7.Height
             - TextCanvas7_1:
                 Control: Text@0.0.51
                 Properties:
@@ -124,25 +149,22 @@ Screens:
             Color: =RGBA(50,50,50,1)
             DaysAheadRestriction: =390
             DefaultEndDate: |-
-              =varPopUp_ClassPicker_scenarioDate
-              /*
-              If(
-                  !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Blank(),
-                      varPopUp_ClassPicker_scenarioDate,
+              =If(
+                  (!IsBlankOrError(var_Date) || var_Date <> Blank()),
+                      var_Date, //varPopUp_ClassPicker_scenarioDate,
                       Now()
               )
-              */
             DefaultStartDate: |-
               =If(
-                  !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Blank(),
-                      varPopUp_ClassPicker_scenarioDate,
+                  (!IsBlankOrError(var_Date) || var_Date <> Blank()),
+                      var_Date, //varPopUp_ClassPicker_scenarioDate,
                       Now()
               )
             Height: =445
             OnChangeCal: |-
               =// Calculate the default end time (60 mins after start time) and store it in a variable
               //Set(varDefaultEndTime, DateAdd(TimeFromdd.Selected.Value, 60, TimeUnit.Minutes));
-              Set(varDefaultEndTime, varPopUp_ClassPicker_scenarioEndTime);
+              Set(varDefaultEndTime, var_EndTime); //varPopUp_ClassPicker_scenarioEndTime);
 
               // Reset the end time dropdown to apply the new default
               Reset(TimeTodd);
@@ -238,6 +260,12 @@ Screens:
                       )
                   )
               );
+
+              Navigate(Confirm);
+
+
+
+              /*
               If(
                   false And false,
                   Notify(
@@ -269,8 +297,8 @@ Screens:
                                       ])
                                   ),
                                   Asset,
-                                  Title,
-                                  'Room Location'
+                                  ItemID_title,
+                                  RoomLocation
                               ),
                               Title,
                               DeskText,
@@ -291,14 +319,17 @@ Screens:
                   Distinct(
                       Filter(
                           Desks,
-                          !(Asset.Value in [
+                          Asset.Value in [
                               "Desk",
                               "Item"
                           ])
                       ),
-                      Title
+                      ItemID_title
                   )
               );
+              */
+
+
               /*
               Set(varInterval2, Text(ddRecurrenceFrequency.Selected.Value));
               Set(varFirstDayName, Text(Min(CollectionRecurrence, StartDateTime), "dddd"));
@@ -306,7 +337,8 @@ Screens:
               Set(varStartDate,Text(Min(CollectionRecurrence, StartDateTime), "[$-en-US]yyyy-mm-ddTHH:mm:ss"));
               Set(varReEndDate, Text(Max(CollectionRecurrence, EndDateTime), "[$-en-US]mm-dd-yyy"));
               */
-              Navigate(DeskSelect)
+
+              //Navigate(DeskSelect)
             Text: ="Continue"
             Width: =200
             X: =btnBackDate.X + btnBackDate.Width + 20
@@ -741,9 +773,9 @@ Screens:
                   ChevronHoverBackground: =ColorValue("#874EB5")
                   Default: |-
                     =If(
-                        !IsBlankOrError(varPopUp_ClassPicker_scenarioEndTime) || varPopUp_ClassPicker_scenarioEndTime <> Blank(),
-                            varPopUp_ClassPicker_scenarioEndTime,
-                            Now()
+                        !IsBlankOrError(var_EndTime) || var_EndTime <> Blank(),
+                            var_EndTime,
+                            varDefaultEndTime
                     )
                   Height: =30
                   HoverFill: =Color.LightGray
@@ -791,13 +823,11 @@ Screens:
                   ChevronHoverBackground: =ColorValue("#874EB5")
                   Default: |-
                     =If(
-                        !IsBlankOrError(varPopUp_ClassPicker_scenarioStartTime) || varPopUp_ClassPicker_scenarioStartTime <> Blank(),
-                            varDefaultTime,
-                            varPopUp_ClassPicker_scenarioStartTime
+                        !IsBlankOrError(var_StartTime) || var_StartTime <> Blank(),
+                            var_StartTime,
+                            varDefaultTime
                             //Now()
                     )
-                    // TimeValue(DateAdd(DateValue(Today())+Time(Hour(Now()),RoundUp(Minute(Now())/15,0)*15,0),If(Minute(Today())>=0&&Minute(Now())<15,0,15),TimeUnit.Minutes))
-                    //"9:00 AM"
                   Height: =30
                   HoverFill: =Color.LightGray
                   Items: |+
@@ -951,7 +981,8 @@ Screens:
                         Fill: =ColorFade(Color.Gray, .5)
                         Height: =2
                         OnSelect: =Select(Parent)
-                        Width: =656
+                        Width: |+
+                          =Parent.Width - 10
                   - lbl_valueReservationPOCdepartment:
                       Control: Text@0.0.51
                       Properties:
@@ -1063,7 +1094,7 @@ Screens:
                   PaddingTop: =0
                   Text: ="Start Date/Time:"
                   Weight: ='TextCanvas.Weight'.Bold
-                  Width: =153
+                  Width: =155
                   X: =lbl_Desk.X + lbl_Desk.Width
                   Y: =lbl_Desk.Y
             - lbl_Desk:
@@ -1104,7 +1135,7 @@ Screens:
                   PaddingTop: =0
                   Text: ="Reservation For:"
                   Weight: ='TextCanvas.Weight'.Bold
-                  Width: =Parent.Width - Self.X
+                  Width: =200
                   X: =lbl_EndTime.X + lbl_EndTime.Width
                   Y: =lbl_Desk.Y
             - lbl_RoomLocation:
@@ -1117,11 +1148,10 @@ Screens:
                   PaddingRight: =0
                   PaddingTop: =0
                   Text: ="Room Location"
-                  Visible: =false
                   Weight: ='TextCanvas.Weight'.Bold
-                  Width: =180
-                  X: =372
-                  Y: =187
+                  Width: =218
+                  X: =498
+                  Y: =lbl_CheckedOutBy.Y
       - ctn_Recurrance:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
@@ -1783,3 +1813,50 @@ Screens:
                         6
                     )
                   Y: =ddRecurrenceFrequency.Y + ddRecurrenceFrequency.Height
+      - Preloader_2:
+          Control: CanvasComponent
+          ComponentName: Preloader
+          Properties:
+            AnimatedGIF: ="https://aka.ms/preloadergif"
+            Color: =
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =Parent.Height
+            IsLoading: =true
+            Styles: =Table({Key:"Fill", Value:"#0086D0" , Type:"Color"})
+            Text: =
+            Width: =Parent.Width
+      - Text3:
+          Control: ModernText@1.0.0
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(9, 33, 98, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =Preloader_2.Height
+            Italic: =true
+            Size: =40
+            Text: ="Loading . . . . ."
+            Visible: =Preloader_2.Visible
+            Width: =Preloader_2.Width
+            X: =Preloader_2.X
+            Y: =Preloader_2.Y
+      - Timer4:
+          Control: Timer@2.1.0
+          Properties:
+            AutoStart: =true
+            Duration: =1000
+            Height: =31
+            OnTimerEnd: |-
+              =If(
+                  Self.Visible,
+                  Notify("TESTING! The control named 'Timer4' has ended, and the page typically would now self-navigate forward to the 'Confirm' screen at this time.........",NotificationType.Information, 1000),
+                  ""
+              );
+              Select(ContinueDatebtn);
+            Visible: |-
+              =If(
+                  Lower(User().Email) = "kyle.coder@va.gov",
+                  true,
+                  false
+              )
+            X: =434
+            Y: =609

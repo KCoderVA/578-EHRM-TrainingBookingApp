@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Top Building</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Homepage_WFBa" transform="translate(-135.000000, -65.000000)">
+            <g id="Group-4" transform="translate(136.000000, 59.000000)">
+                <g id="Top-Building" transform="translate(0.000000, 6.500000)">
+                    <g id="Facility-/-white-mini">
+                        <g id="Facility">
+                            <g id="Group-5">
+                                <g id="Building-Icon">
+                                    <path d="M8.48347122,0.116676974 L2.03650152,0.116676974 C1.89843034,0.116676974 1.78650152,0.228605786 1.78650152,0.366676974 L1.78650152,13.116677 L1.78650152,13.116677 L11.241047,13.116677 L11.241047,0.366676974 C11.241047,0.228605786 11.1291182,0.116676974 10.991047,0.116676974 L8.48347122,0.116676974 L8.48347122,0.116676974 Z" id="Path-4" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <line x1="0" y1="13.25" x2="13" y2="13.25" id="Line-5" stroke="#FFFFFF" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"></line>
+                                    <path d="M6.02966436,11.7767471 L6.84333469,11.7767471 C6.98140588,11.7767471 7.09333469,11.8886759 7.09333469,12.0267471 L7.09333469,13.116677 L7.09333469,13.116677 L5.77966436,13.116677 L5.77966436,12.0267471 C5.77966436,11.8886759 5.89159317,11.7767471 6.02966436,11.7767471 Z" id="Rectangle" fill="#FFFFFF"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                    <rect id="Rectangle" fill="#FFFFFF" x="4.72727273" y="4.09090909" width="1.18181818" height="1.18181818" rx="0.25"></rect>
+                    <rect id="Rectangle-Copy-2" fill="#FFFFFF" x="4.72727273" y="6.45454545" width="1.18181818" height="1.18181818" rx="0.25"></rect>
+                    <rect id="Rectangle-Copy" fill="#FFFFFF" x="7.09090909" y="4.09090909" width="1.18181818" height="1.18181818" rx="0.25"></rect>
+                    <rect id="Rectangle-Copy-3" fill="#FFFFFF" x="7.09090909" y="6.45454545" width="1.18181818" height="1.18181818" rx="0.25"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

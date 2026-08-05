@@ -18,7 +18,7 @@ App As appinfo:
                 If(
                     varTargetEmail = "kyle.coder@va.gov",
                     false,
-                    varTargetEmail <> "kyle.coder@va.gov" && varRealEmail = varTargetEmail,
+                    varRealEmail <> varTargetEmail,
                     true,
                     false
                 )
@@ -30,7 +30,7 @@ App As appinfo:
             ClearCollect(colMenu, []);
             ClearCollect(CollectionRecurrence, []);
         // Declare global app rules
-            Set(varRepoVersion, "0.8.12");
+            Set(varRepoVersion, "0.9.26");
             Set(user_isAdmin, false);
         
         // ============================================================

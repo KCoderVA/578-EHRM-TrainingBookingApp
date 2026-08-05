@@ -1654,7 +1654,7 @@
           "Category": "Data",
           "NameMap": "{\"DateValue\":\"DateValue\"}",
           "PropertyName": "SelectedDates",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Design",

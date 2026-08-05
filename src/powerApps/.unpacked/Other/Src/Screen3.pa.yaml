@@ -109,7 +109,7 @@ Screens:
                   Visible: |-
                     =/*Visible if calendar events are found on this day*/               
                     //CountRows(Filter(MyCalendarEvents, DateValue(Text(Start)) = DateAdd(_firstDayInView,ThisItem.Value,Days))) > 0 && !Subcircle2_1.Visible && Title7_1.Visible
-                    !IsBlank(LookUp('Desk Reservations','Check Out From' = DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)).'Reason for desk reservation')
+                    !IsBlank(LookUp('Desk Reservations','Check Out From' = DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)).Reasonfordeskreservation)
                   Width: =30
                   X: =70
                   Y: =45

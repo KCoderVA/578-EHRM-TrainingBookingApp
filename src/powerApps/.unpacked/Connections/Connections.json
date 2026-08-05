@@ -12,7 +12,7 @@
     "connectionRef": {
       "apiTier": "Standard",
       "displayName": "Office 365 Outlook",
-      "iconUri": "https://gov.static.powerapps.us/resource/ppcr/releases/v1.0.1812/1.0.1812.4763/office365/icon.png",
+      "iconUri": "https://gov.static.powerapps.us/resource/ppcr/releases/v1.0.1819/1.0.1819.4795/office365/icon.png",
       "id": "/providers/microsoft.powerapps/apis/shared_office365",
       "parameterHints": {},
       "parameterHintsV2": {}

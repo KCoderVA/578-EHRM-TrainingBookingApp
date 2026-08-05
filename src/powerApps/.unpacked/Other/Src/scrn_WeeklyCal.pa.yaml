@@ -75,7 +75,7 @@ Screens:
                     Desks,
                     Asset.Value = "Room"
                 ),
-                Title
+                ItemID_title
             )
         );
     Children:
@@ -221,7 +221,7 @@ Screens:
                               OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
                               Size: =9
                               Text: |-
-                                =Concatenate(ThisItem.'Reason for desk reservation'," ",Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM"))
+                                =Concatenate(ThisItem.Reasonfordeskreservation," ",Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM"))
 
                                 //&& Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)
                               Visible: =false
@@ -407,7 +407,7 @@ Screens:
                   AccessibleLabel: ="Floor Input"
                   BorderColor: =RGBA(179, 179, 179, 1)
                   BorderThickness: =1
-                  Default: =LookUp(Desks,Title = varSelectedReservation.DeskText).'Room Location'
+                  Default: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation
                   Fill: =RGBA(0, 0, 0, 0)
                   Font: =Font.'Segoe UI'
                   Height: =47
@@ -452,7 +452,7 @@ Screens:
                   Default: |-
                     =
 
-                    varSelectedReservation.'Reason for desk reservation'
+                    varSelectedReservation.Reasonfordeskreservation
                     //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
                   Font: =Font.'Segoe UI'
                   Height: =111
@@ -543,7 +543,7 @@ Screens:
                 Group: grpMap_8
                 Properties:
                   Height: =415
-                  Image: =LookUp(Desks,Title = varSelectedReservation.DeskText).RoomPicture
+                  Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation0
                   ImagePosition: =ImagePosition.Stretch
                   Visible: =showMap
                   Width: =1022

@@ -11,7 +11,153 @@ Screens:
     Properties:
       Fill: =RGBA(0, 63, 114, 1)
       Height: =Max(App.Height, App.DesignHeight)
-      OnVisible: =Set(varTimer, false);
+      OnVisible: |-
+        =Set(varTimer, false);
+
+        Set(varPopUp_ClassPicker, 0);
+        Reset(DataCardValue3);
+        Reset(DataCardValue7);
+        Reset(DataCardValue8);
+        Reset(DropdownCanvas1);
+        Reset(dropdown_RolePicker);
+        Reset(dropdown_ScenarioPicker);
+        Reset(dropdown_LocationPicker);
+        Reset(dropdown_DateTimePicker);
+        ResetForm(Form1);
+
+
+        Set(_allRoomsConcat, Blank());
+        Set(_calendarVisible, Blank());
+        Set(_dateSelected, Blank());
+        Set(_dateSelected2, Blank());
+        Set(_firstDayInView, Blank());
+        Set(_FirstDayinView2, Blank());
+        Set(_firstDayOfMonth, Blank());
+        Set(_firstDayOfMonth2, Blank());
+        Set(_firstDayofWeek2, Blank());
+        Set(_lastDayOfMonth, Blank());
+        Set(_LastDayOfMonth2, Blank());
+        Set(_maxDate, Blank());
+        Set(_MaxDate, Blank());
+        Set(_MaxDate2, Blank());
+        Set(_minDate, Blank());
+        Set(_MinDate, Blank());
+        Set(_MinDate2, Blank());
+        Set(_myCalendarName, Blank());
+        Set(_myScheduledMeeting, Blank());
+        Set(_noRoomLists, Blank());
+        Set(_roomListSelected, Blank());
+        Set(_selectedMeetingTime, Blank());
+        Set(_selectedRoom, Blank());
+        Set(_selectedRoomList, Blank());
+        Set(_selectedUser, Blank());
+        Set(_showDetails, Blank());
+        Set(_showMeetingTimes, Blank());
+        Set(currentItem, Blank());
+        Set(endByDate, Blank());
+        Set(gv_item, Blank());
+        Set(maxOccurrence, Blank());
+        Set(NthWeekdayRecord, Blank());
+        Set(numWorkDays, Blank());
+        Set(PDFPrint, Blank());
+        Set(startWeekday, Blank());
+        Set(submitItem, Blank());
+        //Set(user_isAdmin, Blank());
+        //Set(userAccessLevel_text, Blank());
+        Set(var_Attendees, Blank());
+        //Set(var_AuthorInfo, Blank();
+        Set(var_Date, Blank());
+        Set(var_DayOfWeek, Blank());
+        Set(var_Duration, Blank());
+        Set(var_EndTime, Blank());
+        Set(var_firstHalfDuration, Blank());
+        Set(var_ManagerEmail, Blank());
+        Set(var_MeetingCategory, Blank());
+        Set(var_OptionalAttendees, Blank());
+        Set(var_reservationBuildingNumber, Blank());
+        Set(var_reservationDivision, Blank());
+        Set(var_reservationFloorNumber, Blank());
+        Set(var_reservationFullDateTime, Blank());
+        Set(var_reservationFullLocation, Blank());
+        Set(var_reservationRole, Blank());
+        Set(var_reservationRoomNumber, Blank());
+        Set(var_reservationScenario, Blank());
+        Set(var_scenarioTrainingMaterialsURL, Blank());
+        Set(var_secondHalfTime, Blank());
+        Set(var_StartTime, Blank());
+        Set(varAccept, Blank());
+        Set(varAccept3, Blank());
+        Set(varAccept4, Blank());
+        Set(varAttendees, Blank());
+        Set(varCancelContainer, Blank());
+        Set(varDaily, Blank());
+        Set(varDefaultEndTime, Blank());
+        Set(varDescription, Blank());
+        //Set(varDeskAccessControl_record, Blank());
+        Set(varDeskMode, Blank());
+        Set(varEmailBody, Blank());
+        Set(varEndDate, Blank());
+        Set(varEventEndTime, Blank());
+        Set(varEventStartTime, Blank());
+        Set(varImportance, Blank());
+        Set(varIsImpersonating, Blank());
+        Set(varManageSelectedDesk, Blank());
+        Set(varMeetCat, Blank());
+        Set(varOptionalAttendees, Blank());
+        Set(varPopUp_ClassPicker, Blank());
+        Set(varPopUp_ClassPicker_scenarioDate, Blank());
+        Set(varPopUp_ClassPicker_scenarioDateTime, Blank());
+        Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank());
+        Set(varPopUp_ClassPicker_scenarioEnd24, Blank());
+        Set(varPopUp_ClassPicker_scenarioEndTime, Blank());
+        Set(varPopUp_ClassPicker_scenarioLocation, Blank());
+        Set(varPopUp_ClassPicker_scenarioName, Blank());
+        Set(varPopUp_ClassPicker_scenarioRole, Blank());
+        Set(varPopUp_ClassPicker_scenarioSplit, Blank());
+        Set(varPopUp_ClassPicker_scenarioStart24, Blank());
+        Set(varPopUp_ClassPicker_scenarioStartTime, Blank());
+        //Set(varRealEmail, Blank());
+        //Set(varRealEntraID, Blank());
+        Set(varRecurrence, Blank());
+        Set(varRecurrenceID, Blank());
+        Set(varReminder, Blank());
+        //Set(varRepoVersion, Blank());
+        Set(varReservePOC, Blank());
+        Set(varScreenReset, Blank());
+        Set(varSelectedDesk, Blank());
+        Set(varSelectedReservation, Blank());
+        Set(varSelectedStartDate, Blank());
+        Set(varsmartboardck, Blank());
+        //Set(varTargetEmail, Blank());
+        //Set(varTargetEntraID, Blank());
+        Set(varTimer, Blank());
+        Set(varTitle, Blank());
+        Set(varURL, Blank());
+        Set(varURLName, Blank());
+        Set(varUserExists, Blank());
+        //Set(varUser_details, Blank());
+        Set(varWeekday, Blank());
+        Clear(AllRooms);
+        Clear(AvailableRooms);
+        Clear(AvailableRoomsOptimal);
+        Clear(col_selectedRecord);
+        Clear(colCombinedRecurrence);
+        Clear(colDates);
+        //Clear(colDeskAccess);
+        Clear(colDeskChckRecur);
+        //Clear(colMenu);
+        Clear(colRoomFilter);
+        Clear(colSelectedDesks);
+        Clear(colSmartboard);
+        //Clear(colUser_details);
+        Clear(MeetingTimes);
+        Clear(MyPeople);
+        Clear(RoomsLists);
+        Clear(RoomTimeSuggestions);
+        //Clear(varUser_details);
+        Clear(WeekdaysOnly);
+        Clear(wkDays);
+        Clear(wkDaysTemp);
       Width: =Max(App.Width, App.DesignWidth)
     Children:
       - Timer3:
@@ -59,6 +205,7 @@ Screens:
             Height: =37
             OnSelect: =Navigate(scrn_WeeklyCal)
             Text: ="View calendars!"
+            Visible: =false
             Width: =333
             X: =Label4.X + (Label4.Width / 2) - (Self.Width / 2)
             Y: =591
@@ -70,6 +217,7 @@ Screens:
             Height: =38
             Size: =18
             Text: ="See daily/weekly/monthly reservation calendars:"
+            Visible: =false
             Width: =HtmlText2.Width
             X: =HtmlText2.X
             Y: =HtmlText2.Y + HtmlText2.Height
@@ -137,150 +285,181 @@ Screens:
           Variant: BrowseLayout_Vertical_OneTextVariant_ver4.0
           Properties:
             AccessibleLabel: ="Upcoming Reservations"
-            Height: =494
+            Height: =bgRounded_3.Height - lblMyUpcomingRes.Y - Self.Y + 10
             Items: |-
               =// Show first N events
               FirstN(
                   SortByColumns(
                       Filter(
                           'Desk Reservations',
-                          (
-                              Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text) // || Lower('Created By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
-                          )
-                          && 'Check Out From' >= Today()
+                          (Lower(submitterEmail_text) = Lower(varDeskAccessControl_record.Email_Text) || Lower(studentEmail_text) = Lower(varDeskAccessControl_record.Email_Text))
+                          && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
                       ),
-                      "CheckOutFrom",
+                      "reservationStart_datetime",
                       SortOrder.Ascending
                   ),
                   500
               )
             TabIndex: =5
-            TemplateSize: =175
+            TemplateSize: =lblMonth.Height + lblYear.Height + lblCheckOutToFrom.Height + shapeSeperator.Height + lblDescription.Height + 15 //175
             Width: =504
             X: =620
-            Y: =97
+            Y: =lblMyUpcomingRes.Y + lblMyUpcomingRes.Height
           Children:
-            - Separator2:
+            - shapeSeperator:
                 Control: Rectangle@2.3.0
                 Properties:
                   Fill: =RGBA(15, 108, 189, 1)
                   Height: =1
                   OnSelect: =Select(Parent)
+                  Visible: =false
                   Width: =Parent.TemplateWidth
                   Y: =Parent.TemplateHeight - 1
-            - Label6:
-                Control: Label@2.5.1
-                Properties:
-                  FontWeight: =FontWeight.Bold
-                  Height: =94
-                  OnSelect: =Select(Parent)
-                  Overflow: =Overflow.Scroll
-                  Size: =16
-                  Text: =ThisItem.'Reason for desk reservation'
-                  VerticalAlign: =VerticalAlign.Top
-                  Width: =234
-                  Y: =80
-            - Title2_14:
-                Control: Label@2.5.1
-                Properties:
-                  Align: =Align.Center
-                  BorderColor: =RGBA(0, 0, 0, 1)
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Semibold
-                  Height: =57
-                  OnSelect: =Select(Parent)
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =18
-                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]mmm"))
-                  VerticalAlign: =VerticalAlign.Top
-                  Visible: =If(Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]dd")) = Upper(Text(DateTimeValue(ThisItem.'Check Out To'),"[$-en-US]dd")), false, true)
-                  Width: =94
-                  Y: =50
-            - Title2_15:
-                Control: Label@2.5.1
-                Properties:
-                  Align: =Align.Center
-                  BorderColor: =RGBA(0, 0, 0, 1)
-                  Color: =RGBA(135, 78, 181, 1)
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Bold
-                  Height: =45
-                  OnSelect: =Select(Parent)
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =18
-                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out To Text'),"[$-en-US]dd"))
-                  VerticalAlign: =VerticalAlign.Top
-                  Visible: =Title2_14.Visible
-                  Width: =72
-                  X: =69
-                  Y: =50
-            - Label2_1:
-                Control: Label@2.5.1
-                Properties:
-                  Align: =Align.Center
-                  FontWeight: =FontWeight.Semibold
-                  Height: =29
-                  OnSelect: =Select(Parent)
-                  Text: =" to "
-                  Visible: =Title2_14.Visible
-                  Width: =50
-                  X: =52
-                  Y: =21
-            - Icon6:
+            - iconOpenDetails:
                 Control: Classic/Icon@2.5.0
                 Properties:
                   Color: =RGBA(15, 108, 189, 1)
                   Height: =45
                   Icon: =Icon.OpenInNewWindow
                   OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  Width: =Self.Height
+                  X: =lblDeskFloor.X + lblDeskFloor.Width - 5
+                  Y: =(lblDeskFloor.Y + lblDeskFloor.Height / 2) - (Self.Height / 2) //(Parent.TemplateHeight / 2) - (Self.Height / 2)
+            - lblDescription:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  AutoHeight: |-
+                    =If(
+                        Self.Text = "" || IsBlankOrError(Self.Text),
+                        false,
+                        true
+                    )
+                  FontWeight: =FontWeight.Bold
+                  Height: |-
+                    =If(
+                        Self.Text = "" || IsBlankOrError(Self.Text),
+                        0,
+                        lblCheckOutToFrom.Height
+                    )
+                  OnSelect: =Select(Parent)
+                  Overflow: =Overflow.Scroll
+                  Size: =16
+                  Text: =ThisItem.Description
+                  VerticalAlign: =VerticalAlign.Top
                   Visible: =false
-                  Width: =45
-                  X: =430
-            - Title2_3:
+                  Width: =Parent.Width
+                  X: =lblCheckOutToFrom.X
+                  Y: =lblCheckOutToFrom.Y + lblCheckOutToFrom.Height
+            - lblDeskFloor:
                 Control: Label@2.5.1
                 Properties:
                   Align: =Align.Center
                   BorderColor: =RGBA(0, 0, 0, 1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Semibold
+                  Height: =(lblMonth.Height + lblYear.Height + lblCheckOutToFrom.Height) - Self.Y + 10//42
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =14
+                  Text: |-
+                    =ThisItem.reservationScenario_text
+                    & "
+                    " &
+                    ThisItem.reservationRole_text
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =lblDeskText.Width - iconOpenDetails.Width
+                  X: =lblDeskText.X
+                  Y: =lblDeskText.Y + lblDeskText.Height
+            - lblDeskText:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  AutoHeight: =true
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =86
+                  OnSelect: =Select(Parent)
+                  Size: =16
+                  Text: =ThisItem.studentName_text
+                  Underline: =true
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =Parent.Width - (lblMonth.Width + lblDay.Width )
+                  X: =Parent.Width - Self.Width
+                  Y: =lblMonth.Y
+            - lblCheckOutToFrom:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  AutoHeight: =true
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =lblMonth.FontWeight
                   Height: =35
                   OnSelect: =Select(Parent)
                   PaddingBottom: =0
                   PaddingLeft: =10
                   PaddingRight: =10
                   PaddingTop: =0
-                  Size: =16
-                  Text: =Text(DateTimeValue(ThisItem.'Check Out From'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To'), DateTimeFormat.ShortTime)
+                  Size: =10
+                  Text: =Text(DateTimeValue(ThisItem.reservationStart_datetime), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.reservationEnd_datetime), DateTimeFormat.ShortTime)
                   VerticalAlign: =VerticalAlign.Bottom
-                  Width: =300
-                  X: =204
-                  Y: =128
-            - Title2_2:
+                  Width: =lblMonth.Width + lblDay.Width
+                  X: =lblMonth.X
+                  Y: =lblYear.Y + lblYear.Height + 5
+            - lblYear:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  Color: =RGBA(15, 108, 189, 1)
+                  FontWeight: =lblMonth.FontWeight
+                  Height: =lblMonth.Height
+                  OnSelect: =Select(Parent)
+                  Size: =lblMonth.Size
+                  Text: |-
+                    =Upper(
+                        Text(
+                            DateTimeValue(ThisItem.reservationStart_datetime),
+                            "[$-en-US]yyyy"
+                        )
+                    )
+                  Width: =lblMonth.Width + lblDay.Width
+                  X: =lblMonth.X
+                  Y: |+
+                    =lblMonth.Y + lblMonth.Height - 10
+            - lblDay:
                 Control: Label@2.5.1
                 Properties:
                   Align: =Align.Center
                   BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(15, 108, 189, 1)
                   Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Semibold
-                  Height: =42
+                  FontWeight: =lblMonth.FontWeight
+                  Height: =lblMonth.Height
                   OnSelect: =Select(Parent)
                   PaddingBottom: =0
-                  PaddingLeft: =10
-                  PaddingRight: =10
+                  PaddingLeft: =0
+                  PaddingRight: =0
                   PaddingTop: =0
-                  Size: =16
-                  Text: =ThisItem.DeskText
+                  Size: =lblMonth.Size
+                  Text: |-
+                    =Upper(
+                        Text(
+                            DateTimeValue(ThisItem.reservationStart_datetime),
+                            "[$-en-US]dd"
+                        )
+                    )
                   VerticalAlign: =VerticalAlign.Top
-                  Width: =300
-                  X: =204
-                  Y: =86
-            - Title2_1:
+                  Width: =42
+                  X: =lblMonth.X + lblMonth.Width
+                  Y: =lblMonth.Y
+            - lblMonth:
                 Control: Label@2.5.1
                 Properties:
                   Align: =Align.Center
@@ -288,54 +467,46 @@ Screens:
                   Color: =RGBA(15, 108, 189, 1)
                   Font: =Font.'Segoe UI'
                   FontWeight: =FontWeight.Bold
-                  Height: =45
+                  Height: =30
                   OnSelect: =Select(Parent)
                   PaddingBottom: =0
                   PaddingLeft: =0
                   PaddingRight: =0
                   PaddingTop: =0
                   Size: =18
-                  Text: |-
-                    =Upper(
-                        Text(
-                            DateTimeValue(ThisItem.'Check Out From'),
-                            "[$-en-US]dd"
-                        )
+                  Text: =Upper(Text(DateTimeValue(ThisItem.reservationStart_datetime),"[$-en-US]mmm"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =60
+                  Y: =3
+            - btnSelector:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderThickness: =3
+                  Color: =RGBA(1, 1, 1, 1)
+                  Fill: =RGBA(1, 1, 1, 0)
+                  Height: =Parent.TemplateHeight - 6
+                  HoverBorderColor: |-
+                    =If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        RGBA(9, 33, 98, 1),
+                        App.ActiveScreen.Name <> "Dashboard",
+                        Color.White
                     )
-                  VerticalAlign: =VerticalAlign.Top
-                  Width: =42
-                  X: =102
-            - Title2:
-                Control: Label@2.5.1
-                Properties:
-                  Align: =Align.Center
-                  BorderColor: =RGBA(0, 0, 0, 1)
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Semibold
-                  Height: =45
-                  OnSelect: =Select(Parent)
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =18
-                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]mmm"))
-                  VerticalAlign: =VerticalAlign.Top
-                  Width: =102
-            - Title2_20:
-                Control: Label@2.5.1
-                Properties:
-                  Align: =Align.Center
-                  BorderColor: =RGBA(0, 0, 0, 1)
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Semibold
-                  Height: =86
-                  OnSelect: =Select(Parent)
-                  Size: =16
-                  Text: =ThisItem.DeskFloor
-                  VerticalAlign: =VerticalAlign.Top
-                  Width: =300
-                  X: =204
+                  HoverColor: =
+                  HoverFill: |-
+                    =If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        ColorFade(RGBA(0, 131, 190, .8),50%),
+                        App.ActiveScreen.Name <> "Dashboard",
+                        RGBA(255, 255, 255, .5)
+                    )
+                  OnSelect: =Select(iconOpenDetails) //Select(Parent)
+                  PressedBorderColor: =Self.BorderColor
+                  PressedFill: =Self.Fill
+                  Text: =
+                  Width: =Parent.TemplateWidth - 6
+                  X: =3
+                  Y: =3
       - lblMyUpcomingRes:
           Control: Label@2.5.1
           Properties:
@@ -346,7 +517,7 @@ Screens:
             Text: ="Your Upcoming Reservations (" & gallMyReservationsPreview.AllItemsCount & ")" & ":"
             Width: =448
             X: =648
-            Y: =40
+            Y: =bgRounded_3.Y
       - lblNoResDashboard:
           Control: Label@2.5.1
           Properties:
@@ -433,6 +604,13 @@ Screens:
             OnChange: |-
               =// Resolve the impersonated user's record
               Set(varTargetEmail, Self.Selected.Value);
+              Set(varTargetEntraID, 
+                  LookUp(
+                      DeskAccessControl, 
+                      Lower(Self.Selected.Value) = Lower(Email_Text),
+                      Id_Text
+                  )        
+              );
               Set(varIsImpersonating, varTargetEmail <> varRealEmail);
 
               Set(
@@ -455,6 +633,12 @@ Screens:
                   varUser_details,
                   Office365Users.UserProfileV2(varTargetEmail)
               );
+
+                  Refresh(DeskAccessControl);
+                  ClearCollect(colDeskAccess, DeskAccessControl);
+                  ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+                  ClearCollect(colMenu, []);
+                  ClearCollect(CollectionRecurrence, []);
 
               // Rebuild the menu with the same Switch you use in OnStart
               Switch(
@@ -479,6 +663,8 @@ Screens:
                   ),
                   ClearCollect(colMenu, [])
               );
+
+              //Select(Button6);
             SelectMultiple: =false
             Visible: =user_isAdmin || User().Email = "Kyle.Coder@va.gov"
             Width: =284
@@ -510,6 +696,6 @@ Screens:
             FontWeight: =FontWeight.Semibold
             Height: =45
             Size: =14
-            Text: =varRepoVersion
+            Text: ="v" & varRepoVersion
             Width: =75
             X: =15

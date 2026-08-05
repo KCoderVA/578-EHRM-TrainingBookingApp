@@ -2448,7 +2448,7 @@
       "MetaDataIDKey": "",
       "Name": "BackIconButton1_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 1,
+      "ParentIndex": 0,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -11441,7 +11441,7 @@
       "MetaDataIDKey": "%FieldName.ID%",
       "Name": "DataCardKey23_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 1,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -12753,7 +12753,7 @@
       "MetaDataIDKey": "%FieldName.ID%",
       "Name": "DataCardKey27_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 1,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -13409,7 +13409,7 @@
       "MetaDataIDKey": "%FieldName.ID%",
       "Name": "DataCardKey29_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 1,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -14393,7 +14393,7 @@
       "MetaDataIDKey": "%FieldName.ID%",
       "Name": "DataCardKey31_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 1,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -25873,7 +25873,7 @@
       "MetaDataIDKey": "%FieldName.ID%",
       "Name": "DataCardKey63_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
+      "ParentIndex": 1,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -32393,7 +32393,7 @@
       "MetaDataIDKey": "%FieldValue.ID%",
       "Name": "DataCardValue20_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
+      "ParentIndex": 0,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -33825,7 +33825,7 @@
       "MetaDataIDKey": "%FieldValue.ID%",
       "Name": "DataCardValue24_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
+      "ParentIndex": 0,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -34511,7 +34511,7 @@
       "MetaDataIDKey": "%FieldValue.ID%",
       "Name": "DataCardValue26_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
+      "ParentIndex": 0,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -35197,7 +35197,7 @@
       "MetaDataIDKey": "%FieldValue.ID%",
       "Name": "DataCardValue28_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
+      "ParentIndex": 0,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -48352,7 +48352,7 @@
       "MetaDataIDKey": "%FieldValue.ID%",
       "Name": "DataCardValue59_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 0,
+      "ParentIndex": 3,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -48728,7 +48728,7 @@
         {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -50795,7 +50795,7 @@
       "MetaDataIDKey": "",
       "Name": "DeleteConfirmDialogContainer1_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 0,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -53508,7 +53508,7 @@
       "MetaDataIDKey": "",
       "Name": "EditIconButton1_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 3,
+      "ParentIndex": 4,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -73133,7 +73133,7 @@
       "MetaDataIDKey": "%ErrorMessage.ID%",
       "Name": "ErrorMessage63_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 3,
+      "ParentIndex": 2,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -76913,7 +76913,7 @@
         {
           "Category": "Behavior",
           "PropertyName": "OnSelect",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         }
       ],
       "StyleName": "defaultIconStyle",
@@ -82832,7 +82832,7 @@
         {
           "Category": "Design",
           "PropertyName": "TemplateSize",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -82947,7 +82947,7 @@
         {
           "Category": "Design",
           "PropertyName": "Fill",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -83375,7 +83375,7 @@
         {
           "Category": "Design",
           "PropertyName": "Height",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Design",
@@ -83533,7 +83533,7 @@
       "MetaDataIDKey": "",
       "Name": "ResetFormButton1_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 4,
+      "ParentIndex": 3,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -83857,7 +83857,7 @@
       "MetaDataIDKey": "",
       "Name": "RightContainer1_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 2,
+      "ParentIndex": 1,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -87330,7 +87330,7 @@
       "MetaDataIDKey": "",
       "Name": "SelectedRecordTitle1_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 0,
+      "ParentIndex": 1,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -87341,7 +87341,7 @@
         {
           "Category": "Data",
           "PropertyName": "Text",
-          "RuleProviderType": "User"
+          "RuleProviderType": "Unknown"
         },
         {
           "Category": "Data",
@@ -88425,7 +88425,7 @@
       "MetaDataIDKey": "",
       "Name": "SidebarContainer1_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 1,
+      "ParentIndex": 0,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -94171,7 +94171,7 @@
       "MetaDataIDKey": "%FieldRequired.ID%",
       "Name": "StarVisible23_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 0,
+      "ParentIndex": 1,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -95483,7 +95483,7 @@
       "MetaDataIDKey": "%FieldRequired.ID%",
       "Name": "StarVisible27_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 0,
+      "ParentIndex": 1,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -96139,7 +96139,7 @@
       "MetaDataIDKey": "%FieldRequired.ID%",
       "Name": "StarVisible29_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 0,
+      "ParentIndex": 1,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -97123,7 +97123,7 @@
       "MetaDataIDKey": "%FieldRequired.ID%",
       "Name": "StarVisible31_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 0,
+      "ParentIndex": 1,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {
@@ -108603,7 +108603,7 @@
       "MetaDataIDKey": "%FieldRequired.ID%",
       "Name": "StarVisible63_1",
       "OptimizeForDevices": "Off",
-      "ParentIndex": 1,
+      "ParentIndex": 0,
       "PersistMetaDataIDKey": false,
       "Properties": [
         {

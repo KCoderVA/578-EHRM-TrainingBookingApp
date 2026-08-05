@@ -1,14 +1,15 @@
 # Power Apps (Canvas): EHRM Training & Booking App (Station #578)
 
-**Canvas app version**: v0.8.14 (2026-07-28)
-**App package**: `.msapp/v0.8.14_578EHRMTrainingApp.msapp`
+**Canvas app version**: v0.9.26 (2026-08-04)
+**App package**: `.msapp/v0.9.26_578EHRMTrainingApp.msapp`
 
-> Component versioning note: starting with this release the Canvas app version is
-> being brought onto the project-wide SemVer line (project release **v0.8.16**). The
-> unpacked `.msapp` carries the label **v0.8.14**; minor version-string drift exists
-> inside the app itself (`App.OnStart` sets `varRepoVersion "0.8.12"`, the Dashboard
-> timer still shows the prior stamp) and is tracked as a follow-up in
-> [`v0.8.14_recentChangesSummary.md`](v0.8.14_recentChangesSummary.md) §9.
+> Component versioning note: this Canvas app component is now on its own SemVer line at
+> **v0.9.26**, *ahead* of the project-wide release (`VERSION` file = **0.8.17**), per the
+> repo's hybrid versioning policy. `App.OnStart` now stamps `varRepoVersion "0.9.26"`
+> (corrected from the prior `"0.8.12"`), so the Dashboard version badge is accurate; a
+> smaller drift remains — the manifest `AppDescription` still reads **"v0.9.17"** — and
+> is tracked as a follow-up in
+> [`v0.9.26_recentChangesSummary.md`](v0.9.26_recentChangesSummary.md) §9.
 
 ## Provenance / credits (v0.0.1 baseline)
 
@@ -17,14 +18,31 @@
 
 ---
 
-## What changed in v0.8.14 (current)
+## What changed in v0.9.26 (current)
 
-v0.8.14 is the largest functional advance of the Canvas app since the baseline. It moved the app from an early prototype to a substantially complete application. A full file-by-file structural/behavioral diff (hash/size analysis of every unpacked screen, with per-screen rationale) lives in [`v0.8.14_recentChangesSummary.md`](v0.8.14_recentChangesSummary.md). The headline changes:
+Where v0.8.14 was about *access* (an app-wide RBAC engine, impersonation, and a first-draft Class/Session Picker), **v0.9.26 is about *data*** — it turns every booking into a complete, persisted training record and lays the SharePoint groundwork for a trainer approval + automated-reminder workflow. No screens were added; the booking pipeline (POCSUPERVISOR → Confirm) was deepened and the back-end lists were re-shaped. A full file-by-file structural/behavioral diff (hash/size analysis of every unpacked screen and data-source, with per-change rationale) lives in [`v0.9.26_recentChangesSummary.md`](v0.9.26_recentChangesSummary.md). The headline changes:
+
+1. **`Desk Reservations` list schema massively expanded (~40 new columns).** New **submitter**, **student/attendee**, **reservation (scenario/role/session/location)**, **trainer approval**, and **automated-reminder** column families; three legacy columns removed (`DeskFloor`, `Floor`, `Reason for desk reservation`). This is the backbone of the release.
+2. **Class/Session Picker is now persisted — v0.8.14 gap closed.** The **Confirm** SUBMIT `Patch` now writes the full scenario/role/session/location plus separate submitter and student identities into the new columns (previously the picker values were displayed but never saved).
+3. **Booking *on behalf of* others is now first-class.** POCSUPERVISOR gained an attendee people-picker (`var_Attendees`); the app records the **submitter** (real signed-in user) and the **student** (chosen attendee, incl. their manager email) as distinct fields.
+4. **POCSUPERVISOR reworked (`+63 KB`).** Semantic picker control names (`dropdown_ScenarioPicker`/`RolePicker`/`DateTimePicker`/`LocationPicker`), a live HTML selection summary, a scenario-materials deep-link, and an admin `RESET` button.
+5. **Reservation Details enriched (`+6 KB`).** Now shows scenario/role/session/submitter and a *"Contact the EHRM Trainers about this item (#ID)"* action.
+6. **`Desks` list normalized.** Legacy untyped/duplicate columns removed in favor of typed `*_choice` / `*_text` / `*_boolean` columns; `DeskSelect` / `ManageDesks` / `NewDesk` re-bound to the cleaned schema.
+7. **Version + impersonation fixes.** `varRepoVersion` corrected to `0.9.26`; the `varIsImpersonating` detection logic corrected (v0.8.14's expression was inverted).
+8. **No new screens, components, or images.** Two modern control templates (`modernText`, `modernTextInput`) were registered and used in the reworked forms.
+
+> **Open items carried into v0.9.26:** `BindingErrorCount` rose 49 → 329 (validate in App Checker before publishing — likely references to now-removed columns plus the modern-control migration); the trainer/reminder columns are written **blank** by the app and need their companion **Power Automate** flows; and the manifest `AppDescription` still lags at "v0.9.17". See [`v0.9.26_recentChangesSummary.md`](v0.9.26_recentChangesSummary.md) §9.
+
+---
+
+## What changed in v0.8.14 (previous)
+
+v0.8.14 was the largest functional advance of the Canvas app since the baseline. It moved the app from an early prototype to a substantially complete application (a full file-by-file diff of the v0.3.4 → v0.8.14 changes was retained locally under `archive/`). The headline changes:
 
 1. **Access control re-architected app-wide.** `App.OnStart` grew from a 1-line version stub into a full role-based access-control (RBAC), user auto-provisioning, and impersonation engine. The dynamic navigation menu (`colMenu`) moved out of `Dashboard.OnVisible` into `App.OnStart` so every screen is gated consistently. Eight tiers (`AccessDenied` → `View-only` → `User` → `SuperUser` → `Manager` → `ServiceChief` → `ProjectLeader` → `AppAdmin`) are read live per-user from the `DeskAccessControl` list and wired into menu contents, Dashboard messaging, calendar `DisplayMode`/`Items` filters, and admin-only controls.
 2. **Impersonation ("act as another user").** Admins get a hidden combobox on the Dashboard that re-renders the entire app as any selected user — for support/troubleshooting and booking on behalf of others. The real signed-in identity is captured separately and auto-provisioning only ever writes for the real user, never while impersonating.
 3. **Zero-touch onboarding.** On first launch, a user with no `DeskAccessControl` row is auto-provisioned with a default `"User"` level (Entra ID, timestamps, and manager email via `Office365Users.Manager`), then re-read.
-4. **Training-aware bookings (Class/Session Picker).** A new `ctn_PopUp_ClassPicker` popup on `POCSUPERVISOR` walks the user through Scenario → Role → Date/Time session → Location, deep-links to the SharePoint Learning Lab Workbook library, and echoes selections on the Confirm screen. *(Known gap: the picker values are displayed but not yet persisted in the SUBMIT `Patch` — see summary §9.)*
+4. **Training-aware bookings (Class/Session Picker).** A new `ctn_PopUp_ClassPicker` popup on `POCSUPERVISOR` walks the user through Scenario → Role → Date/Time session → Location, deep-links to the SharePoint Learning Lab Workbook library, and echoes selections on the Confirm screen. *(Known gap at the time: the picker values were displayed but not persisted in the SUBMIT `Patch`; **closed in v0.9.26** — see the v0.9.26 summary §7 and §4.2.)*
 5. **New `alt_ManageDesks` screen.** A modern responsive-layout CRUD console for the `Desks` list (add/edit/delete), staged alongside the legacy `ManageDesks` ahead of a planned cutover.
 6. **Dashboard redesign.** Dark-navy theme, mascot banner, role-aware welcome / "ACCESS DENIED" / "VIEW ONLY" messaging, author/version timer, and the host for the impersonation controls.
 7. **Calendar + `chkWeekDays` refinements.** Layout/visibility polish across `scrn_MoCalendar`, `scrn_WeeklyCal`, `scrn_DailyCal`; loose top-level controls on `chkWeekDays` consolidated under group containers.
@@ -272,7 +290,8 @@ All three connectors (Office 365 Outlook, Office 365 Users, SharePoint) now refe
 
 | Version          | Date                 | Summary                                                                                                                                                                                                                                                                                                                           |
 | ---------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **v0.8.14** | **2026-07-28** | **App-wide RBAC engine in `App.OnStart` (8 tiers), impersonation, zero-touch user auto-provisioning, new training Class/Session Picker (`ctn_PopUp_ClassPicker`) on POCSUPERVISOR, new `alt_ManageDesks` CRUD screen, Dashboard redesign, calendar/`chkWeekDays` refinements, assets 6→38, new `Tabs_altColor` component. See [`v0.8.14_recentChangesSummary.md`](v0.8.14_recentChangesSummary.md).** |
+| **v0.9.26** | **2026-08-04** | **`Desk Reservations` schema expanded by ~40 columns (submitter / student / reservation / trainer-approval / reminder families); Class/Session Picker now persisted in the Confirm SUBMIT `Patch`; POCSUPERVISOR reworked (`+63 KB`) with an attendee people-picker (book-on-behalf) and semantic picker names; Reservation Details enriched; `Desks` list normalized to typed columns; `varRepoVersion`→0.9.26 and `varIsImpersonating` fix. See [`v0.9.26_recentChangesSummary.md`](v0.9.26_recentChangesSummary.md).** |
+| v0.8.14 | 2026-07-28 | App-wide RBAC engine in `App.OnStart` (8 tiers), impersonation, zero-touch user auto-provisioning, new training Class/Session Picker (`ctn_PopUp_ClassPicker`) on POCSUPERVISOR, new `alt_ManageDesks` CRUD screen, Dashboard redesign, calendar/`chkWeekDays` refinements, assets 6→38, new `Tabs_altColor` component |
 | v0.3.4 | 2026-07-09 | Role-based access control (8 tiers), smart scheduling defaults, conflict detection, cancellation confirmation dialog, Daily Calendar screen replacement (scrn_DailyCal), grid layout modernization, explicit action buttons on MyAppts, Reservation detail relabeling, app version variable, connector/platform updates |
 | v0.0.2           | 2026-01-02           | SharePoint binding fixes, screen behavior improvements (Dashboard, MyAppts, POCSUPERVISOR, chkWeekDays)                                                                                                                                                                                                                           |
 | v0.0.1           | 2025-12-31           | Initial baseline shared starter app                                                                                                                                                                                                                                                                                               |
@@ -281,11 +300,11 @@ All three connectors (Office 365 Outlook, Office 365 Users, SharePoint) now refe
 
 ## Screenshots
 
-> **v0.8.14 screenshots not yet recaptured.** The screenshots below are from the v0.3.4 app and remain the most recent captures. New screenshots of the redesigned Dashboard, Class/Session Picker, and `alt_ManageDesks` screen should be captured from the live v0.8.14 app and added under [`assets/screenshots/`](../../assets/screenshots/) with a `v0.8.14_*` prefix.
+> **v0.9.26 screenshots not yet recaptured.** The screenshots below are from the v0.3.4 app and remain the most recent captures. New screenshots of the reworked Class/Session Picker (with the attendee people-picker), the enriched Confirm review, and the Reservation Details screen should be captured from the live v0.9.26 app and added under [`assets/images/screenshots/appGuide/`](../../assets/images/screenshots/appGuide/) with a `v0.9.26_*` prefix.
 
 ### Screenshots (v0.3.4)
 
-Screenshots captured 2026-07-09 from the live v0.3.4 app. Stored under [`assets/screenshots/`](../../assets/screenshots/).
+Screenshots captured 2026-07-09 from the live v0.3.4 app. Stored under [`assets/images/screenshots/appGuide/`](../../assets/images/screenshots/appGuide/).
 
 | Screen                                  | File                                    |
 | --------------------------------------- | --------------------------------------- |
@@ -316,15 +335,15 @@ Screenshots captured 2026-07-09 from the live v0.3.4 app. Stored under [`assets/
 - **App Type**: Phone layout (landscape orientation)
 - **Connectors**: Office 365 Outlook, Office 365 Users, SharePoint
 - **Data Sources**:
-  - **SharePoint**: Desk Reservations, DeskAccessControl, Desks
+  - **SharePoint**: Desk Reservations *(v0.9.26: schema expanded with submitter / student / reservation / trainer-approval / reminder column families — see [`v0.9.26_recentChangesSummary.md`](v0.9.26_recentChangesSummary.md) §7)*, DeskAccessControl, Desks *(v0.9.26: normalized to typed `*_choice`/`*_text`/`*_boolean` columns)*
   - **Office 365 Outlook**: CalendarGetTables, V3CalendarPostItem, V2CalendarPostItem, FindMeetingTimes, GetRoomLists, GetRooms, GetRoomsInRoomList
   - **Office 365 Users**: SearchUser, MyProfileV2, ManagerV2, UserProfileV2
 
-## 2. Screens (v0.8.14 — 22 screens)
+## 2. Screens (v0.9.26 — 22 screens)
 
 | #  | Screen Name         | Purpose                                                                                                        |
 | -- | ------------------- | -------------------------------------------------------------------------------------------------------------- |
-| 0  | `alt_ManageDesks` | **NEW** Modern responsive CRUD console for the `Desks` list (add/edit/delete); staged alongside legacy `ManageDesks` |
+| 0  | `alt_ManageDesks` | Modern responsive CRUD console for the `Desks` list (add/edit/delete); staged alongside legacy `ManageDesks` *(added v0.8.14)* |
 | 1  | `Dashboard`       | Welcome, upcoming reservations preview, role-based menu, impersonation controls (admin)                        |
 | 2  | `MyAppts`         | My Reservations — Upcoming / Previous tabs with CANCEL action                                                 |
 | 3  | `POCSUPERVISOR`   | Create a new reservation — employee, supervisor, training type selection                                      |
@@ -341,13 +360,13 @@ Screenshots captured 2026-07-09 from the live v0.3.4 app. Stored under [`assets/
 | 14 | `Screen3`         | *(utility screen)*                                                                                           |
 | 15 | `scrn_MoCalendar` | Monthly Calendar — full month grid view with booking entries                                                  |
 | 16 | `scrn_WeeklyCal`  | Weekly Calendar — 7-day grid with booking entries                                                             |
-| 17 | `scrn_DailyCal`   | **NEW** Daily Calendar List — daily training room reservation list view *(replaces scrn_WeeklyCal_1)* |
+| 17 | `scrn_DailyCal`   | Daily Calendar List — daily training room reservation list view *(added v0.3.4, replaced scrn_WeeklyCal_1)* |
 | 18 | `DebuggingScreen` | Developer debugging utilities                                                                                  |
 | 19 | `Screen1`         | *(utility screen)*                                                                                           |
 | 20 | `PDFScreen`       | PDF export/preview                                                                                             |
 | 21 | `Screen2`         | *(utility screen)*                                                                                           |
 
-> **Note**: `scrn_WeeklyCal_1` was removed and replaced by `scrn_DailyCal` in v0.3.4. `alt_ManageDesks` was added in v0.8.14 (22 screens total).
+> **Note**: `scrn_WeeklyCal_1` was removed and replaced by `scrn_DailyCal` in v0.3.4; `alt_ManageDesks` was added in v0.8.14. **No screens were added or removed in v0.9.26** (still 22 total).
 
 ## 3. ALM workflow (pack/unpack)
 

@@ -19,6 +19,60 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.9.26] - 2026-08-04
+
+> **Version realignment:** the project-wide version jumps `0.8.16` → `0.9.26` to re-align the repository release line with the Canvas app's independently-advancing version (now **v0.9.26**), continuing the alignment strategy begun at `0.8.16`. This **supersedes the never-completed `0.8.17`** cycle — its blank `docs/release-notes/v0.8.17_*` stubs were renamed and filled in as `v0.9.26_*`, and no `[0.8.17]` release was ever published.
+>
+> **This release DOES change the SharePoint schema** (contrast with `[0.8.16]`, which had none): the `Desk Reservations` list gained ~40 columns and the `Desks` list was normalized. See below and `src/powerApps/v0.9.26_recentChangesSummary.md` §7.
+
+### Added
+
+- **Canvas app v0.9.26 unpacked source** — the updated Canvas app was exported and unpacked into `src/powerApps/.unpacked/` (package `src/powerApps/.msapp/v0.9.26_578EHRMTrainingApp.msapp`, tracked via `.gitignore` `!*.msapp`, replacing the prior v0.8.14 package). Where v0.8.14 was about *access*, v0.9.26 is about *data* — every booking is now a complete, persisted training record:
+  - **`Desk Reservations` SharePoint list schema expanded by ~40 columns**, grouped into **submitter** (who created the request), **student/attendee** (who the training is for, incl. manager email), **reservation** (scenario / role / session start-end / decomposed location), **narrative bodies** (agreement / description / comments / invite body), **trainer approval** (received → approved → recorded-in-Excel lifecycle), and **automated-reminder** tracking (1 week / 72 h / 1 h pre-class + 24 h post-create, for student and trainer). This is the backbone of the release.
+  - **Class/Session Picker is now persisted** — the **Confirm** SUBMIT `Patch` writes the full scenario/role/session/location plus separate submitter and student identities into the new columns (previously displayed but never saved).
+  - **Booking on behalf of others** — POCSUPERVISOR gained an attendee people-picker (`var_Attendees`); the app records the **submitter** (real signed-in user) and the **student** (chosen attendee) as distinct fields, and generates a structured `Title` (`<attendee> – <category> - <scenario> (<role>)`).
+  - **POCSUPERVISOR reworked (`+63 KB`)** — semantic picker control names (`dropdown_ScenarioPicker`/`RolePicker`/`DateTimePicker`/`LocationPicker`), a live HTML selection summary, a scenario-materials deep-link, and an admin `RESET` button.
+  - **Reservation Details enriched** — surfaces scenario/role/session/submitter and a *"Contact the EHRM Trainers about this item (#ID)"* action.
+  - **Two modern control templates** (`modernText`, `modernTextInput`) registered and used in the reworked forms.
+  - Full file-by-file structural/behavioral diff with per-change rationale: **`src/powerApps/v0.9.26_recentChangesSummary.md`** (renamed from `v0.8.14_recentChangesSummary.md`).
+- **`docs/release-notes/v0.9.26_commitMessage.md`**, **`v0.9.26_pullRequest.md`**, **`v0.9.26_releaseNotes.md`** — authored release artifacts for this release (renamed from the blank `v0.8.17_*` stubs).
+
+### Changed
+
+- **`VERSION`** — 0.8.17 → 0.9.26 (see version-realignment note above).
+- **`README.md`** — release badge v0.8.16 → v0.9.26; Canvas app component version v0.8.14 → v0.9.26 with a training-record description.
+- **`src/powerApps/README.md`** — updated header to v0.9.26, added a "What changed in v0.9.26 (current)" narrative, demoted the v0.8.14 section to "previous", added a v0.9.26 component version-history row, and refreshed the data-sources / screenshots notes.
+- **`docs/PROJECT_STATUS.md`** — status summary, component versions, release history table, data model, and roadmap updated for v0.9.26 / Canvas app v0.9.26.
+- **`src/solution.xml`** — Power Platform solution `Version` 0.3.4 → 0.9.26; description refreshed to current v0.9.26 features.
+- **`src/sharePoint/README.md`** — documented the `Desk Reservations` schema expansion and the `Desks` normalization.
+- **`assets/images/` reorganized** — loose image files consolidated into categorized subfolders (`graphics/`, `icons/`, `logos/`, `objects/`, `screenshots/`); the in-app screenshots moved from `assets/screenshots/` → `assets/images/screenshots/appGuide/` (the `src/powerApps/README.md` screenshot links were repointed accordingly).
+- **`Desks` SharePoint list normalized** — legacy untyped/duplicate columns removed in favor of typed `*_choice` / `*_text` / `*_boolean` columns; `DeskSelect` / `ManageDesks` / `NewDesk` re-bound to the cleaned schema.
+- **`App.OnStart`** — `varRepoVersion` corrected `0.8.12` → `0.9.26`; `varIsImpersonating` detection logic corrected (was inverted).
+
+### Removed
+
+- **3 legacy `Desk Reservations` columns** — `DeskFloor`, `Floor`, `Reason for desk reservation` (superseded by the new decomposed-location and narrative-body columns).
+- **Prior Canvas artifacts superseded** — the v0.8.14 `.msapp` package and `src/powerApps/v0.8.14_recentChangesSummary.md` were replaced (the v0.8.14 change summary was retained locally under `archive/`).
+- **Abandoned `v0.8.17_*` release-note stubs** — renamed/refilled as `v0.9.26_*`.
+- **6 unused desk-specific sample images** — the `mapBldg110` / `mapFloor6` / `mapDesk3` / `RoomGA141` maps and the `Desk3` / `RoomGA141` photos (no references remain outside the app's own internal asset copies).
+- **`docs/release-notes/v0.8.16_*`** — prior release notes rotated out of `docs/release-notes/` (retained under `archive/`).
+
+### Fixed
+
+- **Class/Session Picker persistence gap** — the `varPopUp_ClassPicker_*` / `var_reservation*` values are now written to SharePoint in the Confirm SUBMIT `Patch` (was follow-up §9 item 1 of the v0.8.14 summary).
+- **In-app version stamp** — `App.OnStart` `varRepoVersion` now reads `0.9.26`, so the Dashboard version badge is accurate.
+- **Impersonation detection** — `varIsImpersonating` now evaluates `varRealEmail <> varTargetEmail` (the v0.8.14 expression was inverted).
+
+### Notes
+
+- **Known follow-ups (see `src/powerApps/v0.9.26_recentChangesSummary.md` §9):**
+  - `BindingErrorCount` rose **49 → 329** — validate in the Power Apps App Checker before production deployment (likely references to the removed columns plus the modern Text/TextInput control migration).
+  - The **trainer** and **reminder** columns are inserted **blank** by the app — they are the schema contract for companion **Power Automate** approval/reminder flows that still need to be built/deployed (`src/powerAutomate/`). `OutlookEventID`/`OutlookSeriesID` are likewise deferred to a flow.
+  - Residual version drift: the manifest `AppDescription` reads `v0.9.17` while the `.msapp`/`varRepoVersion` read `0.9.26`.
+- **Open security gap (carried forward):** new/unknown users are still auto-granted the `User` access level rather than `AccessDenied`. Populating `DeskAccessControl.AccessLevel_Text` for all intended users, and deciding the unknown-user default, remains a required admin action.
+
+---
+
 ## [0.8.16] - 2026-07-28
 
 > **Version alignment:** With this release the project-wide version jumps from `0.3.8` to `0.8.16` to bring the repository release line onto the Canvas app's independently-advancing `0.8.x` version series. The Canvas app component advances **v0.3.4 → v0.8.14** (the app-internal version strings still show minor drift — `App.OnStart` sets `varRepoVersion "0.8.12"` and the Dashboard timer shows the prior stamp — tracked as a follow-up). This supersedes the note in the `[0.3.8]` entry below, which stated the Canvas app "remains v0.3.4" and that the v0.8.14 app had "not yet been exported/unpacked."

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Icon / recent</title>
+    <g id="Visual-Designs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="Facility_-Recent-(Option2)" transform="translate(-39.000000, -351.000000)" stroke="#FE635B" stroke-width="0.75">
+            <g id="Group-6" transform="translate(38.932203, 344.000000)">
+                <g id="Icon-/-recent" transform="translate(0.000000, 7.000000)">
+                    <g id="Group-7">
+                        <path d="M2.44180783,2.5309286 C3.66195663,1.27888824 5.35258736,0.502401469 7.22145527,0.500714755 C10.9355968,0.497370815 13.9421451,3.55651712 13.9388021,7.33334178 C13.9354535,11.1101664 10.9234794,14.1757358 7.20933794,14.1790852 C3.49519645,14.1824291 0.488649012,11.1222829 0.491992019,7.34545822" id="Stroke-3" transform="translate(7.215397, 7.339900) rotate(-3.000000) translate(-7.215397, -7.339900) "></path>
+                        <polyline id="Stroke-5" points="4.43454237 3.6689 1.79505085 3.2829 1.61515254 0.5579"></polyline>
+                    </g>
+                    <polyline id="Path-5" stroke-linejoin="round" points="6.88135593 3 6.88135593 8 10.8135593 8 11.2067797 8"></polyline>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

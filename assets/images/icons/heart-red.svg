@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="41px" height="39px" viewBox="0 0 41 39" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Badge / Home</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Homepage_Health.b" transform="translate(-163.000000, -136.000000)" stroke="#FE635B">
+            <g id="Health-Icon-Reverse" transform="translate(150.000000, 121.000000)">
+                <g id="Group-3">
+                    <g id="Badge-/-heart" transform="translate(12.487016, 11.230000)">
+                        <g id="Heart" transform="translate(1.294345, 4.371429)">
+                            <path d="M19.4151724,5.94674571 L17.0594648,3.29474571 C13.1570152,-1.09854 6.82896331,-1.09854 2.92651366,3.29474571 C-0.975936,7.68803143 -0.975936,14.8120029 2.92651366,19.2052886 L19.4151724,37.88586 L35.9025368,19.2052886 C39.8062808,14.8120029 39.8062808,7.68803143 35.9025368,3.29474571 C32.0013815,-1.09854 25.6733297,-1.09854 21.7695857,3.29474571 L19.4151724,5.94674571 Z" id="Stroke-1"></path>
+                            <path d="M33.6529655,11.6571429 C33.6529655,8.43831429 31.3347939,5.82857143 28.4755862,5.82857143" id="Stroke-3"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

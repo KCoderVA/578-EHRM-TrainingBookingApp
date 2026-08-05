@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="37px" height="32px" viewBox="0 0 37 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Badge / pass</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Homepage_WFBa-Copy" transform="translate(-163.000000, -135.000000)" stroke="#FFFFFF">
+            <g id="home-content" transform="translate(0.000000, 121.000000)">
+                <g id="Pass" transform="translate(148.000000, 0.000000)">
+                    <g id="Group-3">
+                        <g id="Group-5">
+                            <g id="Badge-/-Pass-whole">
+                                <g id="Badge-/-pass" transform="translate(15.000000, 14.000000)">
+                                    <g id="Group-11">
+                                        <g transform="translate(0.354019, 0.735254)" stroke-width="0.75">
+                                            <g id="Badge-/-Pass-access">
+                                                <g id="Badge" transform="translate(0.318229, 0.219039)">
+                                                    <path d="M9.27322116,6.64756845 L2,6.64756845 C0.8954305,6.64756845 -1.3527075e-16,7.54299895 0,8.64756845 L0,27.914058 C2.09738034e-15,29.0186275 0.8954305,29.914058 2,29.914058 L33.0064099,29.914058 C34.1109794,29.914058 35.0064099,29.0186275 35.0064099,27.914058 L35.0064099,8.64756845 C35.0064099,7.54299895 34.1109794,6.64756845 33.0064099,6.64756845 L22.3516607,6.64756845" id="Path-3" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                    <rect id="Rectangle" x="14.485411" y="0" width="7.24270549" height="9.97135268" rx="1"></rect>
+                                                    <ellipse id="Oval" cx="25.3494692" cy="15.5109931" rx="3.62135275" ry="3.32378423"></ellipse>
+                                                    <line x1="6.15335548" y1="21.0506334" x2="15.574761" y2="21.0506334" id="Line-3" stroke-linecap="round" stroke-linejoin="round"></line>
+                                                    <line x1="6.16214056" y1="25.2053637" x2="21.6015638" y2="24.9283817" id="Line-3-Copy" stroke-linecap="round" stroke-linejoin="round"></line>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

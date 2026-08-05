@@ -67,7 +67,7 @@ scrn_WeeklyCal As screen:
                     Desks,
                     Asset.Value = "Room"
                 ),
-                Title
+                ItemID_title
             )
         );
 
@@ -248,7 +248,7 @@ scrn_WeeklyCal As screen:
                     OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
                     Size: =9
                     Text: |-
-                        =Concatenate(ThisItem.'Reason for desk reservation'," ",Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM"))
+                        =Concatenate(ThisItem.Reasonfordeskreservation," ",Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM"))
                         
                         //&& Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)
                     Visible: =false
@@ -536,7 +536,7 @@ scrn_WeeklyCal As screen:
             AccessibleLabel: ="Floor Input"
             BorderColor: =RGBA(179, 179, 179, 1)
             Color: =RGBA(0, 0, 0, 1)
-            Default: =LookUp(Desks,Title = varSelectedReservation.DeskText).'Room Location'
+            Default: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
@@ -605,7 +605,7 @@ scrn_WeeklyCal As screen:
             Default: |-
                 =
                 
-                varSelectedReservation.'Reason for desk reservation'
+                varSelectedReservation.Reasonfordeskreservation
                 //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
@@ -765,7 +765,7 @@ scrn_WeeklyCal As screen:
                 DisabledBorderColor: =RGBA(166, 166, 166, 1)
                 DisabledFill: =RGBA(244, 244, 244, 1)
                 Height: =415
-                Image: =LookUp(Desks,Title = varSelectedReservation.DeskText).RoomPicture
+                Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation0
                 ImagePosition: =ImagePosition.Stretch
                 Visible: =showMap
                 Width: =1022
