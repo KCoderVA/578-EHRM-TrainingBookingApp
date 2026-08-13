@@ -1,0 +1,163 @@
+Tabs_3 As CanvasComponent:
+    darkMode: |-
+        =If(
+            App.ActiveScreen.Name = "Dashboard",
+            true,
+            App.ActiveScreen.Name <> "Dashboard",
+            false
+        )
+    Fill: =RGBA(0, 0, 0, 0)
+    Height: |
+        =120
+    HomePage: =Dashboard//App.ActiveScreen
+    Items: =colMenu
+    templateHeight: =Tabs_3.Height - 20
+    templateWidth: =Tabs_3.Width / CountRows(Tabs_3.Items)
+    Width: =660
+    X: =0
+    Y: =0
+    ZIndex: =2
+
+    Rectangle12 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisplayMode: =DisplayMode.Disabled
+        Fill: |-
+            =If(
+                App.ActiveScreen.Name = "Dashboard" || Tabs_3.darkMode = true,
+                RGBA(0, 0, 0, 0),
+                App.ActiveScreen.Name <> "Dashboard" && Tabs_3.darkMode = false,
+                RGBA(0, 0, 0, 1)
+            )
+        Height: =Parent.Height
+        Visible: =false
+        Width: =Parent.Width
+        ZIndex: =1
+
+    Gallery4_1 As gallery.galleryHorizontal:
+        '#CopilotOverlayLabel': ="Filtered"
+        AccessibleLabel: ="Footer tabs"
+        BorderColor: =RGBA(9, 33, 98, 1)
+        DisabledBorderColor: =Gallery4_1.BorderColor
+        DisabledFill: =Gallery4_1.Fill
+        Fill: |-
+            =If(
+                App.ActiveScreen.Name = "Dashboard" || Tabs_3.darkMode = true,
+                RGBA(9, 33, 98, 0.2),
+                App.ActiveScreen.Name <> "Dashboard" && Tabs_3.darkMode = false,
+                RGBA(9, 33, 98, 0.4)
+            )
+        FocusedBorderThickness: =0
+        Height: =Parent.Height - Rectangle1_1.Height
+        HoverBorderColor: =Gallery4_1.BorderColor
+        HoverFill: =Gallery4_1.Fill
+        Items: =Tabs_3.Items
+        LoadingSpinnerColor: =Gallery4_1.BorderColor
+        OnSelect: =Navigate(ThisItem.Page)
+        PressedBorderColor: =Gallery4_1.BorderColor
+        PressedFill: =Gallery4_1.Fill
+        ShowScrollbar: =false
+        TabIndex: =1
+        TemplatePadding: =1
+        TemplateSize: =Tabs_3.templateWidth - 2
+        Width: =CountRows(Tabs_3.Items) & 110
+        Y: =Rectangle1_1.Height + Rectangle1_1.Y
+        ZIndex: =2
+
+        Icon10_1 As icon.Search:
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            DisabledFill: =Icon10_1.Fill
+            Fill: =RGBA(255, 255, 255, 0)
+            FocusedBorderColor: =Icon10_1.BorderColor
+            Height: =Tabs_3.templateHeight - Label10_1.Height + 10
+            HoverBorderColor: =ColorFade(Icon10_1.BorderColor, 20%)
+            HoverColor: =ColorFade(Icon10_1.Color, 20%)
+            HoverFill: =Icon10_1.Fill
+            Icon: =ThisItem.Icon
+            OnSelect: =Select(Parent);Navigate(ThisItem.Page)
+            PressedBorderColor: =ColorFade(Icon10_1.BorderColor, -20%)
+            PressedColor: =ColorFade(Icon10_1.Color, -20%)
+            PressedFill: =Icon10_1.Fill
+            Width: =Self.Height
+            X: =(Parent.TemplateWidth / 2) - (Self.Width / 2)
+            Y: =2
+            ZIndex: =1
+
+        Button8_1 As button:
+            AutoDisableOnSelect: =false
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderThickness: =6
+            Color: =RGBA(9, 33, 98, 1)
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(0, 0, 0, 0)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =Parent.TemplateHeight - 4
+            HoverBorderColor: |-
+                =If(
+                    App.ActiveScreen.Name = "Dashboard" || Tabs_3.darkMode = true,
+                    Color.White,
+                    App.ActiveScreen.Name <> "Dashboard" && Tabs_3.darkMode = false,
+                    RGBA(9, 33, 98, 1)
+                )
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: |-
+                =If(
+                    App.ActiveScreen.Name = "Dashboard",
+                    ColorFade(RGBA(0, 131, 190, .8),50%),
+                    App.ActiveScreen.Name <> "Dashboard",
+                    RGBA(255, 255, 255, .5)
+                )
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =15
+            RadiusBottomRight: =15
+            RadiusTopLeft: =15
+            RadiusTopRight: =15
+            Size: =24
+            Text: =
+            Width: =Parent.TemplateWidth
+            X: =2
+            Y: =2
+            ZIndex: =2
+
+        Label10_1 As label:
+            Align: =LayoutAlignItems.Center
+            BorderColor: =RGBA(32, 54, 71, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(255, 255, 255, 0)
+            FocusedBorderColor: =Label10_1.BorderColor
+            FontWeight: =FontWeight.Bold
+            Height: =Tabs_3.templateHeight / 4
+            HoverBorderColor: =Label10_1.BorderColor
+            HoverColor: =Label10_1.Color
+            HoverFill: =Label10_1.Fill
+            OnSelect: =Select(Parent);Navigate(ThisItem.Page)
+            PressedBorderColor: =Label10_1.BorderColor
+            PressedColor: =Label10_1.Color
+            PressedFill: =Label10_1.Fill
+            Size: =Self.Height / 2
+            Text: =ThisItem.Name
+            Width: =Parent.TemplateWidth
+            X: =(Parent.TemplateWidth / 2) - (Self.Width / 2)
+            Y: =Parent.TemplateHeight - Self.Height
+            ZIndex: =3
+
+    Rectangle1_1 As rectangle:
+        BorderColor: =RGBA(128, 128, 128, 1)
+        Fill: =RGBA(214, 221, 224, 1)
+        Height: =3
+        Width: =Tabs_3.Width
+        ZIndex: =3
+
