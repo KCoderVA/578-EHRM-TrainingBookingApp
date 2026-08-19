@@ -16,22 +16,21 @@ EditorState:
     - Confirm
     - Success
     - ManageDesks
-    - alt_ManageDesks
+    - ManageUsers
     - NewDesk
     - NewEditDesk
     - Reservation
     - SuccessDeskMod
     - ReleaseNotes
-    - Screen3
     - scrn_MoCalendar
     - scrn_WeeklyCal
     - scrn_DailyCal
     - DebuggingScreen
-    - Screen1
+    - CreateMeeting
     - PDFScreen
-    - Screen2
+    - Screen3
   ComponentDefinitionsOrder:
     - Preloader
     - Tabs
-    - Tabs_altColor
+    - Tabs_3
     - Calendar

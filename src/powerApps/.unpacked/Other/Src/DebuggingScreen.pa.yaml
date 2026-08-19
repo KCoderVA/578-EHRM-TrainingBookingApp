@@ -8,716 +8,1029 @@
 # ************************************************************************************************
 Screens:
   DebuggingScreen:
+    Properties:
+      Fill: =Color.LightGray
+      Height: =App.Height
+      Width: =App.Width
     Children:
-      - Gallery1:
-          Control: Gallery@2.15.0
-          Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver4.0
+      - ctnDebugScreen_content:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
           Properties:
-            DelayItemLoading: =false
-            Items: =Filter(Desks, 'Room Location' = "C3073" && Asset.Value = "Desk")
-            LoadingSpinner: =LoadingSpinner.None
-            TemplateSize: =Min(160, Self.Height - 60)
-            X: =40
-            Y: =40
+            Height: =Parent.Height - ctnDebugScreen_header.Height
+            Width: =Parent.Width
+            Y: =ctnDebugScreen_header.Y + ctnDebugScreen_header.Height
           Children:
-            - Title1:
-                Control: Label@2.5.1
+            - Container4:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
                 Properties:
-                  BorderColor: =RGBA(0, 0, 0, 1)
-                  FontWeight: =FontWeight.Semibold
-                  Height: =Self.Size * 1.8
-                  OnSelect: =Select(Parent)
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =20
-                  Text: =ThisItem.Asset.Value
-                  VerticalAlign: =VerticalAlign.Top
-                  Width: =400
-                  X: =24
-                  Y: =54
-            - Subtitle1:
-                Control: Label@2.5.1
+                  Height: =Gallery1.Height
+                  Width: =Gallery1.Width
+                  X: =Gallery1.X + Gallery1.Width
+                  Y: =Gallery1.Y
+                Children:
+                  - HtmlText5:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        HtmlText: ="variable names - HTML text"
+                        Width: =378.6666666666667
+                  - Timer2:
+                      Control: Timer@2.1.0
+                      Properties:
+                        AutoStart: =true
+                        Duration: =2500
+                        Height: =100
+                        OnSelect: =
+                        OnTimerEnd: =Navigate(Dashboard);
+                        OnTimerStart: |-
+                          =ResetForm(Form1);
+                          ResetForm(Form2);
+
+
+                          Set(_allRoomsConcat, Blank());
+                          Set(_calendarVisible, Blank());
+                          Set(_dateSelected, Blank());
+                          Set(_dateSelected2, Blank());
+                          Set(_firstDayInView, Blank());
+                          Set(_FirstDayinView2, Blank());
+                          Set(_firstDayOfMonth, Blank());
+                          Set(_firstDayOfMonth2, Blank());
+                          Set(_firstDayofWeek2, Blank());
+                          Set(_lastDayOfMonth, Blank());
+                          Set(_LastDayOfMonth2, Blank());
+                          Set(_maxDate, Blank());
+                          Set(_MaxDate, Blank());
+                          Set(_MaxDate2, Blank());
+                          Set(_minDate, Blank());
+                          Set(_MinDate, Blank());
+                          Set(_MinDate2, Blank());
+                          Set(_myCalendarName, Blank());
+                          Set(_myScheduledMeeting, Blank());
+                          Set(_noRoomLists, Blank());
+                          Set(_roomListSelected, Blank());
+                          Set(_selectedMeetingTime, Blank());
+                          Set(_selectedRoom, Blank());
+                          Set(_selectedRoomList, Blank());
+                          Set(_selectedUser, Blank());
+                          Set(_showDetails, Blank());
+                          Set(_showMeetingTimes, Blank());
+                          Set(currentItem, Blank());
+                          Set(endByDate, Blank());
+                          Set(gv_item, Blank());
+                          Set(maxOccurrence, Blank());
+                          Set(NthWeekdayRecord, Blank());
+                          Set(numWorkDays, Blank());
+                          Set(PDFPrint, Blank());
+                          Set(startWeekday, Blank());
+                          Set(submitItem, Blank());
+                          //Set(user_isAdmin, Blank());
+                          //Set(userAccessLevel_text, Blank());
+                          Set(var_Attendees, Blank());
+                          //Set(var_AuthorInfo, Blank();
+                          Set(var_Date, Blank());
+                          Set(var_Date_central, Blank());
+                          Set(var_DayOfWeek, Blank());
+                          Set(var_Duration, Blank());
+                          Set(var_Duration_central, Blank());
+                          Set(var_EmailBody, Blank());
+                          Set(var_EndDateTime_central, Blank());
+                          Set(var_EndTime, Blank());
+                          Set(var_EndTime_central, Blank());
+                          Set(var_firstHalfDuration, Blank());
+                          Set(var_firstHalfDuration_central, Blank());
+                          Set(var_ManagerEmail, Blank());
+                          Set(var_MeetingCategory, Blank());
+                          Set(var_OptionalAttendees, Blank());
+                          Set(var_reservationBuildingNumber, Blank());
+                          Set(var_reservationDivision, Blank());
+                          Set(var_reservationFloorNumber, Blank());
+                          Set(var_reservationFullDateTime, Blank());
+                          Set(var_reservationFullLocation, Blank());
+                          Set(var_reservationRole, Blank());
+                          Set(var_reservationRoomNumber, Blank());
+                          Set(var_reservationScenario, Blank());
+                          Set(var_scenarioTrainingMaterialsURL, Blank());
+                          Set(var_secondHalfTime, Blank());
+                          Set(var_secondHalfTime_central, Blank());
+                          Set(var_Service, Blank());
+                          Set(var_StartDateTime_central, Blank());
+                          Set(var_StartTime, Blank());
+                          Set(var_StartTime_central, Blank());
+                          Set(varAccept, Blank());
+                          Set(varAccept3, Blank());
+                          Set(varAccept4, Blank());
+                          Set(varAttendees, Blank());
+                          Set(varCancelContainer, Blank());
+                          Set(varDaily, Blank());
+                          Set(varDefaultEndTime, Blank());
+                          Set(varDescription, Blank());
+                          //Set(varDeskAccessControl_record, Blank());
+                          Set(varDeskMode, Blank());
+                          Set(var_EmailBody, Blank());
+                          Set(varEndDate, Blank());
+                          Set(varEventEndTime, Blank());
+                          Set(varEventStartTime, Blank());
+                          Set(varImportance, Blank());
+                          Set(varIsImpersonating, Blank());
+                          Set(varManageSelectedDesk, Blank());
+                          Set(varMeetCat, Blank());
+                          Set(varOptionalAttendees, Blank());
+                          Set(varPopUp_ClassPicker, Blank());
+                          Set(varPopUp_ClassPicker_scenario, Blank());
+                          Set(varPopUp_ClassPicker_scenarioDate, Blank());
+                          Set(varPopUp_ClassPicker_scenarioDateTime, Blank());
+                          Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank());
+                          Set(varPopUp_ClassPicker_scenarioEnd24, Blank());
+                          Set(varPopUp_ClassPicker_scenarioEndTime, Blank());
+                          Set(varPopUp_ClassPicker_scenarioLocation, Blank());
+                          Set(varPopUp_ClassPicker_scenarioName, Blank());
+                          Set(varPopUp_ClassPicker_scenarioRole, Blank());
+                          Set(varPopUp_ClassPicker_scenarioSplit, Blank());
+                          Set(varPopUp_ClassPicker_scenarioStart24, Blank());
+                          Set(varPopUp_ClassPicker_scenarioStartTime, Blank());
+                          //Set(varRealEmail, Blank());
+                          //Set(varRealEntraID, Blank());
+                          Set(varRecurrence, Blank());
+                          Set(varRecurrenceID, Blank());
+                          Set(varReminder, Blank());
+                          //Set(varRepoVersion, Blank());
+                          Set(varReservePOC, Blank());
+                          Set(varSelectedDesk, Blank());
+                          Set(varSelectedReservation, Blank());
+                          Set(varSelectedStartDate, Blank());
+                          Set(varsmartboardck, Blank());
+                          //Set(varTargetEmail, Blank());
+                          //Set(varTargetEntraID, Blank());
+                          Set(varTimer, Blank());
+                          Set(varTitle, Blank());
+                          Set(varURL, Blank());
+                          Set(varURLName, Blank());
+                          Set(varUserExists, Blank());
+                          //Set(varUser_details, Blank());
+                          Set(varWeekday, Blank());
+
+
+                          Clear(AllRooms);
+                          Clear(AvailableRooms);
+                          Clear(AvailableRoomsOptimal);
+                          Clear(col_EventBuildDetails);
+                          Clear(col_EventCombinedDetails);
+                          Clear(col_MasterSchedule);
+                          Clear(colCombinedRecurrence);
+                          Clear(colDates);
+                          //Clear(colDeskAccess);
+                          Clear(colDeskChckRecur);
+                          Clear(CollectionRecurrence);
+                          //Clear(colMenu);
+                          Clear(colRoomFilter);
+                          Clear(colSelectedDesks);
+                          Clear(colSmartboard);
+                          //Clear(colUser_details);
+                          Clear(MeetingTimes);
+                          Clear(MyPeople);
+                          Clear(RoomsLists);
+                          Clear(RoomTimeSuggestions);
+                          Clear(WeekdaysOnly);
+                          Clear(wkDays);
+                          Clear(wkDaysTemp);
+
+                          Refresh(Desks);
+                          Refresh('Desk Reservations');
+                          Refresh(MasterScheduleList);
+                          Refresh(DeskAccessControl);
+                        Repeat: =true
+                        Size: =25
+                        Text: ="Going home in . . . . . . " & Text(DateAdd(Self.Duration, - (Time(0,0,0, Self.Value)), TimeUnit.Milliseconds), "s.fff")
+                        Width: =Container4.Width
+                        Y: =Container4.Height - Self.Height
+            - Gallery1:
+                Control: Gallery@2.15.0
+                Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver4.0
                 Properties:
-                  BorderColor: =RGBA(0, 0, 0, 1)
-                  Height: =Self.Size * 1.8
-                  OnSelect: =Select(Parent)
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =18
-                  Text: =ThisItem.ItemID_title
-                  VerticalAlign: =VerticalAlign.Top
-                  Width: =Title1.Width
-                  X: =24
-                  Y: =16
-            - NextArrow1:
-                Control: Classic/Icon@2.5.0
+                  DelayItemLoading: =false
+                  Height: =Form2.Height
+                  Items: |-
+                    =Filter(
+                        Desks,
+                        //Active_text = "Yes" && 
+                        ItemType_text = "Desk"
+                    )
+                  LoadingSpinner: =LoadingSpinner.None
+                  TemplateSize: =lbl_DeskNumber.Height + lbl_RoomNumber.Height + lbl_FloorNumber.Height + lbl_BuildingNumber.Height + (Separator1.Height + Separator1.BorderThickness)
+                  Width: =Form2.Width
+                  X: =Form2.X + Form2.Width
+                  Y: =Form2.Y
+                Children:
+                  - Separator1:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        Fill: =App.Theme.Colors.Darker30
+                        Height: =1
+                        OnSelect: =Select(Parent)
+                        Width: =Parent.TemplateWidth
+                        Y: =Parent.TemplateHeight - 1
+                  - lbl_ItemID:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Height: =Self.Size * 1.8
+                        Italic: =true
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =lbl_DeskNumber.Size
+                        Text: |-
+                          ="Item Number:   " & ThisItem.ItemID_title
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =150
+                        X: =lbl_DeskNumber.X + lbl_DeskNumber.Width
+                        Y: =lbl_DeskNumber.Y
+                  - lbl_BuildingNumber:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =Self.Size * 1.8
+                        LineHeight: =1
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =lbl_DeskNumber.Size
+                        Text: |-
+                          ="Building Number:   " & ThisItem.FloorNumber_number
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =lbl_DeskNumber.Width
+                        Y: =lbl_FloorNumber.Y + lbl_FloorNumber.Height
+                  - lbl_FloorNumber:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =Self.Size * 1.8
+                        LineHeight: =1
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =lbl_DeskNumber.Size
+                        Text: |-
+                          ="Floor Number:   " & ThisItem.FloorNumber_number
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =lbl_DeskNumber.Width
+                        Y: =lbl_RoomNumber.Y + lbl_RoomNumber.Height
+                  - lbl_RoomNumber:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =Self.Size * 1.8
+                        LineHeight: =1
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =lbl_DeskNumber.Size
+                        Text: |-
+                          ="Room Number:   " & ThisItem.RoomNumber_number
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =lbl_DeskNumber.Width
+                        Y: =lbl_DeskNumber.Y + lbl_DeskNumber.Height
+                  - lbl_DeskNumber:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =Self.Size * 1.8
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: |-
+                          ="Desk Number:   " & ThisItem.DeskNumber_number
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =(Parent.Width / 2)
+                  - NextArrow1:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        AccessibleLabel: =Self.Tooltip
+                        Height: =Parent.TemplateHeight
+                        Icon: =Icon.ChevronRight
+                        OnSelect: =Select(Parent); Navigate(ManageDesks);
+                        PaddingBottom: =10
+                        PaddingLeft: =10
+                        PaddingRight: =10
+                        PaddingTop: =10
+                        TabIndex: =0
+                        Tooltip: ="View item details"
+                        Width: =60
+                        X: =Parent.TemplateWidth - Self.Width - 5
+                        Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
+            - Form2:
+                Control: Form@2.4.4
+                Variant: Classic
+                Layout: Vertical
                 Properties:
-                  AccessibleLabel: =Self.Tooltip
-                  Height: =60
-                  Icon: =Icon.ChevronRight
-                  OnSelect: =Select(Parent)
-                  PaddingBottom: =10
-                  PaddingLeft: =10
-                  PaddingRight: =10
-                  PaddingTop: =10
-                  TabIndex: =0
-                  Tooltip: ="View item details"
-                  Width: =60
-                  X: =Parent.TemplateWidth - Self.Width - 5
-                  Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
-            - Separator1:
-                Control: Rectangle@2.3.0
-                Properties:
-                  Fill: =App.Theme.Colors.Darker30
-                  Height: =1
-                  OnSelect: =Select(Parent)
-                  Width: =Parent.TemplateWidth
-                  Y: =Parent.TemplateHeight - 1
-            - Title1_1:
-                Control: Label@2.5.1
-                Properties:
-                  BorderColor: =RGBA(0, 0, 0, 1)
-                  FontWeight: =FontWeight.Semibold
-                  Height: =Self.Size * 1.8
-                  OnSelect: =Select(Parent)
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =20
-                  Text: =ThisItem.RoomLocation
-                  VerticalAlign: =VerticalAlign.Top
-                  Width: =400
-                  X: =24
-                  Y: =108
-      - Form2:
-          Control: Form@2.4.4
-          Variant: Classic
-          Layout: Vertical
+                  DataSource: =Desks
+                  Height: =Parent.Height
+                  Width: =Parent.Width / 3
+                Children:
+                  - Title_DataCard1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: ClassicTextualEdit
+                      IsLocked: true
+                      Properties:
+                        DataField: ="Title"
+                        Default: =ThisItem.ItemID_title
+                        DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,ItemID_title)
+                        Height: =60
+                        MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, ItemID_title)
+                        Required: =true
+                        Update: =DataCardValue2.Text
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =0
+                      Children:
+                        - DataCardKey2:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =48
+                              Text: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              Wrap: =false
+                              X: =30
+                              Y: =10
+                        - DataCardValue2:
+                            Control: Classic/TextInput@2.3.2
+                            MetadataKey: FieldValue
+                            Properties:
+                              BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                              Default: =Parent.Default
+                              DelayOutput: =true
+                              DisplayMode: =Parent.DisplayMode
+                              MaxLength: =Parent.MaxLength
+                              PaddingLeft: =5
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =0
+                              RadiusTopRight: =0
+                              Tooltip: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardKey2.Y + DataCardKey2.Height + 5
+                        - ErrorMessage2:
+                            Control: Label@2.5.1
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =RGBA(168, 0, 0, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =10
+                              Live: =Live.Assertive
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =24
+                              Text: =Parent.Error
+                              Visible: =Parent.DisplayMode=DisplayMode.Edit
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardValue2.Y + DataCardValue2.Height
+                        - StarVisible2:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =DataCardKey2.Height
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Wrap: =false
+                              Y: =DataCardKey2.Y
+                  - Description_DataCard1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: ClassicTextualEdit
+                      IsLocked: true
+                      Properties:
+                        DataField: ="Description"
+                        Default: =ThisItem.Description
+                        DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Description)
+                        Height: =Title_DataCard1.Height
+                        MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Description)
+                        Required: =false
+                        Update: =DataCardValue4.Text
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =1
+                      Children:
+                        - DataCardKey4:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =48
+                              Text: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              Wrap: =false
+                              X: =30
+                              Y: =10
+                        - DataCardValue4:
+                            Control: Classic/TextInput@2.3.2
+                            MetadataKey: FieldValue
+                            Properties:
+                              BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                              Default: =Parent.Default
+                              DelayOutput: =true
+                              DisplayMode: =Parent.DisplayMode
+                              MaxLength: =Parent.MaxLength
+                              PaddingLeft: =5
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =0
+                              RadiusTopRight: =0
+                              Tooltip: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardKey4.Y + DataCardKey4.Height + 5
+                        - ErrorMessage4:
+                            Control: Label@2.5.1
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =RGBA(168, 0, 0, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =10
+                              Live: =Live.Assertive
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =24
+                              Text: =Parent.Error
+                              Visible: =Parent.DisplayMode=DisplayMode.Edit
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardValue4.Y + DataCardValue4.Height
+                        - StarVisible4:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =DataCardKey4.Height
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Wrap: =false
+                              Y: =DataCardKey4.Y
+                  - Map Link_DataCard1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: ClassicUrlEdit
+                      IsLocked: true
+                      Properties:
+                        DataField: ="MapLink"
+                        Default: =ThisItem.MapLink
+                        DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,MapLink)
+                        Height: =Title_DataCard1.Height
+                        Required: =false
+                        Update: =DataCardValue5.Text
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =2
+                      Children:
+                        - DataCardKey5:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =48
+                              Text: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              Wrap: =false
+                              X: =30
+                              Y: =10
+                        - DataCardValue5:
+                            Control: Classic/TextInput@2.3.2
+                            MetadataKey: FieldValue
+                            Properties:
+                              BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                              Default: =Parent.Default
+                              DelayOutput: =true
+                              DisplayMode: =Parent.DisplayMode
+                              PaddingLeft: =5
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =0
+                              RadiusTopRight: =0
+                              Tooltip: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardKey5.Y + DataCardKey5.Height + 5
+                        - ErrorMessage5:
+                            Control: Label@2.5.1
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =RGBA(168, 0, 0, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =10
+                              Live: =Live.Assertive
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =24
+                              Text: =Parent.Error
+                              Visible: =Parent.DisplayMode=DisplayMode.Edit
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardValue5.Y + DataCardValue5.Height
+                        - StarVisible5:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =DataCardKey5.Height
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Wrap: =false
+                              Y: =DataCardKey5.Y
+                  - Active_DataCard1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: ClassicNumberEdit
+                      IsLocked: true
+                      Properties:
+                        DataField: ="Active"
+                        Default: =ThisItem.Active
+                        DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Active)
+                        Height: =Title_DataCard1.Height
+                        Required: =false
+                        Update: =Value(DataCardValue6.Text)
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =3
+                      Children:
+                        - DataCardKey6:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =48
+                              Text: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              Wrap: =false
+                              X: =30
+                              Y: =10
+                        - DataCardValue6:
+                            Control: Classic/TextInput@2.3.2
+                            MetadataKey: FieldValue
+                            Properties:
+                              BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                              Default: =Parent.Default
+                              DelayOutput: =true
+                              DisplayMode: =Parent.DisplayMode
+                              Format: =TextFormat.Number
+                              PaddingLeft: =5
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =0
+                              RadiusTopRight: =0
+                              Tooltip: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardKey6.Y + DataCardKey6.Height + 5
+                        - ErrorMessage6:
+                            Control: Label@2.5.1
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =RGBA(168, 0, 0, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =10
+                              Live: =Live.Assertive
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =24
+                              Text: =Parent.Error
+                              Visible: =Parent.DisplayMode=DisplayMode.Edit
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardValue6.Y + DataCardValue6.Height
+                        - StarVisible6:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =DataCardKey6.Height
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Wrap: =false
+                              Y: =DataCardKey6.Y
+                  - RoomLocation_DataCard1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: ClassicTextualEdit
+                      IsLocked: true
+                      Properties:
+                        DataField: ="Floor"
+                        Default: =ThisItem.RoomLocation
+                        DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,RoomLocation)
+                        Height: =Title_DataCard1.Height
+                        MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, RoomLocation)
+                        Required: =false
+                        Update: =DataCardValue9.Text
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =4
+                      Children:
+                        - DataCardKey7:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =48
+                              Text: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              Wrap: =false
+                              X: =30
+                              Y: =10
+                        - DataCardValue9:
+                            Control: Classic/TextInput@2.3.2
+                            MetadataKey: FieldValue
+                            Properties:
+                              BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                              Default: =Parent.Default
+                              DelayOutput: =true
+                              DisplayMode: =Parent.DisplayMode
+                              MaxLength: =Parent.MaxLength
+                              PaddingLeft: =5
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =0
+                              RadiusTopRight: =0
+                              Tooltip: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardKey7.Y + DataCardKey7.Height + 5
+                        - ErrorMessage7:
+                            Control: Label@2.5.1
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =RGBA(168, 0, 0, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =10
+                              Live: =Live.Assertive
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =24
+                              Text: =Parent.Error
+                              Visible: =Parent.DisplayMode=DisplayMode.Edit
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardValue9.Y + DataCardValue9.Height
+                        - StarVisible7:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =DataCardKey7.Height
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Wrap: =false
+                              Y: =DataCardKey7.Y
+                  - Asset_DataCard1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: ClassicComboBoxEdit
+                      Properties:
+                        DataField: ="Asset"
+                        Default: =ThisItem.Asset
+                        DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Asset)
+                        Height: =Title_DataCard1.Height
+                        Required: =false
+                        Update: =DataCardValue10.Selected
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =5
+                      Children:
+                        - DataCardKey8:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =48
+                              Text: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              Wrap: =false
+                              X: =30
+                              Y: =10
+                        - DataCardValue10:
+                            Control: Classic/ComboBox@2.4.0
+                            MetadataKey: FieldValue
+                            Properties:
+                              BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                              DefaultSelectedItems: =Parent.Default
+                              DisplayFields: =["Value"]
+                              DisplayMode: =Parent.DisplayMode
+                              Items: =Choices([@Desks].Asset)
+                              PaddingBottom: =5
+                              PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                              PaddingRight: =5
+                              PaddingTop: =5
+                              SearchFields: =["Value"]
+                              SelectMultiple: =false
+                              Tooltip: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardKey8.Y + DataCardKey8.Height + 5
+                        - ErrorMessage8:
+                            Control: Label@2.5.1
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =RGBA(168, 0, 0, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =10
+                              Live: =Live.Assertive
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =24
+                              Text: =Parent.Error
+                              Visible: =Parent.DisplayMode=DisplayMode.Edit
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardValue10.Y + DataCardValue10.Height
+                        - StarVisible8:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =DataCardKey8.Height
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Wrap: =false
+                              Y: =DataCardKey8.Y
+                  - DeskLocation_DataCard1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: ClassicUrlEdit
+                      IsLocked: true
+                      Properties:
+                        DataField: ="DeskLocation"
+                        Default: =ThisItem.DeskLocation
+                        DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,DeskLocation)
+                        Height: =Title_DataCard1.Height
+                        Required: =false
+                        Update: =DataCardValue11.Text
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =6
+                      Children:
+                        - DataCardKey11:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =48
+                              Text: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              Wrap: =false
+                              X: =30
+                              Y: =10
+                        - DataCardValue11:
+                            Control: Classic/TextInput@2.3.2
+                            MetadataKey: FieldValue
+                            Properties:
+                              BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                              Default: =Parent.Default
+                              DelayOutput: =true
+                              DisplayMode: =Parent.DisplayMode
+                              PaddingLeft: =5
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =0
+                              RadiusTopRight: =0
+                              Tooltip: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardKey11.Y + DataCardKey11.Height + 5
+                        - ErrorMessage11:
+                            Control: Label@2.5.1
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =RGBA(168, 0, 0, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =10
+                              Live: =Live.Assertive
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =24
+                              Text: =Parent.Error
+                              Visible: =Parent.DisplayMode=DisplayMode.Edit
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardValue11.Y + DataCardValue11.Height
+                        - StarVisible11:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =DataCardKey11.Height
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Wrap: =false
+                              Y: =DataCardKey11.Y
+                  - Capacity_DataCard1:
+                      Control: TypedDataCard@1.0.7
+                      Variant: ClassicTextualEdit
+                      IsLocked: true
+                      Properties:
+                        DataField: ="Capacity"
+                        Default: =ThisItem.Capacity
+                        DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Capacity)
+                        Height: =Title_DataCard1.Height
+                        MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Capacity)
+                        Required: =false
+                        Update: =DataCardValue12.Text
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =7
+                      Children:
+                        - DataCardKey12:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldName
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =48
+                              Text: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              Wrap: =false
+                              X: =30
+                              Y: =10
+                        - DataCardValue12:
+                            Control: Classic/TextInput@2.3.2
+                            MetadataKey: FieldValue
+                            Properties:
+                              BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                              Default: =Parent.Default
+                              DelayOutput: =true
+                              DisplayMode: =Parent.DisplayMode
+                              MaxLength: =Parent.MaxLength
+                              PaddingLeft: =5
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =0
+                              RadiusTopRight: =0
+                              Tooltip: =Parent.DisplayName
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardKey12.Y + DataCardKey12.Height + 5
+                        - ErrorMessage12:
+                            Control: Label@2.5.1
+                            MetadataKey: ErrorMessage
+                            Properties:
+                              AutoHeight: =true
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =RGBA(168, 0, 0, 1)
+                              FontWeight: =FontWeight.Semibold
+                              Height: =10
+                              Live: =Live.Assertive
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =24
+                              Text: =Parent.Error
+                              Visible: =Parent.DisplayMode=DisplayMode.Edit
+                              Width: =Parent.Width - 60
+                              X: =30
+                              Y: =DataCardValue12.Y + DataCardValue12.Height
+                        - StarVisible12:
+                            Control: Label@2.5.1
+                            MetadataKey: FieldRequired
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =RGBA(0, 0, 0, 1)
+                              Color: =App.Theme.Colors.Darker30
+                              Height: =DataCardKey12.Height
+                              Text: ="*"
+                              Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                              Width: =30
+                              Wrap: =false
+                              Y: =DataCardKey12.Y
+      - ctnDebugScreen_header:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
           Properties:
-            DataSource: =Desks
-            X: =60
-            Y: =60
+            Height: =Parent.Height / 6
+            Width: =Parent.Width
           Children:
-            - Title_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicTextualEdit
-                IsLocked: true
+            - Tabs_5:
+                Control: CanvasComponent
+                ComponentName: Tabs
                 Properties:
-                  DataField: ="Title"
-                  Default: =ThisItem.ItemID_title
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,ItemID_title)
-                  MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, ItemID_title)
-                  Required: =true
-                  Update: =DataCardValue2.Text
-                  X: =0
-                  Y: =0
-                Children:
-                  - DataCardKey2:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DataCardValue2:
-                      Control: Classic/TextInput@2.3.2
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Parent.Default
-                        DelayOutput: =true
-                        DisplayMode: =Parent.DisplayMode
-                        MaxLength: =Parent.MaxLength
-                        PaddingLeft: =5
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
-                        Tooltip: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardKey2.Y + DataCardKey2.Height + 5
-                  - ErrorMessage2:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue2.Y + DataCardValue2.Height
-                  - StarVisible2:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey2.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey2.Y
-            - Description_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicTextualEdit
-                IsLocked: true
+                  Height: =106.66666666666667
+                  HomePage: =App.ActiveScreen
+                  Items: |-
+                    =colMenu
+                    /*Table(
+                        {
+                            Name: "Home",
+                            Icon: Icon.DetailList,
+                            Page: App.ActiveScreen,
+                            Visible:true
+                        },
+                        {
+                            Name: "Items",
+                            Icon: Icon.Bookmark,
+                            Page: App.ActiveScreen,
+                            Visible:true
+                        },
+                        {
+                            Name: "Desks",
+                            Icon: Icon.ComputerDesktop,
+                            Page: App.ActiveScreen,
+                            Visible:true
+                        },
+                        {
+                            Name: "Users",
+                            Icon: Icon.People,
+                            Page: App.ActiveScreen,
+                            Visible:true
+                        },
+                        {
+                            Name: "New",
+                            Icon: Icon.Add,
+                            Page: App.ActiveScreen,
+                            Visible:true
+                        }
+                    )*/
+                  Width: =608
+                  X: =Parent.Width - Self.Width
+            - Text2:
+                Control: ModernText@1.0.0
                 Properties:
-                  DataField: ="Description"
-                  Default: =ThisItem.Description
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Description)
-                  MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Description)
-                  Required: =false
-                  Update: =DataCardValue4.Text
-                  X: =0
-                  Y: =1
-                Children:
-                  - DataCardKey4:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DataCardValue4:
-                      Control: Classic/TextInput@2.3.2
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Parent.Default
-                        DelayOutput: =true
-                        DisplayMode: =Parent.DisplayMode
-                        MaxLength: =Parent.MaxLength
-                        PaddingLeft: =5
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
-                        Tooltip: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardKey4.Y + DataCardKey4.Height + 5
-                  - ErrorMessage4:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue4.Y + DataCardValue4.Height
-                  - StarVisible4:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey4.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey4.Y
-            - Map Link_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicUrlEdit
-                IsLocked: true
-                Properties:
-                  DataField: ="MapLink"
-                  Default: =ThisItem.MapLink
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,MapLink)
-                  Required: =false
-                  Update: =DataCardValue5.Text
-                  X: =0
-                  Y: =2
-                Children:
-                  - DataCardKey5:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DataCardValue5:
-                      Control: Classic/TextInput@2.3.2
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Parent.Default
-                        DelayOutput: =true
-                        DisplayMode: =Parent.DisplayMode
-                        PaddingLeft: =5
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
-                        Tooltip: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardKey5.Y + DataCardKey5.Height + 5
-                  - ErrorMessage5:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue5.Y + DataCardValue5.Height
-                  - StarVisible5:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey5.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey5.Y
-            - Active_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicNumberEdit
-                IsLocked: true
-                Properties:
-                  DataField: ="Active"
-                  Default: =ThisItem.Active
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Active)
-                  Required: =false
-                  Update: =Value(DataCardValue6.Text)
-                  X: =0
-                  Y: =3
-                Children:
-                  - DataCardKey6:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DataCardValue6:
-                      Control: Classic/TextInput@2.3.2
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Parent.Default
-                        DelayOutput: =true
-                        DisplayMode: =Parent.DisplayMode
-                        Format: =TextFormat.Number
-                        PaddingLeft: =5
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
-                        Tooltip: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardKey6.Y + DataCardKey6.Height + 5
-                  - ErrorMessage6:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue6.Y + DataCardValue6.Height
-                  - StarVisible6:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey6.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey6.Y
-            - RoomLocation_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicTextualEdit
-                IsLocked: true
-                Properties:
-                  DataField: ="Floor"
-                  Default: =ThisItem.RoomLocation
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,RoomLocation)
-                  MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, RoomLocation)
-                  Required: =false
-                  Update: =DataCardValue9.Text
-                  X: =0
-                  Y: =4
-                Children:
-                  - DataCardKey7:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DataCardValue9:
-                      Control: Classic/TextInput@2.3.2
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Parent.Default
-                        DelayOutput: =true
-                        DisplayMode: =Parent.DisplayMode
-                        MaxLength: =Parent.MaxLength
-                        PaddingLeft: =5
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
-                        Tooltip: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardKey7.Y + DataCardKey7.Height + 5
-                  - ErrorMessage7:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue9.Y + DataCardValue9.Height
-                  - StarVisible7:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey7.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey7.Y
-            - Asset_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicComboBoxEdit
-                Properties:
-                  DataField: ="Asset"
-                  Default: =ThisItem.Asset
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Asset)
-                  Required: =false
-                  Update: =DataCardValue10.Selected
-                  X: =0
-                  Y: =5
-                Children:
-                  - DataCardKey8:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DataCardValue10:
-                      Control: Classic/ComboBox@2.4.0
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        DefaultSelectedItems: =Parent.Default
-                        DisplayFields: =["Value"]
-                        DisplayMode: =Parent.DisplayMode
-                        Items: =Choices([@Desks].Asset)
-                        PaddingBottom: =5
-                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
-                        PaddingRight: =5
-                        PaddingTop: =5
-                        SearchFields: =["Value"]
-                        SelectMultiple: =false
-                        Tooltip: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardKey8.Y + DataCardKey8.Height + 5
-                  - ErrorMessage8:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue10.Y + DataCardValue10.Height
-                  - StarVisible8:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey8.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey8.Y
-            - DeskLocation_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicUrlEdit
-                IsLocked: true
-                Properties:
-                  DataField: ="DeskLocation"
-                  Default: =ThisItem.DeskLocation
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,DeskLocation)
-                  Required: =false
-                  Update: =DataCardValue11.Text
-                  X: =0
-                  Y: =6
-                Children:
-                  - DataCardKey11:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DataCardValue11:
-                      Control: Classic/TextInput@2.3.2
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Parent.Default
-                        DelayOutput: =true
-                        DisplayMode: =Parent.DisplayMode
-                        PaddingLeft: =5
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
-                        Tooltip: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardKey11.Y + DataCardKey11.Height + 5
-                  - ErrorMessage11:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue11.Y + DataCardValue11.Height
-                  - StarVisible11:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey11.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey11.Y
-            - Capacity_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicTextualEdit
-                IsLocked: true
-                Properties:
-                  DataField: ="Capacity"
-                  Default: =ThisItem.Capacity
-                  DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Capacity)
-                  MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Capacity)
-                  Required: =false
-                  Update: =DataCardValue12.Text
-                  X: =0
-                  Y: =7
-                Children:
-                  - DataCardKey12:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DataCardValue12:
-                      Control: Classic/TextInput@2.3.2
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Parent.Default
-                        DelayOutput: =true
-                        DisplayMode: =Parent.DisplayMode
-                        MaxLength: =Parent.MaxLength
-                        PaddingLeft: =5
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
-                        Tooltip: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardKey12.Y + DataCardKey12.Height + 5
-                  - ErrorMessage12:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue12.Y + DataCardValue12.Height
-                  - StarVisible12:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey12.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey12.Y
+                  FontWeight: =FontWeight.Bold
+                  Height: =Parent.Height
+                  Size: =40
+                  Text: ="Debugging Screen"
+                  Width: =Parent.Width - Tabs_5.Width

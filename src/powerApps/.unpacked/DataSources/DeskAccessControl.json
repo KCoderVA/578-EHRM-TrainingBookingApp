@@ -26,6 +26,8 @@
       "AccessLevel_Choice": "AccessLevel_Choice",
       "AccessLevel_Choice#Id": "AccessLevel_Choice Id",
       "AccessLevel_Text": "AccessLevel_Text",
+      "AccessLevel_text0": "AccessLevel_text",
+      "AccessLevel_text0#Id": "AccessLevel_text Id",
       "AccessStart_dateTime": "AccessStart_dateTime",
       "AccessStart_Text": "AccessStart_Text",
       "AccessStop_dateTime": "AccessStop_dateTime",
@@ -86,7 +88,9 @@
       "Title": "Title",
       "UserPrincipleName_Text": "UserPrincipleName_Text",
       "UserType_Text": "UserType_Text",
-      "utcNow_x0028__x0029__value": "utcNow()_value"
+      "utcNow_x0028__x0029__value": "utcNow()_value",
+      "Which_x0020_ACCESS_x0020_LEVEL_x": "Which ACCESS LEVEL (text) should be given to this new user?",
+      "Which_x0020_ACCESS_x0020_LEVEL_x#Id": "Which ACCESS LEVEL (text) should be given to this new user? Id"
     },
     "DatasetName": "https://dvagov.sharepoint.com/sites/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp",
     "EncodeDataset": true,

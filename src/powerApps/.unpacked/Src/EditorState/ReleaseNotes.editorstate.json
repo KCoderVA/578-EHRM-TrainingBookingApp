@@ -1182,14 +1182,7 @@
         },
         "Y",
         "ZIndex",
-        {
-          "AFDDataSourceName": "",
-          "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "",
-          "InvariantPropertyName": "Items",
-          "IsLockable": false,
-          "NameMapSourceSchema": "?"
-        },
+        "Items",
         "HomePage"
       ],
       "HasDynamicProperties": false,
@@ -1213,9 +1206,8 @@
       "Properties": [
         {
           "Category": "Data",
-          "NameMap": "{\"Icon\":\"Icon\",\"Name\":\"Name\",\"Page\":\"Page\",\"Visible\":\"Visible\"}",
           "PropertyName": "Items",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "System"
         },
         {
           "Category": "Data",

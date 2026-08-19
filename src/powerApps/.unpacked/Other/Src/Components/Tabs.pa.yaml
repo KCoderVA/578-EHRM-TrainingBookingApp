@@ -22,7 +22,8 @@ ComponentDefinitions:
         Description: Items for the tabs
         DataType: Table
         Default: |-
-          =Table(
+          =colMenu
+          /*Table(
               {
                   Name: "Home",
                   Icon: Icon.DetailList,
@@ -30,24 +31,30 @@ ComponentDefinitions:
                   Visible:true
               },
               {
-                  Name: "My Appts",
-                  Icon: Icon.Person,
+                  Name: "Items",
+                  Icon: Icon.Bookmark,
                   Page: App.ActiveScreen,
                   Visible:true
               },
-               {
-                  Name: "Manage Desks",
+              {
+                  Name: "Desks",
                   Icon: Icon.ComputerDesktop,
                   Page: App.ActiveScreen,
                   Visible:true
               },
               {
-                  Name: "Create New",
+                  Name: "Users",
+                  Icon: Icon.People,
+                  Page: App.ActiveScreen,
+                  Visible:true
+              },
+              {
+                  Name: "New",
                   Icon: Icon.Add,
                   Page: App.ActiveScreen,
                   Visible:true
               }
-          )
+          )*/
     Properties:
       Height: =120
       Width: =608
@@ -75,7 +82,7 @@ ComponentDefinitions:
             ShowScrollbar: =false
             TabIndex: =1
             TemplatePadding: =1
-            TemplateSize: =Tabs.Width / 4
+            TemplateSize: =Tabs.Width / CountRows(Tabs.Items)
             Width: =Tabs.Width
             Y: =Rectangle1.Height + Rectangle1.Y
           Children:

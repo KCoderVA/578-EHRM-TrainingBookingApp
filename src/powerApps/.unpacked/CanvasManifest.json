@@ -11,7 +11,7 @@
   },
   "Properties": {
     "AppCreationSource": "AppFromScratch",
-    "AppDescription": "v0.9.17 (source code @ https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp)",
+    "AppDescription": "v0.12.2 (source code @ https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp)",
     "AppPreviewFlagsMap": {
       "adaptivepaging": false,
       "aibuilderserviceenrollment": true,
@@ -100,7 +100,7 @@
       "zeroalltabindexes": false
     },
     "Author": "",
-    "BindingErrorCount": 329,
+    "BindingErrorCount": 120,
     "ConnectionString": "",
     "ContainsThirdPartyPcfControls": false,
     "DefaultConnectedDataSourceMaxGetRowsCount": 2000,
@@ -142,19 +142,18 @@
     "Confirm",
     "Success",
     "ManageDesks",
-    "alt_ManageDesks",
+    "ManageUsers",
     "NewDesk",
     "NewEditDesk",
     "Reservation",
     "SuccessDeskMod",
     "ReleaseNotes",
-    "Screen3",
     "scrn_MoCalendar",
     "scrn_WeeklyCal",
     "scrn_DailyCal",
     "DebuggingScreen",
-    "Screen1",
+    "CreateMeeting",
     "PDFScreen",
-    "Screen2"
+    "Screen3"
   ]
 }

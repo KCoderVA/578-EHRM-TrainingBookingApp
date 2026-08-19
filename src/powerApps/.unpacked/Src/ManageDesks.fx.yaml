@@ -16,7 +16,7 @@ ManageDesks As screen:
         Width: =Parent.Width
         ZIndex: =2
 
-    lblMyAppointments_1 As label:
+    lblTitle_ManageDesks As label:
         Align: =Align.Center
         BorderColor: =App.Theme.Colors.Darker40
         Color: =RGBA(255, 255, 255, 1)
@@ -28,166 +28,7 @@ ManageDesks As screen:
         Text: ="Manage Desks"
         Width: =501
         X: =301
-        ZIndex: =4
-
-    "galActive As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
-        '#CopilotOverlayLabel': ="Filtered"
-        AccessibleLabel: ="Active Desks"
-        BorderColor: =App.Theme.Colors.Darker40
-        Height: =406
-        Items: |+
-            =SortByColumns(
-                Filter(
-                    Desks,
-                   Active = 1
-                ),
-                "Title",
-                SortOrder.Ascending
-            )
-            
-        Layout: =Layout.Vertical
-        ShowNavigation: =true
-        TabIndex: =5
-        TemplatePadding: =0
-        TemplateSize: =63
-        Visible: =upSelected
-        Width: =1095
-        X: =25
-        Y: =234
-        ZIndex: =6
-
-        Separator2_3 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(39, 113, 194, 1)
-            Height: =1
-            OnSelect: =Select(Parent)
-            Width: =Parent.TemplateWidth
-            Y: =Parent.TemplateHeight - 1
-            ZIndex: =3
-
-        Title2_17 As label:
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Semibold
-            Height: =57
-            OnSelect: =Select(Parent)
-            PaddingBottom: =0
-            PaddingLeft: =20
-            PaddingRight: =10
-            PaddingTop: =0
-            Size: =16
-            Text: =ThisItem.ItemID_title
-            VerticalAlign: =VerticalAlign.Top
-            Width: =300
-            X: =2
-            Y: =6
-            ZIndex: =5
-
-        Title2_19 As label:
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Semibold
-            Height: =49
-            OnSelect: =Select(Parent)
-            PaddingBottom: =0
-            PaddingLeft: =20
-            PaddingRight: =10
-            PaddingTop: =0
-            Size: =16
-            Text: |-
-                ="Training Room: " & ThisItem.RoomLocation
-            VerticalAlign: =VerticalAlign.Top
-            Width: =250
-            X: =268
-            Y: =6
-            ZIndex: =6
-
-        Button3_1 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(128, 128, 128, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =45
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =Select(Parent);Patch(Desks,ThisItem,{Active:0})
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="⛔  DEACTIVATE"
-            X: =911
-            Y: =6
-            ZIndex: =7
-
-        Button3_2 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(39, 113, 194, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =45
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: =Set(varDeskMode,"Edit");Set(varManageSelectedDesk,ThisItem);Navigate(NewEditDesk)
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="✏️  EDIT"
-            X: =720
-            Y: =6
-            ZIndex: =8
-
-        Button3_5 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(184, 0, 0, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =45
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =UpdateContext({varDeskToDelete:ThisItem});UpdateContext({varShowConfirmDelete:true})
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: =" 🗑️  DELETE"
-            X: =540
-            Y: =6
-            ZIndex: =9
+        ZIndex: =3
 
     lblNoRes_1 As label:
         Align: =Align.Center
@@ -195,16 +36,111 @@ ManageDesks As screen:
         Color: =RGBA(0, 0, 0, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         Font: =App.Theme.Font
-        FontWeight: =FontWeight.Lighter
-        Height: =90
-        Size: =21
-        Text: ="No upcoming reservations"
-        Visible: =If(CountRows(galActive.AllItems) >=1, false, true)
-        Width: =640
-        Y: =526
+        FontWeight: =FontWeight.Bold
+        Height: =galActive.Height
+        Size: =40
+        Text: |-
+            =If(
+                upSelected && !prevSelected,
+                "No upcoming reservations",
+                !upSelected && prevSelected,
+                "No previous reservations",
+                "No reservations"
+            )
+        Visible: |-
+            =If(
+                galActive.Visible && CountRows(galActive.AllItems) >=1,
+                false,
+                galNonActive.Visible && CountRows(galNonActive.AllItems) >=1,
+                false,
+                galActive.Visible && CountRows(galActive.AllItems) <=1,
+                true,
+                galNonActive.Visible && CountRows(galNonActive.AllItems) <=1,
+                true,
+                !galActive.Visible && !galNonActive.Visible,
+                true,
+                false
+            )
+        Width: =galActive.Width
+        X: =galActive.X
+        Y: =galActive.Y
+        ZIndex: =4
+
+    rectSeperator_1 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(204, 204, 204, 1)
+        Height: =2
+        Width: =Parent.Width / 1.9
+        X: =5
+        Y: =rectUpSel_1.Y + rectUpSel_1.Height + 3
+        ZIndex: =5
+
+    iconAddDesk As icon.Add:
+        AccessibleLabel: ="Add Desk"
+        BorderColor: =RGBA(255, 255, 255, 0)
+        BorderThickness: =5
+        Color: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(244, 244, 244, 1)
+        Height: =50
+        HoverBorderColor: =App.Theme.Colors.Lighter50
+        HoverColor: =ColorFade(Self.HoverFill, 95%)
+        HoverFill: =App.Theme.Colors.Darker40
+        Icon: =Icon.AddLibrary
+        OnSelect: =Set(varDeskMode,"New");Navigate(NewDesk);
+        PaddingBottom: =5
+        PaddingLeft: =5
+        PaddingRight: =5
+        PaddingTop: =5
+        TabIndex: =3
+        Visible: =user_isAdmin
+        Width: =50
+        X: =Image2_6.Width - Self.Width - 5
+        Y: =Image2_6.Y + Image2_6.Height + 5
+        ZIndex: =6
+
+    rectPrevSel_1 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =rectUpSel_1.Fill
+        Height: =rectUpSel_1.Height
+        Visible: =prevSelected
+        Width: =rectUpSel_1.Width
+        X: =rectUpSel_1.X + rectUpSel_1.Width
+        Y: =rectUpSel_1.Y
         ZIndex: =7
 
-    lblUpcoming_1 As label:
+    lblTabInactive As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        FocusedBorderThickness: =.5
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Lighter
+        Height: =55
+        HoverFill: =ColorFade(Self.Fill, 50%)
+        OnSelect: |-
+            =UpdateContext({prevSelected:!prevSelected});UpdateContext({upSelected:!upSelected});
+        PressedFill: =
+        Size: =18
+        TabIndex: =2
+        Text: ="INACTIVE (" & CountRows(galNonActive.AllItems) &")"
+        Width: =220
+        X: =367
+        Y: =167
+        ZIndex: =8
+
+    rectUpSel_1 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(39, 113, 194, 1)
+        Height: =5
+        Visible: =upSelected
+        Width: =rectSeperator_1.Width / 2
+        X: =rectSeperator_1.X
+        Y: =lblTabActive.Y + lblTabActive.Height
+        ZIndex: =9
+
+    lblTabActive As label:
         Align: =Align.Center
         BorderColor: =App.Theme.Colors.Darker40
         Color: =RGBA(0, 0, 0, 1)
@@ -219,131 +155,239 @@ ManageDesks As screen:
         TabIndex: =1
         Text: ="ACTIVE (" & CountRows(galActive.AllItems) & ")"
         Width: =220
-        X: =55
-        Y: =167
-        ZIndex: =8
-
-    lblPrev_1 As label:
-        Align: =Align.Center
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        FocusedBorderThickness: =.5
-        Font: =App.Theme.Font
-        FontWeight: =FontWeight.Lighter
-        Height: =55
-        OnSelect: |-
-            =UpdateContext({prevSelected:!prevSelected});UpdateContext({upSelected:!upSelected});
-        Size: =18
-        TabIndex: =2
-        Text: ="INACTIVE (" & CountRows(galInactive.AllItems) &")"
-        Width: =220
-        X: =367
-        Y: =167
-        ZIndex: =9
-
-    rectSeperator_1 As rectangle:
-        BorderColor: =App.Theme.Colors.Darker40
-        Fill: =RGBA(204, 204, 204, 1)
-        Height: =1
-        Width: =590
-        X: =25
-        Y: =221
+        Y: =Image2_6.Y + Image2_6.Height
         ZIndex: =10
 
-    rectUpSel_1 As rectangle:
-        BorderColor: =App.Theme.Colors.Darker40
-        Fill: =RGBA(39, 113, 194, 1)
-        Height: =5
-        Visible: =upSelected
-        Width: =160
-        X: =72
-        Y: =212
+    Tabs_7 As Tabs:
+        Height: =112
+        X: =252
+        Y: =52
         ZIndex: =11
 
-    rectPrevSel_1 As rectangle:
-        BorderColor: =App.Theme.Colors.Darker40
-        Fill: =RGBA(39, 113, 194, 1)
-        Height: =5
-        Visible: =prevSelected
-        Width: =160
-        X: =397
-        Y: =212
-        ZIndex: =12
-
-    "galInactive As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
+    "galNonActive As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
         '#CopilotOverlayLabel': ="Filtered"
-        AccessibleLabel: ="Inactive Desks"
+        AccessibleLabel: ="Active Desks"
         BorderColor: =App.Theme.Colors.Darker40
-        Height: =438
-        Items: |-
+        Height: =Parent.Height - Self.Y
+        Items: |
             =SortByColumns(
                 Filter(
                     Desks,
-                   Active = 0
+                   (Active_boolean = false || Active_text = "false") && (Dropdown3.SelectedText.Value = ThisRecord.ItemType_choice.Value)
+                   || (Active_boolean = false || Active_text = "false") && (Dropdown3.SelectedText.Value = "All")
                 ),
                 "Title",
                 SortOrder.Ascending
             )
         Layout: =Layout.Vertical
-        TabIndex: =4
+        ShowNavigation: =true
+        TabIndex: =5
         TemplatePadding: =0
-        TemplateSize: =172
+        TemplateSize: =60
         Visible: =prevSelected
-        Width: =1045
-        X: =41
-        Y: =202
-        ZIndex: =13
+        Width: =Parent.Width - (Self.X * 2)
+        X: =galActive.X
+        Y: =rectSeperator_1.Y + rectSeperator_1.Height + 2
+        ZIndex: =12
 
-        Separator2_4 As rectangle:
+        Separator2_5 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
             Fill: =RGBA(39, 113, 194, 1)
             Height: =1
             OnSelect: =Select(Parent)
             Width: =Parent.TemplateWidth
             Y: =Parent.TemplateHeight - 1
+            ZIndex: =1
+
+        btnActivate_1 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            Color: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =Color.LightGreen
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =Parent.TemplateHeight / 1.8
+            HoverBorderColor: =ColorFade(Self.BorderColor, 90%)
+            HoverColor: =ColorFade(Self.Color, 100%)
+            HoverFill: =ColorFade(Self.BorderColor, -50%)
+            OnSelect: |-
+                =Select(Parent);
+                Patch(
+                    Desks,
+                    ThisItem,
+                    {
+                        Active_boolean: true,
+                        Active_text: "true"
+                    }
+                    )
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: ="⏻  ACTIVATE"
+            Width: |
+                =130
+            X: =Parent.TemplateWidth - Self.Width - 15
+            Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
+            ZIndex: =2
+
+        btnEdit_1 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(39, 113, 194, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =btnActivate_1.Height
+            HoverBorderColor: =ColorFade(Self.Fill, -50%)
+            HoverColor: =App.Theme.Colors.Darker40
+            HoverFill: =ColorFade(Self.Fill, 50%)
+            OnSelect: =Set(varDeskMode,"Edit");Set(varManageSelectedDesk,ThisItem);Navigate(NewEditDesk)
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: ="✏️  EDIT"
+            Width: =btnActivate_1.Width
+            X: =btnActivate_1.X - Self.Width - 5
+            Y: =btnActivate_1.Y
             ZIndex: =3
 
-        Title2_23 As label:
+        btnDelete_1 As button:
+            BorderColor: =App.Theme.Colors.Primary
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(184, 0, 0, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =btnEdit_1.Height
+            HoverBorderColor: =ColorFade(Self.BorderColor, 50%)
+            HoverColor: =ColorFade(Self.Color, 50%)
+            HoverFill: =ColorFade(Self.Fill, 50%)
+            OnSelect: |-
+                =UpdateContext({varDeskToDelete:ThisItem});UpdateContext({varShowConfirmDelete:true})
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: =" 🗑️  DELETE"
+            Visible: =user_isAdmin
+            Width: =btnEdit_1.Width
+            X: =btnEdit_1.X - btnEdit_1.Width - 5
+            Y: =btnEdit_1.Y
+            ZIndex: =4
+
+        lblName_1 As label:
             Color: =RGBA(0, 0, 0, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Semibold
-            Height: =89
+            FontWeight: =FontWeight.Bold
+            Height: =Parent.TemplateHeight - Self.Y
+            LineHeight: =1
             OnSelect: =Select(Parent)
-            Overflow: =Overflow.Scroll
             PaddingBottom: =0
             PaddingLeft: =20
-            PaddingRight: =0
+            PaddingRight: =10
             PaddingTop: =0
-            Size: =24
-            Text: =ThisItem.ItemID_title
-            VerticalAlign: =VerticalAlign.Top
-            Width: =616
-            Y: =10
+            Size: =16
+            Text: =ThisItem.ItemType_choice.Value
+            Width: =btnDelete_1.X - 5
+            X: =lblType_1.X
+            Y: =lblType_1.Y + lblType_1.Height
             ZIndex: =5
 
-        Title2_25 As label:
+        lblLastModified_1 As label:
             Color: =RGBA(0, 0, 0, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =Font.'Segoe UI'
             FontWeight: =FontWeight.Semibold
-            Height: =89
+            Height: =lblType_1.Height
+            Italic: =true
             OnSelect: =Select(Parent)
             PaddingBottom: =0
             PaddingLeft: =20
-            PaddingRight: =0
+            PaddingRight: =10
             PaddingTop: =0
-            Size: =24
+            Size: =10
             Text: |-
-                ="Floor: " & ThisItem.RoomLocation
-            VerticalAlign: =VerticalAlign.Top
-            Width: =340
-            X: =705
-            Y: =10
+                ="Last Modified:   " & ThisItem.Modified
+            Width: =btnDelete_1.X - Self.X - 5
+            X: =lblType_1.X + lblType_1.Width
+            Y: =lblType_1.Y
             ZIndex: =6
 
-        Button3_6 As button:
+        lblType_1 As label:
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =(Parent.TemplateHeight / 3) - 1
+            Italic: =true
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =20
+            PaddingRight: =10
+            PaddingTop: =0
+            Size: =10
+            Text: |-
+                ="Type:   " & ThisItem.ItemType_choice.Value
+            Width: =250
+            X: =2
+            ZIndex: =7
+
+    "galActive As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
+        '#CopilotOverlayLabel': ="Filtered"
+        AccessibleLabel: ="Active Desks"
+        BorderColor: =App.Theme.Colors.Darker40
+        Height: =Parent.Height - Self.Y
+        Items: |
+            =SortByColumns(
+                Filter(
+                    Desks,
+                   (Active_boolean = true || Active_text = "true") && (Dropdown3.SelectedText.Value = ThisRecord.ItemType_choice.Value)
+                   || (Active_boolean = true || Active_text = "true") && (Dropdown3.SelectedText.Value = "All")
+                ),
+                "Title",
+                SortOrder.Ascending
+            )
+        Layout: =Layout.Vertical
+        ShowNavigation: =true
+        TabIndex: =5
+        TemplatePadding: =0
+        TemplateSize: =60
+        Visible: =upSelected
+        Width: =Parent.Width - (Self.X * 2)
+        X: =10
+        Y: =rectSeperator_1.Y + rectSeperator_1.Height + 2
+        ZIndex: =13
+
+        Separator2_3 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(39, 113, 194, 1)
+            Height: =1
+            OnSelect: =Select(Parent)
+            Width: =Parent.TemplateWidth
+            Y: =Parent.TemplateHeight - 1
+            ZIndex: =2
+
+        btnDeactivate As button:
             BorderColor: =App.Theme.Colors.Primary
             BorderThickness: =0
             Color: =App.Theme.Colors.PrimaryForeground
@@ -353,12 +397,20 @@ ManageDesks As screen:
             Fill: =RGBA(128, 128, 128, 1)
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
-            Height: =45
+            Height: =Parent.TemplateHeight / 1.8
             HoverBorderColor: =App.Theme.Colors.Darker10
             HoverColor: =App.Theme.Colors.PrimaryForeground
             HoverFill: =ColorFade(Self.Fill, -20%)
             OnSelect: |-
-                =Select(Parent);Patch(Desks,ThisItem,{Active:1})
+                =Select(Parent);
+                Patch(
+                    Desks,
+                    ThisItem,
+                    {
+                        Active_boolean: false,
+                        Active_text: "false"
+                    }
+                    )
             PressedBorderColor: =App.Theme.Colors.Darker40
             PressedColor: =Self.Color
             PressedFill: =App.Theme.Colors.Darker40
@@ -367,12 +419,12 @@ ManageDesks As screen:
             RadiusTopLeft: =20
             RadiusTopRight: =20
             Size: =14
-            Text: ="✔️  ACTIVATE"
-            X: =375
-            Y: =99
-            ZIndex: =9
+            Text: ="⛔  DEACTIVATE"
+            X: =Parent.TemplateWidth - Self.Width - 15
+            Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
+            ZIndex: =3
 
-        Button3_7 As button:
+        btnEdit As button:
             BorderColor: =App.Theme.Colors.Primary
             BorderThickness: =0
             DisabledBorderColor: =RGBA(244, 244, 244, 1)
@@ -381,11 +433,14 @@ ManageDesks As screen:
             Fill: =RGBA(39, 113, 194, 1)
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
-            Height: =45
+            Height: =btnDeactivate.Height
             HoverBorderColor: =App.Theme.Colors.Darker10
             HoverColor: =App.Theme.Colors.PrimaryForeground
             HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: =Set(varDeskMode,"Edit");Set(varManageSelectedDesk,ThisItem);Navigate(NewDesk)
+            OnSelect: |-
+                =Set(varDeskMode,"Edit");
+                Set(varManageSelectedDesk,ThisItem);
+                Navigate(NewEditDesk)
             PressedBorderColor: =App.Theme.Colors.Darker40
             PressedColor: =Self.Color
             PressedFill: =App.Theme.Colors.Darker40
@@ -394,12 +449,13 @@ ManageDesks As screen:
             RadiusTopLeft: =20
             RadiusTopRight: =20
             Size: =14
-            Text: ="🖉  EDIT"
-            X: =198
-            Y: =99
-            ZIndex: =10
+            Text: ="✏️  EDIT"
+            Width: =btnDeactivate.Width
+            X: =btnDeactivate.X - Self.Width - 5
+            Y: =btnDeactivate.Y
+            ZIndex: =4
 
-        Button3_8 As button:
+        btnDelete As button:
             BorderColor: =App.Theme.Colors.Primary
             BorderThickness: =0
             Color: =App.Theme.Colors.PrimaryForeground
@@ -409,7 +465,7 @@ ManageDesks As screen:
             Fill: =RGBA(184, 0, 0, 1)
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
-            Height: =45
+            Height: =btnEdit.Height
             HoverBorderColor: =App.Theme.Colors.Darker10
             HoverColor: =App.Theme.Colors.PrimaryForeground
             HoverFill: =ColorFade(Self.Fill, -20%)
@@ -424,37 +480,115 @@ ManageDesks As screen:
             RadiusTopRight: =20
             Size: =14
             Text: =" 🗑️  DELETE"
-            X: =22
-            Y: =99
-            ZIndex: =11
+            Width: =btnEdit.Width
+            X: =btnEdit.X - btnEdit.Width - 5
+            Y: =btnEdit.Y
+            ZIndex: =5
 
-    Tabs_7 As Tabs:
-        Height: =112
-        Items: =colMenu
-        X: =252
-        Y: =52
-        ZIndex: =14
+        lblName As label:
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =Parent.TemplateHeight - Self.Y
+            LineHeight: =1
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =20
+            PaddingRight: =10
+            PaddingTop: =0
+            Size: =16
+            Text: =ThisItem.Description_multilinePlainText
+            Width: =btnDelete.X - 5
+            X: =lblType.X
+            Y: =lblType.Y + lblType.Height
+            ZIndex: =6
 
-    iconAddDesk As icon.Add:
-        AccessibleLabel: ="Add Desk"
+        lblLastModified As label:
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =lblType.Height
+            Italic: =true
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =20
+            PaddingRight: =10
+            PaddingTop: =0
+            Size: =10
+            Text: |-
+                ="Last Modified:   " & ThisItem.Modified
+            Width: =btnDelete.X - Self.X - 5
+            X: =lblType.X + lblType.Width
+            Y: =lblType.Y
+            ZIndex: =7
+
+        lblType As label:
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Semibold
+            Height: =(Parent.TemplateHeight / 3) - 1
+            Italic: =true
+            OnSelect: =Select(Parent)
+            PaddingBottom: =0
+            PaddingLeft: =20
+            PaddingRight: =10
+            PaddingTop: =0
+            Size: =10
+            Text: |-
+                ="Type:   " & ThisItem.ItemType_choice.Value
+            Width: =250
+            X: =2
+            ZIndex: =8
+
+    Dropdown3 As dropdown:
         BorderColor: =App.Theme.Colors.Darker40
+        ChevronBackground: =App.Theme.Colors.Primary
+        ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+        ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+        ChevronFill: =App.Theme.Colors.PrimaryForeground
+        ChevronHoverBackground: =App.Theme.Colors.Darker10
+        ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+        Default: =""
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(244, 244, 244, 1)
-        Height: =45
-        Icon: =Icon.Add
-        OnSelect: =Set(varDeskMode,"New");Navigate(NewDesk);
-        TabIndex: =3
-        Width: =62
-        X: =1058
-        Y: =178
-        ZIndex: =15
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Font: =App.Theme.Font
+        FontWeight: |-
+            =If(
+                Self.Selected.Value = "All",
+                FontWeight.Bold,
+                FontWeight.Normal
+            )
+        Height: =iconAddDesk.Height / 1.5
+        HoverColor: =RGBA(0, 0, 0, 1)
+        HoverFill: =App.Theme.Colors.Lighter70
+        Italic: |-
+            =If(
+                Self.Selected.Value = "All",
+                true,
+                false
+            )
+        Items: |-
+            =Ungroup(Table({Value: "All"}, Distinct(Desks, ItemType_choice.Value)), Value)
+        PressedColor: =App.Theme.Colors.PrimaryForeground
+        PressedFill: =App.Theme.Colors.Darker30
+        SelectionColor: =App.Theme.Colors.PrimaryForeground
+        SelectionFill: =App.Theme.Colors.Primary
+        Size: =16
+        Width: =150
+        X: =iconAddDesk.X - Self.Width - 25
+        Y: =iconAddDesk.Y + (iconAddDesk.Height / 8)
+        ZIndex: =19
 
     grpConfirmDelete As group:
         Height: =5
         Width: =5
         X: =40
         Y: =40
-        ZIndex: =21
+        ZIndex: =19
 
         Rectangle5 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
@@ -472,7 +606,7 @@ ManageDesks As screen:
             Height: =640
             Visible: =varShowConfirmDelete
             Width: =1136
-            ZIndex: =16
+            ZIndex: =14
 
         bgRounded_9 As htmlViewer:
             Height: =293
@@ -483,7 +617,7 @@ ManageDesks As screen:
             Width: =722
             X: =207
             Y: =84
-            ZIndex: =17
+            ZIndex: =15
 
         Label1 As label:
             Align: =Align.Center
@@ -499,7 +633,7 @@ ManageDesks As screen:
             Width: =695
             X: =220
             Y: =113
-            ZIndex: =18
+            ZIndex: =16
 
         btnConfirmCancel As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -529,7 +663,7 @@ ManageDesks As screen:
             Width: =293
             X: =239
             Y: =257
-            ZIndex: =19
+            ZIndex: =17
 
         btnConfirmDelete As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -560,5 +694,5 @@ ManageDesks As screen:
             Width: =293
             X: =604
             Y: =257
-            ZIndex: =20
+            ZIndex: =18
 

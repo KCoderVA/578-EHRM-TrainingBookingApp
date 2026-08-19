@@ -12,7 +12,7 @@ Screens:
       OnVisible: |-
         =Set(
             _dateSelected2,
-            Today()
+            First('Desk Reservations').reservationStart_datetime //Today()
         );
         Set(
             _firstDayOfMonth2,
@@ -72,7 +72,7 @@ Screens:
             ShowColumns(
                 Filter(
                     Desks,
-                    Asset.Value = "Room"
+                    ItemType_choice.Value = "Room"
                 ),
                 ItemID_title
             )
@@ -146,7 +146,7 @@ Screens:
                   VerticalAlign: =VerticalAlign.Top
                   Weight: ='TextCanvas.Weight'.Semibold
                   Width: =200
-                  X: =(Icon5_3.X - Self.Width) - (Parent.Width / 10)
+                  X: =((Icon5_3.X - Self.Width) - (Parent.Width / 10) ) + 50
                   Y: =Dropdown2_2.Y
             - Button1_2:
                 Control: Classic/Button@2.2.0
@@ -155,13 +155,13 @@ Screens:
                   BorderThickness: =3
                   Color: =App.Theme.Colors.Darker50
                   Fill: =App.Theme.Colors.Lighter70
-                  Height: =Dropdown2_2.Height - TextCanvas1_4.Height
+                  Height: =Dropdown2_2.Height - TextCanvas1_4.Height + 10
                   OnSelect: =Navigate(scrn_WeeklyCal)
                   Size: =16
                   Text: ="Weekly"
                   Width: =120
                   X: =(((TextCanvas1_4.X - Self.Width) + Self.Width) - 25)
-                  Y: =TextCanvas1_4.Y + TextCanvas1_4.Height
+                  Y: =TextCanvas1_4.Y + TextCanvas1_4.Height - 10
             - Button4_4:
                 Control: Classic/Button@2.2.0
                 Properties:
@@ -169,13 +169,13 @@ Screens:
                   BorderThickness: =3
                   Color: =App.Theme.Colors.Darker50
                   Fill: =App.Theme.Colors.Lighter70
-                  Height: =Dropdown2_2.Height - TextCanvas1_4.Height
+                  Height: =Dropdown2_2.Height - TextCanvas1_4.Height + 10
                   OnSelect: =Navigate(scrn_DailyCal)
                   Size: =14
                   Text: ="Daily"
                   Width: =120
                   X: =((TextCanvas1_4.X + TextCanvas1_4.Width) - Self.Width) + 25
-                  Y: =TextCanvas1_4.Y + TextCanvas1_4.Height
+                  Y: =TextCanvas1_4.Y + TextCanvas1_4.Height - 10
             - Dropdown2_2:
                 Control: Classic/DropDown@2.3.1
                 Properties:
@@ -299,7 +299,14 @@ Screens:
                           )
                         Height: =105
                         Items: |-
-                          =If(
+                          =Filter(
+                              'Desk Reservations',
+                              Active_choice.Value = Text(true),
+                              reservationStart_datetime = Label18_1.Text
+                          )
+
+                          /*
+                          If(
                               (userAccessLevel_text = "AppAdmin"),
                                       Filter(
                                           'Desk Reservations',
@@ -354,6 +361,7 @@ Screens:
                                       SortOrder.Ascending
                                   )
                           )
+                          */
                         LoadingSpinner: =LoadingSpinner.None
                         TemplatePadding: =0
                         TemplateSize: =63
@@ -381,16 +389,14 @@ Screens:
                               Size: =8
                               Text: |-
                                 =Concatenate(
-                                    ThisItem.'Reserved By'.Email,
+                                    ThisItem.studentName_text, 
                                     " 
-                                    for ",
+                                    ",
                                     ThisItem.DeskText,
-                                    " 
-                                    @ ",
-                                    Text(ThisItem.'Check Out To', "hh:mm AM/PM")
+                                    "
+                                    ",
+                                    Text(ThisItem.reservationStart_datetime, "hh:mm AM/PM"), " - " , Text(ThisItem.reservationEnd_datetime, "hh:mm AM/PM"), " (CST)"
                                 )
-
-                                //&& Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)
                               Visible: =false
                               Width: =Parent.Width
                               Y: |-

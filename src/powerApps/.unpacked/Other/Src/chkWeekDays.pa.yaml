@@ -12,12 +12,26 @@ Screens:
       Fill: =RGBA(236, 236, 236, 1)
       Height: =Max(App.Height, App.DesignHeight)
       OnVisible: |-
-        =UpdateContext(
+        =Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: varTargetEmail}).value));
+
+        UpdateContext(
             {
-                varDefaultTime: var_StartTime
+                varDefaultTime: 
+                    If(
+                        !IsBlankOrError(var_StartDateTime_central) || var_StartDateTime_central <> Blank(),
+                            var_StartDateTime_central,
+                        !IsBlankOrError(var_StartTime) || var_StartTime <> Blank(),
+                            var_StartTime,
+                        IsBlankOrError(var_StartDateTime_central) && IsBlankOrError(var_StartTime),
+                            Now(),
+                        Blank()
+                    )
             }
         );
-
+        Reset(Calendar_1);
+        Reset(TimeFromdd);
+        Reset(TimeTodd);
+        Select(calClickBtn);
 
 
         /*
@@ -45,35 +59,6 @@ Screens:
                 )
             }
         );
-        */
-        Reset(Calendar_1);
-        Reset(TimeFromdd);
-        Reset(TimeTodd);
-        Select(calClickBtn);
-
-        ////  KYLE:   temporarily bypass this calendar selection screen
-        //Select(ContinueDatebtn);
-
-        /*
-        UpdateContext({
-            varDefaultTime: With(
-                {
-                    // Calculate the current time plus any minutes needed to get to the next hour if rounding up.
-                    // Example: At 12:50, RoundedUpMinutes will be 60. This adds 60 minutes, making it 1:50.
-                    // We only use the hour from this, which is 1.
-                    CorrectedHour: Hour(DateAdd(Now(), RoundUp(Minute(Now())/15,0)*15 - Minute(Now()), TimeUnit.Minutes)),
-
-                    // Calculate just the rounded-up minute value (0, 15, 30, or 45).
-                    // Example: At 12:50, this results in 0 (since it's the start of the next hour).
-                    CorrectedMinute: Mod(RoundUp(Minute(Now()) / 15, 0) * 15, 60)
-                },
-                // Construct a pure Time value from the corrected hour and minute.
-                Time(CorrectedHour, CorrectedMinute, 0)
-            )
-        });
-        Reset(TimeFromdd);
-        Reset(TimeTodd);
-        Select(calClickBtn)
         */
       Width: =Max(App.Width, App.DesignWidth)
     Children:
@@ -152,13 +137,13 @@ Screens:
               =If(
                   (!IsBlankOrError(var_Date) || var_Date <> Blank()),
                       var_Date, //varPopUp_ClassPicker_scenarioDate,
-                      Now()
+                      Today()
               )
             DefaultStartDate: |-
               =If(
                   (!IsBlankOrError(var_Date) || var_Date <> Blank()),
                       var_Date, //varPopUp_ClassPicker_scenarioDate,
-                      Now()
+                      Today()
               )
             Height: =445
             OnChangeCal: |-
@@ -261,7 +246,73 @@ Screens:
                   )
               );
 
+
+
+
+              /////////////////////////////////////////////////////////
+              // --- Central Time Variables ---
+              /////////////////////////////////////////////////////////
+              // Build full Eastern date/times, then shift back 1 hour
+              Set(
+                  var_StartDateTime_central,
+                  DateAdd(DateTimeValue(var_Date & " " & var_StartTime), -1, TimeUnit.Hours)
+              );
+              Set(
+                  var_EndDateTime_central,
+                  DateAdd(DateTimeValue(var_Date & " " & var_EndTime), -1, TimeUnit.Hours)
+              );
+
+              // Extract Central date (in case the -1 hour crossed midnight)
+              Set(
+                  var_Date_central,
+                  DateValue(var_StartDateTime_central)
+              );
+
+              // Extract Central start/end times
+              Set(
+                  var_StartTime_central,
+                  Time(
+                      Hour(var_StartDateTime_central),
+                      Minute(var_StartDateTime_central),
+                      Second(var_StartDateTime_central)
+                  )
+              );
+              Set(
+                  var_EndTime_central,
+                  Time(
+                      Hour(var_EndDateTime_central),
+                      Minute(var_EndDateTime_central),
+                      Second(var_EndDateTime_central)
+                  )
+              );
+
+              // Duration is unchanged by a timezone shift, but recompute for consistency
+              Set(
+                  var_firstHalfDuration_central,
+                  var_EndDateTime_central - var_StartDateTime_central
+              );
+              Set(
+                  var_Duration_central,
+                  With(
+                      { totalMinutes: Round(var_firstHalfDuration_central * 24 * 60, 0) },
+                      Text(RoundDown(totalMinutes / 60, 0), "00") & "h " &
+                      Text(Mod(totalMinutes, 60), "00") & "m"
+                  )
+              );
+
+              // Rebuild the "second half" string in Central (e.g. "7:30 AM - 12:30 PM")
+              Set(
+                  var_secondHalfTime_central,
+                  Text(var_StartDateTime_central, "h:mm AM/PM") & " - " & Text(var_EndDateTime_central, "h:mm AM/PM")
+              );
+
+
               Navigate(Confirm);
+
+
+
+
+
 
 
 
@@ -580,16 +631,17 @@ Screens:
 
 
                                   // Only add if Monthly and recurrenceDate is still in the target month, else always add for other types
-                                  If(!IsBlank(recurrenceDate) And ddRecurrenceFrequency.Selected.Value <> "Weekly",
-                                      Collect(
-                                          CollectionRecurrence,
-                                          {
-                                              Occurrence: seqRec.Value,
-                                              OccurrenceDate: DateValue(recurrenceDate),
-                                              StartDateTime: DateTimeValue(DateValue(recurrenceDate) + TimeValue(TimeFromdd.SelectedText.Value)),
-                                              EndDateTime: DateTimeValue(recurrenceDate + TimeValue(TimeTodd.SelectedText.Value))
-                                          }
-                                      );
+                                  If(
+                                      !IsBlank(recurrenceDate) And ddRecurrenceFrequency.Selected.Value <> "Weekly",
+                                          Collect(
+                                              CollectionRecurrence,
+                                              {
+                                                  Occurrence: seqRec.Value,
+                                                  OccurrenceDate: DateValue(recurrenceDate),
+                                                  StartDateTime: DateTimeValue(DateValue(recurrenceDate) + TimeValue(TimeFromdd.SelectedText.Value)),
+                                                  EndDateTime: DateTimeValue(recurrenceDate + TimeValue(TimeTodd.SelectedText.Value))
+                                              }
+                                          );
               ///                        DateAdd(recurrenceDate, 1, TimeUnit.Months) /// 250609 CED Do not recall why this is here but assume it is for monthly option?
                                   );
                               )
@@ -773,9 +825,9 @@ Screens:
                   ChevronHoverBackground: =ColorValue("#874EB5")
                   Default: |-
                     =If(
-                        !IsBlankOrError(var_EndTime) || var_EndTime <> Blank(),
-                            var_EndTime,
-                            varDefaultEndTime
+                        IsBlankOrError(varDefaultTime),
+                        DateAdd(TimeFromdd.Selected.Value, TimeUnit.Hours, 1),
+                        DateAdd(varDefaultTime, TimeUnit.Hours, 1)
                     )
                   Height: =30
                   HoverFill: =Color.LightGray
@@ -797,7 +849,7 @@ Screens:
                     // Filter(With({Interval:60},ForAll(Sequence(60*24/Interval),Time(0,Interval*(Value-1),0))),Value>TimeFromdd.Selected.Value)
                   Items.Value: =Value
                   OnChange: =Select(calClickBtn)
-                  Reset: =varScreenReset
+                  Reset: =
                   Size: =18
                   Width: =183
                   X: =Tolb.X + Tolb.Width
@@ -823,10 +875,9 @@ Screens:
                   ChevronHoverBackground: =ColorValue("#874EB5")
                   Default: |-
                     =If(
-                        !IsBlankOrError(var_StartTime) || var_StartTime <> Blank(),
-                            var_StartTime,
-                            varDefaultTime
-                            //Now()
+                        IsBlankOrError(varDefaultTime),
+                        Now(),
+                        varDefaultTime
                     )
                   Height: =30
                   HoverFill: =Color.LightGray
@@ -851,7 +902,7 @@ Screens:
                     Set(varIsRecurringcal, "Yes");
                     Set(varRecurrenceFrequency, ddRecurrenceFrequency.Selected.Value); 
                     */
-                  Reset: =varScreenReset
+                  Reset: =
                   Size: =18
                   Width: =183
                   X: '=Fromlb.X + Fromlb.Width '
@@ -1302,7 +1353,7 @@ Screens:
                   PaddingBottom: =0
                   PaddingTop: =0
                   RadioSize: =15
-                  Reset: =varScreenReset
+                  Reset: =
                   Size: =10.5
                   Visible: =ddRecurrenceFrequency.Selected.Value = "Daily" Or ddRecurrenceFrequency.Selected.Value = "Monthly"
                   Width: =169
@@ -1363,7 +1414,7 @@ Screens:
                   RadiusBottomRight: =0
                   RadiusTopLeft: =0
                   RadiusTopRight: =0
-                  Reset: =varWeeklyReset Or varScreenReset
+                  Reset: =varWeeklyReset
                   Size: =9
                   Visible: =ddRecurrenceFrequency.Selected.Value = "Daily" Or ddRecurrenceFrequency.Selected.Value = "Weekly" Or ddRecurrenceFrequency.Selected.Value = "Monthly"
                   Width: =25
@@ -1471,7 +1522,7 @@ Screens:
                   RadiusBottomRight: =0
                   RadiusTopLeft: =0
                   RadiusTopRight: =0
-                  Reset: =varWeeklyReset Or varScreenReset
+                  Reset: =varWeeklyReset
                   Size: =9
                   Visible: =ddRecurrenceFrequency.Selected.Value = "Monthly"
                   Width: =25
@@ -1554,7 +1605,7 @@ Screens:
                   RadiusBottomRight: =0
                   RadiusTopLeft: =0
                   RadiusTopRight: =0
-                  Reset: =varWeeklyReset Or varScreenReset
+                  Reset: =varWeeklyReset
                   Size: =9
                   Visible: |-
                     =false // In the event MS fixes the ability to do anything other than 1, the code below will enable the control accordingly
@@ -1671,7 +1722,7 @@ Screens:
                   PaddingBottom: =0
                   PaddingTop: =0
                   RadioSize: =15
-                  Reset: =varScreenReset
+                  Reset: =
                   Size: =10
                   Visible: =RecurringWeeklb_2.Visible
                   Width: =218
@@ -1728,7 +1779,7 @@ Screens:
                   RadiusBottomRight: =0
                   RadiusTopLeft: =0
                   RadiusTopRight: =0
-                  Reset: =varWeeklyReset Or varScreenReset
+                  Reset: =varWeeklyReset
                   Size: =9
                   Visible: =RecurringWeeklb_2.Visible
                   Width: =25
@@ -1825,38 +1876,199 @@ Screens:
             Styles: =Table({Key:"Fill", Value:"#0086D0" , Type:"Color"})
             Text: =
             Width: =Parent.Width
-      - Text3:
-          Control: ModernText@1.0.0
-          Properties:
-            Align: =Align.Center
-            Color: =RGBA(9, 33, 98, 1)
-            FontWeight: =FontWeight.Bold
-            Height: =Preloader_2.Height
-            Italic: =true
-            Size: =40
-            Text: ="Loading . . . . ."
-            Visible: =Preloader_2.Visible
-            Width: =Preloader_2.Width
-            X: =Preloader_2.X
-            Y: =Preloader_2.Y
       - Timer4:
           Control: Timer@2.1.0
           Properties:
             AutoStart: =true
+            BorderThickness: =5
+            Color: =RGBA(9, 33, 98, 1)
             Duration: =1000
-            Height: =31
+            Fill: =RGBA(0, 0, 0, 0)
+            FontWeight: =FontWeight.Bold
+            Height: =Preloader_2.Height
             OnTimerEnd: |-
-              =If(
-                  Self.Visible,
-                  Notify("TESTING! The control named 'Timer4' has ended, and the page typically would now self-navigate forward to the 'Confirm' screen at this time.........",NotificationType.Information, 1000),
-                  ""
+              =// =====================================================================
+              // SET varEmailBody  —  578 EHRM Learning Lab calendar-invite body
+              // =====================================================================
+              Set(
+                  var_EmailBody,
+
+                  // ---------- HEADER ----------
+                  $"<meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"">
+                  <table style=""max-width:1200px;width:1200px;margin:0 auto;font-family:Arial,sans-serif;border-collapse:collapse;background-color:#D5FFFF;"" border=""1"" cellspacing=""0"" cellpadding=""0"">
+                    <tr>
+                      <td style=""background-color:#28a745;padding:15px;text-align:center;"">
+                        <span style=""color:#ffffff;padding:2px 2px;border-radius:2px;font-size:8px;font-weight:bold;letter-spacing:1px;display:inline-block;""> - AN AUTOMATED MESSAGE FROM THE EDWARD HINES JR. VA HOSPITAL - </span>
+                        <h2 style=""background-color:#28a745;color:#ffffff;padding:8px 14px;border-radius:25px;font-size:20px;font-weight:bold;display:inline-block;margin:15px 0 5px 0;"">&nbsp;&nbsp;&#10003;&nbsp;&nbsp;&nbsp;&nbsp;REGISTRATION CONFIRMED - EHRM Learning Lab Training</h2>
+                        <div style=""color:#ffffff;font-size:12px;font-weight:400;"">
+                          <a style=""color:#000080;text-decoration:underline;"" href=""https://www.va.gov/hines-health-care/"" target=""_blank"">Edward Hines Jr. VA Hospital</a>
+                          &nbsp;|&nbsp;
+                          <a style=""color:#000080;text-decoration:underline;"" href=""https://www.va.gov/"" target=""_blank"">U.S. Department of Veterans Affairs</a>
+                        </div>
+                      </td>
+                    </tr>
+                    <!-- ===== INTRO / THANK YOU ===== -->
+                    <tr><td style=""padding:20px 15px 0 15px;"">
+                      <table style=""width:100%;background-color:#d4edda;border-left:5px solid #28a745;border-collapse:collapse;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                        <tr><td style=""padding:15px;"">
+                          <h3 style=""color:#155724;margin:0 0 10px 0;font-size:20px;font-weight:bold;"">&nbsp;&nbsp;&#127881;&nbsp;&nbsp;Thank you for registering for EHRM training!</h3>
+                          <p style=""color:#155724;margin:0;font-size:15px;line-height:1.6;"">Your registration for the <strong>578 EHRM Learning Lab</strong> session has been successfully submitted. We look forward to seeing you there!</p>
+                        </td></tr>
+                      </table>
+                    </td></tr>
+                    <!-- ===== EVENT DETAILS ===== -->
+                    <tr><td style=""padding:20px 15px 0 15px;"">
+                      <table style=""width:100%;border:4px solid #0066cc;border-collapse:collapse;background-color:#e7f3ff;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                        <tr><td style=""background-color:#0066cc;color:#ffffff;padding:10px 12px;font-size:16px;font-weight:bold;"">&#128197;&nbsp;&nbsp;Event Details</td></tr>
+                        <tr><td style=""padding:10px;background-color:#ffffff;"">
+                          <table style=""width:100%;"" border=""0"" cellspacing=""0"" cellpadding=""6"">
+                            <tr>
+                              <td style=""color:#0066cc;font-size:11px;width:28%;vertical-align:top;"">Training Scenario:</td>
+                              <td style=""font-size:16px;color:#333333;""><strong>578 EHRM Learning Lab &#8211; {"" & var_reservationScenario & ""} </strong></td>
+                            </tr>
+                            <tr>
+                              <td style=""color:#0066cc;font-size:11px;vertical-align:top;"">Training Role:</td>
+                              <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_reservationRole & ""}</b></strong></td>
+                            </tr>
+                            <tr>
+                              <td style=""color:#0066cc;font-size:11px;vertical-align:top;"">Class Date:</td>
+                              <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_Date_central & ""}</b></strong></td>
+                            </tr>
+                            <tr>
+                              <td style=""color:#0066cc;font-size:11px;vertical-align:top;"">Class Time:</td>
+                              <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_secondHalfTime_central & ""}</b></strong></td>
+                            </tr>
+                            <tr>
+                              <td style=""color:#0066cc;font-size:11px;vertical-align:top;"">Class Location:</td>
+                              <td style=""font-size:16px;color:#333333;""><strong><b>{"" & "Room #" & var_reservationRoomNumber & ", Floor #" & var_reservationFloorNumber & ", Building #" & var_reservationBuildingNumber & ", " & var_reservationDivision & ""}</b></strong></td>
+                            </tr>
+                          </table>
+                        </td></tr>
+                      </table>
+                    </td></tr>
+                    <!-- ===== CRITICAL PREREQUISITES ===== -->
+                    <tr><td style=""padding:20px 15px 0 15px;"">
+                      <table style=""width:100%;border:4px solid #155724;border-collapse:collapse;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                        <tr><td style=""background-color:#155724;color:#ffffff;padding:10px 12px;font-size:18px;font-weight:bold;"">&nbsp;&nbsp;&#128680;&nbsp;&nbsp;&nbsp;&nbsp;CRITICAL PREREQUISITES</td></tr>
+                        <tr><td style=""padding:5px;background-color:#ffffff;"">
+                        <p style=""color:#0D0D0D;margin:0;font-size:16px;line-height:1.6;""><strong>AT LEAST THREE WEEKS IN ADVANCE</strong> of training, you <b><u><i>must</i></u></b>  complete the following steps to successfully gain access to the EHRM Sandbox environment:</p>
+                          <ol style=""margin:0;padding-left:12px;font-size:14px;color:#0D0D0D;line-height:1.2;"">
+                            <li>Complete the TMS ""<strong>EHRM Sandbox Login and Orientation Video</strong>"" course (NFED #4686318).</li>
+                            <li>&nbsp;&nbsp;Wait up to 21 days until you receive confirmation email from <strong>VA-Account-Provisioning_US@oracle.com</strong>, confirming your account has been provisioned.</li>
+                            <li>Identify the correct version of <strong>Sandbox web portal</strong> according to your assigned EHRM Role (<a style=""color:#000080;text-decoration:underline;"" href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx?csf=1&web=1&e=ohGdcr#which-sandbox-citrix-storefront-application-do-i-use"" target=""_blank"">VIEW HELP GUIDE</a>).</li>
+                            <li><strong>Successfully login</strong> to your own Sandbox web portal using your newly provisioned Oracle account information & the <a style=""color:#000080;text-decoration:underline;"" href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/_layouts/15/embed.aspx?UniqueId=81a58232-44f3-4c74-83df-6f8ca1a67de9"" target=""_blank"">EHRM Sandbox Login Instructions</a> user guide. (<a style=""color:#000080;text-decoration:underline;"" href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx"" target=""_blank"">VIEW HELP GUIDE</a>).</li>
+                            <li>If you are still unable to login to your Sandbox web portal <strong> more than three weeks after</strong> completing the TMS course, you should <b><u><i>immediately</i></u></b> contact the <a style=""color:#000080;text-decoration:underline;"" href=""mailto:VAEHRMSandbox@va.gov"" target=""_blank"">VA EHRM Sandbox</a> national team for assistance.</li>
+                            </ol>
+                          <p style=""color:#0D0D0D;margin:0;font-size:16px;line-height:1.6;"">Failure to complete all of these prerequisite tasks <strong>IN ADVANCE</strong> of your scheduled training event date, will negatively impact the mandatory EHRM roll-out process significantly!
+                          </p>
+                        </td></tr>
+                      </table>
+                    </td></tr>
+                    <!-- ===== REGISTRATION DETAILS ===== -->
+                    <tr><td style=""padding:20px 15px 0 15px;"">
+                      <table style=""width:100%;border:4px solid #636363;border-collapse:collapse;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                        <tr><td colspan=""2"" style=""background-color:#636363;color:#ffffff;padding:10px 12px;font-size:16px;font-weight:bold;"">&nbsp;&nbsp;&#128203;&nbsp;&nbsp;&nbsp;&nbsp;Your Registration Details</td></tr>
+                        <tr>
+                          <td style=""background-color:#f1c40f;color:#2c3e50;padding:3px 3px;font-weight:bold;font-size:10px;text-transform:uppercase;width:35%;border-bottom:2px solid #d4a017;"">Field/Parameter</td>
+                          <td style=""background-color:#f1c40f;color:#2c3e50;padding:3px 3px;font-weight:bold;font-size:10px;text-transform:uppercase;width:65%;border-bottom:2px solid #d4a017;"">Your VALUES</td>
+                        </tr>
+                        <tr>
+                          <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Registration Status:</td>
+                          <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong>SUBMITTED / PENDING APPROVAL</strong></em></td>
+                        </tr>
+                        <tr>
+                          <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">First Name:</td>
+                          <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.GivenName & ""}</b></strong></em></td>
+                        </tr>
+                        <tr>
+                          <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Last Name:</td>
+                          <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.Surname & ""}</b></strong></em></td>
+                        </tr>
+                        <tr>
+                          <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Title:</td>
+                          <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.JobTitle & ""}</b></strong></em></td>
+                        </tr>
+                        <tr>
+                          <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Email Address:</td>
+                          <td style=""padding:5px;color:#000080;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.Mail & ""}</b></strong></em></td>
+                        </tr>
+                        <tr>
+                          <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Network Account :</td>
+                          <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.MailNickname & ""}</b></strong></em></td>
+                        </tr>
+                        <tr>
+                          <td style=""padding:12px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;"">Submission Date/Time:</td>
+                          <td style=""padding:12px;color:#495057;font-size:16px;background-color:#fafbfc;""><em><strong><b>{"" & Now() & ""}</b></strong></em></td>
+                        </tr>
+                      </table>
+                    </td></tr>"
+
+                  // =================================================================
+                  // IMAGE BLOCK #1 — REGISTRATION QR CODE   *** DISABLED ***
+                  // To enable: remove the leading // on the next line AND on every
+                  // line of the segment below (including the closing "$"...").
+                  // Then swap the placeholder src URL for your public https image.
+                  // -----------------------------------------------------------------
+                  // & $"
+                  //   <tr><td style=""padding:20px 15px 0 15px;text-align:center;"">
+                  //     <table style=""width:100%;background-color:#e1f5f8;border:4px solid #17a2b8;border-collapse:collapse;"" border=""0"" cellspacing=""0"" cellpadding=""10"">
+                  //       <tr><td style=""text-align:center;"">
+                  //         <p style=""margin:0 0 8px 0;font-size:14px;color:#0c5460;font-weight:bold;"">&#128242;&nbsp;Scan to Register Others</p>
+                  //         <img src=""https://PLACEHOLDER-URL/registration-qr.png"" alt=""Registration QR code"" width=""160"" height=""160"" style=""border:3px solid #17a2b8;border-radius:8px;display:block;margin:0 auto;"">
+                  //       </td></tr>
+                  //     </table>
+                  //   </td></tr>
+                  // "
+
+                  // =================================================================
+                  // IMAGE BLOCK #2 — EVENT FLYER   *** DISABLED ***
+                  // Same enable procedure as Block #1.
+                  // -----------------------------------------------------------------
+                  // & $"
+                  //   <tr><td style=""padding:20px 15px 0 15px;text-align:center;"">
+                  //     <img src=""https://PLACEHOLDER-URL/event-flyer.png"" alt=""EHRM Learning Lab flyer"" width=""280"" style=""border:3px solid #17a2b8;border-radius:8px;display:block;margin:0 auto;"">
+                  //   </td></tr>
+                  // "
+
+                  // =================================================================
+                  // IMAGE BLOCK #3 — VA / HINES LOGO (FOOTER)   *** DISABLED ***
+                  // Same enable procedure as Block #1.
+                  // -----------------------------------------------------------------
+                  // & $"
+                  //   <tr><td style=""padding:15px;text-align:center;background-color:#1f4e79;"">
+                  //     <img src=""https://PLACEHOLDER-URL/hines-va-logo.png"" alt=""Edward Hines Jr. VA Hospital"" width=""360"" style=""display:block;margin:0 auto;"">
+                  //   </td></tr>
+                  // "
+
+                  // ---------- CONTACT + FOOTER (always on) ----------
+                  & $"
+                    <tr><td style=""padding:20px 15px 0 15px;"">
+                      <table style=""width:100%;border:4px solid #6c757d;border-collapse:collapse;background-color:#fff9e6;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                        <tr><td style=""background-color:#6c757d;color:#ffffff;padding:10px 12px;font-size:16px;font-weight:bold;"">&#10067;&nbsp;&nbsp;Questions or Need Assistance?</td></tr>
+                        <tr><td style=""padding:15px;background-color:#ffffff;"">
+                          <p style=""margin:0 0 10px 0;font-size:14px;color:#333333;line-height:1.5;"">Contact the Edward Hines Jr. VA Hospital's EHRM Team:</p>
+                          <p style=""margin:0 0 6px 0;font-size:14px;color:#333333;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#128222;&nbsp;&nbsp;&nbsp;Call the Clinical Informatics direct help line via <a style=""color:#000080;text-decoration:underline;"" href=""tel:+17082022777"">(708) 202-2777</a></p>
+                          <p style=""margin:0;font-size:14px;color:#333333;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#128231;&nbsp;&nbsp;&nbsp;Email the EHRM Training Coordinators via <a style=""color:#000080;text-decoration:underline;"" href=""mailto:VHAHINInformaticsTrainingAndSupport@va.gov"">VHAHINInformaticsTrainingAndSupport@va.gov</a></p>
+                          <p style=""margin:12px 0 0 0;font-size:13px;color:#333333;"">Keep your Registration ID (<strong><u><i><b>{"" & (Max('Desk Reservations', Value(ID)) + 1) & ""}</u></i></b></strong>) handy when contacting us.</p>
+                        </td></tr>
+                      </table>
+                    </td></tr>
+                    <br>
+
+                    <tr><td style=""padding:8px 8px;background-color:#1f4e79;border-top:4px solid #e03e2d;text-align:center;"">
+                      <p style=""margin:0;color:#ffffff;font-size:12px;line-height:1.5;""><i>This is an automated confirmation from the Clinical Informatics Team at Edward Hines Jr. VA Hospital. <em><strong>Please do not reply to this email.</i></strong></em></p>
+                    </td></tr>
+
+                  </table>"
               );
+
               Select(ContinueDatebtn);
-            Visible: |-
-              =If(
-                  Lower(User().Email) = "kyle.coder@va.gov",
-                  true,
-                  false
-              )
-            X: =434
-            Y: =609
+            Repeat: =true
+            Size: =30
+            Text: |-
+              ="LOADING. . . ."
+              //Text(Time(0, 0, Self.Value/1000), "hh:mm:ss")
+            Visible: =false
+            Width: =Preloader_2.Width
+            X: =Preloader_2.X
+            Y: =Preloader_2.Y

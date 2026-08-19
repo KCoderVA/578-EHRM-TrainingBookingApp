@@ -20,9 +20,9 @@ Reservation As screen:
         ZIndex: =3
 
     Tabs_10 As Tabs:
-        Items: =colMenu
-        Width: =610
-        X: =526
+        Height: =109
+        Width: =522
+        X: =614
         ZIndex: =4
 
     lblNameDesk_1 As label:
@@ -35,7 +35,7 @@ Reservation As screen:
         Text: |-
             ="EHRM Training Description:"
         Width: =560
-        Y: =151
+        Y: =Image2_9.Y + Image2_9.Height + 5
         ZIndex: =5
 
     tbNameDesk_1 As text:
@@ -58,11 +58,22 @@ Reservation As screen:
         HoverBorderColor: =App.Theme.Colors.Darker40
         HoverColor: =RGBA(0, 0, 0, 1)
         HoverFill: =App.Theme.Colors.Lighter70
+        LineHeight: =1
         Mode: =TextMode.MultiLine
-        Size: =18
+        Size: |
+            =If(
+                Len(Self.Text) > 100,
+                12,
+                Len(Self.Text) > 75,
+                14,
+                Len(Self.Text) > 50,
+                16,
+                Len(Self.Text) <= 50,
+                18
+            )
         Width: =540
         X: =20
-        Y: =189
+        Y: =lblNameDesk_1.Y + lblNameDesk_1.Height
         ZIndex: =6
 
     lblFloorDesk_1 As label:
@@ -90,8 +101,8 @@ Reservation As screen:
         Italic: =true
         Size: =16
         Text: |-
-            ="Start Date/Time:"
-        Width: =180
+            ="Event Start Date/Time:"
+        Width: =220
         X: =tbMapDesk_1.X - Self.Width
         Y: =tbMapDesk_1.Y
         ZIndex: =8
@@ -135,26 +146,60 @@ Reservation As screen:
 
     tbDescrDesk_1 As text:
         AccessibleLabel: ="Desk Description Input"
+        Align: |-
+            =If(
+                Self.Text = "None submitted",
+                Align.Center,
+                Align.Left
+            )
         BorderColor: =RGBA(179, 179, 179, 1)
         Color: =RGBA(0, 0, 0, 1)
         Default: |-
-            =varSelectedReservation.reservationComments_multilinetext
-            & "
-            " &
-            varSelectedReservation.reservationJustification_multilinetext
+            =If(
+                (!IsBlankOrError(varSelectedReservation.reservationComments_multilinetext) || !IsBlankOrError(varSelectedReservation.reservationJustification_multilinetext)),(varSelectedReservation.reservationComments_multilinetext & "
+                " & varSelectedReservation.reservationJustification_multilinetext),
+                "None submitted"
+            )
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
         DisplayMode: =DisplayMode.View
         FocusedBorderThickness: =4
         Font: =Font.'Segoe UI'
-        FontWeight: =FontWeight.Bold
-        Height: =111
+        FontWeight: |-
+            =If(
+                Self.Text = "None submitted",
+                FontWeight.Lighter,
+                FontWeight.Bold
+            )
+        Height: |-
+            =If(
+                (IsBlankOrError(varSelectedReservation.reservationComments_multilinetext) || IsBlankOrError(varSelectedReservation.reservationJustification_multilinetext)),
+                70,
+                135
+            )
         HoverBorderColor: =App.Theme.Colors.Darker40
         HoverColor: =RGBA(0, 0, 0, 1)
         HoverFill: =App.Theme.Colors.Lighter70
+        Italic: |-
+            =If(
+                Self.Text = "None submitted",
+                true,
+                false
+            )
         Mode: =TextMode.MultiLine
-        Size: =18
+        PaddingTop: |-
+            =If(
+                Self.Text = "None submitted",
+                25,
+                5
+            )
+        Size: |-
+            =If(
+                Self.Text = "None submitted",
+                14,
+                18
+            )
         Width: =tbNameDesk_1.Width
         X: =lblDescrDesk_1.X + 20
         Y: =lblDescrDesk_1.Y + lblDescrDesk_1.Height
@@ -180,6 +225,7 @@ Reservation As screen:
         PressedFill: =App.Theme.Colors.Darker40
         Size: =18
         Text: ="Cancel This Reservation"
+        Visible: =Toggle1.Checked
         Width: =btnBack.Width
         X: =btnBack.X - Self.Width - 20
         Y: =btnBack.Y
@@ -245,8 +291,8 @@ Reservation As screen:
         Italic: =true
         Size: =16
         Text: |-
-            ="End Date/Time:"
-        Width: =180
+            ="Event End Date/Time:"
+        Width: =220
         X: =tbTo.X - Self.Width
         Y: =tbTo.Y
         ZIndex: =15
@@ -308,7 +354,7 @@ Reservation As screen:
         Size: =16
         Width: =250
         X: =Parent.Width - Self.Width - 5
-        Y: =Rectangle2_8.Y + Rectangle2_8.Height + 5
+        Y: =Image2_9.Y + Image2_9.Height + 5
         ZIndex: =18
 
     grpHeader_8 As group:
@@ -322,7 +368,7 @@ Reservation As screen:
             BorderColor: =App.Theme.Colors.Darker40
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =150
+            Height: =lblMyAppointments_3.Height + 5
             Image: =abstractBackground
             ImagePosition: =ImagePosition.Fill
             Width: =Parent.Width
@@ -331,7 +377,8 @@ Reservation As screen:
         Rectangle2_8 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
             Fill: =RGBA(135, 78, 181, 0.65)
-            Height: =Image2_9.Height
+            Height: =lblMyAppointments_3.Height + 5
+            Visible: =false
             Width: =Parent.Width
             ZIndex: =2
 
@@ -379,27 +426,21 @@ Reservation As screen:
         Color: =RGBA(0, 0, 0, 1)
         Default: |-
             =If(
-                !IsBlank(varSelectedReservation.reservationDesk_text),
-                Concatenate(
-                    varSelectedReservation.reservationDesk_text,
-                    "
-                    "
-                    ),
-                ""
-            )
-            &
-            varSelectedReservation.reservationRoom_text
-            & "
-            " &
-            varSelectedReservation.reservationFloor_text
-            & "
-            " &
-            varSelectedReservation.reservationBuilding_text
-            & "
-            " &
+            !IsBlank(varSelectedReservation.reservationDesk_text),
+            Concatenate(
+            varSelectedReservation.reservationDesk_text,
+            "
+            "
+            ),
+            ""
+            ) & 
+            varSelectedReservation.reservationRoom_text & "
+            " & 
+            varSelectedReservation.reservationFloor_text & "
+            " & 
+            varSelectedReservation.reservationBuilding_text & "
+            " & 
             varSelectedReservation.reservationDivision_text
-            
-            
             //varSelectedReservation.reservationRoom & varSelectedReservation.reservationFloor & varSelectedReservation.reservationBuilding & varSelectedReservation.reservationDivision
             //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -412,14 +453,16 @@ Reservation As screen:
         Height: |-
             =If(
                 IsBlank(varSelectedReservation.reservationDesk_text),
-                111,
-                130
+                70,
+                135
+            
             )
         HintText: =""
         HoverBorderColor: =App.Theme.Colors.Darker40
         HoverColor: =RGBA(0, 0, 0, 1)
         HoverFill: =App.Theme.Colors.Lighter70
         Mode: =TextMode.MultiLine
+        OnSelect: =
         Size: =15.5
         Width: =tbNameDesk_1.Width
         X: =lblFloorDesk_1.X + 20
@@ -436,8 +479,8 @@ Reservation As screen:
         Italic: =true
         Size: =lblReservedOn.Size / 1.5
         Text: |-
-            ="Last Modified Date/Time:"
-        Width: =180
+            ="Reservation Last Modified Date/Time:"
+        Width: =240
         X: =tbTo_3.X - Self.Width
         Y: =tbTo_3.Y
         ZIndex: =25
@@ -462,7 +505,7 @@ Reservation As screen:
         HoverFill: =App.Theme.Colors.Lighter70
         Italic: =true
         Size: =tbTo.Size / 1.5
-        Width: =tbReservedOn.Width / 1.5
+        Width: =tbReservedOn.Width / 1.8
         X: =(tbReservedOn.X + tbReservedOn.Width) - Self.Width
         Y: =tbTo.Y + tbTo.Height + 5
         ZIndex: =26
@@ -609,21 +652,115 @@ Reservation As screen:
         Y: =(btnCancel.Y - Self.Height) - (btnBack.X - btnCancel.X - btnBack.Width)
         ZIndex: =29
 
-    grpConfirmCancel_1 As group:
-        Height: =5
-        Width: =5
-        X: =40
-        Y: =40
-        ZIndex: =29
+    Rectangle3_5 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(116, 116, 116, 0.85)
+        Height: =Parent.Height - Image2_9.Height
+        Visible: =varConfirmCancel
+        Width: =Parent.Width
+        Y: =Image2_9.Y + Image2_9.Height
+        ZIndex: =30
 
-        Rectangle3_5 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =Parent.Height - Image2_9.Height
-            Visible: =varConfirmCancel
-            Width: =Parent.Width
-            Y: =Image2_9.Y + Image2_9.Height
-            ZIndex: =30
+    lblToRes_5 As label:
+        Align: =Align.Right
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =Font.'Segoe UI'
+        Height: =lblNameDesk_1.Height
+        Italic: =true
+        Size: =16
+        Text: ="Event Active?"
+        X: =853
+        Y: =tbTo_5.Y
+        ZIndex: =31
+
+    tbTo_5 As text:
+        AccessibleLabel: ="Map Link Input"
+        Align: =Align.Right
+        BorderColor: =RGBA(179, 179, 179, 1)
+        Color: =RGBA(0, 0, 0, 1)
+        Default: =varSelectedReservation.Active_choice.Value
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        DisplayMode: =DisplayMode.View
+        FocusedBorderThickness: =4
+        Font: =Font.'Segoe UI'
+        FontWeight: =FontWeight.Bold
+        HintText: =""
+        HoverBorderColor: =App.Theme.Colors.Darker40
+        HoverColor: =RGBA(0, 0, 0, 1)
+        HoverFill: =App.Theme.Colors.Lighter70
+        Size: =16
+        Visible: =false
+        Width: =124
+        X: =1007
+        Y: =tbTo_4.Y + tbTo_4.Height + 5
+        ZIndex: =32
+
+    Toggle1 As Toggle:
+        BasePaletteColor: =
+        Checked: |-
+            =If(
+                tbTo_5.Text = Text(true),
+                true,
+                tbTo_5.Text = Text(false),
+                false,
+                Blank()
+            )
+        DisplayMode: =DisplayMode.Edit
+        FontColor: =
+        Height: =tbTo_5.Height
+        Label: =
+        LabelPosition: ='Toggle.LabelPosition'.Before
+        OnCheck: |-
+            =//Remove('Desk Reservations', varSelectedReservation);
+            Patch(
+                'Desk Reservations',
+                varSelectedReservation,
+                {
+                    Active_choice: {Value: true},
+                    reservationComments_multilinetext: "Uncanceled by student @ " & Now()
+                }
+            );
+            Refresh('Desk Reservations');
+            Select(btnBack)
+        OnUncheck: |-
+            =//Remove('Desk Reservations', varSelectedReservation);
+            Patch(
+                'Desk Reservations',
+                varSelectedReservation,
+                {
+                    Active_choice: {Value: false},
+                    reservationComments_multilinetext: "Canceled by student @ " & Now()
+                }
+            );
+            Refresh('Desk Reservations');
+            Set(varSelectedReservation, Blank());
+            Navigate(MyAppts);
+        ToggleSize: |
+            =70
+        Width: =tbTo_5.Width
+        X: =tbTo_5.X
+        Y: =tbTo_5.Y
+        ZIndex: =33
+
+    Container6 As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Height: =489
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =false
+        Width: =1136
+        Y: =151
+        ZIndex: =34
 
         bgRounded_12 As htmlViewer:
             Height: =Rectangle3_5.Height / 1.75
@@ -633,24 +770,16 @@ Reservation As screen:
             Visible: =varConfirmCancel
             Width: =Rectangle3_5.Width / 1.75
             X: =(Rectangle3_5.Width / 2) - (Self.Width / 2)
-            Y: =(Rectangle3_5.Height / 2)
-            ZIndex: =31
+            Y: =209
+            ZIndex: =1
 
-        Label1_2 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =93
-            Size: =24
-            Text: ="Are you sure you want to cancel this?"
-            Visible: =varConfirmCancel
-            Width: =bgRounded_12.Width - 20
-            X: =bgRounded_12.X + 10
-            Y: =bgRounded_12.Y + 20
-            ZIndex: =32
+        Button3 As modernButton:
+            Height: =64
+            Text: ="Button"
+            Width: =280
+            X: =40
+            Y: =40
+            ZIndex: =2
 
         btnConfirmCancel_2 As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -679,8 +808,24 @@ Reservation As screen:
             Visible: =varConfirmCancel
             Width: =234
             X: =Label1_2.X + 50
-            Y: =364
-            ZIndex: =33
+            Y: =40
+            ZIndex: =3
+
+        Label1_2 As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =93
+            Size: =24
+            Text: ="Are you sure you want to cancel this?"
+            Visible: =varConfirmCancel
+            Width: =bgRounded_12.Width - 20
+            X: =bgRounded_12.X + 10
+            Y: =bgRounded_12.Y + 20
+            ZIndex: =4
 
         btnConfirmDelete_2 As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -697,9 +842,14 @@ Reservation As screen:
             HoverColor: =App.Theme.Colors.PrimaryForeground
             HoverFill: =ColorFade(Self.Fill, -20%)
             OnSelect: |-
-                =Remove(
+                =//Remove('Desk Reservations', varSelectedReservation);
+                Patch(
                     'Desk Reservations',
-                    varSelectedReservation
+                    varSelectedReservation,
+                    {
+                        Active_choice: {Value: false},
+                        reservationComments_multilinetext: "Canceled by student @ " & Now()
+                    }
                 );
                 UpdateContext({varConfirmCancel: false});
                 Back()
@@ -715,6 +865,188 @@ Reservation As screen:
             Visible: =varConfirmCancel
             Width: =258
             X: =Label1_2.X + Label1_2.Width - Self.Width - 50
-            Y: =364
-            ZIndex: =34
+            Y: =40
+            ZIndex: =5
+
+    Container5_1 As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Height: =526
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =varConfirmCancel
+        Width: =1136
+        Y: =114
+        ZIndex: =35
+
+        Rectangle6_2 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(214, 221, 224, 0.75)
+            Height: =526
+            Width: =Parent.Width
+            X: =
+            ZIndex: =1
+
+        bgRounded_11 As htmlViewer:
+            Height: =232
+            HtmlText: |-
+                =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+                "<div style='border:1px gray;border-radius:25%;height:200px;width:100%;background-color:#FCFCFC'></div>"
+                /*Concat(
+                    "<div style='border:1px gray;border-radius:10%;height:",
+                    "239",
+                    "px;width:",
+                    "100",
+                    "%;background-color:#FCFCFC'></div>"
+                )*/
+            Size: =24
+            Visible: =varConfirmCancel
+            Width: =Label1_5.Width
+            X: =289
+            Y: =147
+            ZIndex: =2
+
+        Label1_5 As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =94
+            Size: =24
+            Text: |-
+                ="Are you sure you 
+                want to cancel this?"
+            Visible: =varConfirmCancel
+            Width: =557
+            X: =289
+            Y: =162
+            ZIndex: =3
+
+        btnConfirmCancel_6 As button:
+            BorderColor: =RGBA(9, 33, 98, 1)
+            BorderThickness: =5
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(106, 122, 127, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =66
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+                =UpdateContext({varConfirmCancel:false})
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: |-
+                ="Nevermind,
+                Don't Cancel"
+            Visible: =varConfirmCancel
+            X: =387
+            Y: =256
+            ZIndex: =5
+
+        btnConfirmDelete_6 As button:
+            BorderColor: =RGBA(9, 33, 98, 1)
+            BorderThickness: =5
+            Color: =App.Theme.Colors.PrimaryForeground
+            DisabledBorderColor: =RGBA(244, 244, 244, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Fill: =RGBA(184, 0, 0, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Height: =66
+            HoverBorderColor: =App.Theme.Colors.Darker10
+            HoverColor: =App.Theme.Colors.PrimaryForeground
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |+
+                =Patch(
+                    'Desk Reservations',
+                    varSelectedReservation,
+                    {
+                        Active_choice: {Value: false},
+                        reservationComments_multilinetext: "Canceled by " & User().Email & " @ " & Now()
+                    }
+                );
+                Refresh('Desk Reservations');
+                UpdateContext({varConfirmCancel: false});
+                Set(varSelectedReservation, Blank());
+                Navigate(MyAppts);
+                //Remove('Desk Reservations', varSelectedReservation);
+                
+                
+            PressedBorderColor: =App.Theme.Colors.Darker40
+            PressedColor: =Self.Color
+            PressedFill: =App.Theme.Colors.Darker40
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: |-
+                ="Confirm
+                & Cancel"
+            Visible: =varConfirmCancel
+            X: =587
+            Y: =256
+            ZIndex: =6
+
+    Button11 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(255, 255, 255, 0)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =Toggle1.Height + 4
+        HoverBorderColor: =
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =
+        OnSelect: |-
+            =If(
+                Toggle1.Checked,
+                Select(btnCancel),
+                ""
+            )
+        PressedBorderColor: =
+        PressedColor: =Self.Color
+        PressedFill: =
+        RadiusBottomLeft: =0
+        RadiusBottomRight: =0
+        RadiusTopLeft: =0
+        RadiusTopRight: =0
+        Size: =24
+        Text: =
+        Visible: |-
+            =If(
+                user_isAdmin = true,
+                false,
+                true
+            )
+        Width: =Parent.Width - Self.X
+        X: =lblToRes_5.X
+        Y: |
+            =Toggle1.Y - 2
+        ZIndex: =36
 

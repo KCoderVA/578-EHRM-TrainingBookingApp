@@ -2,12 +2,12 @@
 
 This document describes the current public state of the EHRM Training & Booking App repository and what is included/excluded as of the latest release.
 
-## Status summary (v0.9.26)
+## Status summary (v0.12.2)
 
-- **Release type**: Feature — the Canvas app component advances **v0.8.14 → v0.9.26**, turning every booking into a complete, persisted training record (Class/Session Picker now saved; submitter vs. student identity captured; attendee people-picker for booking-on-behalf; POCSUPERVISOR reworked). The project-wide version jumps `0.8.16 → 0.9.26` to re-align the repo release line with the Canvas app's version (superseding the never-completed `0.8.17`). **This release DOES change the SharePoint schema:** the `Desk Reservations` list gained ~40 columns (submitter / student / reservation / trainer-approval / reminder families) and the `Desks` list was normalized to typed columns. Connectors are unchanged.
-- **Project release**: v0.9.26 (2026-08-04)
+- **Release type**: Feature (go-live readiness) — the Canvas app component advances **v0.9.26 → v0.12.2**. This release adds `ManageUsers` and `CreateMeeting`, removes legacy screens (`alt_ManageDesks`, `Screen1`, `Screen2`), expands SharePoint bindings (`MasterScheduleList`, `SuperUserList`, `backupList_DeskReservations`, `Learning Lab Sessions`), and strengthens fallback/backup patch paths in `Confirm`. Version drift is resolved (`varRepoVersion` + manifest + package now all `0.12.2`) and `BindingErrorCount` improves `329 → 120`.
+- **Project release**: v0.12.2 (2026-08-12)
 - **Component versions**:
-  - Canvas app: **v0.9.26** (source-controlled unpacked source under `src/powerApps/.unpacked/`; package at `src/powerApps/.msapp/v0.9.26_578EHRMTrainingApp.msapp`, tracked via `.gitignore` `!*.msapp`). See [src/powerApps/README.md](../src/powerApps/README.md) and the full diff in [src/powerApps/v0.9.26_recentChangesSummary.md](../src/powerApps/v0.9.26_recentChangesSummary.md).
+  - Canvas app: **v0.12.2** (source-controlled unpacked source under `src/powerApps/.unpacked/`; package at `src/powerApps/.msapp/v0.12.2_578EHRMTrainingApp.msapp`, tracked via `.gitignore` `!*.msapp`). See [src/powerApps/README.md](../src/powerApps/README.md), [src/powerApps/v0.12.2_diffAnalysis.md](../src/powerApps/v0.12.2_diffAnalysis.md), and [src/powerApps/v0.12.2_changeSummary.md](../src/powerApps/v0.12.2_changeSummary.md).
   - Power Automate: `AppUserList` v0.1.0 (source-controlled unpacked source under `src/powerAutomate/AppUserList/.unpacked/`)
   - SharePoint: `src/sharePoint/list/<listName>/local/` (raw exports, local-only) + `src/sharePoint/searchConfig/SearchConfiguration.xml` (tracked) — see [src/sharePoint/README.md](../src/sharePoint/README.md)
   - Analytics: `src/analytics/powerBI/` (Power BI `.pbit` template tracked) + `src/analytics/sql/` (scaffolded, currently empty) — see [src/analytics/README.md](../src/analytics/README.md)
@@ -16,6 +16,7 @@ This document describes the current public state of the EHRM Training & Booking 
 
 | Version | Date | Type |
 |---------|------|------|
+| v0.12.2 | 2026-08-12 | Feature (go-live readiness) — Canvas app v0.9.26 → v0.12.2: added `ManageUsers` + `CreateMeeting`, removed `alt_ManageDesks`/`Screen1`/`Screen2`, expanded data-source/list bindings, improved `Confirm` fallback/backup patch strategy, aligned app/manifest/package version strings, and reduced binding errors (`329 → 120`) |
 | v0.9.26 | 2026-08-04 | Feature — Canvas app v0.8.14 → v0.9.26: `Desk Reservations` schema expanded ~40 columns, Class/Session Picker persisted, submitter/student identity split, attendee people-picker (book-on-behalf), POCSUPERVISOR reworked, `Desks` list normalized; project version realigned `0.8.16 → 0.9.26` (superseding 0.8.17) |
 | v0.8.16 | 2026-07-28 | Feature — Canvas app v0.8.14 imported: app-wide RBAC engine, impersonation, zero-touch onboarding, training Class/Session Picker, new `alt_ManageDesks` CRUD screen, Dashboard redesign; project version realigned to `0.8.x` |
 | v0.3.8 | 2026-07-28 | Patch — `src/analytics/` component added, `src/sharePoint/` restructured, `.gitignore` local-folder hardening, documentation catch-up |
@@ -49,7 +50,7 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
 
 - **Export artifacts** such as Solution `.zip` files and Canvas `.msapp` packages.
   - Solution `.zip` exports are stored locally under `dist/` and are git-ignored by design.
-  - **Exception:** Canvas `.msapp` packages are force-tracked via `.gitignore` `!*.msapp`, so the current release package (`src/powerApps/.msapp/v0.9.26_578EHRMTrainingApp.msapp`) *is* committed to the repo alongside its unpacked source.
+  - **Exception:** Canvas `.msapp` packages are force-tracked via `.gitignore` `!*.msapp`, so the current release package (`src/powerApps/.msapp/v0.12.2_578EHRMTrainingApp.msapp`) *is* committed to the repo alongside its unpacked source.
   - For releases, attach exports to a GitHub Release if you need distributable artifacts.
 - **Compressed archive files** (`.zip`, `.7z`, `.gz`, `.rar`, `.tar`, etc.) — broadly git-ignored as of v0.3.6 to prevent large binary exports from entering the repo.
 - **Spreadsheet and data list files** (`.csv`, `.xlsx`, `.xls`, `.ods`, `.tsv`, etc.) — broadly git-ignored as of v0.3.6 to prevent PII or sensitive VA data from being committed accidentally. Use `!path/to/file` negation entries in `.gitignore` to selectively expose sanitized public-facing files.
@@ -62,23 +63,27 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
 
 ## Current data model (baseline)
 
-The baseline artifacts are driven by SharePoint lists. As of v0.9.26 the reservation schema is materially more training-centric:
+The baseline artifacts are driven by SharePoint lists. As of v0.12.2 the reservation schema is materially more training-centric and operationally integrated:
 
-- `Desk Reservations` *(v0.9.26: expanded by ~40 columns — submitter / student / reservation-detail / trainer-approval / reminder families — so a booking now records a full training registration; 3 legacy columns removed)*
+- `Desk Reservations` *(v0.9.26 baseline expansion retained in v0.12.2; still the core persisted training-registration record)*
 - `DeskAccessControl`
-- `Desks` *(v0.9.26: normalized to typed `*_choice` / `*_text` / `*_boolean` columns)*
+- `Desks` *(v0.9.26 normalization retained in v0.12.2)*
+- `MasterScheduleList` *(bound and active in v0.12.2)*
+- `SuperUserList` *(bound and active in v0.12.2)*
+- `backupList_DeskReservations` *(bound and used for backup persistence in v0.12.2)*
+- `Learning Lab Sessions` *(bound and active in v0.12.2)*
 - `Schedule` *(new in v0.3.8 — scaffold only; no list schema exported yet)*
 
-The Canvas app contains 22 screens (unchanged in v0.9.26; v0.8.14 had added `alt_ManageDesks`, a modern responsive CRUD console for the `Desks` list, and v0.3.4 had replaced `scrn_WeeklyCal_1` with `scrn_DailyCal`). Some screen and control naming still reflects the original desk/room reservation terminology, but v0.9.26 took a major step toward training-centric data by adding scenario/role/session/student/submitter/trainer columns to `Desk Reservations`. The `Schedule` list scaffold remains a further step in that migration.
+The Canvas app now contains 21 screens in v0.12.2 (added `ManageUsers` + `CreateMeeting`; removed `alt_ManageDesks`, `Screen1`, `Screen2`). Some naming still reflects legacy desk/room terminology, but the app continues moving toward training-centric operation with integrated user management and schedule/super-user list dependencies.
 
-### Canvas app access control model (v0.9.26)
+### Canvas app access control model (v0.12.2)
 
-The RBAC logic (introduced in v0.8.14) is resolved once per session in `App.OnStart` and enforced consistently across every screen. Access is driven by the `DeskAccessControl` SharePoint list's `AccessLevel_Text` column. Valid access levels are: `SuperUser`, `AppAdmin`, `Manager`, `ServiceChief`, `ProjectLeader`, `User`, `View-only`, `AccessDenied`. The engine also **auto-provisions** first-launch users (default `"User"` level, with Entra ID / timestamps / manager email) and supports **admin impersonation** ("act as another user") for support and booking-on-behalf-of (its detection logic was corrected in v0.9.26). Each intended user's row in `DeskAccessControl` should have `AccessLevel_Text` populated for correct role enforcement. **Open gap:** unknown users still default to `User` rather than `AccessDenied`.
+The RBAC logic (introduced in v0.8.14 and expanded through v0.12.2) is resolved once per session in `App.OnStart` and enforced across navigation/screen access. Access is driven by `DeskAccessControl.AccessLevel_Text`. Valid levels in active branches include `ProjectLeader`, `Manager`, `ServiceChief`, `AppAdmin`, `SuperUser`, `User`, `View-Only`, and `AccessDenied`. The engine still auto-provisions first-launch users with default `"User"` access and still contains hard-coded admin identity checks in impersonation branches. **Open gap:** unknown users default to `User` rather than `AccessDenied`.
 
 ### Connectors & data sources
 
-- **Connectors**: Office 365 Outlook, Office 365 Users, SharePoint *(no connector changes in v0.9.26)*
-- **Data sources**: SharePoint lists (Desk Reservations — training-record schema as of v0.9.26; DeskAccessControl; Desks — normalized), Outlook actions, O365 Users search (`MyProfileV2`, `UserProfileV2`, `ManagerV2`)
+- **Connectors**: Office 365 Outlook, Office 365 Users, SharePoint *(connector set unchanged; actions expanded in v0.12.2)*
+- **Data sources**: SharePoint lists (`Desk Reservations`, `DeskAccessControl`, `Desks`, `MasterScheduleList`, `SuperUserList`, `backupList_DeskReservations`, `Learning Lab Sessions`), Outlook actions, O365 Users search/profile/photo actions.
 
 ## Release readiness checklist
 
@@ -98,10 +103,10 @@ Before tagging/publishing a release:
 ## Next steps / roadmap (high level)
 
 - Populate `DeskAccessControl` list with correct `AccessLevel_Text` values for all intended users, and decide the unknown-user default (currently `User`, ideally `AccessDenied`) to fully activate the RBAC system.
-- **Build the trainer-approval & reminder Power Automate flows** — v0.9.26 added the `trainer*` (received → approved → recorded-in-Excel) and `reminder*` (1 week / 72 h / 1 h pre-class + 24 h post-create) columns to `Desk Reservations`, but the app writes them **blank**; the companion flows that populate them (and create the Outlook invite to back-fill `OutlookEventID`/`OutlookSeriesID`) still need to be built under `src/powerAutomate/`.
-- **Resolve `BindingErrorCount` (49 → 329 in v0.9.26)** — review in the Power Apps App Checker before the next production deployment; likely references to the removed `Desk Reservations`/`Desks` columns plus the modern Text/TextInput control migration.
-- **Finish reconciling version strings** — `varRepoVersion` and the `.msapp` label are now `0.9.26` and `VERSION` is aligned, but the manifest `AppDescription` still reads `v0.9.17`; unify it.
-- ~~Persist the Class/Session Picker selections~~ — **done in v0.9.26** (written in the Confirm SUBMIT `Patch`).
+- **Build/validate trainer-approval and reminder Power Automate flows** — required to fully operationalize trainer/reminder fields and post-create lifecycle actions.
+- **Burn down remaining App Checker findings** — `BindingErrorCount` improved to `120` in v0.12.2 but should be reduced further before broad production load.
+- ~~Finish reconciling version strings~~ — **done in v0.12.2** (`varRepoVersion`, package label, and manifest description are now aligned at `0.12.2`).
+- ~~Persist the Class/Session Picker selections~~ — **done in v0.9.26** (retained in v0.12.2).
 - Complete the cancellation workflow — `Button3_9` ("Cancel This") in `MyAppts` is stubbed; the actual `Patch`/delete logic to mark a reservation as cancelled in SharePoint needs to be wired up.
 - Continue replacing baseline "desk reservation" terminology with training-booking-centric labels throughout all screens and SharePoint columns.
 - Evaluate adding SharePoint column `Active_choice` population on booking creation so the past/active filter works consistently from day one.

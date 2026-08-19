@@ -12,7 +12,8 @@ App:
     MinScreenHeight: =320
     MinScreenWidth: =320
     OnStart: |-
-      =// ============================================================
+      =    Set(varRepoVersion, "0.12.2");
+      // ============================================================
       // 1. Initialization & Setup
       // ============================================================
       // Set initialization loading screen
@@ -33,13 +34,22 @@ App:
               )
           );
       // Refresh SharePoint list/data sources, then ClearCollect newest info
+          Refresh('Desk Reservations');
           Refresh(DeskAccessControl);
+          Refresh(Desks);
+          Refresh(MasterScheduleList);
+          Refresh(SuperUserList);
+          Refresh(backupList_DeskReservations);
+          Refresh('Learning Lab Sessions');
           ClearCollect(colDeskAccess, DeskAccessControl);
+          ClearCollect(col_MasterSchedule, MasterScheduleList);
           ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
-          ClearCollect(colMenu, []);
-          ClearCollect(CollectionRecurrence, []);
+          ClearCollect(col_SuperUserList, SuperUserList);
+          ClearCollect(col_backupDeskReservations, backupList_DeskReservations);
+          ClearCollect(col_nationalEHRMLearningLabSessions, 'Learning Lab Sessions');
+          Clear(colMenu);
+          Clear(CollectionRecurrence);
       // Declare global app rules
-          Set(varRepoVersion, "0.9.26");
           Set(user_isAdmin, false);
 
       // ============================================================
@@ -57,7 +67,7 @@ App:
       //    which at OnStart is always the case, but guarded for safety).
       // ============================================================
           If(
-              !varUserExists && varTargetEmail = varRealEmail,
+              !varUserExists && Lower(varTargetEmail) = Lower(varRealEmail),
               Patch(
                   DeskAccessControl,
                   Defaults(DeskAccessControl),
@@ -68,9 +78,13 @@ App:
                       'utcNow()_value': Now(),
                       Id_Text: varTargetEntraID,
                       AccessStart_dateTime: Now(),
+                      AccessStop_dateTime: DateAdd(Now(), 6, TimeUnit.Months),
                       Approver_Email_Text: varRealEmail,
                       Manager_Email_Text: Lower(Office365Users.Manager(varTargetEntraID).Mail),
-                      Title: varTargetEntraID
+                      Title: varTargetEntraID,
+                      'addMinutes(utcNow(),10)': DateAdd(Now(), 10, TimeUnit.Minutes),
+                      'Created Via': Text("New User to 578 EHRM Training App"),
+                      NetworkAccount_Text: varUser_details.mailNickname
                   }
               );
               Refresh(DeskAccessControl);
@@ -104,36 +118,273 @@ App:
               true,
 
               // Elevated roles: full menu
-              userAccessLevel_text in [
-                  "SuperUser", "Manager", "ServiceChief", "ProjectLeader", "AppAdmin"
-              ],
+              userAccessLevel_text in ["ProjectLeader", "Manager", "ServiceChief", "AppAdmin"],
               ClearCollect(
                   colMenu,
-                  { Name: "Home",    Icon: Icon.DetailList,       Page: Dashboard,      Visible: true },
-                  { Name: "My Bookings",  Icon: Icon.Person,           Page: MyAppts,        Visible: true },
-                  { Name: "Create New",         Icon: Icon.Add,              Page: POCSUPERVISOR,  Visible: true },
-                  { Name: "Manage Rooms", Icon: Icon.ComputerDesktop,  Page: ManageDesks,    Visible: true }
+                  {
+                      Name: "Home",
+                      Icon: Icon.Home,
+                      Page: Dashboard,
+                      Visible: true
+                  },
+                  {
+                      Name: "Items",
+                      Icon: Icon.Bookmark,
+                      Page: MyAppts,
+                      Visible: true
+                  },
+                  {
+                      Name: "Desks",
+                      Icon: Icon.ComputerDesktop,
+                      Page: ManageDesks,
+                      Visible: true
+                  },
+                  {
+                      Name: "Users",
+                      Icon: Icon.People,
+                      Page: ManageUsers,
+                      Visible: true
+                  },
+                  {
+                      Name:"Help",
+                      Icon: Icon.Help,
+                      Page: ReleaseNotes,
+                      Visible: true
+                  },
+                  {
+                      Name: "New",
+                      Icon: Icon.Add,
+                      Page: POCSUPERVISOR,
+                      Visible: true
+                  }
               ),
 
               // Standard user
-              userAccessLevel_text = "User",
+              userAccessLevel_text in ["User", "SuperUser"],
               ClearCollect(
                   colMenu,
-                  { Name: "Home",   Icon: Icon.DetailList, Page: Dashboard,     Visible: true },
-                  { Name: "My Bookings", Icon: Icon.Person,     Page: MyAppts,       Visible: true },
-                  { Name: "Create New",        Icon: Icon.Add,        Page: POCSUPERVISOR, Visible: true }
+                  {
+                      Name: "Home",
+                      Icon: Icon.Home,
+                      Page: Dashboard,
+                      Visible: true
+                  },
+                  {
+                      Name: "Items",
+                      Icon: Icon.Bookmark,
+                      Page: MyAppts,
+                      Visible: true
+                  },
+                  {
+                      Name: "Help",
+                      Icon: Icon.Help,
+                      Page: ReleaseNotes,
+                      Visible: true
+                  },
+                  {
+                      Name: "New",
+                      Icon: Icon.Add,
+                      Page: POCSUPERVISOR,
+                      Visible: true
+                  }
               ),
 
               // View-only
-              userAccessLevel_text = "View-only",
+              userAccessLevel_text in ["View-Only"],
               ClearCollect(
                   colMenu,
-                  { Name: "Home",   Icon: Icon.DetailList, Page: Dashboard, Visible: true },
-                  { Name: "My Bookings", Icon: Icon.Person,     Page: MyAppts,   Visible: true }
+                  {
+                      Name: "Home",
+                      Icon: Icon.Home,
+                      Page: Dashboard,
+                      Visible: true
+                  },
+                  {
+                      Name: "Items",
+                      Icon: Icon.Bookmark,
+                      Page: MyAppts,
+                      Visible: true
+                  },
+                  {
+                      Name:"Help",
+                      Icon: Icon.Help,
+                      Page: ReleaseNotes,
+                      Visible: true
+                  }
+              ),
+
+              // View-only
+              userAccessLevel_text in ["AccessDenied"],
+              ClearCollect(
+                  colMenu,
+                  {
+                      Name: "Home",
+                      Icon: Icon.Home,
+                      Page: Dashboard,
+                      Visible: true
+                  },
+                  {
+                      Name:"Help",
+                      Icon: Icon.Help,
+                      Page: ReleaseNotes,
+                      Visible: true
+                  }
               ),
 
               // AccessDenied or anything else: empty menu
-              ClearCollect(colMenu, [])
+              IsBlankOrError(userAccessLevel_text),
+              ClearCollect(
+                  colMenu,
+                  {
+                      Name: "Home",
+                      Icon: Icon.Home,
+                      Page: Dashboard,
+                      Visible: true
+                  },
+                  {
+                      Name:"Help",
+                      Icon: Icon.Help,
+                      Page: ReleaseNotes,
+                      Visible: true
+                  }
+              )
           );
+
+
+
+      Set(varTimer, true);
+
+
+
+      ResetForm(Form1);
+      ResetForm(Form2);
+
+
+      Set(_allRoomsConcat, Blank());
+      Set(_calendarVisible, Blank());
+      Set(_dateSelected, Blank());
+      Set(_dateSelected2, Blank());
+      Set(_firstDayInView, Blank());
+      Set(_FirstDayinView2, Blank());
+      Set(_firstDayOfMonth, Blank());
+      Set(_firstDayOfMonth2, Blank());
+      Set(_firstDayofWeek2, Blank());
+      Set(_lastDayOfMonth, Blank());
+      Set(_LastDayOfMonth2, Blank());
+      Set(_maxDate, Blank());
+      Set(_MaxDate, Blank());
+      Set(_MaxDate2, Blank());
+      Set(_minDate, Blank());
+      Set(_MinDate, Blank());
+      Set(_MinDate2, Blank());
+      Set(_myCalendarName, Blank());
+      Set(_myScheduledMeeting, Blank());
+      Set(_noRoomLists, Blank());
+      Set(_roomListSelected, Blank());
+      Set(_selectedMeetingTime, Blank());
+      Set(_selectedRoom, Blank());
+      Set(_selectedRoomList, Blank());
+      Set(_selectedUser, Blank());
+      Set(_showDetails, Blank());
+      Set(_showMeetingTimes, Blank());
+      Set(currentItem, Blank());
+      Set(endByDate, Blank());
+      Set(gv_item, Blank());
+      Set(maxOccurrence, Blank());
+      Set(NthWeekdayRecord, Blank());
+      Set(numWorkDays, Blank());
+      Set(PDFPrint, Blank());
+      Set(startWeekday, Blank());
+      Set(submitItem, Blank());
+      Set(var_Attendees, Blank());
+      Set(var_Date, Blank());
+      Set(var_Date_central, Blank());
+      Set(var_DayOfWeek, Blank());
+      Set(var_Duration, Blank());
+      Set(var_Duration_central, Blank());
+      Set(var_EmailBody, Blank());
+      Set(var_EndDateTime_central, Blank());
+      Set(var_EndTime, Blank());
+      Set(var_EndTime_central, Blank());
+      Set(var_firstHalfDuration, Blank());
+      Set(var_firstHalfDuration_central, Blank());
+      Set(var_ManagerEmail, Blank());
+      Set(var_MeetingCategory, Blank());
+      Set(var_OptionalAttendees, Blank());
+      Set(var_reservationAgreementBody, Blank());
+      Set(var_reservationBuildingNumber, Blank());
+      Set(var_reservationDivision, Blank());
+      Set(var_reservationFloorNumber, Blank());
+      Set(var_reservationFullDateTime, Blank());
+      Set(var_reservationFullLocation, Blank());
+      Set(var_reservationRole, Blank());
+      Set(var_reservationRoomNumber, Blank());
+      Set(var_reservationScenario, Blank());
+      Set(var_scenarioTrainingMaterialsURL, Blank());
+      Set(var_secondHalfTime, Blank());
+      Set(var_secondHalfTime_central, Blank());
+      Set(var_Service, Blank());
+      Set(var_StartDateTime_central, Blank());
+      Set(var_StartTime, Blank());
+      Set(var_StartTime_central, Blank());
+      Set(varAccept, Blank());
+      Set(varAccept3, Blank());
+      Set(varAccept4, Blank());
+      Set(varAttendees, Blank());
+      Set(varCancelContainer, Blank());
+      Set(varDaily, Blank());
+      Set(varDefaultEndTime, Blank());
+      Set(varDescription, Blank());
+      Set(varDeskMode, Blank());
+      Set(var_EmailBody, Blank());
+      Set(varEndDate, Blank());
+      Set(varEventEndTime, Blank());
+      Set(varEventStartTime, Blank());
+      Set(varImportance, Blank());
+      Set(varIsImpersonating, Blank());
+      Set(varManageSelectedDesk, Blank());
+      Set(varMeetCat, Blank());
+      Set(varMyProfile, Blank());
+      Set(varOptionalAttendees, Blank());
+      Set(varPopUp_ClassPicker, Blank());
+      Set(varPopUp_ClassPicker_scenario, Blank());
+      Set(varPopUp_ClassPicker_scenarioDate, Blank());
+      Set(varPopUp_ClassPicker_scenarioDateTime, Blank());
+      Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank());
+      Set(varPopUp_ClassPicker_scenarioEnd24, Blank());
+      Set(varPopUp_ClassPicker_scenarioEndTime, Blank());
+      Set(varPopUp_ClassPicker_scenarioLocation, Blank());
+      Set(varPopUp_ClassPicker_scenarioName, Blank());
+      Set(varPopUp_ClassPicker_scenarioRole, Blank());
+      Set(varPopUp_ClassPicker_scenarioSplit, Blank());
+      Set(varPopUp_ClassPicker_scenarioStart24, Blank());
+      Set(varPopUp_ClassPicker_scenarioStartTime, Blank());
+      Set(varRecurrence, Blank());
+      Set(varRecurrenceID, Blank());
+      Set(varReminder, Blank());
+      Set(varReservePOC, Blank());
+      Set(varSelectedDesk, Blank());
+      Set(varSelectedReservation, Blank());
+      Set(varSelectedStartDate, Blank());
+      Set(varsmartboardck, Blank());
+      Set(varStudentMgrMail, Blank());
+      Set(varStudentProfile, Blank());
+      Set(varTitle, Blank());
+      Set(varURL, Blank());
+      Set(varURLName, Blank());
+      Set(varUserExists, Blank());
+      Set(varWeekday, Blank());
+
+      Refresh('Desk Reservations');
+      Refresh(DeskAccessControl);
+      Refresh(Desks);
+      Refresh(MasterScheduleList);
+      Refresh(SuperUserList);
+      Refresh(backupList_DeskReservations);
+      Refresh('Learning Lab Sessions');
+
+      ClearCollect(colDeskAccess, DeskAccessControl);
+      ClearCollect(col_MasterSchedule, MasterScheduleList);
+      ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
     StartScreen: =Dashboard
     Theme: =PowerAppsTheme

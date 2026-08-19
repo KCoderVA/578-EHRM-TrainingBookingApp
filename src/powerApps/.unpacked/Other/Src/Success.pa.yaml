@@ -11,6 +11,23 @@ Screens:
     Properties:
       Fill: =RGBA(236, 236, 236, 1)
       Height: =Max(App.Height, App.DesignHeight)
+      OnVisible: |-
+        =// ═══════════════════════════════════════════════════════════════
+        // SUCCESS SCREEN  —  property-by-property formulas
+        // ═══════════════════════════════════════════════════════════════
+
+        // ───────────────────────────────────────────────────────────────
+        // SCREEN.OnVisible
+        // ───────────────────────────────────────────────────────────────
+        // Decide once whether everything succeeded. Only start the auto-
+        // redirect timer when it did; otherwise the user stays here to read
+        // the warning and must dismiss manually.
+        If(
+            (varCalendarOK = true && (varMainOK = true || varMainSimpleOK = true) && (varBackupOK = true || varBackupSimpleOK = true)),
+            Set(varAllOK, true) && Set(varShowRedirect, varAllOK),
+            (varCalendarOK <> true && (varMainOK <> true || varMainSimpleOK <> true) && (varBackupOK <> true || varBackupSimpleOK <> true)),
+            Set(varAllOK, false) && Set(varShowRedirect, varAllOK)
+        )
       Width: =Max(App.Width, App.DesignWidth)
     Children:
       - Image2_3:
@@ -23,15 +40,29 @@ Screens:
       - iconCircle1:
           Control: Circle@2.3.0
           Properties:
-            Fill: =RGBA(15, 108, 189, 1)
+            Fill: |-
+              =If(
+                  varAllOK,
+                  RGBA(15, 108, 189, 1),
+                  RGBA(168, 0, 0, 1)
+              )
             X: =(Parent.Width - Self.Width) / 2
-            Y: =(Parent.Height/2 - Self.Height/2) * .7
+            Y: =iconCheck1.Y
       - iconCheck1:
           Control: Classic/Icon@2.5.0
           Properties:
             Color: =RGBA(255, 255, 255, 1)
             Height: =iconCircle1.Height
-            Icon: =Icon.Check
+            Icon: |+
+              =//"Your training is booked!"
+              // ───────────────────────────────────────────────────────────────
+              // LblSuccessMsg1.Text   (main heading/message label)
+              // ───────────────────────────────────────────────────────────────
+              If(
+                  varAllOK,
+                  Icon.Check,
+                  Icon.Error
+              )
             PaddingBottom: =Self.PaddingTop
             PaddingLeft: =Self.PaddingTop
             PaddingRight: =Self.PaddingTop
@@ -39,17 +70,27 @@ Screens:
             PressedFill: =RGBA(255, 255, 255, 0.3)
             Width: =iconCircle1.Width
             X: =(Parent.Width - Self.Width) / 2
-            Y: =(Parent.Height/2 - Self.Height/2) * .7
+            Y: |+
+              =lblSuccess.Y + lblSuccess.Height + (Self.Height / 2) - 10
       - LblSuccessMsg1:
           Control: Label@2.5.1
           Properties:
             Align: =Align.Center
-            AutoHeight: =true
-            Height: =iconCircle1.Height
-            Text: ="You're booked!"
-            Width: =640
-            X: =(Parent.Width - Self.Width) / 2
-            Y: =382
+            FontWeight: =FontWeight.Bold
+            Height: =50
+            Size: =28
+            Text: |+
+              =//"Your training is booked!"
+              // ───────────────────────────────────────────────────────────────
+              // LblSuccessMsg1.Text   (main heading/message label)
+              // ───────────────────────────────────────────────────────────────
+              If(
+                  varAllOK,
+                  "✅ Your submission was successfully submitted!",
+                  "⚠️ Your submission may not have fully saved."
+              )
+            Width: =Parent.Width
+            Y: =iconCheck1.Y + iconCheck1.Height
       - Timer1:
           Control: Timer@2.1.0
           Properties:
@@ -97,7 +138,7 @@ Screens:
               Set(varDefaultEndTime, Blank());
               Set(varDescription, Blank());
               Set(varDeskMode, Blank());
-              Set(varEmailBody, Blank());
+              Set(var_EmailBody, Blank());
               Set(varEndDate, Blank());
               Set(varEventEndTime, Blank());
               Set(varEventStartTime, Blank());
@@ -132,12 +173,11 @@ Screens:
             Align: =Align.Center
             Color: =RGBA(255, 255, 255, 1)
             FontWeight: =FontWeight.Bold
-            Height: =113
-            Size: =32
+            Height: =150
+            Size: =48
             Text: ="Success!"
-            Width: =640
+            Width: =Parent.Width
             X: =(Parent.Width - Self.Width) / 2
-            Y: =18
       - Tabs_6:
           Control: CanvasComponent
           ComponentName: Tabs
@@ -146,34 +186,313 @@ Screens:
             HomePage: =App.ActiveScreen
             Items: |-
               =colMenu
-              /*
-              Table(
+              /*Table(
                   {
                       Name: "Home",
                       Icon: Icon.DetailList,
-                      Page: Dashboard,        
+                      Page: App.ActiveScreen,
                       Visible:true
                   },
                   {
-                      Name: "My Appts",
-                      Icon: Icon.Person,
-                      Page: MyAppts,
+                      Name: "Items",
+                      Icon: Icon.Bookmark,
+                      Page: App.ActiveScreen,
                       Visible:true
                   },
                   {
-                      Name: "Create New",
-                      Icon: Icon.Add,
-                      Page: chkWeekDays,
-                      Visible:true
-                  },
-                  {
-                      Name: "Manage Desks",
+                      Name: "Desks",
                       Icon: Icon.ComputerDesktop,
-                      Page: ManageDesks,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  },
+                  {
+                      Name: "Users",
+                      Icon: Icon.People,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  },
+                  {
+                      Name: "New",
+                      Icon: Icon.Add,
+                      Page: App.ActiveScreen,
                       Visible:true
                   }
-              )
-              */
+              )*/
+            Visible: =false
             Width: =608
             X: =(Parent.Width - Self.Width) / 2
             Y: =520
+      - Timer2_1:
+          Control: Timer@2.1.0
+          Properties:
+            AutoStart: |-
+              =If(
+                  IsBlankOrError(varShowRedirect),
+                  false,
+                  varShowRedirect = true,
+                  varShowRedirect,
+                  false
+              )
+            BorderThickness: =0
+            Color: =
+            Duration: =2500
+            Fill: =RGBA(255, 255, 255, 0)
+            FontWeight: =FontWeight.Lighter
+            Height: =40
+            OnSelect: |-
+              =If(
+                  IsBlankOrError(varShowRedirect),
+                  Launch("mailto:Kyle.coder@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov&subject=Error%20saving%20my%20submission%20into%20your%20'578%20EHRM%20Training%20App'"),
+                  varShowRedirect = false,
+                  Launch("mailto:Kyle.coder@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov&subject=Error%20saving%20my%20submission%20into%20your%20'578%20EHRM%20Training%20App'"),
+                  false
+              )
+            OnTimerEnd: |-
+              =If(
+                  IsBlankOrError(varShowRedirect),
+                  false,
+                  varShowRedirect = true,
+                  Navigate(Dashboard),
+                  false
+              )
+            OnTimerStart: |-
+              =If(
+                  IsBlankOrError(varShowRedirect),
+                  false,
+                  varShowRedirect = true,
+                  Concurrent(
+                      Set(varTimer, true),
+                      Refresh('Desk Reservations'),
+                      Refresh(DeskAccessControl),
+                      Refresh(MasterScheduleList),
+                      Refresh(Desks),
+                      Refresh(SuperUserList),
+                      Refresh(backupList_DeskReservations),
+                      Refresh('Learning Lab Sessions'),
+                      ResetForm(Form1),
+                      ResetForm(Form2),
+                      Set(_allRoomsConcat, Blank()),
+                      Set(_calendarVisible, Blank()),
+                      Set(_dateSelected, Blank()),
+                      Set(_dateSelected2, Blank()),
+                      Set(_firstDayInView, Blank()),
+                      Set(_FirstDayinView2, Blank()),
+                      Set(_firstDayOfMonth, Blank()),
+                      Set(_firstDayOfMonth2, Blank()),
+                      Set(_firstDayofWeek2, Blank()),
+                      Set(_lastDayOfMonth, Blank()),
+                      Set(_LastDayOfMonth2, Blank()),
+                      Set(_maxDate, Blank()),
+                      Set(_MaxDate, Blank()),
+                      Set(_MaxDate2, Blank()),
+                      Set(_minDate, Blank()),
+                      Set(_MinDate, Blank()),
+                      Set(_MinDate2, Blank()),
+                      Set(_myCalendarName, Blank()),
+                      Set(_myScheduledMeeting, Blank()),
+                      Set(_noRoomLists, Blank()),
+                      Set(_roomListSelected, Blank()),
+                      Set(_selectedMeetingTime, Blank()),
+                      Set(_selectedRoom, Blank()),
+                      Set(_selectedRoomList, Blank()),
+                      Set(_selectedUser, Blank()),
+                      Set(_showDetails, Blank()),
+                      Set(_showMeetingTimes, Blank()),
+                      Set(currentItem, Blank()),
+                      Set(endByDate, Blank()),
+                      Set(gv_item, Blank()),
+                      Set(maxOccurrence, Blank()),
+                      Set(NthWeekdayRecord, Blank()),
+                      Set(numWorkDays, Blank()),
+                      Set(PDFPrint, Blank()),
+                      Set(startWeekday, Blank()),
+                      Set(submitItem, Blank()),
+                      //Set(user_isAdmin, Blank()),
+                      //Set(userAccessLevel_text, Blank()),
+                      Set(var_Attendees, Blank()),
+                      //Set(var_AuthorInfo, Blank(),
+                      Set(var_Date, Blank()),
+                      Set(var_Date_central, Blank()),
+                      Set(var_DayOfWeek, Blank()),
+                      Set(var_Duration, Blank()),
+                      Set(var_Duration_central, Blank()),
+                      Set(var_EmailBody, Blank()),
+                      Set(var_EndDateTime_central, Blank()),
+                      Set(var_EndTime, Blank()),
+                      Set(var_EndTime_central, Blank()),
+                      Set(var_firstHalfDuration, Blank()),
+                      Set(var_firstHalfDuration_central, Blank()),
+                      Set(var_ManagerEmail, Blank()),
+                      Set(var_MeetingCategory, Blank()),
+                      Set(var_OptionalAttendees, Blank()),
+                      Set(var_reservationBuildingNumber, Blank()),
+                      Set(var_reservationDivision, Blank()),
+                      Set(var_reservationFloorNumber, Blank()),
+                      Set(var_reservationFullDateTime, Blank()),
+                      Set(var_reservationFullLocation, Blank()),
+                      Set(var_reservationRole, Blank()),
+                      Set(var_reservationRoomNumber, Blank()),
+                      Set(var_reservationScenario, Blank()),
+                      Set(var_scenarioTrainingMaterialsURL, Blank()),
+                      Set(var_secondHalfTime, Blank()),
+                      Set(var_secondHalfTime_central, Blank()),
+                      Set(var_Service, Blank()),
+                      Set(var_StartDateTime_central, Blank()),
+                      Set(var_StartTime, Blank()),
+                      Set(var_StartTime_central, Blank()),
+                      Set(varAccept, Blank()),
+                      Set(varAccept3, Blank()),
+                      Set(varAccept4, Blank()),
+                      Set(varAttendees, Blank()),
+                      Set(varCancelContainer, Blank()),
+                      Set(varDaily, Blank()),
+                      Set(varDefaultEndTime, Blank()),
+                      Set(varDescription, Blank()),
+                      //Set(varDeskAccessControl_record, Blank()),
+                      Set(varDeskMode, Blank()),
+                      Set(varEndDate, Blank()),
+                      Set(varEventEndTime, Blank()),
+                      Set(varEventStartTime, Blank()),
+                      Set(varImportance, Blank()),
+                      Set(varIsImpersonating, Blank()),
+                      Set(varManageSelectedDesk, Blank()),
+                      Set(varMeetCat, Blank()),
+                      Set(varOptionalAttendees, Blank()),
+                      Set(varPopUp_ClassPicker, Blank()),
+                      Set(varPopUp_ClassPicker_scenario, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioDate, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioDateTime, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioEnd24, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioEndTime, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioLocation, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioName, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioRole, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioSplit, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioStart24, Blank()),
+                      Set(varPopUp_ClassPicker_scenarioStartTime, Blank()),
+                      //Set(varRealEmail, Blank()),
+                      //Set(varRealEntraID, Blank()),
+                      Set(varRecurrence, Blank()),
+                      Set(varRecurrenceID, Blank()),
+                      Set(varReminder, Blank()),
+                      //Set(varRepoVersion, Blank()),
+                      Set(varReservePOC, Blank()),
+                      Set(varSelectedDesk, Blank()),
+                      Set(varSelectedReservation, Blank()),
+                      Set(varSelectedStartDate, Blank()),
+                      Set(varsmartboardck, Blank()),
+                      //Set(varTargetEmail, Blank()),
+                      //Set(varTargetEntraID, Blank()),
+                      Set(varTitle, Blank()),
+                      Set(varURL, Blank()),
+                      Set(varURLName, Blank()),
+                      Set(varUserExists, Blank()),
+                      //Set(varUser_details, Blank()),
+                      Set(varWeekday, Blank()),
+                      Clear(AllRooms),
+                      Clear(AvailableRooms),
+                      Clear(AvailableRoomsOptimal),
+                      Clear(col_EventBuildDetails),
+                      Clear(col_EventCombinedDetails),
+                      Clear(col_MasterSchedule),
+                      Clear(colCombinedRecurrence),
+                      Clear(colDates),
+                      //Clear(colDeskAccess),
+                      Clear(colDeskChckRecur),
+                      Clear(CollectionRecurrence),
+                      //Clear(colMenu),
+                      Clear(colRoomFilter),
+                      Clear(colSelectedDesks),
+                      Clear(colSmartboard),
+                      //Clear(colUser_details),
+                      Clear(MeetingTimes),
+                      Clear(MyPeople),
+                      Clear(RoomsLists),
+                      Clear(RoomTimeSuggestions),
+                      Clear(WeekdaysOnly),
+                      Clear(wkDays),
+                      Clear(wkDaysTemp)
+                  ),
+                  false
+              )
+            Repeat: =true
+            Size: =18
+            Text: |-
+              =If(
+                  IsBlankOrError(varShowRedirect),
+                  "Kyle.Coder@va.gov",
+                  varShowRedirect = true,
+                  Text(DateAdd(Self.Duration, - (Time(0,0,0, Self.Value)), TimeUnit.Milliseconds), "sfff"),
+                  ""
+              )
+            Width: |+
+              =250
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =Parent.Height - Self.Height
+      - LblSuccessMsg1_2:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            AutoHeight: =true
+            Height: |+
+              =100
+            Italic: =true
+            Size: =18
+            Text: |-
+              =//"You now have a Outlook calendar invite for the date/time you selected, which contains more important details about your upcoming training event/class!"
+              If(
+                  varAllOK = true && user_isAdmin = true,
+                  "You now have a Outlook calendar invite for the date/time you selected, which contains more important details about your upcoming training event/class!"
+                      & Char(10) &
+                      If(varMainOK = true, "• Main reservation list = SUCCESS" & Char(10), varMainOK = false, "• Main reservation list = FAILED" & Char(10)) &
+                      If(varMainSimpleOK = true, "• Main (simple) reservation list = SUCCESS" & Char(10), varMainSimpleOK = false, "• Main (simple) reservation list = FAILED" & Char(10)) &
+                      If(varBackupOK = true, "• Backup reservation list = SUCCESS" & Char(10), varBackupOK = false, "• Backup reservation list = FAILED" & Char(10)) &
+                      If(varBackupSimpleOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10), varBackupSimpleOK = false, "• Backup (simple) reservation list = FAILED" & Char(10)) &
+                      If(varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10), varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10)),
+                  varAllOK = true && user_isAdmin = false,
+                      "You now have a Outlook calendar invite for the date/time you selected, which contains more important details about your upcoming training event/class!"
+                      & Char(10) &
+                      If(varMainOK = true, "• Main reservation list = SUCCESS" & Char(10), varMainOK = false, "• Main reservation list = FAILED" & Char(10)) &
+                      //If(varMainSimpleOK = true, "• Main (simple) reservation list = SUCCESS" & Char(10), varMainSimpleOK = false, "• Main (simple) reservation list = FAILED" & Char(10)) &
+                      //If(varBackupOK = true, "• Backup reservation list = SUCCESS" & Char(10), varBackupOK = false, "• Backup reservation list = FAILED" & Char(10)) &
+                      If(varBackupSimpleOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10), varBackupSimpleOK = false, "• Backup (simple) reservation list = FAILED" & Char(10)) &
+                      If(varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10), varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10)),
+                  varAllOK = false && user_isAdmin = true,
+                  "The following did NOT complete successfully:" & Char(10) &
+                      If(varMainOK = false, "• Main reservation list = FAILED" & Char(10), varMainOK = true, "• Main reservation list = SUCCESS" & Char(10)) &
+                      If(varMainSimpleOK = false, "• Main (simple) reservation list = FAILED" & Char(10), varMainSimpleOK = true, "• Main (simple) reservation list = SUCCESS" & Char(10)) &
+                      If(varBackupOK = false, "• Backup reservation list = FAILED" & Char(10), varBackupOK = true, "• Backup reservation list = SUCCESS" & Char(10)) &
+                      If(varBackupSimpleOK = false, "• Backup (simple) reservation list = FAILED" & Char(10), varBackupSimpleOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10)) &
+                      If(varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10), varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10)) & 
+                      "Please refresh the app (reload the web page) and submit again. If this error repeats another time, please contact the app admins via Kyle.Coder@va.gov.",
+                  varAllOK = false && user_isAdmin = false,
+                  "The following did NOT complete successfully:" & Char(10) &
+                      If(varMainOK = false, "• Main reservation list = FAILED" & Char(10), varMainOK = true, "• Main reservation list = SUCCESS" & Char(10)) &
+                      //If(varMainSimpleOK = false, "• Main (simple) reservation list = FAILED" & Char(10), varMainSimpleOK = true, "• Main (simple) reservation list = SUCCESS" & Char(10)) &
+                      //If(varBackupOK = false, "• Backup reservation list = FAILED" & Char(10), varBackupOK = true, "• Backup reservation list = SUCCESS" & Char(10)) &
+                      If(varBackupSimpleOK = false, "• Backup (simple) reservation list = FAILED" & Char(10), varBackupSimpleOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10)) &
+                      If(varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10), varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10)) & 
+                      "Please refresh the app (reload the web page) and submit again. If this error repeats another time, please contact the app admins via Kyle.Coder@va.gov."
+              )
+            Width: =LblSuccessMsg1.Width / 1.2
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =LblSuccessMsg1.Y + LblSuccessMsg1.Height
+      - LblSuccessMsg1_3:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Lighter
+            Height: =40
+            Italic: =true
+            Size: =20
+            Text: |-
+              =If(
+                  IsBlankOrError(varShowRedirect),
+                  "If this error repeats another time, please contact the app admins via",
+                  varShowRedirect = true,
+                  "Moving back to home screen in. . . . "
+              )
+            Width: =Parent.Width
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =Timer2_1.Y - Self.Height
