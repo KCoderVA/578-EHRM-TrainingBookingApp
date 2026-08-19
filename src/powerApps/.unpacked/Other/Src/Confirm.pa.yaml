@@ -12,12 +12,26 @@ Screens:
       Fill: =RGBA(236, 236, 236, 1)
       Height: =Max(App.Height, App.DesignHeight)
       OnVisible: |-
-        =ClearCollect(
+        =// ———————————————————————————————————————————————————————————————
+        // 0) Pre-compute fragile lookups ONCE, safely.
+        Set(varMyProfile, IfError(Office365Users.MyProfileV2(), Blank()));
+        Set(varStudentProfile, IfError(Office365Users.UserProfileV2(var_Attendees), Blank()));
+        Set(varStudentMgrMail, IfError(Lower(Office365Users.ManagerV2(var_Attendees).mail), Blank()));
+        Set(varStudentMgrProfile, IfError(Office365Users.ManagerV2(varTargetEntraID), Blank()));
+
+        ClearCollect(
             colCombinedRecurrence,
             AddColumns(
                 CollectionRecurrence,
                 Floor,
-                First(colSelectedDesks).FloorNumber_number
+                If(
+                    !IsBlankOrError(First(colSelectedDesks).FloorNumber_number),
+                        First(colSelectedDesks).FloorNumber_number,
+                        //Value(var_reservationFloorNumber),
+                    IsBlankOrError(var_reservationFloorNumber),
+                        Value("2"),
+                    First(colSelectedDesks).FloorNumber_number
+                    )
             )
         );
         ClearCollect(
@@ -42,7 +56,8 @@ Screens:
                 ) + 1,
                 1
             )
-        )
+        );
+        Set(varSelectedDesk, First(col_EventCombinedDetails));
       Width: =Max(App.Width, App.DesignWidth)
     Children:
       - Gallery3_1:
@@ -50,32 +65,37 @@ Screens:
           Variant: Vertical
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
-            Height: =(text_Value3.Height + text_Value3.Y + 50)
+            Height: =(btn_ContactPOC.Height + btn_ContactPOC.Y + 30)
             Items: |-
               =//CollectionRecurrence
               colCombinedRecurrence
+            ShowScrollbar: =false
             TemplateSize: =250
-            Visible: =!varAccept3 And !varAccept4
+            Visible: |-
+              =If(
+                  IsBlankOrError(varAccept3) || varAccept3 = false,
+                      false,
+                  IsBlankOrError(varAccept4) || varAccept4 = false,
+                      false,
+                  varAccept3 = true && varAccept4 = true,
+                      true,
+                  false
+              )
             Width: =800
             X: =(Parent.Width / 2) - (Self.Width / 2)
             Y: =lblReview_1.Y + lblReview_1.Height + 10
           Children:
-            - Rectangle12:
-                Control: Rectangle@2.3.0
-                Properties:
-                  Height: =0
-                  OnSelect: =Select(Parent)
-                  Width: =537
-                  Y: =Gallery3_1.TemplateHeight
             - text_Value7:
                 Control: Text@0.0.51
                 Properties:
                   Height: =25
                   Size: =18
                   Text: =var_Attendees
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Bold
                   Width: =text_Key7.Width
-                  X: =text_Key7.X
+                  X: |+
+                    =textKey_Date.X + 5
                   Y: =text_Key7.Y + text_Key7.Height
             - text_Key7:
                 Control: Text@0.0.51
@@ -84,20 +104,39 @@ Screens:
                   FontItalic: =true
                   Height: =20
                   Text: ="Selected EMPLOYEE:"
-                  Visible: =!varAccept3 And !varAccept4
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Regular
                   Width: =text_Key4.Width
-                  X: =text_Value6.X
+                  X: =textKey_Date.X
                   Y: =text_Value6.Y + text_Value6.Height + 10
+            - btn_SelectedEmployee:
+                Control: ModernButton@1.0.0
+                Properties:
+                  Appearance: =ButtonAppearance.Transparent
+                  Height: =text_Key7.Height + text_Value7.Height
+                  OnSelect: |-
+                    =ResetForm(Form1);
+                    Navigate(POCSUPERVISOR);
+                  Text: =
+                  Width: =text_Key7.Width
+                  X: =text_Key7.X
+                  Y: =text_Key7.Y
             - text_Value6:
                 Control: Text@0.0.51
                 Properties:
-                  Height: =25
+                  Height: |-
+                    =If(
+                        Len(Self.Text) > 35,
+                        50,
+                        25
+                    )
                   Size: =18
                   Text: =varPopUp_ClassPicker_scenarioRole
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Bold
                   Width: =text_Key6.Width
-                  X: =text_Key6.X
+                  X: |+
+                    =textKey_Date.X + 5
                   Y: =text_Key6.Y + text_Key6.Height
             - text_Key6:
                 Control: Text@0.0.51
@@ -106,18 +145,23 @@ Screens:
                   FontItalic: =true
                   Height: =20
                   Text: ="Selected ROLE:"
-                  Visible: =!varAccept3 And !varAccept4
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Regular
                   Width: =text_Key4.Width
-                  X: =text_Value1.X
+                  X: =textKey_Date.X
                   Y: =text_Value4.Y + text_Value4.Height + 10
             - text_Value5:
                 Control: Text@0.0.51
                 Properties:
                   Height: =25
                   Size: =18
-                  Text: =varPopUp_ClassPicker_scenarioName
-                  Visible: =false
+                  Text: |-
+                    =If(
+                        IsBlankOrError(varSelectedDesk.TrainingCoordEmail_text),
+                        "VHAHINInformaticsTrainingAndSupport@va.gov",
+                        varSelectedDesk.TrainingCoordEmail_text
+                    )
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Bold
                   Width: =text_Key5.Width
                   X: =text_Key5.X
@@ -125,12 +169,19 @@ Screens:
             - text_Value4:
                 Control: Text@0.0.51
                 Properties:
-                  Height: =25
+                  Height: |-
+                    =If(
+                        Len(Self.Text) > 35,
+                        50,
+                        25
+                    )
                   Size: =18
                   Text: =varPopUp_ClassPicker_scenarioName
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Bold
                   Width: =text_Key4.Width
-                  X: =text_Key4.X
+                  X: |+
+                    =textKey_Date.X + 5
                   Y: =text_Key4.Y + text_Key4.Height
             - text_Key5:
                 Control: Text@0.0.51
@@ -138,12 +189,30 @@ Screens:
                   Fill: =RGBA(180, 214, 250, 1)
                   FontItalic: =true
                   Height: =20
-                  Text: ="End Date/Time"
-                  Visible: =false
+                  Text: ="Training Event POINT-OF-CONTACT:"
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Regular
-                  Width: =text_Key4.Width
+                  Width: =text_Key3.Width
                   X: =text_Key4.X + text_Key4.Width
-                  Y: =text_Key4.Y
+                  Y: =text_Key7.Y
+            - btn_ContactPOC:
+                Control: ModernButton@1.0.0
+                Properties:
+                  Appearance: =ButtonAppearance.Transparent
+                  Height: =text_Key5.Height + text_Value5.Height
+                  OnSelect: |-
+                    =Launch(
+                        Concatenate(
+                            "mailto:",
+                            text_Value5.Text
+                        ),
+                        LaunchTarget.New,
+                        ""
+                    )
+                  Text: =
+                  Width: =text_Key5.Width
+                  X: =text_Key5.X
+                  Y: =text_Key5.Y
             - text_Key4:
                 Control: Text@0.0.51
                 Properties:
@@ -151,30 +220,57 @@ Screens:
                   FontItalic: =true
                   Height: =20
                   Text: ="Selected SCENARIO:"
-                  Visible: =!varAccept3 And !varAccept4
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Regular
-                  Width: =text_Key1.Width + text_Key2.Width
-                  X: =text_Value1.X
+                  Width: =textKey_Date.Width + text_Key2.Width
+                  X: =textKey_Date.X
                   Y: =text_Value1.Y + text_Value1.Height + 10
             - text_Value3:
                 Control: Text@0.0.51
                 Properties:
-                  Height: =200
+                  Height: |-
+                    =If(
+                        IsBlankOrError(varSelectedDesk.CombinedLocationDetails_multilinePlainText),
+                        150,
+                        180
+                    )
                   Size: =20
-                  Text: =varSelectedDesk.CombinedLocationDetails_multilinePlainText
+                  Text: |-
+                    =If(
+                    IsBlankOrError(varSelectedDesk.CombinedLocationDetails_multilinePlainText),
+                    ("Desk 1"
+                    & ",
+                    " &
+                    "Room " & var_reservationRoomNumber
+                    & ",
+                    " &
+                    "Floor " & var_reservationFloorNumber
+                    & ",
+                    " &
+                    "Building " & var_reservationBuildingNumber
+                    & ",
+                    " &
+                    var_reservationDivision),
+                    varSelectedDesk.CombinedLocationDetails_multilinePlainText
+                    )
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Bold
                   Width: =text_Key3.Width
-                  X: =text_Key3.X
+                  X: =text_Key3.X + 5
                   Y: =text_Key3.Y + text_Key3.Height
             - text_Value2:
                 Control: Text@0.0.51
                 Properties:
                   Height: =25
                   Size: =18
-                  Text: =var_secondHalfTime
+                  Text: |-
+                    =//var_secondHalfTime  & " (EST)"
+                    var_secondHalfTime_central & " (CST)"//
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Bold
                   Width: =text_Key2.Width
-                  X: =text_Key2.X
+                  X: |+
+                    =text_Value1.X + text_Value1.Width + 5
                   Y: =text_Key2.Y + text_Key2.Height
             - text_Value1:
                 Control: Text@0.0.51
@@ -182,20 +278,24 @@ Screens:
                   Height: =25
                   Size: =18
                   Text: =var_Date //ThisItem.StartDateTime
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Bold
-                  Width: =text_Key1.Width
-                  X: =text_Key1.X
-                  Y: =text_Key1.Y + text_Key1.Height
+                  Width: =textKey_Date.Width
+                  X: |+
+                    =textKey_Date.X + 5
+                  Y: =textKey_Date.Y + textKey_Date.Height
             - text_Key3:
                 Control: Text@0.0.51
                 Properties:
                   Fill: =RGBA(180, 214, 250, 1)
                   FontItalic: =true
                   Height: =20
-                  Text: ="Room Location & Desk Assignment"
-                  Visible: =!varAccept3 And !varAccept4
+                  Text: ="Training Event LOCATION DETAILS:"
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Regular
-                  Width: =350
+                  Width: |-
+                    =//350
+                    Parent.Width - textKey_Date.Width - text_Key2.Width - 10
                   X: =text_Key2.X + text_Key2.Width
                   Y: =text_Key2.Y
             - text_Key2:
@@ -204,22 +304,44 @@ Screens:
                   Fill: =RGBA(180, 214, 250, 1)
                   FontItalic: =true
                   Height: =20
-                  Text: ="Training Time:"
-                  Visible: =!varAccept3 And !varAccept4
+                  Text: ="Training TIME:"
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Regular
-                  Width: =text_Key1.Width * 2
-                  X: =text_Key1.X + text_Key1.Width
-                  Y: =text_Key1.Y
-            - text_Key1:
+                  Width: =textKey_Date.Width * 2
+                  X: =textKey_Date.X + textKey_Date.Width
+                  Y: =textKey_Date.Y
+            - textKey_Date:
                 Control: Text@0.0.51
                 Properties:
                   Fill: =RGBA(180, 214, 250, 1)
                   FontItalic: =true
                   Height: =20
-                  Text: ="Training Date:"
-                  Visible: =!varAccept3 And !varAccept4
+                  Text: ="Training DATE:"
+                  Visible: =Parent.Visible
                   Weight: ='TextCanvas.Weight'.Regular
                   Width: =120
+            - btn_Date:
+                Control: ModernButton@1.0.0
+                Properties:
+                  Appearance: =ButtonAppearance.Transparent
+                  Height: |-
+                    =Max(
+                        (text_Value3.Y + text_Value3.Height),
+                        (text_Value6.Y + text_Value6.Height)
+                    )
+                  OnSelect: |-
+                    =Launch(
+                        Concatenate(
+                            "mailto:",
+                            text_Value5.Text
+                        ),
+                        LaunchTarget.New,
+                        ""
+                    )
+                  Text: =
+                  Width: =Parent.Width - (Parent.TemplatePadding * 2)
+                  X: =textKey_Date.X
+                  Y: =textKey_Date.Y
       - lblReview:
           Control: Label@2.5.1
           Properties:
@@ -228,11 +350,17 @@ Screens:
             Height: =60
             Italic: =true
             LineHeight: =1
+            PaddingBottom: =0
+            PaddingTop: =0
             Size: =16
-            Text: |-
-              ="Please review your reservation details, before clicking 'SUBMIT'......
-              (or go 'Back' to make changes)"
-            Visible: =!varAccept3 And !varAccept4
+            Text: ="Please review your reservation details below, before sumitting..."
+            Visible: |-
+              =If(
+                  Container2.Visible = true,
+                  false,
+                  Container2.Visible = false,
+                  true
+              )
             Width: =675
             X: =(Parent.Width - Self.Width) / 2
             Y: =150
@@ -243,16 +371,471 @@ Screens:
             Image: =abstractBackground
             ImagePosition: =ImagePosition.Fill
             Width: =Parent.Width
-      - btnConfirm_2:
+      - btnSubmit:
           Control: Classic/Button@2.2.0
           Properties:
             Fill: =RGBA(15, 108, 189, 1)
             Height: =45
             HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: "=// ———————————————————————————————————————————————————————————————————————————————————————————————————————\n// 1) Save item(s) to Outlook\nOffice365Outlook.V4CalendarPostItem(\n    LookUp(Office365Outlook.CalendarGetTables().value, DisplayName = \"Calendar\").Name, // current user's Outlook Calendar\n    //Subject\n        Concatenate(\n            \"EHRM Learning Lab Scenario - \",\n            var_reservationScenario //varTitle\n        ),\n    //Start Date/Time\n        varEventStartTime,\n    //End Date/Time\n        varEventEndTime,\n    //Event Timezone\n    \"(UTC-06:00) Central Time\",\n    //Main properties\n        {\n                requiredAttendees: var_Attendees, //varAttendees,\n                //optionalAttendees: varOptionalAttendees,\n                body: varEmailBody,\n                categories: varMeetCat,      \n                location: varSelectedDesk.CombinedLocationDetails_multilinePlainText, // Need proper value\n                importance: varImportance, // low, normal, high\n                isAllDay: false, // true if all day\n                recurrence: varRecurrence, // \"weekly\", \"daily\", etc.\n                selectedDaysOfWeek: varWeekday,\n                recurrenceEnd: Text(DateValue(varEndDate), \"yyyy-mm-dd\"), // \"2025-06-08\"\n                numberOfOccurences: Value(recurPeriodTxt.Text), // integer\n                reminderMinutesBeforeStart: varReminder, // integer\n                isReminderOn: If(varReminder > 0, true, false), // or false\n                showAs: \"busy\", // free, tentative, busy, oof, workingElsewhere, unknown\n                responseRequested: true, // or true for RSVP\n                sensitivity: \"normal\" // normal, personal, private, confidential\n        }\n);\n//////////////////////////////////////////////////////////////////////////////////////////////\n// ——————————————————————————————————————————————\n// 2) Patch to SharePoint list, For each recurrence date…\nForAll(\n    CollectionRecurrence As rec,\n    // …and each selected desk…\n    ForAll(\n        colSelectedDesks As desk,\n    // ——— (Optional) send the invite ———\n        \n        // ——— Patch the SharePoint list ———\n        Patch(\n            'Desk Reservations',\n            Defaults('Desk Reservations'),\n            {\n                // New Columns:\n                Title: var_Attendees & \" – \" &  var_MeetingCategory & \" - \" & var_reservationScenario & \" (\" & var_reservationRole & \")\",\n                submitterName_text: Office365Users.MyProfileV2().displayName,\n                submitterEmail_text: Lower(Office365Users.MyProfileV2().mail),\n                submitterService_text: Office365Users.MyProfileV2().department & \" - \" &Office365Users.MyProfileV2().companyName,\n                studentName_text: Office365Users.UserProfileV2(var_Attendees).displayName,\n                studentEmail_text: Lower(Office365Users.UserProfileV2(var_Attendees).mail),\n                studentService_text: var_Service,\n                studentTitle_text: Office365Users.UserProfileV2(var_Attendees).jobTitle,\n                studentManagerEmail_text: Lower(Office365Users.ManagerV2(var_Attendees).mail),\n                reservationRole_text: var_reservationRole,\n                reservationScenario_text: var_reservationScenario,\n                reservationStart_datetime: varEventStartTime,\n                reservationEnd_datetime: varEventEndTime,\n                reservationDesk_text: Blank(),\n                reservationRoom_text: \"Room #\" & var_reservationRoomNumber,\n                reservationFloor_text: \"Floor #\" & var_reservationFloorNumber,\n                reservationBuilding_text: \"Building #\" & var_reservationBuildingNumber,\n                reservationDivision_text: var_reservationDivision,\n                reservationAgreementBody_multilinetext: var_reservationAgreementBody,\n                reservationDescription_multilinetext: var_reservationScenario & \" (\" & var_reservationRole & \")\",\n                reservationComments_multilinetext: Blank(),\n                reservationInviteBody_multilinetext: varEmailBody,\n                reservationInviteOptionalAttendees_multilinetext: var_OptionalAttendees,\n\n                // OLD Columns:\n                //'Reserved By': Office365Users.MyProfileV2().displayName,\n                MeetingCategory: var_MeetingCategory,\n                DeskText: var_reservationScenario & \" (\" & var_reservationRole & \")\",\n                Description: var_reservationScenario & \" (\" & var_reservationRole & \")\",\n                //OptionalAttendees: var_OptionalAttendees,\n                //Active_choice: true,\n                'Check Out To': varEventEndTime,\n                'Check Out From': varEventStartTime,\n                'Check Out To Text': Text(var_EndTime),\n                'Check Out From Text': Text(var_StartTime),\n                //'Check Out To Number': Value(var_EndTime)\n                //'Check Out From Number': Value(var_StartTime),\n                Service: var_Service,\n                RoomReservation: true,\n                //Manager: Lower(Office365Users.UserProfileV2(var_ManagerEmail).mail),\n                //Asset: \"Desk\",\n                //RecurrenceFrequency: varRecurrence,\n                RecurrenceEndDate: Blank(),\n                RecurrenceID: varRecurrenceID,\n                RecurrenceDayName: Blank(),\n                RecurrenceTimes: Blank(),\n                RecurrencePattern: Blank(),\n                IsRecurring: true,\n                OutlookEventID: Blank(),\n                OutlookSeriesID: Blank(),\n                ParentReservationID: Blank()\n            }\n        )   \n    )\n);\n\n\n// ——————————————————————————————————————————————\n// 3) Clean up & navigate\nSet(varScreenReset, true);\nSet(varScreenReset, false);\n\nConcurrent(\n    ResetForm(Form1),\n    Reset(ddImportance),\n    Reset(ddRecurrenceFrequency),\n    Reset(Calendar_1),\n    Reset(Gallery6),\n    Reset(DatePickerCanvas2),\n    Reset(Gallery3_1);\n    Clear(colSelectedDesks),\n    Clear(CollectionRecurrence),\n    Clear(colDeskChckRecur),\n    Clear(colCombinedRecurrence),\n    Clear(wkDays),\n    Clear(wkDaysTemp)\n);\n\nNavigate(Success)"
+            OnSelect: |-
+              =// ———————————————————————————————————————————————————————————————
+              // Step 0) Reset all flags + result collections.
+              	Set(varCalendarOK, false );
+              // full 48-col main Patch succeeded (all rows)
+              	Set(varMainOK, false );
+              // simplified 10-col main Patch succeeded (all rows)
+              	Set(varMainSimpleOK, false );
+              // full 48-col backup Patch succeeded (all rows)
+              	Set(varBackupOK, false );
+              // simplified 10-col backup Patch succeeded (all rows)
+              	Set(varBackupSimpleOK, false );
+              	Set(varAllOK, false );
+              // Clear success/failure collections
+              	Clear(colMainFullResults);
+              	Clear(colMainSimpleResults);
+              	Clear(colBackupPatchResults);
+              // Set email outcome flag to false
+                  Set(varEmailOK, false);
+              	
+              // ———————————————————————————————————————————————————————————————
+              // Step 1) Outlook calendar item -> varCalendarOK.
+              	IfError(
+              		Office365Outlook.V4CalendarPostItem(
+              			LookUp(
+              				Office365Outlook.CalendarGetTables().value,
+              				DisplayName = "Calendar"
+              			).Name,
+              			Concatenate(
+              				"578 EHRM Learning Lab - ",
+              				var_reservationScenario
+              			),
+              			var_StartDateTime_central,
+              			var_EndDateTime_central,
+              			"Central Standard Time",
+              			{
+              				requiredAttendees: var_Attendees,
+              				optionalAttendees: var_Attendees,
+              				body: var_EmailBody,
+              				categories: varMeetCat,
+              				location: varSelectedDesk.CombinedLocationDetails_multilinePlainText,
+              				importance: "high",
+              				isAllDay: false,
+              				recurrence: varRecurrence,
+              				reminderMinutesBeforeStart: varReminder,
+              				isReminderOn: If(
+              					varReminder > 0,
+              					true,
+              					false
+              				),
+              				showAs: "busy",
+              				responseRequested: true,
+              				sensitivity: "normal"
+              			}
+              		),
+              // STEP 1b) varCalendarOK = boolean outcome of the V4CalendarPostItem action.
+              		Set(
+              			varCalendarOK,
+              			false
+              		),
+              		Set(
+              			varCalendarOK,
+              			true
+              		)
+              	);
+
+
+              // ———————————————————————————————————————————————————————————————
+              // STEP 2) Attempt MAIN FULL Patch (detailed 48 columns) for every row.
+              	ForAll(
+              		CollectionRecurrence As rec,
+              		ForAll(
+              			colSelectedDesks As desk,
+              			Collect(
+              				colMainFullResults,
+              				{
+              					ok: !IsError(
+              						Patch(
+              							'Desk Reservations',
+              							Defaults('Desk Reservations'),
+              							{
+              								// New Columns:
+              								Title: var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")",
+              								submitterName_text: varMyProfile.displayName,
+              								submitterEmail_text: Lower(varMyProfile.mail),
+              								submitterService_text: var_Service,
+              								studentName_text: varStudentProfile.displayName,
+              								studentEmail_text: Lower(varStudentProfile.mail),
+              								studentService_text: var_Service,
+              								studentTitle_text: varStudentProfile.jobTitle,
+              								studentManagerEmail_text: varStudentMgrMail,
+              								reservationRole_text: var_reservationRole,
+              								reservationScenario_text: var_reservationScenario,
+              								reservationStart_datetime: var_StartDateTime_central,
+              								reservationEnd_datetime: var_EndDateTime_central,
+              								reservationDesk_text: "Desk " & "1",
+              								reservationRoom_text: "Room " & var_reservationRoomNumber,
+              								reservationFloor_text: "Floor " & var_reservationFloorNumber,
+              								reservationBuilding_text: "Building " & var_reservationBuildingNumber,
+              								reservationDivision_text: var_reservationDivision,
+              								reservationAgreementBody_multilinetext: var_reservationAgreementBody,
+              								reservationDescription_multilinetext: var_reservationScenario & " (" & var_reservationRole & ")",
+              								reservationComments_multilinetext: Blank(),
+              								reservationInviteBody_multilinetext: var_EmailBody,
+              								reservationInviteOptionalAttendees_multilinetext: var_OptionalAttendees,
+
+              								// OLD Columns:
+              								MeetingCategory: var_MeetingCategory,
+              								DeskText: var_reservationScenario & " (" & var_reservationRole & ")",
+              								Description: var_reservationScenario & " (" & var_reservationRole & ")",
+              								Active_choice: {Value: Text("true")},
+              								'Check Out To': var_StartDateTime_central,
+              								'Check Out From': var_EndDateTime_central,
+              								'Check Out To Text': Text(var_EndTime_central),
+              								'Check Out From Text': Text(var_StartTime_central),
+              								'Check Out From Number': Value(Substitute(Substitute(Substitute(Substitute(var_StartTime_central, "PM", ""), "AM", ""), ":", ""), " ", "")),
+              								'Check Out To Number': Value(Substitute(Substitute(Substitute(Substitute(var_EndTime_central, "PM", ""), "AM", ""), ":", ""), " ", "")),
+              								Service: var_Service,
+              								RoomReservation: true,
+              								Asset: {Value: "Desk"},
+              								RecurrenceFrequency: {Value: varRecurrence},
+              								RecurrenceEndDate: Blank(),
+              								RecurrenceID: varRecurrenceID,
+              								RecurrenceDayName: If(IsBlankOrError(var_DayOfWeek), Blank(), var_DayOfWeek),
+              								RecurrenceTimes: Blank(),
+              								RecurrencePattern: Blank(),
+              								IsRecurring: false,
+              								OutlookEventID: Blank(),
+              								OutlookSeriesID: Blank(),
+              								ParentReservationID: Blank()
+              							}
+              						)
+              					)
+              				}
+              			)
+              		)
+              	);
+              // STEP 2b) varMainOK = boolean outcome of the FULL Patch (all rows OK).
+              	Set(
+              		varMainOK,
+              		CountRows(colMainFullResults) > 0 And CountIf(colMainFullResults, Not(ok)) = 0
+              	);
+              	
+              // ———————————————————————————————————————————————————————————————
+              // STEP 3) If MAIN FULL Patch (step #2 & #2b) failed -> attempt SIMPLE fallback; else skip it.
+              	If(
+              		Not(varMainOK),
+              		ForAll(
+              			CollectionRecurrence As recS,
+              			ForAll(
+              				colSelectedDesks As deskS,
+              				Collect(
+              					colMainSimpleResults,
+              					{
+              						ok: !IsError(
+              							Patch(
+              								'Desk Reservations',
+              								Defaults('Desk Reservations'),
+              								{
+              									Title: var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")",
+              									submitterName_text: varMyProfile.displayName,
+              									submitterEmail_text: Lower(varMyProfile.mail),
+              									studentName_text: varStudentProfile.displayName,
+              									studentEmail_text: Lower(varStudentProfile.mail),
+              									reservationRole_text: var_reservationRole,
+              									reservationScenario_text: var_reservationScenario,
+              									reservationStart_datetime: var_StartDateTime_central,
+              									reservationEnd_datetime: var_EndDateTime_central,
+              									Active_choice: {Value: Text("true")}
+              								}
+              							)
+              						)
+              					}
+              				)
+              			)
+              		)
+              	);
+              // STEP 3b) varMainSimpleOK = boolean outcome of the simple fallback action.
+              	Set(
+              		varMainSimpleOK,
+              		CountRows(colMainSimpleResults) > 0 And CountIf(
+              			colMainSimpleResults,
+              			Not(ok)
+              		) = 0
+              	);
+              	
+              // ———————————————————————————————————————————————————————————————
+              // STEP 4) Attempt detailed backup Patch for every colBackupPatchResults (runs regardless of main outcome)
+              	ForAll(
+              		CollectionRecurrence As rec,
+              		ForAll(
+              			colSelectedDesks As desk,
+              			Collect(
+              				colMainFullResults,
+              				{
+              					ok: !IsError(
+              						Patch(
+              							backupList_DeskReservations,
+              							Defaults('Desk Reservations'),
+              							{
+              								// New Columns:
+              								Title: var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")",
+              								submitterName_text: varMyProfile.displayName,
+              								submitterEmail_text: Lower(varMyProfile.mail),
+              								submitterService_text: var_Service,
+              								studentName_text: varStudentProfile.displayName,
+              								studentEmail_text: Lower(varStudentProfile.mail),
+              								studentService_text: var_Service,
+              								studentTitle_text: varStudentProfile.jobTitle,
+              								studentManagerEmail_text: varStudentMgrMail,
+              								reservationRole_text: var_reservationRole,
+              								reservationScenario_text: var_reservationScenario,
+              								reservationStart_datetime: var_StartDateTime_central,
+              								reservationEnd_datetime: var_EndDateTime_central,
+              								reservationDesk_text: "Desk " & "1",
+              								reservationRoom_text: "Room " & var_reservationRoomNumber,
+              								reservationFloor_text: "Floor " & var_reservationFloorNumber,
+              								reservationBuilding_text: "Building " & var_reservationBuildingNumber,
+              								reservationDivision_text: var_reservationDivision,
+              								reservationAgreementBody_multilinetext: var_reservationAgreementBody,
+              								reservationDescription_multilinetext: var_reservationScenario & " (" & var_reservationRole & ")",
+              								reservationComments_multilinetext: Blank(),
+              								reservationInviteBody_multilinetext: var_EmailBody,
+              								reservationInviteOptionalAttendees_multilinetext: var_OptionalAttendees,
+
+              								// OLD Columns:
+              								MeetingCategory: var_MeetingCategory,
+              								DeskText: var_reservationScenario & " (" & var_reservationRole & ")",
+              								Description: var_reservationScenario & " (" & var_reservationRole & ")",
+              								Active_choice: {Value: Text("true")},
+              								'Check Out To': var_StartDateTime_central,
+              								'Check Out From': var_EndDateTime_central,
+              								'Check Out To Text': Text(var_EndTime_central),
+              								'Check Out From Text': Text(var_StartTime_central),
+              								'Check Out From Number': Value(Substitute(Substitute(Substitute(Substitute(var_StartTime_central, "PM", ""), "AM", ""), ":", ""), " ", "")),
+              								'Check Out To Number': Value(Substitute(Substitute(Substitute(Substitute(var_EndTime_central, "PM", ""), "AM", ""), ":", ""), " ", "")),
+              								Service: var_Service,
+              								RoomReservation: true,
+              								Asset: {Value: "Desk"},
+              								RecurrenceFrequency: {Value: varRecurrence},
+              								RecurrenceEndDate: Blank(),
+              								RecurrenceID: varRecurrenceID,
+              								RecurrenceDayName: If(IsBlankOrError(var_DayOfWeek), Blank(), var_DayOfWeek),
+              								RecurrenceTimes: Blank(),
+              								RecurrencePattern: Blank(),
+              								IsRecurring: false,
+              								OutlookEventID: Blank(),
+              								OutlookSeriesID: Blank(),
+              								ParentReservationID: Blank()
+              							}
+              						)
+              					)
+              				}
+              			)
+              		)
+              	);
+              // STEP 4b) varBackupOK = boolean outcome of the main backup patch action.
+              	Set(
+              		varBackupOK,
+              		CountRows(colBackupPatchResults) > 0 And CountIf(
+              			colBackupPatchResults,
+              			Not(ok)
+              		) = 0
+              	);
+              	
+              // ———————————————————————————————————————————————————————————————
+              // STEP 5) Attempt simplified backup Patch for every colBackupPatchResults (runs regardless of main outcome)
+              	If(
+              		Not(varBackupOK),
+              		ForAll(
+              			CollectionRecurrence As recBk,
+              			ForAll(
+              				colSelectedDesks As deskBk,
+              				Collect(
+              					colBackupPatchResults,
+              					{
+              						ok: !IsError(
+              							Patch(
+              								backupList_DeskReservations,
+              								Defaults('Desk Reservations'),
+              								{
+              									Title: var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")",
+              									submitterName_text: varMyProfile.displayName,
+              									submitterEmail_text: Lower(varMyProfile.mail),
+              									studentName_text: varStudentProfile.displayName,
+              									studentEmail_text: Lower(varStudentProfile.mail),
+              									reservationRole_text: var_reservationRole,
+              									reservationScenario_text: var_reservationScenario,
+              									reservationStart_datetime: var_StartDateTime_central,
+              									reservationEnd_datetime: var_EndDateTime_central,
+              									Active_choice: {Value: Text("true")}
+              								}
+              							)
+              						)
+              					}
+              				)
+              			)
+              		)
+                  );
+              // STEP 5b) varBackupOK = boolean outcome of the main backup patch action.
+              	Set(
+              		varBackupSimpleOK,
+              		CountRows(colBackupPatchResults) > 0 And CountIf(
+              			colBackupPatchResults,
+              			Not(ok)
+              		) = 0
+              	);
+
+
+              // ———————————————————————————————————————————————————————————————
+              // STEP 6) Patch the SuperUserList (only if the user's email exists)
+              // Grab the matching row once
+              Set(
+                  varSuperUserRow,
+                  LookUp(
+                      SuperUserList,
+                      Lower('Enter Super User VA email address') = Lower(varMyProfile.mail)
+                  )
+              );
+              If(
+                  !IsBlank(varSuperUserRow),
+                  // Build this event's single-line string
+                  Set(
+                      varNewEventLine,
+                      "Event: " & Text(
+                          var_StartDateTime_central,
+                          "m/d/yyyy h:mm AM/PM"
+                      ) & "; Scenario: " & var_reservationScenario & "; Role: " & var_reservationRole & ";"
+                  );
+                  IfError(
+                      Patch(
+                          SuperUserList,
+                          varSuperUserRow,
+                          {
+                              // First three columns: only stamp if currently blank
+                              LearningLab_Scheduled_datetime:
+                                  If(
+                                      IsBlank(varSuperUserRow.LearningLab_Scheduled_datetime),
+                                      var_StartDateTime_central,
+                                      varSuperUserRow.LearningLab_Scheduled_datetime
+                              ),
+                              LearningLab_ScenarioName:
+                                  If(
+                                      IsBlank(varSuperUserRow.LearningLab_ScenarioName),
+                                      var_reservationScenario,
+                                      varSuperUserRow.LearningLab_ScenarioName
+                                  ),
+                              LearningLab_RoleName:
+                                  If(
+                                      IsBlank(varSuperUserRow.LearningLab_RoleName),
+                                      var_reservationRole,
+                                      varSuperUserRow.LearningLab_RoleName
+                                  ),
+                              // Multi-text column: append a new line every time
+                              LearningLab_multiScenario_multipletext:
+                                  If(
+                                      IsBlank(varSuperUserRow.LearningLab_multiScenario_multipletext),
+                                      varNewEventLine,
+                                      varSuperUserRow.LearningLab_multiScenario_multipletext & Char(10) & varNewEventLine
+                                  )
+                          }
+                      ),
+                      // STEP 7b) varPatchSuperUsersOK = boolean outcome of the patch SuperUserList action.
+                      Set(varPatchSuperUsersOK, false),
+                      // On success -> true.
+                      Set(varPatchSuperUsersOK, true)
+                  )
+              );
+
+
+
+              // ———————————————————————————————————————————————————————————————
+              // Step 7) Send the confirmation email (separate from the calendar item).
+              IfError(
+                  Office365Outlook.SendEmailV2(
+                      // To: (required)
+                      Concatenate(var_Attendees, "; "),
+                      // Subject: (required)
+                      Concatenate(
+                          "[REGISTERED!] EHRM Learning Lab Training - ",
+                          var_reservationScenario,
+                          " (",
+                          var_reservationRole,
+                          ")"
+                      ),
+                      // Body: (required)
+                      var_EmailBody,
+                      // Optional advanced parameters:
+                      {
+                          Importance: "Normal", //"Low", "Normal", "High"
+                          IsHtml: true,
+                          Cc: Concatenate(varAttendees, "; ", "VHAHINInformaticsTrainingAndSupport@va.gov; ", "Kyle.Coder@va.gov; "),   // optional — remove if not needed
+                          //Bcc: var_OptionalAttendees,
+                          ReplyTo: "VHAHINInformaticsTrainingAndSupport@va.gov"
+                      }
+                  ),
+              // STEP 7b) varBackupOK = boolean outcome of the main backup patch action.
+                  Set(varEmailOK, false),
+                  // On success -> true.
+                  Set(varEmailOK, true)
+              );
+
+              // ———————————————————————————————————————————————————————————————
+              // STEP 8) Combined flag varAllOK variable if all other preceeding steps pass/fail.
+              // Main list is considered saved if EITHER the full OR the simple
+              // Patch succeeded. Overall OK requires calendar + backup + main.
+              	Set(
+              		varAllOK,
+              		varCalendarOK And (varMainOK Or varMainSimpleOK) And (varBackupOK Or varBackupSimpleOK) And varEmailOK And varPatchSuperUsersOK
+              	);
+
+
+
+              // ———————————————————————————————————————————————————————————————
+              // STEP 9) Cleanup ONLY on full success.
+              	If(
+              		varAllOK,
+              		Concurrent(
+              			Set(
+              				varAccept,
+              				Blank()
+              			),
+              			Set(
+              				varAccept3,
+              				Blank()
+              			),
+              			Set(
+              				varAccept4,
+              				Blank()
+              			),
+              			ResetForm(Form1),
+              			Reset(ddImportance),
+              			Reset(ddRecurrenceFrequency),
+              			Reset(Calendar_1),
+              			Reset(Gallery6),
+              			Reset(DatePickerCanvas2),
+              			Reset(Gallery3_1),
+              			Clear(colSelectedDesks),
+              			Clear(CollectionRecurrence),
+              			Clear(colDeskChckRecur),
+              			Clear(colCombinedRecurrence),
+              			Clear(wkDays),
+              			Clear(wkDaysTemp)
+              		)
+              	);
+              	
+
+              // ———————————————————————————————————————————————————————————————
+              // Step 10)  Navigate to Confirmation screen.
+              //Navigate(Success);
             Text: ="SUBMIT!"
             Underline: =true
-            Visible: =!varAccept3 And !varAccept4
+            Visible: |-
+              =If(
+                  Container2.Visible = true,
+                  false,
+                  Container2.Visible = false,
+                  true
+              )
             Width: =200
             X: =(Parent.Width - Self.Width) / 2
             Y: =Parent.Height - Self.Height - 50
@@ -262,17 +845,16 @@ Screens:
             Align: =Align.Center
             Color: =RGBA(255, 255, 255, 1)
             FontWeight: =FontWeight.Bold
-            Height: =50
+            Height: =75
             Size: =32
             Text: |-
-              =If(varAccept3,
-                  "Room Terms and Conditions",
-                  //Else
-                  If(varAccept4,
-                      "Setup/cleanup acknowledgement",
-                      //Else
+              =If(
+                  ((IsBlankOrError(varAccept3) || varAccept3 = false) && (IsBlankOrError(varAccept4) || varAccept4 = false)),
+                      "Room Terms and Conditions",
+                  ((!IsBlankOrError(varAccept3) || varAccept3 = true) && (IsBlankOrError(varAccept4) || varAccept4 = false)),
+                      "Training Terms & Conditions", //Setup/cleanup acknowledgement",
+                  ((!IsBlankOrError(varAccept3) || varAccept3 = true) && (!IsBlankOrError(varAccept4) || varAccept4 = true)),
                       "Everything look good?"
-                  )
               )
             Width: =1136
       - btnBackConfirm:
@@ -287,200 +869,787 @@ Screens:
             Text: ="Back"
             Width: =200
             X: =(Parent.Width - Self.Width) / 2
-            Y: =70
+            Y: =80
       - lblReview_1:
           Control: Label@2.5.1
           Properties:
             Align: =Align.Center
             Font: =Font.'Segoe UI'
             Height: =20
-            Italic: =true
             LineHeight: =1
             Size: =12
             Text: |-
               =Switch(Gallery3_1.AllItemsCount,
-                  0, " There are no events",
-                  1, Gallery3_1.AllItemsCount & " event",
-                  Gallery3_1.AllItemsCount & " events"
+                  0, "You have not configured any events yet...",
+                  1, "Creating (" & Gallery3_1.AllItemsCount & ") event",
+                  2, "Creating (" & Gallery3_1.AllItemsCount & ") events",
+                  "Creating (" & Gallery3_1.AllItemsCount & ") events"
               )
-            Visible: =!varAccept3 And !varAccept4
+            Visible: |-
+              =If(
+                  Container2.Visible = true,
+                  false,
+                  Container2.Visible = false,
+                  true
+              )
             Width: =675
             X: =lblReview.X
-            Y: =lblReview.Y + lblReview.Height
-      - Container6:
-          Control: GroupContainer@1.5.0
-          Variant: GridLayout
-          Properties:
-            Height: =400
-            LayoutGridColumns: =2
-            LayoutGridRows: =1
-            Visible: =false
-            Width: =997
-            X: =66
-            Y: =230
-          Children:
-            - Form4:
-                Control: Form@2.4.4
-                Variant: Modern
-                Layout: Vertical
-                Properties:
-                  DataSource: =col_EventCombinedDetails
-                  Height: =DataCard2.Height + DataCard3.Height + DataCard4.Height + DataCard5.Height
-                  Width: =500
-                  X: =40
-                  Y: =40
-                Children:
-                  - DataCard2:
-                      Control: TypedDataCard@1.0.7
-                      Variant: BlankCard
-                      Properties:
-                        Height: =Text2.Height + TextInput1.Height + 5
-                        Width: =487
-                        X: =0
-                        Y: =0
-                      Children:
-                        - TextInput1:
-                            Control: ModernTextInput@1.1.1
-                            Properties:
-                              Default: =ThisItem.RoomNumber_number
-                              Y: =Text2.Y + Text2.Height
-                        - Text2:
-                            Control: ModernText@1.0.0
-                            Properties:
-                              Text: ="Scenario"
-                  - DataCard3:
-                      Control: TypedDataCard@1.0.7
-                      Variant: BlankCard
-                      Properties:
-                        Height: =100
-                        Width: =487
-                        X: =0
-                        Y: =DataCard2.Y + DataCard2.Height
-                  - DataCard4:
-                      Control: TypedDataCard@1.0.7
-                      Variant: BlankCard
-                      Properties:
-                        Height: =100
-                        Width: =487
-                        X: =0
-                        Y: =DataCard3.Y + DataCard2.Height
-                  - DataCard5:
-                      Control: TypedDataCard@1.0.7
-                      Variant: BlankCard
-                      Properties:
-                        Height: =100
-                        Width: =487
-                        X: =0
-                        Y: =DataCard4.Y + DataCard2.Height
-            - Form5:
-                Control: Form@2.4.4
-                Variant: Modern
-                Layout: Vertical
-                Properties:
-                  DataSource: =col_EventBuildDetails
-                  Height: =400
-                  X: =40
-                  Y: =40
-                Children:
-                  - DataCard6:
-                      Control: TypedDataCard@1.0.7
-                      Variant: BlankCard
-                      Properties:
-                        Width: =487
-                        X: =0
-                        Y: =0
-                  - DataCard7:
-                      Control: TypedDataCard@1.0.7
-                      Variant: BlankCard
-                      Properties:
-                        Width: =487
-                        X: =0
-                        Y: =1
+            Y: =lblReview.Y + lblReview.Height - Self.Height
       - Container2:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
           Properties:
             DropShadow: =DropShadow.None
             Height: =482
-            Visible: =varAccept3 Or varAccept4 ///varAccept2
-            Width: =854
-            X: =164
-            Y: =158
+            Visible: |-
+              =If(
+                  IsBlankOrError(varAccept3) || varAccept3 = false,
+                      true,
+                  IsBlankOrError(varAccept4) || varAccept4 = false,
+                      true,
+                  varAccept3 = true && varAccept4 = true,
+                      false,
+                  true
+              )
+            Width: =Parent.Width / 1.15
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =150
           Children:
             - ButtonCanvas2:
                 Control: Button@0.0.45
                 Properties:
+                  Align: =Align.Center
                   BasePaletteColor: =RGBA(5, 102, 178, 1)
                   Font: =Font.Arial
-                  FontSize: =32
+                  FontSize: =26
                   Height: =90
                   OnSelect: |-
                     =//Set(varAccept2,false);Set(varAccept, true);
-                    If(varAccept3,
-                        Set(varAccept3, false);
-                        Set(varAccept4, false),
-                        If(varAccept4,
-                            Set(varAccept4, false)
-                        )
+                    If(
+                        ((IsBlankOrError(varAccept3) || varAccept3 = false) && (IsBlankOrError(varAccept4) || varAccept4 = false)),
+                            Concurrent(
+                                Set(varAccept3, true),
+                                Set(varAccept4, false)
+                            ),
+                        (varAccept3 = true && (IsBlankOrError(varAccept4) || varAccept4 = false)),
+                            Concurrent(
+                                Set(varAccept3, true),
+                                Set(varAccept4, true)
+                            ),
+                        (varAccept3 = true && varAccept4 = true),
+                            Concurrent(
+                                Set(varAccept3, true),
+                                Set(varAccept4, true)
+                            )
                     );
                     Set(var_reservationAgreementBody, HtmlText3.HtmlText);
                   Text: |-
-                    =If(varAccept3,
-                        "Accept Terms 
-                            & Conditions",
-                        //Else
-                        "Aknowledge My
-                        Responsibility"
+                    =If(
+                        varAccept3 = true,
+                        "I Accept These Terms & Conditions",
+                        "I Aknowledge My
+                        Responsibilities"
                     )
-                  Width: =277
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =275
                   X: =(Parent.Width / 2) - (Self.Width / 2)
                   Y: =Parent.Height - Self.Height - 10
             - HtmlText3:
                 Control: HtmlViewer@2.1.0
                 Properties:
                   Fill: =RGBA(0, 0, 0, 0)
-                  Height: =392
+                  Height: =410
                   HtmlText: |-
                     =If(
-                        varAccept3,
+                        (varAccept3 = true && varAccept4 <> true),
+                        ///// THEN (parent):
                         If(
                             IsBlankOrError(varPopUp_ClassPicker_scenarioSplit) || IsBlankOrError(varPopUp_ClassPicker_scenarioName),
-                            "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:14px; border-radius:5px;'>
-                                <ul style='padding-left:20px;'>
-                                <li>I have tested and confirmed I have sandbox access: <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx?csf=1&web=1&e=ohGdcr&CID=a04e3960-c7fe-4688-8185-144525372e55"" style='color:#add8e6;'>Log into Sandbox</a></li>
-                                <li>I understand the training location is in Building #20 and I must provide my own transportation. <a href=""https://dvagov.sharepoint.com/:i:/s/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp/IQBaKx0HJ0METY3KdSl-dDo0AVVZRsTdnR80aX1kEjowr_U?e=edHt9o"" style='color:#add8e6;'>Link to Campus Map</a>.</li>
-                                <li>Download the training materials: <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"">Learning Lab Training Materials Library</a>.</li>,
-                                <li>The EHRM Training Rooms are intended solely for EHRM-related training, meetings, and activities. Any other use is prohibited unless expressly authorized.</li>
-                                <li>If you have any issues with EHRM equipment, please contact OI&T at ext. <a href=""tel:+18556734357"" style='color:#add8e6;'>44357 (1-855-673-4357)</a>.</li>
-                                <li>Ensure that the room is left in an orderly condition.​</li>
-                                <li>Ensure the room set up has been put back in the initial arrangement.​</li>
-                                <li>Capacity: Do not exceed the room’s maximum occupancy limit.​</li>
-                            </ul>
-                            <p style='margin-top:15px;'>For questions contact <a href=""mailto:VHAHINInformaticsTrainingAndSupport@va.gov"" style='color:#add8e6;'>VHAHINInformaticsTrainingAndSupport@va.gov.</a>.</p>
 
-                            <div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px; text-align: center'>
-                            By acknowledging this, you accept responsibility for the EHRM training workstation/Desk and ensuring the room is returned to its original state.
+                            ///// THEN (child):
+                            "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:0px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px;'>
+                                <ul style='padding-left:20px;'>
+                                <li>I have tested and confirmed I have access to <b>TRAINING SANDBOX</b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx?csf=1&web=1&e=ohGdcr&CID=a04e3960-c7fe-4688-8185-144525372e55"" style='color:#add8e6;'><i>Log into Sandbox</i></a></li>
+                                <li>I understand the training location is in <b>" & If(var_reservationBuildingNumber = "20", "in BUILDING #" & var_reservationBuildingNumber, "VIRTUAL") & "</b> and I must provide my own transportation:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""https://dvagov.sharepoint.com/:i:/s/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp/IQBaKx0HJ0METY3KdSl-dDo0AVVZRsTdnR80aX1kEjowr_U?e=edHt9o"" style='color:#add8e6;'><i>View Map</i></a></li>
+                                <li>The EHRM Training Rooms are <b>INTENDED SOLELY</b> for EHRM-related training, meetings, events, & activities. Any other use is prohibited unless expressly authorized.</li>
+                                <li>If you experience any <b>ISSUES WITH EQUIPMENT</b>, please contact OI&T at ext. <a href=""tel:918556734357"" style='color:#add8e6;'><i>44357 </a><a href=""tel:+18556734357"">(1-855-673-4357)</a></i></li>
+                                <li>Ensure that the room <b>REMAINS CLEAN</b> during training, and is the training room will be returned to the original orderly arrangement at the end of your training class.​</li>
+                                <li>Do not exceed the room’s maximum occupancy <b>CAPACITY</b> limit, credit records will only be granted to pre-registered staff.​</li>
+                                <li>You should download & review the <b>TRAINING MATERIALS</b> in advance:
+                            <div style='background-color:#2c2c2c; color:#f0f0f0; padding:5px; font-family:Segoe UI, sans-serif; font-size:20px; border-radius:5px; text-align: center'><a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"" style='color:#add8e6;'><i><b>VIEW TRAINING MATERIALS</b></a></div></li>
+                            </ul>
+                            <p style='margin-top:10px;'>For any questions or additional assistance, please contact <a href=""mailto:VHAHINInformaticsTrainingAndSupport@va.gov"" style='color:#add8e6;'>VHAHINInformaticsTrainingAndSupport@va.gov</a>.</p>
+                            <br/>
+                            <br/>
+                            <div style='background-color:#2c2c2c; color:#f0f0f0; padding:0px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px; text-align: center'>
+                            Your click of the aknowledgement button below, you attest your acceptance of responsibility for the assigned desk/workstation during your scheduled training class event AND confirm understanding of the each of the special requirements listed above
                             </div>",
-                        // ELSE IF !IsBlankOrError(varPopUp_ClassPicker_scenarioSplit) || !IsBlankOrError(varPopUp_ClassPicker_scenarioName)
-                            "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:14px; border-radius:5px;'>
-                                <ul style='padding-left:20px;'>
-                                <li>I have tested and confirmed I have sandbox access: <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx?csf=1&web=1&e=ohGdcr&CID=a04e3960-c7fe-4688-8185-144525372e55"" style='color:#add8e6;'>Log into Sandbox</a></li>
-                                <li>I understand the training location is in Building #20 and I must provide my own transportation. <a href=""https://dvagov.sharepoint.com/:i:/s/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp/IQBaKx0HJ0METY3KdSl-dDo0AVVZRsTdnR80aX1kEjowr_U?e=edHt9o"" style='color:#add8e6;'>Link to Campus Map</a>.</li>
-                                <li>Download the training materials: <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=" & varPopUp_ClassPicker_scenarioSplit & "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603""> " & varPopUp_ClassPicker_scenarioName & " Scenario Documents</a>.</li>
-                                <li>The EHRM Training Rooms are intended solely for EHRM-related training, meetings, and activities. Any other use is prohibited unless expressly authorized.</li>
-                                <li>If you have any issues with EHRM equipment, please contact OI&T at ext. <a href=""tel:+18556734357"" style='color:#add8e6;'>44357 (1-855-673-4357)</a>.</li>
-                                <li>Ensure that the room is left in an orderly condition.​</li>
-                                <li>Ensure the room set up has been put back in the initial arrangement.​</li>
-                                <li>Capacity: Do not exceed the room’s maximum occupancy limit.​</li>
-                            </ul>
-                            <p style='margin-top:15px;'>For questions contact <a href=""mailto:VHAHINInformaticsTrainingAndSupport@va.gov"" style='color:#add8e6;'>VHAHINInformaticsTrainingAndSupport@va.gov.</a>.</p>
 
-                            <div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px; text-align: center'>
-                            By acknowledging this, you accept responsibility for the EHRM training workstation/Desk and ensuring the room is returned to its original state.
+
+                            ///// ELSE (child):   (!IsBlankOrError(varPopUp_ClassPicker_scenarioSplit) || !IsBlankOrError(varPopUp_ClassPicker_scenarioName)):
+                            "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:0px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px;'>
+                                <ul style='padding-left:50px;'>
+                                <li>I have tested and confirmed I have access to <b>TRAINING SANDBOX</b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx?csf=1&web=1&e=ohGdcr&CID=a04e3960-c7fe-4688-8185-144525372e55"" style='color:#add8e6;'><i>Log into Sandbox</i></a></li>
+                                <li>I understand the training location is <b>" & If(var_reservationBuildingNumber = "20", "in BUILDING #" & var_reservationBuildingNumber, "VIRTUAL") & "</b> and I must provide my own transportation:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=""https://dvagov.sharepoint.com/:i:/s/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp/IQBaKx0HJ0METY3KdSl-dDo0AVVZRsTdnR80aX1kEjowr_U?e=edHt9o"" style='color:#add8e6;'><i>View Map</i></a></li>
+                                <li>The EHRM Training Rooms are <b>INTENDED SOLELY</b> for EHRM-related training, meetings, events, & activities. Any other use is prohibited unless expressly authorized.</li>
+                                <li>If you experience any <b>ISSUES WITH EQUIPMENT</b>, please contact OI&T at ext. <a href=""tel:918556734357"" style='color:#add8e6;'><i>44357</a><a href=""tel:+18556734357"" style='color:#f0f0f0;text-decoration:none;'> (1-855-673-4357)</a></i></li>
+                                <li>Ensure that the room <b>REMAINS CLEAN</b> during training, and is the training room will be returned to the original orderly arrangement at the end of your training class.​</li>
+                                <li>Do not exceed the room’s maximum occupancy <b>CAPACITY</b> limit, credit records will only be granted to pre-registered staff.​</li>
+                                <li>Review the <b>TRAINING MATERIALS</b> in advance:
+                            <div style='background-color:#2c2c2c; color:#f0f0f0; padding:5px; font-family:Segoe UI, sans-serif; font-size:20px; border-radius:5px; text-align: center'><a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=" & varPopUp_ClassPicker_scenarioSplit & "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603"" style='color:#add8e6;'><i><b>" & Upper(varPopUp_ClassPicker_scenarioName) & " TRAINING MATERIALS</b></a></div></li>
+                            </ul>
+                            <p style='margin-top:10px; margin-left:5px;'>For any questions or additional assistance, please contact <a href=""mailto:VHAHINInformaticsTrainingAndSupport@va.gov"" style='color:#add8e6;'>VHAHINInformaticsTrainingAndSupport@va.gov</a>.</p>
+                            <br/>
+                            <br/>
+                            <div style='background-color:#2c2c2c; color:#f0f0f0; padding:0px; font-family:Segoe UI, sans-serif; font-size:16px; border-radius:5px; text-align: center'>
+                            With your click of the aknowledgement button below, you attest your acceptance of responsibility for the assigned desk/workstation during your scheduled training class event AND you confirm understanding of the each of the special requirements listed above.....
                             </div>"
                         ),
-                        // ELSE IF
+
+                        ///// ELSE (parent):   (varAccept3 <> true && varAccept4 <> true):
                         "<div style='background-color:#2c2c2c; color:#f0f0f0; padding:15px; font-family:Segoe UI, sans-serif; font-size:40px; border-radius:5px; text-align: center'>By acknowledging this, you accept responsibility for the EHRM VILT workstation & ensuring the desk/room is returned to its original state.</div>"
                     )
                   Size: =13
                   Width: =Parent.Width
+                  Y: =0 - 15
+      - Container8:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: |-
+              =If(
+                  Container2.Visible = true,
+                  0,
+                  Container2.Visible = false && user_isAdmin = true,
+                  45,
+                  0
+              )
+            Visible: =false
+            Width: =Parent.Width
+            X: =(Parent.Width - Self.Width) / 2
+            Y: =Parent.Height - Self.Height
+          Children:
+            - btnPostCalendarItem:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Fill: =RGBA(15, 108, 189, 1)
+                  Height: =btnPatchDetailedMainList.Height
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: |
+                    =// ———————————————————————————————————————————————————————————————
+                    // Step 0) Reset all flags + result collections.
+                    Set(
+                        varCalendarOK,
+                        false
+                    );
+                    //Set(varMainOK, false );
+                    // full 48-col Patch succeeded (all rows)
+                    //Set(varMainSimpleOK, false );
+                    // simplified fallback Patch succeeded (all rows)
+                    //Set(varBackupOK, false );
+                    //Set(varAllOK, false );
+                    //Clear(colMainFullResults);
+                    //Clear(colMainSimpleResults);
+                    //Clear(colBackupPatchResults);
+                    // ———————————————————————————————————————————————————————————————
+                    // Step 1) Outlook calendar item -> varCalendarOK.
+                    IfError(
+                        Office365Outlook.V4CalendarPostItem(
+                            LookUp(
+                                Office365Outlook.CalendarGetTables().value,
+                                DisplayName = "Calendar"
+                            ).Name,
+                            Concatenate(
+                                "578 EHRM Learning Lab - ",
+                                var_reservationScenario
+                            ),
+                            var_StartDateTime_central,
+                            var_EndDateTime_central,
+                            "Central Standard Time",
+                            {
+                                requiredAttendees: var_Attendees,
+                                optionalAttendees: var_Attendees,
+                                body: var_EmailBody,
+                                categories: varMeetCat,
+                                location: varSelectedDesk.CombinedLocationDetails_multilinePlainText,
+                                importance: "high",
+                                isAllDay: false,
+                                recurrence: varRecurrence,
+                                reminderMinutesBeforeStart: varReminder,
+                                isReminderOn: If(
+                                    varReminder > 0,
+                                    true,
+                                    false
+                                ),
+                                showAs: "busy",
+                                responseRequested: true,
+                                sensitivity: "normal"
+                            }
+                        ),
+                    // STEP 1b) varCalendarOK = boolean outcome of the V4CalendarPostItem action.
+                        Set(
+                            varCalendarOK,
+                            false
+                        ),
+                        Set(
+                            varCalendarOK,
+                            true
+                        )
+                    );
+                    // ———————————————————————————————————————————————————————————————
+                    // ———————————————————————————————————————————————————————————————
+                    // STEP 5) Combined flag varAllOK variable if all other preceeding steps pass/fail.
+                    // Main list is considered saved if EITHER the full OR the simple
+                    // Patch succeeded. Overall OK requires calendar + backup + main.
+                    Set(
+                        varAllOK,
+                        varCalendarOK And (varMainOK Or varMainSimpleOK) And (varBackupOK Or varBackupSimpleOK)
+                    );
+                  Size: =btnSubmit.Size / 2
+                  Text: ="PostItem(Calendar)"
+                  Visible: |-
+                    =If(
+                        Container2.Visible = true,
+                        false,
+                        Container2.Visible = false && user_isAdmin = true,
+                        true
+                    )
+                  Width: |+
+                    =btnPatchDetailedMainList.Width
+                  X: =btnPatchSimpleBackupList.X + btnPatchSimpleBackupList.Width + 10
+                  Y: =Parent.Height - Self.Height - 10
+            - btnPatchSimpleBackupList:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Fill: =RGBA(15, 108, 189, 1)
+                  Height: =btnPatchDetailedMainList.Height
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: |-
+                    =// ———————————————————————————————————————————————————————————————
+                    // Step 0) Reset all flags + result collections.
+                    //Set(varCalendarOK, false );
+                    //Set(varMainOK, false );
+                    // full 48-col Patch succeeded (all rows)
+                    //Set(varMainSimpleOK, false );
+                    // simplified fallback Patch succeeded (all rows)
+                    Set(
+                        varBackupSimpleOK,
+                        false
+                    );
+                    //Set(varAllOK, false );
+                    //Clear(colMainFullResults);
+                    //Clear(colMainSimpleResults);
+                    //Clear(colBackupPatchResults);
+                    // ———————————————————————————————————————————————————————————————
+                    // STEP 5) Attempt simplified backup Patch for every colBackupPatchResults (runs regardless of main outcome)
+                    	If(
+                    		Not(varBackupOK),
+                    		ForAll(
+                    			CollectionRecurrence As recBk,
+                    			ForAll(
+                    				colSelectedDesks As deskBk,
+                    				Collect(
+                    					colBackupPatchResults,
+                    					{
+                    						ok: !IsError(
+                    							Patch(
+                    								backupList_DeskReservations,
+                    								Defaults('Desk Reservations'),
+                    								{
+                    									Title: var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")",
+                    									submitterName_text: varMyProfile.displayName,
+                    									submitterEmail_text: Lower(varMyProfile.mail),
+                    									studentName_text: varStudentProfile.displayName,
+                    									studentEmail_text: Lower(varStudentProfile.mail),
+                    									reservationRole_text: var_reservationRole,
+                    									reservationScenario_text: var_reservationScenario,
+                    									reservationStart_datetime: var_StartDateTime_central,
+                    									reservationEnd_datetime: var_EndDateTime_central,
+                    									Active_choice: {Value: Text("true")}
+                    								}
+                    							)
+                    						)
+                    					}
+                    				)
+                    			)
+                    		)
+                        );
+                    // STEP 5b) varBackupOK = boolean outcome of the main backup patch action.
+                    	Set(
+                    		varBackupSimpleOK,
+                    		CountRows(colBackupPatchResults) > 0 And CountIf(
+                    			colBackupPatchResults,
+                    			Not(ok)
+                    		) = 0
+                    	);
+                    // ———————————————————————————————————————————————————————————————
+                    // STEP 5) Combined flag varAllOK variable if all other preceeding steps pass/fail.
+                    // Main list is considered saved if EITHER the full OR the simple
+                    // Patch succeeded. Overall OK requires calendar + backup + main.
+                    Set(
+                        varAllOK,
+                        varCalendarOK And (varMainOK Or varMainSimpleOK) And (varBackupOK Or varBackupSimpleOK)
+                    );
+                  Size: =btnSubmit.Size / 2
+                  Text: ="Patch(intoSimpleBackup)"
+                  Visible: |-
+                    =If(
+                        Container2.Visible = true,
+                        false,
+                        Container2.Visible = false && user_isAdmin = true,
+                        true
+                    )
+                  Width: |+
+                    =btnPatchDetailedMainList.Width
+                  X: =btnPatchDetailedBackupList.X + btnPatchDetailedBackupList.Width + 10
+                  Y: =btnPostCalendarItem.Y
+            - btnPatchDetailedBackupList:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Fill: =RGBA(15, 108, 189, 1)
+                  Height: =btnPatchDetailedMainList.Height
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: |
+                    =// ———————————————————————————————————————————————————————————————
+                    // Step 0) Reset all flags + result collections.
+                    //Set(varCalendarOK, false );
+                    //Set(varMainOK, false );
+                    // full 48-col Patch succeeded (all rows)
+                    //Set(varMainSimpleOK, false );
+                    // simplified fallback Patch succeeded (all rows)
+                    Set(
+                        varBackupOK,
+                        false
+                    );
+                    //Set(varAllOK, false );
+                    //Clear(colMainFullResults);
+                    //Clear(colMainSimpleResults);
+                    //Clear(colBackupPatchResults);
+                    // ———————————————————————————————————————————————————————————————
+                    // STEP 4) Attempt detailed backup Patch for every colBackupPatchResults (runs regardless of main outcome)
+                    ForAll(
+                        CollectionRecurrence As rec,
+                        ForAll(
+                            colSelectedDesks As desk,
+                            Collect(
+                                colMainFullResults,
+                                {
+                                    ok: !IsError(
+                                        Patch(
+                                            backupList_DeskReservations,
+                                            Defaults('Desk Reservations'),
+                                            {
+                                                // New Columns:
+                                                Title: var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")",
+                                                submitterName_text: varMyProfile.displayName,
+                                                submitterEmail_text: Lower(varMyProfile.mail),
+                                                submitterService_text: var_Service,
+                                                studentName_text: varStudentProfile.displayName,
+                                                studentEmail_text: Lower(varStudentProfile.mail),
+                                                studentService_text: var_Service,
+                                                studentTitle_text: varStudentProfile.jobTitle,
+                                                studentManagerEmail_text: varStudentMgrMail,
+                                                reservationRole_text: var_reservationRole,
+                                                reservationScenario_text: var_reservationScenario,
+                                                reservationStart_datetime: var_StartDateTime_central,
+                                                reservationEnd_datetime: var_EndDateTime_central,
+                                                reservationDesk_text: "Desk " & "1",
+                                                reservationRoom_text: "Room " & var_reservationRoomNumber,
+                                                reservationFloor_text: "Floor " & var_reservationFloorNumber,
+                                                reservationBuilding_text: "Building " & var_reservationBuildingNumber,
+                                                reservationDivision_text: var_reservationDivision,
+                                                reservationAgreementBody_multilinetext: var_reservationAgreementBody,
+                                                reservationDescription_multilinetext: var_reservationScenario & " (" & var_reservationRole & ")",
+                                                reservationComments_multilinetext: Blank(),
+                                                reservationInviteBody_multilinetext: var_EmailBody,
+                                                reservationInviteOptionalAttendees_multilinetext: var_OptionalAttendees,
+
+                                                // OLD Columns:
+                                                MeetingCategory: var_MeetingCategory,
+                                                DeskText: var_reservationScenario & " (" & var_reservationRole & ")",
+                                                Description: var_reservationScenario & " (" & var_reservationRole & ")",
+                                                Active_choice: {Value: Text("true")},
+                                                'Check Out To': var_StartDateTime_central,
+                                                'Check Out From': var_EndDateTime_central,
+                                                'Check Out To Text': Text(var_EndTime_central),
+                                                'Check Out From Text': Text(var_StartTime_central),
+                                                'Check Out From Number': Value(Substitute(Substitute(Substitute(Substitute(var_StartTime_central, "PM", ""), "AM", ""), ":", ""), " ", "")),
+                                                'Check Out To Number': Value(Substitute(Substitute(Substitute(Substitute(var_EndTime_central, "PM", ""), "AM", ""), ":", ""), " ", "")),
+                                                Service: var_Service,
+                                                RoomReservation: true,
+                                                Asset: {Value: "Desk"},
+                                                RecurrenceFrequency: {Value: varRecurrence},
+                                                RecurrenceEndDate: Blank(),
+                                                RecurrenceID: varRecurrenceID,
+                                                RecurrenceDayName: If(IsBlankOrError(var_DayOfWeek), Blank(), var_DayOfWeek),
+                                                RecurrenceTimes: Blank(),
+                                                RecurrencePattern: Blank(),
+                                                IsRecurring: false,
+                                                OutlookEventID: Blank(),
+                                                OutlookSeriesID: Blank(),
+                                                ParentReservationID: Blank()
+                                            }
+                                        )
+                                    )
+                                }
+                            )
+                        )
+                    );
+                    // STEP 4b) varBackupOK = boolean outcome of the main backup patch action.
+                    Set(
+                        varBackupOK,
+                        CountRows(colBackupPatchResults) > 0 And CountIf(
+                            colBackupPatchResults,
+                            Not(ok)
+                        ) = 0
+                    );
+                    // ———————————————————————————————————————————————————————————————
+                    // STEP 5) Combined flag varAllOK variable if all other preceeding steps pass/fail.
+                    // Main list is considered saved if EITHER the full OR the simple
+                    // Patch succeeded. Overall OK requires calendar + backup + main.
+                    Set(
+                        varAllOK,
+                        varCalendarOK And (varMainOK Or varMainSimpleOK) And (varBackupOK Or varBackupSimpleOK)
+                    );
+                  Size: =btnSubmit.Size / 2
+                  Text: ="Patch(intoDetailedBackup)"
+                  Visible: |-
+                    =If(
+                        Container2.Visible = true,
+                        false,
+                        Container2.Visible = false && user_isAdmin = true,
+                        true
+                    )
+                  Width: |+
+                    =btnPatchDetailedMainList.Width
+                  X: =btnPatchSimpleMainList.X + btnPatchSimpleMainList.Width + 10
+                  Y: =btnPostCalendarItem.Y
+            - btnPatchSimpleMainList:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Fill: =RGBA(15, 108, 189, 1)
+                  Height: =btnPatchDetailedMainList.Height
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: |-
+                    =// ———————————————————————————————————————————————————————————————
+                    // Step 0) Reset all flags + result collections.
+                    //Set(varCalendarOK, false );
+                    //Set(varMainOK, false );
+                    // full 48-col Patch succeeded (all rows)
+                    Set(
+                        varMainSimpleOK,
+                        false
+                    );
+                    // simplified fallback Patch succeeded (all rows)
+                    //Set(varBackupOK, false );
+                    //Set(varAllOK, false );
+                    //Clear(colMainFullResults);
+                    Clear(colMainSimpleResults);
+                    //Clear(colBackupPatchResults);
+                    // STEP 3) If FULL failed -> attempt SIMPLE fallback; else skip it.
+                    If(
+                        Not(varMainOK),
+                        ForAll(
+                            CollectionRecurrence As recS,
+                            ForAll(
+                                colSelectedDesks As deskS,
+                                Collect(
+                                    colMainSimpleResults,
+                                    {
+                                        ok: !IsError(
+                                            Patch(
+                                                'Desk Reservations',
+                                                Defaults('Desk Reservations'),
+                                                {
+                                                    Title: var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")",
+                                                    submitterName_text: varMyProfile.displayName,
+                                                    submitterEmail_text: Lower(varMyProfile.mail),
+                                                    studentName_text: varStudentProfile.displayName,
+                                                    studentEmail_text: Lower(varStudentProfile.mail),
+                                                    reservationRole_text: var_reservationRole,
+                                                    reservationScenario_text: var_reservationScenario,
+                                                    reservationStart_datetime: var_StartDateTime_central,
+                                                    reservationEnd_datetime: var_EndDateTime_central,
+                                                    Active_choice: {Value: Text("true")}
+                                                }
+                                            )
+                                        )
+                                    }
+                                )
+                            )
+                        )
+                    );
+                    // STEP 3b) varMainSimpleOK = boolean outcome of the simple fallback action.
+                    Set(
+                        varMainSimpleOK,
+                        CountRows(colMainSimpleResults) > 0 And CountIf(
+                            colMainSimpleResults,
+                            Not(ok)
+                        ) = 0
+                    );
+                    // ———————————————————————————————————————————————————————————————
+                    // STEP 5) Combined flag varAllOK variable if all other preceeding steps pass/fail.
+                    // Main list is considered saved if EITHER the full OR the simple
+                    // Patch succeeded. Overall OK requires calendar + backup + main.
+                    Set(
+                        varAllOK,
+                        varCalendarOK And (varMainOK Or varMainSimpleOK) And (varBackupOK Or varBackupSimpleOK)
+                    );
+                  Size: =btnSubmit.Size / 2
+                  Text: ="Patch(intoSimplifiedMainList)"
+                  Visible: |-
+                    =If(
+                        Container2.Visible = true,
+                        false,
+                        Container2.Visible = false && user_isAdmin = true,
+                        true
+                    )
+                  Width: |+
+                    =btnPatchDetailedMainList.Width
+                  X: =btnPatchDetailedMainList.X + btnPatchDetailedMainList.Width + 10
+                  Y: =Parent.Height - Self.Height - 10
+            - btnPatchDetailedMainList:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Fill: =RGBA(15, 108, 189, 1)
+                  Height: =btnSubmit.Height
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: |-
+                    =// ———————————————————————————————————————————————————————————————
+                    // 0) Reset all flags + result collections.
+                    //Set(varCalendarOK, false);
+                    Set(varMainOK, false);          // full 48-col Patch succeeded (all rows)
+                    //Set(varMainSimpleOK, false);    // simplified fallback Patch succeeded (all rows)
+                    //Set(varBackupOK, false);
+                    //Set(varAllOK, false);
+                    Clear(colMainFullResults);
+                    Clear(colMainSimpleResults);
+                    //Clear(colBackupPatchResults);
+
+                    // ———————————————————————————————————————————————————————————————
+                    // STEP 1) Attempt MAIN FULL Patch (detailed 48 columns) for every row.
+                    ForAll(
+                        CollectionRecurrence As rec,
+                        ForAll(
+                            colSelectedDesks As desk,
+                            Collect(
+                                colMainFullResults,
+                                {
+                                    ok: !IsError(
+                                        Patch(
+                                            'Desk Reservations',
+                                            Defaults('Desk Reservations'),
+                                            {
+                                                // New Columns:
+                                                Title: var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")",
+                                                submitterName_text: varMyProfile.displayName,
+                                                submitterEmail_text: Lower(varMyProfile.mail),
+                                                submitterService_text: var_Service,
+                                                studentName_text: varStudentProfile.displayName,
+                                                studentEmail_text: Lower(varStudentProfile.mail),
+                                                studentService_text: var_Service,
+                                                studentTitle_text: varStudentProfile.jobTitle,
+                                                studentManagerEmail_text: varStudentMgrMail,
+                                                reservationRole_text: var_reservationRole,
+                                                reservationScenario_text: var_reservationScenario,
+                                                reservationStart_datetime: var_StartDateTime_central,
+                                                reservationEnd_datetime: var_EndDateTime_central,
+                                                reservationDesk_text: "Desk " & "1",
+                                                reservationRoom_text: "Room " & var_reservationRoomNumber,
+                                                reservationFloor_text: "Floor " & var_reservationFloorNumber,
+                                                reservationBuilding_text: "Building " & var_reservationBuildingNumber,
+                                                reservationDivision_text: var_reservationDivision,
+                                                reservationAgreementBody_multilinetext: var_reservationAgreementBody,
+                                                reservationDescription_multilinetext: var_reservationScenario & " (" & var_reservationRole & ")",
+                                                reservationComments_multilinetext: Blank(),
+                                                reservationInviteBody_multilinetext: var_EmailBody,
+                                                reservationInviteOptionalAttendees_multilinetext: var_OptionalAttendees,
+
+                                                // OLD Columns:
+                                                MeetingCategory: var_MeetingCategory,
+                                                DeskText: var_reservationScenario & " (" & var_reservationRole & ")",
+                                                Description: var_reservationScenario & " (" & var_reservationRole & ")",
+                                                Active_choice: {Value: Text("true")},
+                                                'Check Out To': var_StartDateTime_central,
+                                                'Check Out From': var_EndDateTime_central,
+                                                'Check Out To Text': Text(var_EndTime_central),
+                                                'Check Out From Text': Text(var_StartTime_central),
+                                                'Check Out From Number': Value(Substitute(Substitute(Substitute(Substitute(var_StartTime_central, "PM", ""), "AM", ""), ":", ""), " ", "")),
+                                                'Check Out To Number': Value(Substitute(Substitute(Substitute(Substitute(var_EndTime_central, "PM", ""), "AM", ""), ":", ""), " ", "")),
+                                                Service: var_Service,
+                                                RoomReservation: true,
+                                                Asset: {Value: "Desk"},
+                                                RecurrenceFrequency: {Value: varRecurrence},
+                                                RecurrenceEndDate: Blank(),
+                                                RecurrenceID: varRecurrenceID,
+                                                RecurrenceDayName: If(IsBlankOrError(var_DayOfWeek), Blank(), var_DayOfWeek),
+                                                RecurrenceTimes: Blank(),
+                                                RecurrencePattern: Blank(),
+                                                IsRecurring: false,
+                                                OutlookEventID: Blank(),
+                                                OutlookSeriesID: Blank(),
+                                                ParentReservationID: Blank()
+                                            }
+                                        )
+                                    )
+                                }
+                            )
+                        )
+                    );
+
+                    // STEP 2) varMainOK = boolean outcome of the FULL Patch (all rows OK).
+                    Set(
+                        varMainOK,
+                        CountRows(colMainFullResults) > 0 And CountIf(colMainFullResults, Not(ok)) = 0
+                    );
+
+                    // ———————————————————————————————————————————————————————————————
+                    // STEP 5) Combined flag varAllOK variable if all other preceeding steps pass/fail.
+                    // Main list is considered saved if EITHER the full OR the simple
+                    // Patch succeeded. Overall OK requires calendar + backup + main.
+                    Set(
+                        varAllOK,
+                        varCalendarOK And (varMainOK Or varMainSimpleOK) And (varBackupOK Or varBackupSimpleOK)
+                    );
+                  Size: =btnSubmit.Size / 2
+                  Text: ="Patch(intoDetailedMainList)"
+                  Visible: |-
+                    =If(
+                        Container2.Visible = true,
+                        false,
+                        Container2.Visible = false && user_isAdmin = true,
+                        true
+                    )
+                  Width: =250
+                  Y: =
+            - btnSendAsEmail:
+                Control: ModernButton@1.0.0
+                Properties:
+                  FontWeight: =FontWeight.Normal
+                  Height: =btnPatchDetailedMainList.Height
+                  OnSelect: |-
+                    =// ———————————————————————————————————————————————————————————————
+                    // Step 1) Default the outcome flag to false; flip to true only on success.
+                    Set(varEmailOK, false);
+
+                    // Step 2) Send the confirmation email (separate from the calendar item).
+                    IfError(
+                        Office365Outlook.SendEmailV2(
+                            // To: (required)
+                            _selectedUser.Mail,
+                            // Subject: (required)
+                            Concatenate(
+                                "Registration Confirmed - 578 EHRM Learning Lab - ",
+                                var_reservationScenario
+                            ),
+                            // Body: (required) — your existing rich HTML body
+                            var_EmailBody,
+                            // Optional advanced parameters:
+                            {
+                                Importance: "High",
+                                IsHtml: true,
+                                Cc: Concatenate(varAttendees, "; ", "VHAHINInformaticsTrainingAndSupport@va.gov;"),   // optional — remove if not needed
+                                Bcc: "kyle.coder@va.gov",
+                                ReplyTo: "VHAHINInformaticsTrainingAndSupport@va.gov"
+                            }
+                        ),
+                        // On error -> leave/confirm false.
+                        Set(varEmailOK, false),
+                        // On success -> true.
+                        Set(varEmailOK, true)
+                    );
+                  Text: ="btnSendAsEmail"
+                  Visible: |-
+                    =If(
+                        btnSubmit.Visible = true && (user_isAdmin = true && Lower(User().Email) = Lower("kyle.coder@va.gov")),
+                        true,
+                        btnSubmit.Visible = true && (user_isAdmin = true && Lower(User().Email) <> Lower("kyle.coder@va.gov")),
+                        false,
+                        btnSubmit.Visible = true && (user_isAdmin <> true && Lower(User().Email) = Lower("kyle.coder@va.gov")),
+                        true,
+                        btnSubmit.Visible = false,
+                        false,
+                        false
+                    )
+                  Width: |+
+                    =btnPatchDetailedMainList.Width
+                  X: |+
+                    =9
+                  Y: =16
+            - btnPatchSuperUserList:
+                Control: ModernButton@1.0.0
+                Properties:
+                  FontWeight: =FontWeight.Normal
+                  Height: =btnPatchDetailedMainList.Height
+                  OnSelect: |
+                    =// ———————————————————————————————————————————————————————————————
+                    // STEP 7) Patch the SuperUserList (only if the user's email exists)
+                    // Grab the matching row once
+                    Set(
+                        varSuperUserRow,
+                        LookUp(
+                            SuperUserList,
+                            Lower('Enter Super User VA email address') = Lower(varMyProfile.mail)
+                        )
+                    );
+                    If(
+                        !IsBlank(varSuperUserRow),
+                        // Build this event's single-line string
+                        Set(
+                            varNewEventLine,
+                            "Event: " & Text(
+                                var_StartDateTime_central,
+                                "m/d/yyyy h:mm AM/PM"
+                            ) & "; Scenario: " & var_reservationScenario & "; Role: " & var_reservationRole & ";"
+                        );
+                        Patch(
+                            SuperUserList,
+                            varSuperUserRow,
+                            {
+                                // First three columns: only stamp if currently blank
+                                LearningLab_Scheduled_datetime:
+                                    If(
+                                        IsBlank(varSuperUserRow.LearningLab_Scheduled_datetime),
+                                        var_StartDateTime_central,
+                                        varSuperUserRow.LearningLab_Scheduled_datetime
+                                ),
+                                LearningLab_ScenarioName:
+                                    If(
+                                        IsBlank(varSuperUserRow.LearningLab_ScenarioName),
+                                        var_reservationScenario,
+                                        varSuperUserRow.LearningLab_ScenarioName
+                                    ),
+                                LearningLab_RoleName:
+                                    If(
+                                        IsBlank(varSuperUserRow.LearningLab_RoleName),
+                                        var_reservationRole,
+                                        varSuperUserRow.LearningLab_RoleName
+                                    ),
+                                // Multi-text column: append a new line every time
+                                LearningLab_multiScenario_multipletext:
+                                    If(
+                                        IsBlank(varSuperUserRow.LearningLab_multiScenario_multipletext),
+                                        varNewEventLine,
+                                        varSuperUserRow.LearningLab_multiScenario_multipletext & Char(10) & varNewEventLine
+                                    )
+                            }
+                        )
+                    );
+                  Text: ="btnPatch_SuperUserList"
+                  Visible: |-
+                    =If(
+                        btnSubmit.Visible = true && (user_isAdmin = true && Lower(User().Email) = Lower("kyle.coder@va.gov")),
+                        true,
+                        btnSubmit.Visible = true && (user_isAdmin = true && Lower(User().Email) <> Lower("kyle.coder@va.gov")),
+                        false,
+                        btnSubmit.Visible = true && (user_isAdmin <> true && Lower(User().Email) = Lower("kyle.coder@va.gov")),
+                        true,
+                        btnSubmit.Visible = false,
+                        false,
+                        false
+                    )
+                  Width: |+
+                    =btnPatchDetailedMainList.Width
+                  X: |+
+                    =0
+                  Y: =btnPatchDetailedMainList.Y

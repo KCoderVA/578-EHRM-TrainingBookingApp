@@ -19,6 +19,49 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.12.2] - 2026-08-12
+
+> **Go-live readiness release:** this version advances the project-wide release line to `0.12.2` and aligns the Canvas app, solution manifest, and release artifacts around a single semantic baseline for imminent production deployment.
+
+### Added
+
+- **Canvas analysis documentation (new v0.12.2 set) in `src/powerApps/`:**
+  - `v0.12.2_diffAnalysis.md`
+  - `v0.12.2_changeSummary.md`
+  - `v0.12.2_knownIssues.md`
+  - `v0.12.2_recommendations.md`
+- **Release-note artifacts for v0.12.2 in `docs/release-notes/`:**
+  - `v0.12.2_commitMessage.md`
+  - `v0.12.2_pullRequest.md`
+  - `v0.12.2_releaseNotes.md`
+
+### Changed
+
+- **`VERSION`** — `0.9.27 -> 0.12.2`.
+- **`src/solution.xml`** — solution `<Version>` updated `0.9.26 -> 0.12.2`; description refreshed to v0.12.2 go-live context.
+- **`README.md`** — project badge and current-version references updated to v0.12.2.
+- **`docs/PROJECT_STATUS.md`** — release history, component baseline, status summary, connector/data-source references, and roadmap text updated for v0.12.2.
+- **`src/powerApps/README.md`** — current section switched to v0.12.2, version-history table extended, and current data-source/screen inventory updated.
+- **`docs/release-notes/v0.9.27_commitMessage.md`**, **`docs/release-notes/v0.9.27_pullRequest.md`**, **`docs/release-notes/v0.9.27_releaseNotes.md`** — template placeholders replaced with populated v0.12.2-ready content for continuity with existing naming cycle.
+
+### Fixed
+
+- **Version identity drift corrected** — app/package/manifest/repo release baselines now align at `0.12.2`.
+- **Canvas metadata quality improved** — `BindingErrorCount` reduced from `329` to `120` (remaining issues are tracked as follow-up work).
+
+### Removed
+
+- **Legacy screen set removed from active app topology:** `alt_ManageDesks`, `Screen1`, `Screen2`.
+
+### Notes
+
+- **Screen topology update:** Added `ManageUsers` and `CreateMeeting`; current net screen count is 21.
+- **Data-source expansion:** Current bindings now include `MasterScheduleList`, `SuperUserList`, `backupList_DeskReservations`, and `Learning Lab Sessions`.
+- **Deferred integration fields remain intentional:** `OutlookEventID`, `OutlookSeriesID`, and `ParentReservationID` are still app-layer deferred and require companion flow completion.
+- **Known follow-up:** complete App Checker cleanup for remaining binding warnings before final production hardening sign-off.
+
+---
+
 ## [0.9.26] - 2026-08-04
 
 > **Version realignment:** the project-wide version jumps `0.8.16` → `0.9.26` to re-align the repository release line with the Canvas app's independently-advancing version (now **v0.9.26**), continuing the alignment strategy begun at `0.8.16`. This **supersedes the never-completed `0.8.17`** cycle — its blank `docs/release-notes/v0.8.17_*` stubs were renamed and filled in as `v0.9.26_*`, and no `[0.8.17]` release was ever published.

@@ -74,7 +74,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Tabs",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1133,
+        "PublishOrderIndex": 866,
         "Rules": [
           {
             "Category": "Data",
@@ -220,7 +220,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 1135,
+            "PublishOrderIndex": 868,
             "Rules": [
               {
                 "Category": "Design",
@@ -352,7 +352,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 1136,
+            "PublishOrderIndex": 869,
             "Rules": [
               {
                 "Category": "Data",
@@ -735,7 +735,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 1137,
+            "PublishOrderIndex": 870,
             "Rules": [
               {
                 "Category": "Data",
@@ -1138,7 +1138,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 1138,
+            "PublishOrderIndex": 871,
             "Rules": [
               {
                 "Category": "Data",
@@ -1548,7 +1548,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Tabs",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1134,
+        "PublishOrderIndex": 867,
         "Rules": [
           {
             "Category": "Data",
@@ -1570,7 +1570,7 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "Tabs.Width / 4",
+            "InvariantScript": "Tabs.Width / CountRows(Tabs.Items)",
             "Property": "TemplateSize",
             "RuleProviderType": "User"
           },
@@ -1784,19 +1784,19 @@
       {
         "AFDDataSourceName": "",
         "AutoRuleBindingEnabled": false,
-        "AutoRuleBindingString": "Table(\n    {\n        Name: \"Dashboard\",\n        Icon: Icon.DetailList,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"My Appts\",\n        Icon: Icon.Person,\n        Page: App.ActiveScreen\n    },\n     {\n        Name: \"Manage Desks\",\n        Icon: Icon.ComputerDesktop,\n        Page: App.ActiveScreen\n    },\n    {\n        Name: \"Book\",\n        Icon: Icon.Add,\n        Page: App.ActiveScreen\n    }\n)",
+        "AutoRuleBindingString": "/*Table(\n    {\n        Name: \"Home\",\n        Icon: Icon.DetailList,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"Items\",\n        Icon: Icon.Bookmark,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"Desks\",\n        Icon: Icon.ComputerDesktop,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"Users\",\n        Icon: Icon.People,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"New\",\n        Icon: Icon.Add,\n        Page: App.ActiveScreen,\n        Visible:true\n    }\n)*/",
         "InvariantPropertyName": "Items",
         "IsLockable": false,
         "NameMapSourceSchema": "?"
       },
       "HomePage"
     ],
-    "LastModifiedTimestamp": "639211155875948774",
+    "LastModifiedTimestamp": "639220786792096890",
     "Name": "Tabs",
     "Rules": [
       {
         "Category": "Data",
-        "InvariantScript": "Table(\n    {\n        Name: \"Home\",\n        Icon: Icon.DetailList,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"My Appts\",\n        Icon: Icon.Person,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n     {\n        Name: \"Manage Desks\",\n        Icon: Icon.ComputerDesktop,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"Create New\",\n        Icon: Icon.Add,\n        Page: App.ActiveScreen,\n        Visible:true\n    }\n)",
+        "InvariantScript": "colMenu\n/*Table(\n    {\n        Name: \"Home\",\n        Icon: Icon.DetailList,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"Items\",\n        Icon: Icon.Bookmark,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"Desks\",\n        Icon: Icon.ComputerDesktop,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"Users\",\n        Icon: Icon.People,\n        Page: App.ActiveScreen,\n        Visible:true\n    },\n    {\n        Name: \"New\",\n        Icon: Icon.Add,\n        Page: App.ActiveScreen,\n        Visible:true\n    }\n)*/",
         "NameMap": "{\"Icon\":\"Icon\",\"Name\":\"Name\",\"Page\":\"Page\",\"Visible\":\"Visible\"}",
         "Property": "Items",
         "RuleProviderType": "System"
@@ -1882,7 +1882,7 @@
   "IsPcfControl": false,
   "IsPremiumPcfControl": false,
   "IsWidgetTemplate": false,
-  "LastModifiedTimestamp": "639211155875948774",
+  "LastModifiedTimestamp": "639220786792096890",
   "Name": "9ac8466133f3416a8cb020a4ca8549de",
   "OverridableProperties": {},
   "TemplateOriginalName": "6eadfe97a9d744baa7654bf7e19d679f",

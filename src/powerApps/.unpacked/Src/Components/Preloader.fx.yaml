@@ -39,17 +39,21 @@ Preloader As CanvasComponent:
         DisabledColor: =RGBA(166, 166, 166, 1)
         FocusedBorderColor: =lblLoaderText.BorderColor
         Font: =If(!IsBlank(LookUp(Preloader.Styles, Key = "Font").Value),LookUp(Preloader.Styles, Key = "Font").Value, Font.'Segoe UI') 
-        Height: =70
+        FontWeight: =FontWeight.Bold
+        Height: =Parent.Height
         HoverBorderColor: =lblLoaderText.BorderColor
         HoverColor: =lblLoaderText.Color
         HoverFill: =lblLoaderText.Fill
         PressedBorderColor: =lblLoaderText.BorderColor
         PressedColor: =lblLoaderText.Color
         PressedFill: =lblLoaderText.Fill
-        Size: =21
-        Text: =Preloader.Text
+        Size: =32
+        Text: |-
+            =//Preloader.Text
+            "LOADING. . . ."
         Width: =Parent.Width
-        Y: =imgLoader.Y + imgLoader.Height
+        X: =Parent.X
+        Y: =Parent.Y //imgLoader.Y + imgLoader.Height
         ZIndex: =3
 
     DefaultStyle As button:

@@ -775,15 +775,15 @@ DeskSelect As screen:
             =SortByColumns(
               Filter(
                 Desks,
-                Active = 1,
-                Asset.Value in ["Desks","Item", "Room"],
+                Active_text = 1,
+                ItemType_choice.Value in ["Desks","Item", "Room"],
                 // Exclude any title in the overlapped-reservation list:
                 Not(ItemID_title in colDeskChckRecur.DeskText),
                 // Honor the room selector:
                 If(
                   Dropdown1.Selected.Value = "All EHRM Training Rooms",
-                  Asset.Value <> "Desk" && Asset.Value <> "Item",
-                  'Room Location' = Dropdown1.Selected.Value
+                  ItemType_choice.Value <> "Desk" && ItemType_choice.Value <> "Item",
+                  RoomName_choice.Value = Dropdown1.Selected.Value
                 )
               ),
               "Title",
@@ -916,4 +916,42 @@ DeskSelect As screen:
             X: =1075
             Y: =161
             ZIndex: =25
+
+    Timer4_1 As timer:
+        AutoStart: =true
+        BorderColor: =App.Theme.Colors.Primary
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Duration: =1000
+        Fill: =App.Theme.Colors.Primary
+        Font: =App.Theme.Font
+        Height: =31
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =App.Theme.Colors.Darker10
+        OnTimerEnd: |-
+            =/*If(
+                Self.Visible,
+                Notify("TESTING! The control named 'Timer4' has ended, and the page typically would now self-navigate forward to the 'Confirm' screen at this time.........",NotificationType.Information, 1000),
+                ""
+            );
+            */
+            
+            Select(btnContinueDesk);
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Repeat: =true
+        Visible: |-
+            =If(
+                Lower(User().Email) = "kyle.coder@va.gov",
+                true,
+                false
+            )
+        Width: =280
+        X: =434
+        Y: =609
+        ZIndex: =27
 

@@ -3,7 +3,8 @@ Tabs As CanvasComponent:
     Height: =120
     HomePage: =App.ActiveScreen
     Items: |-
-        =Table(
+        =colMenu
+        /*Table(
             {
                 Name: "Home",
                 Icon: Icon.DetailList,
@@ -11,24 +12,30 @@ Tabs As CanvasComponent:
                 Visible:true
             },
             {
-                Name: "My Appts",
-                Icon: Icon.Person,
+                Name: "Items",
+                Icon: Icon.Bookmark,
                 Page: App.ActiveScreen,
                 Visible:true
             },
-             {
-                Name: "Manage Desks",
+            {
+                Name: "Desks",
                 Icon: Icon.ComputerDesktop,
                 Page: App.ActiveScreen,
                 Visible:true
             },
             {
-                Name: "Create New",
+                Name: "Users",
+                Icon: Icon.People,
+                Page: App.ActiveScreen,
+                Visible:true
+            },
+            {
+                Name: "New",
                 Icon: Icon.Add,
                 Page: App.ActiveScreen,
                 Visible:true
             }
-        )
+        )*/
     Width: =608
     X: =0
     Y: =0
@@ -59,7 +66,7 @@ Tabs As CanvasComponent:
         ShowScrollbar: =false
         TabIndex: =1
         TemplatePadding: =1
-        TemplateSize: =Tabs.Width / 4
+        TemplateSize: =Tabs.Width / CountRows(Tabs.Items)
         Width: =Tabs.Width
         Y: =Rectangle1.Height + Rectangle1.Y
         ZIndex: =1

@@ -1,681 +1,934 @@
 NewEditDesk As screen:
     Fill: =RGBA(236, 236, 236, 1)
-    Height: =Max(App.Height, App.DesignHeight)
+    Height: =1080 / 1.5
     LoadingSpinnerColor: =App.Theme.Colors.Primary
     OnVisible: |-
-        =UpdateContext({prevSelected:false});UpdateContext({upSelected:true});
-    Width: =Max(App.Width, App.DesignWidth)
+        =UpdateContext({prevSelected:false});
+        UpdateContext({upSelected:true});
+    Width: =1920 / 1.5
 
-    lblMyAppointments_4 As label:
-        Align: =Align.Center
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(255, 255, 255, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =Font.'Segoe UI'
-        FontWeight: =FontWeight.Bold
-        Height: =115
-        Size: =32
-        Text: ="Manage Desks"
-        Width: =640
-        X: =272
-        ZIndex: =3
-
-    bgRounded_14 As htmlViewer:
-        Height: =455
+    htmlBackground As htmlViewer:
+        Height: =Parent.Height - Self.Y
         HtmlText: |-
-            ="<div style='border:1px gray;border-radius:10%;height:870px;width:100%;background-color:#FCFCFC'></div>"
-        Width: =1121
-        X: =15
-        Y: =185
-        ZIndex: =4
+            ="<div style='border:1px gray;border-radius:10%;height:619px;width:100%;background-color:#FCFCFC'></div>"
+        Width: =ctnHeader.Width
+        Y: =ctnHeader.Y + ctnHeader.Height
+        ZIndex: =1
 
-    lblNameDesk_2 As label:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =Font.'Segoe UI'
-        FontWeight: =FontWeight.Semibold
-        Height: =38
-        Size: =21
-        Text: ="Name"
-        Width: =109
-        Y: =188
-        ZIndex: =5
-
-    tbNameDesk_2 As text:
-        AccessibleLabel: ="Desk Name Input"
-        BorderColor: =RGBA(179, 179, 179, 1)
-        Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.ItemID_title,Blank())
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        DisabledFill: =RGBA(244, 244, 244, 1)
-        FocusedBorderThickness: =4
-        Font: =Font.'Segoe UI'
-        Height: =35
-        HoverBorderColor: =App.Theme.Colors.Darker40
-        HoverColor: =RGBA(0, 0, 0, 1)
-        HoverFill: =App.Theme.Colors.Lighter70
-        Size: =18
-        Width: =498
-        X: =92
-        Y: =191
-        ZIndex: =6
-
-    tbFloorDesk_2 As text:
-        AccessibleLabel: ="Floor Input"
-        BorderColor: =RGBA(179, 179, 179, 1)
-        Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomLocation,Blank())
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        DisabledFill: =RGBA(244, 244, 244, 1)
-        FocusedBorderThickness: =4
-        Font: =Font.'Segoe UI'
-        Height: =35
-        HoverBorderColor: =App.Theme.Colors.Darker40
-        HoverColor: =RGBA(0, 0, 0, 1)
-        HoverFill: =App.Theme.Colors.Lighter70
-        Size: =18
-        Width: =498
-        X: =92
-        Y: =249
-        ZIndex: =7
-
-    lblMapDesk_2 As label:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =Font.'Segoe UI'
-        FontWeight: =FontWeight.Semibold
-        Height: =42
-        Size: =21
-        Text: ="Map Link"
-        Width: =145
-        Y: =394
-        ZIndex: =8
-
-    tbMapDesk_2 As text:
-        AccessibleLabel: ="Map Link Input"
-        BorderColor: =RGBA(179, 179, 179, 1)
-        Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.MapLink,Blank())
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        DisabledFill: =RGBA(244, 244, 244, 1)
-        FocusedBorderThickness: =4
-        Font: =Font.'Segoe UI'
-        Height: =32
-        HoverBorderColor: =App.Theme.Colors.Darker40
-        HoverColor: =RGBA(0, 0, 0, 1)
-        HoverFill: =App.Theme.Colors.Lighter70
-        Size: =18
-        Width: =590
-        Y: =436
-        ZIndex: =9
-
-    lblDescrDesk_2 As label:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =Font.'Segoe UI'
-        FontWeight: =FontWeight.Semibold
-        Height: =51
-        Size: =21
-        Text: ="Description"
-        Width: =440
-        X: =624
-        Y: =188
-        ZIndex: =10
-
-    tbDescrDesk_2 As text:
-        AccessibleLabel: ="Desk Description Input"
-        BorderColor: =RGBA(179, 179, 179, 1)
-        Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.Description,Blank())
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        DisabledFill: =RGBA(244, 244, 244, 1)
-        FocusedBorderThickness: =4
-        Font: =Font.'Segoe UI'
-        Height: =256
-        HoverBorderColor: =App.Theme.Colors.Darker40
-        HoverColor: =RGBA(0, 0, 0, 1)
-        HoverFill: =App.Theme.Colors.Lighter70
-        Mode: =TextMode.MultiLine
-        Size: =18
-        Width: =459
-        X: =624
-        Y: =250
+    ctnDetails As groupContainer.manualLayoutContainer:
+        Height: =htmlBackground.Height - 10
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        PaddingBottom: =5
+        PaddingLeft: =5
+        PaddingRight: =5
+        PaddingTop: =5
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Width: =htmlBackground.Width - (Self.X * 2)
+        X: =htmlBackground.X + 25
+        Y: =htmlBackground.Y + 10
         ZIndex: =11
 
-    btnBackDeskEdit_2 As button:
-        BorderColor: =App.Theme.Colors.Primary
-        Color: =App.Theme.Colors.PrimaryForeground
-        DisabledBorderColor: =RGBA(244, 244, 244, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        DisabledFill: =RGBA(244, 244, 244, 1)
-        Fill: =RGBA(128, 128, 128, 1)
-        Font: =App.Theme.Font
-        FontWeight: =FontWeight.Semibold
-        Height: =35
-        HoverBorderColor: =App.Theme.Colors.Darker10
-        HoverColor: =App.Theme.Colors.PrimaryForeground
-        HoverFill: =ColorFade(Self.Fill, -20%)
-        OnSelect: |-
-            =Reset(tbFloorDesk_2);
-            Reset(tbNameDesk_2);
-            Reset(toggleActive_1);
-            Reset(tbDescrDesk_2);
-            Reset(tbMapDesk_2);
-            Reset(tbDeskLocation_2);
-            Reset(tbRoomPhoto_1);
-            Navigate(ManageDesks);
-        PressedBorderColor: =App.Theme.Colors.Darker40
-        PressedColor: =Self.Color
-        PressedFill: =App.Theme.Colors.Darker40
-        Size: =24
-        Text: ="Back"
-        Width: =200
-        X: =317
-        Y: =115
-        ZIndex: =12
-
-    iconViewMap_2 As icon.View:
-        AccessibleLabel: ="View Map"
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(128, 128, 128, 1)
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(244, 244, 244, 1)
-        Height: =40
-        Icon: =Icon.View
-        OnSelect: |-
-            =UpdateContext({showMap:true})
-        TabIndex: =7
-        Width: =40
-        X: =311
-        Y: =393
-        ZIndex: =13
-
-    toggleActive_1 As toggleSwitch:
-        AccessibleLabel: ="Active or Inactive Toggle"
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        Default: =varManageSelectedDesk.Active
-        FalseFill: =RGBA(184, 0, 0, 1)
-        FalseText: ="INACTIVE"
-        Font: =App.Theme.Font
-        HandleFill: =RGBA(255, 255, 255, 1)
-        Height: =35
-        Size: =21
-        TrueFill: =RGBA(54, 176, 75, 1)
-        TrueText: ="ACTIVE"
-        Width: =250
-        X: =886
-        Y: =150
-        ZIndex: =14
-
-    btnUpdate_4 As button:
-        BorderColor: =App.Theme.Colors.Primary
-        Color: =App.Theme.Colors.PrimaryForeground
-        DisabledBorderColor: =RGBA(244, 244, 244, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        DisabledFill: =RGBA(244, 244, 244, 1)
-        Fill: =RGBA(135, 78, 181, 1)
-        Font: =App.Theme.Font
-        FontWeight: =FontWeight.Semibold
-        Height: =35
-        HoverBorderColor: =App.Theme.Colors.Darker10
-        HoverColor: =App.Theme.Colors.PrimaryForeground
-        HoverFill: =ColorFade(Self.Fill, -20%)
-        OnSelect: |
-            =Set(
-                submitItem,
-                Patch(
-                    Desks,
-                    Coalesce(
-                        varManageSelectedDesk,
-                        Defaults(Desks)
-                    ),
-                    {
-                        ItemID_title: tbNameDesk_2.Text,
-                        Asset: ddAsset_1.SelectedText,
-                        'Room Location': tbFloorDesk_2.Text,
-                        Active: toggleActive_1.Value,
-                        'Map Link': tbMapDesk_2.Text,
-                        'Desk Location': tbDeskLocation_2.Text,
-                        RoomPicture: tbRoomPhoto_1.Text,            
-                        Description: tbDescrDesk_2.Text,
-                        'Projector/TV':If(Checkbox1_5.Value = true,"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/vtel.png",Blank()),
-                        VTel: If(Checkbox1_4.Value = true, "https://dvagov.sharepoint.com/sites/vhaaugroom/SiteAssets/images/projector.png",Blank()),
-                        'Smart Board': If(Checkbox1_3.Value = true,"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/smartboard.png",Blank())
-                        
-                    }
-                )
-            );
-            If(
-                IsBlankOrError(submitItem),
-                Notify(
-                    "Something went wrong. Your item has not been submitted." & Last(Errors(Desks)).Message,
-                    NotificationType.Error,
-                    10000
-                ),
-                Notify(
-                    "Your item has been submitted. (ID: " & submitItem.ID & ")",
-                    NotificationType.Success,
-                    5000
-                );
-                Set(
-                    currentItem,
-                    submitItem
-                )
-            );
-            Reset(tbFloorDesk_2);
-            Reset(tbNameDesk_2);
-            Reset(toggleActive_1);
-            Reset(tbDescrDesk_2);
-            Reset(tbMapDesk_2);
-            Reset(tbDeskLocation_2);
-            Reset(tbRoomPhoto_1);
-            Navigate(ManageDesks)
-        PressedBorderColor: =App.Theme.Colors.Darker40
-        PressedColor: =Self.Color
-        PressedFill: =App.Theme.Colors.Darker40
-        Size: =24
-        Text: ="Update"
-        Width: =260
-        X: =571
-        Y: =115
-        ZIndex: =15
-
-    ddAsset_1 As dropdown:
-        BorderColor: =App.Theme.Colors.Darker40
-        ChevronBackground: =App.Theme.Colors.Primary
-        ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
-        ChevronDisabledFill: =RGBA(244, 244, 244, 1)
-        ChevronFill: =App.Theme.Colors.PrimaryForeground
-        ChevronHoverBackground: =App.Theme.Colors.Darker10
-        ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
-        Default: =""
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        DisabledFill: =RGBA(244, 244, 244, 1)
-        Font: =App.Theme.Font
-        Height: =32
-        HoverColor: =RGBA(0, 0, 0, 1)
-        HoverFill: =App.Theme.Colors.Lighter70
-        Items: =Choices([@Desks].Asset)
-        PressedColor: =App.Theme.Colors.PrimaryForeground
-        PressedFill: =App.Theme.Colors.Darker30
-        SelectionColor: =App.Theme.Colors.PrimaryForeground
-        SelectionFill: =App.Theme.Colors.Primary
-        Size: =21
-        Width: =176
-        X: =448
-        Y: =154
-        ZIndex: =16
-
-    Label14_1 As label:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =App.Theme.Font
-        FontWeight: =FontWeight.Semibold
-        Size: =21
-        Text: ="Is this a Room,Desk or Item?"
-        Width: =415
-        Y: =151
-        ZIndex: =17
-
-    lblFloorDesk_3 As label:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =Font.'Segoe UI'
-        FontWeight: =FontWeight.Semibold
-        Height: =43
-        Size: =21
-        Text: ="Room"
-        Width: =92
-        Y: =245
-        ZIndex: =18
-
-    grpHeader_10 As group:
-        Height: =5
-        Width: =5
-        X: =40
-        Y: =20
-        ZIndex: =18
-
-        Image2_11 As image:
+        chkbox_SmartBoard As checkbox:
             BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =150
-            Image: =abstractBackground
-            ImagePosition: =ImagePosition.Fill
-            Width: =Parent.Width
+            CheckboxBorderColor: =App.Theme.Colors.Primary
+            CheckmarkFill: =App.Theme.Colors.Primary
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |+
+                =If(
+                    varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.SmartboardEquipped_boolean),
+                    varManageSelectedDesk.SmartboardEquipped_boolean,
+                    varDeskMode <> "Edit",
+                    false
+                )
+                
+            DisplayMode: =DisplayMode.View
+            Font: =App.Theme.Font
+            Height: =chkbox_VTel.Height
+            HoverColor: =App.Theme.Colors.Darker30
+            OnSelect: =
+            Size: =16
+            Text: ="Has Smartboard?"
+            Width: =chkbox_VTel.Width
+            X: =chkbox_VTel.X + chkbox_VTel.Width
+            Y: =chkbox_VTel.Y
             ZIndex: =1
 
-        Rectangle2_10 As rectangle:
+        chkbox_VTel As checkbox:
             BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(135, 78, 181, 0.65)
-            Height: =150
-            Width: =Parent.Width
+            CheckboxBorderColor: =App.Theme.Colors.Primary
+            CheckmarkFill: =App.Theme.Colors.Primary
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |+
+                =If(
+                    varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.VtelEquipped_boolean),
+                    varManageSelectedDesk.VtelEquipped_boolean,
+                    varDeskMode <> "Edit",
+                    false
+                )
+                
+            DisplayMode: =DisplayMode.View
+            Font: =App.Theme.Font
+            Height: =chkbox_Projector.Height
+            HoverColor: =App.Theme.Colors.Darker30
+            OnSelect: =
+            Size: =16
+            Text: |-
+                ="Has
+                VTel?"
+            Width: =chkbox_Projector.Width
+            X: =chkbox_Projector.X + chkbox_Projector.Width
+            Y: =chkbox_Projector.Y
             ZIndex: =2
 
-    lblMapDesk_5 As label:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =Font.'Segoe UI'
-        FontWeight: =FontWeight.Semibold
-        Height: =38
-        Size: =21
-        Text: ="Room Photo Link"
-        Width: =293
-        Y: =506
-        ZIndex: =19
+        chkbox_Projector As checkbox:
+            BorderColor: =App.Theme.Colors.Darker40
+            CheckboxBorderColor: =App.Theme.Colors.Primary
+            CheckmarkFill: =App.Theme.Colors.Primary
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |
+                =If(
+                    varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.ProjectorEquipped_boolean),
+                    varManageSelectedDesk.ProjectorEquipped_boolean,
+                    varDeskMode <> "Edit",
+                    false
+                )
+            DisplayMode: =DisplayMode.View
+            Font: =App.Theme.Font
+            Height: =59
+            HoverColor: =App.Theme.Colors.Darker30
+            OnSelect: =
+            Size: =16
+            Text: ="Has Projector?"
+            Width: =196
+            X: =lbl_ItemType.X
+            Y: =toggle_ActiveBoolean.Y + toggle_ActiveBoolean.Height + Parent.PaddingTop
+            ZIndex: =3
 
-    tbRoomPhoto_1 As text:
-        AccessibleLabel: ="RoomPicture Input"
-        BorderColor: =RGBA(179, 179, 179, 1)
-        Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomLocation0,Blank())
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        DisabledFill: =RGBA(244, 244, 244, 1)
-        FocusedBorderThickness: =4
-        Font: =Font.'Segoe UI'
-        Height: =30
-        HintText: ="Link to Room Picture"
-        HoverBorderColor: =App.Theme.Colors.Darker40
-        HoverColor: =RGBA(0, 0, 0, 1)
-        HoverFill: =App.Theme.Colors.Lighter70
-        Size: =18
-        Width: =590
-        Y: =555
-        ZIndex: =20
+        toggle_ActiveBoolean As toggleSwitch:
+            AccessibleLabel: ="Active or Inactive Toggle"
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            Default: =varManageSelectedDesk.Active_boolean
+            FalseFill: =Color.Red //RGBA(184, 0, 0, 1)
+            FalseText: ="INACTIVE"
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Bold
+            HandleFill: =RGBA(255, 255, 255, 1)
+            Height: =lbl_ItemType.Height
+            OnChange: |-
+                =//If(
+                    //varManageSelectedDesk.Active_boolean = true && varManageSelectedDesk.Active_text = "true",
+                    Patch(
+                        Desks,
+                        LookUp(Desks, ItemID_title = varManageSelectedDesk.ItemID_title),
+                        {
+                            Active_boolean: Self.Value,
+                            Active_text: Text(Self.Value)
+                        }
+                    )
+                    //varManageSelectedDesk.Active_boolean = false && varManageSelectedDesk.Active_text = "false",
+                    //Patch(
+                    //    Desks,
+                    //    LookUp(Desks, ItemID_title = varManageSelectedDesk.ItemID_title),
+                    //    {
+                    //        Active_boolean: Self.Value,
+                    //        Active_text: Text(Self.Value)
+                    //    }
+                    //),
+            Size: =26
+            TrueFill: =Color.LightGreen //RGBA(54, 176, 75, 1)
+            TrueText: ="ACTIVE"
+            Width: =(lbl_ItemType.Width + dd_ItemType.Width) / 2.4
+            X: =((lbl_ItemType.Width + dd_ItemType.Width) / 2) - (Self.Width / 2) + lbl_ItemType.X
+            Y: =lbl_ItemType.Y + lbl_ItemType.Height + Parent.PaddingTop
+            ZIndex: =4
 
-    lblMapDesk_6 As label:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =Font.'Segoe UI'
-        FontWeight: =FontWeight.Semibold
-        Height: =38
-        Size: =21
-        Text: ="Desk Location Link"
-        Visible: =false
-        Width: =293
-        Y: =483
-        ZIndex: =21
+        dd_ItemType As dropdown:
+            BorderColor: =App.Theme.Colors.Darker40
+            ChevronBackground: =App.Theme.Colors.Primary
+            ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+            ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+            ChevronFill: =App.Theme.Colors.PrimaryForeground
+            ChevronHoverBackground: =App.Theme.Colors.Darker10
+            ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+            Default: |-
+                =If(
+                    varDeskMode = "Edit",
+                    varManageSelectedDesk.ItemType_choice.Value,
+                    Blank()
+                )
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Font: =App.Theme.Font
+            Height: =lbl_ItemType.Height
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Items: |-
+                =Distinct(
+                    Desks,
+                    ItemType_choice.Value)
+            PressedColor: =App.Theme.Colors.PrimaryForeground
+            PressedFill: =App.Theme.Colors.Darker30
+            SelectionColor: =App.Theme.Colors.PrimaryForeground
+            SelectionFill: =App.Theme.Colors.Primary
+            Size: =21
+            Width: |
+                =Parent.Width - Self.X - 10
+            X: =lbl_ItemType.X + lbl_ItemType.Width
+            Y: =lbl_ItemType.Y
+            ZIndex: =5
 
-    tbDeskLocation_2 As text:
-        AccessibleLabel: ="DeskLocation Input"
-        BorderColor: =RGBA(179, 179, 179, 1)
-        Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.DeskLocation,Blank())
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        DisabledFill: =RGBA(244, 244, 244, 1)
-        FocusedBorderThickness: =4
-        Font: =Font.'Segoe UI'
-        Height: =30
-        HintText: ="Link to Room Picture"
-        HoverBorderColor: =App.Theme.Colors.Darker40
-        HoverColor: =RGBA(0, 0, 0, 1)
-        HoverFill: =App.Theme.Colors.Lighter70
-        Size: =18
-        Visible: =false
-        Width: =590
-        Y: =521
-        ZIndex: =22
+        lbl_ItemType As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            Height: =lbl_ItemTitle.Height
+            Italic: =true
+            Size: =18
+            Text: |-
+                ="Item Type:"
+            Width: =lbl_ItemTitle.Width
+            X: =input_ItemTitle.X + input_ItemTitle.Width
+            Y: =input_ItemTitle.Y
+            ZIndex: =6
 
-    Label15_1 As label:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(255, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =App.Theme.Font
-        Height: =104
-        Size: =16
-        Text: |-
-            ="Note: Pictures need to be saved in a SharePoint folder. This is where you will obtain the links for the pictures."
-        Width: =460
-        X: =650
-        Y: =504
-        ZIndex: =23
+        input_Description As text:
+            AccessibleLabel: ="Desk Description Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: =If(varDeskMode = "Edit",varManageSelectedDesk.CombinedLocationDetails_multilinePlainText,Blank())
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =Parent.Height - Self.Y - 10
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Mode: =TextMode.MultiLine
+            Size: =20
+            Width: =lbl_ItemTitle.Width + input_ItemTitle.Width - Self.X
+            X: =lbl_Description.X + 10
+            Y: =lbl_Description.Y + lbl_Description.Height
+            ZIndex: =7
 
-    iconViewMap_5 As icon.View:
-        AccessibleLabel: ="View Map"
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(128, 128, 128, 1)
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(244, 244, 244, 1)
-        Height: =40
-        Icon: =Icon.View
-        OnSelect: |-
-            =UpdateContext({showLocation:true})
-        TabIndex: =7
-        Visible: =false
-        Width: =40
-        X: =311
-        Y: =474
-        ZIndex: =27
+        lbl_Description As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            Height: =lbl_Name_division.Height
+            Italic: =true
+            Size: =18
+            Text: ="Description"
+            Width: =input_Description.Width
+            X: =lbl_Name_division.X
+            Y: =lbl_Name_division.Y + lbl_Name_division.Height + Parent.PaddingTop
+            ZIndex: =8
 
-    iconViewMap_6 As icon.View:
-        AccessibleLabel: ="View Map"
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(128, 128, 128, 1)
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(244, 244, 244, 1)
-        Height: =40
-        Icon: =Icon.View
-        OnSelect: |-
-            =UpdateContext({showRoom:true})
-        TabIndex: =7
-        Width: =40
-        X: =311
-        Y: =515
-        ZIndex: =28
+        input_Name_division As text:
+            AccessibleLabel: ="Floor Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |-
+                =If(
+                    varDeskMode = "Edit",
+                    varManageSelectedDesk.DivisionName_choice.Value,
+                    Blank()
+                )
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =lbl_Name_division.Height
+            HintText: =""
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =20
+            Width: =input_ItemTitle.Width
+            X: =lbl_Name_division.X + lbl_Name_division.Width
+            Y: =lbl_Name_division.Y
+            ZIndex: =9
 
-    grpMap_3 As group:
-        Height: =5
-        Width: =5
-        X: =60
-        Y: =60
-        ZIndex: =28
+        lbl_Name_division As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            Height: =lbl_Number_building.Height
+            Italic: =true
+            Size: =18
+            Text: |-
+                ="Division:"
+            Width: =lbl_Number_building.Width
+            X: =lbl_Number_building.X
+            Y: =lbl_Number_building.Y + lbl_Number_building.Height + Parent.PaddingTop
+            ZIndex: =10
 
-        Rectangle3_6 As rectangle:
+        iconViewMap_2 As icon.View:
+            AccessibleLabel: ="View Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(128, 128, 128, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =40
+            Icon: =Icon.View
+            OnSelect: |-
+                =UpdateContext({showMap:true})
+            TabIndex: =7
+            Width: =40
+            X: =input_Number_building.X + input_Number_building.Width
+            Y: =input_Number_building.Y
+            ZIndex: =11
+
+        input_Number_building As text:
+            AccessibleLabel: ="Floor Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |-
+                =If(
+                    varDeskMode = "Edit",
+                    varManageSelectedDesk.BuldingNumber_number,
+                    Blank()
+                )
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =lbl_Number_building.Height
+            HintText: =""
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =20
+            Width: =input_ItemTitle.Width - iconViewMap_2.Width
+            X: =lbl_Number_building.X + lbl_Number_building.Width
+            Y: =lbl_Number_building.Y
+            ZIndex: =12
+
+        lbl_Number_building As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            Height: =lbl_Number_floor.Height
+            Italic: =true
+            Size: =18
+            Text: |-
+                ="Building #:"
+            Width: =lbl_Number_floor.Width
+            X: =lbl_Number_floor.X
+            Y: =lbl_Number_floor.Y + lbl_Number_floor.Height + Parent.PaddingTop
+            ZIndex: =13
+
+        input_Number_floor As text:
+            AccessibleLabel: ="Floor Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |-
+                =If(
+                    varDeskMode = "Edit",
+                    varManageSelectedDesk.FloorNumber_number,
+                    Blank()
+                )
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =lbl_Number_floor.Height
+            HintText: =""
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =20
+            Width: =input_ItemTitle.Width
+            X: =lbl_Number_floor.X + lbl_Number_floor.Width
+            Y: =lbl_Number_floor.Y
+            ZIndex: =14
+
+        lbl_Number_floor As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            Height: =lbl_Number_room.Height
+            Italic: =true
+            Size: =18
+            Text: |-
+                ="Floor #:"
+            Width: =lbl_Number_room.Width
+            X: =lbl_Number_room.X
+            Y: =lbl_Number_room.Y + lbl_Number_room.Height + Parent.PaddingTop
+            ZIndex: =15
+
+        icon_Number_room As icon.View:
+            AccessibleLabel: ="View Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(128, 128, 128, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =40
+            Icon: =Icon.View
+            OnSelect: |-
+                =UpdateContext({showRoom:true})
+            TabIndex: =7
+            Width: =40
+            X: =input_Number_room.X + input_Number_room.Width
+            Y: =input_Number_room.Y
+            ZIndex: =16
+
+        input_Number_room As text:
+            AccessibleLabel: ="Floor Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |-
+                =If(
+                    varDeskMode = "Edit",
+                    varManageSelectedDesk.RoomNumber_number,
+                    Blank()
+                )
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =lbl_Number_room.Height
+            HintText: =""
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =20
+            Width: =input_ItemTitle.Width - icon_Number_room.Width
+            X: =lbl_Number_room.X + lbl_Number_room.Width
+            Y: =lbl_Number_room.Y
+            ZIndex: =17
+
+        lbl_Number_room As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            Height: =lbl_ItemTitle.Height
+            Italic: =true
+            Size: =18
+            Text: |-
+                ="Room #:"
+            Width: =lbl_Number_desk.Width
+            X: =lbl_Number_desk.X
+            Y: =lbl_Number_desk.Y + lbl_Number_desk.Height + Parent.PaddingTop
+            ZIndex: =18
+
+        icon_Number_desk As icon.View:
+            AccessibleLabel: ="View Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(128, 128, 128, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =40
+            Icon: =Icon.View
+            OnSelect: |-
+                =UpdateContext({showLocation:true})
+            TabIndex: =7
+            Width: =40
+            X: =input_Number_desk.X + input_Number_desk.Width
+            Y: =input_Number_desk.Y
+            ZIndex: =19
+
+        input_Number_desk As text:
+            AccessibleLabel: ="Floor Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |-
+                =If(
+                    varDeskMode = "Edit",
+                    varManageSelectedDesk.DeskNumber_number,
+                    Blank()
+                )
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =lbl_Number_desk.Height
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =20
+            Width: =input_ItemTitle.Width - icon_Number_desk.Width
+            X: =lbl_Number_desk.X + lbl_Number_desk.Width
+            Y: =lbl_Number_desk.Y
+            ZIndex: =20
+
+        lbl_Number_desk As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            Height: =lbl_ItemTitle.Height
+            Italic: =true
+            Size: =18
+            Text: |-
+                ="Desk #:"
+            Width: =lbl_ItemTitle.Width
+            X: =lbl_ItemTitle.X
+            Y: =lbl_ItemTitle.Y + lbl_ItemTitle.Height + Parent.PaddingTop
+            ZIndex: =21
+
+        input_ItemTitle As text:
+            AccessibleLabel: ="Desk Name Input"
+            BorderColor: =RGBA(179, 179, 179, 1)
+            Color: =RGBA(0, 0, 0, 1)
+            Default: |-
+                =If(
+                    varDeskMode = "Edit",
+                    varManageSelectedDesk.Description_multilinePlainText, //varManageSelectedDesk.ItemID_title,
+                    Blank()
+                )
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            FocusedBorderThickness: =4
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =lbl_ItemTitle.Height
+            HoverBorderColor: =App.Theme.Colors.Darker40
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Size: =20
+            Width: =(Parent.Width / 2) - Self.X
+            X: =lbl_ItemTitle.X + lbl_ItemTitle.Width
+            Y: =lbl_ItemTitle.Y
+            ZIndex: =22
+
+        lbl_ItemTitle As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            Italic: =true
+            Size: =18
+            Text: |-
+                ="Name:"
+            Width: =125
+            ZIndex: =23
+
+    ctnImage_map As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Height: =Parent.Height - Self.Y
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =showMap
+        Width: =Parent.Width
+        Y: =ctnHeader.Y + ctnHeader.Height
+        ZIndex: =12
+
+        rectBackground_map As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
             Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =640
-            Visible: =showMap
-            Width: =640
-            ZIndex: =24
+            Height: =Parent.Height
+            Width: =Parent.Width
+            X: =Parent.X
+            ZIndex: =1
 
-        Image5_3 As image:
+        imgMap As image:
             BorderColor: =App.Theme.Colors.Darker40
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =579
-            Image: =varManageSelectedDesk.MapLink
-            ImagePosition: =ImagePosition.Fill
-            Visible: =showMap
-            Width: =575
-            X: =15
-            Y: =61
-            ZIndex: =25
+            Height: =rectBackground_map.Height
+            Image: |-
+                =If(
+                    IsBlankOrError(varManageSelectedDesk.LocationMap_image.Full),
+                    Spinner,
+                    varManageSelectedDesk.LocationMap_image
+                )
+            Width: =rectBackground_map.Width
+            X: =rectBackground_map.X
+            Y: =rectBackground_map.Y
+            ZIndex: =2
 
-        Icon1_3 As icon.Cancel:
-            AccessibleLabel: ="Close Map"
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(255, 255, 255, 1)
+        iconClose_map As icon:
+            AccessibleLabel: ="Close Room"
+            BorderColor: =Self.Color
+            BorderThickness: =5
+            Color: =App.Theme.Colors.Lighter70
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledColor: =RGBA(244, 244, 244, 1)
-            Height: =61
-            Icon: =Icon.Cancel
+            Fill: =App.Theme.Colors.Darker20
+            Height: =75
+            HoverBorderColor: =ColorFade(Self.BorderColor, -50%)
+            HoverColor: =ColorFade(Self.Color, -50%)
+            HoverFill: =ColorFade(Self.Color, 50%)
+            Icon: =Icon.CancelBadge
             OnSelect: |-
                 =UpdateContext({showMap:!showMap})
+            PaddingBottom: =10
+            PaddingLeft: =10
+            PaddingRight: =10
+            PaddingTop: =10
             TabIndex: =11
-            Visible: =showMap
-            X: =571
-            ZIndex: =26
+            Width: |
+                =75
+            X: =Parent.Width - Self.Width - 10
+            Y: =10
+            ZIndex: =3
 
-    grpMap_4 As group:
-        Height: =5
-        Width: =5
-        X: =20
-        Y: =60
-        ZIndex: =32
+    ctnImage_room As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Height: =Parent.Height - Self.Y
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =showRoom
+        Width: =Parent.Width
+        Y: =ctnHeader.Y + ctnHeader.Height
+        ZIndex: =13
 
-        Rectangle3_9 As rectangle:
+        rectBackground_room As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
             Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =640
-            Visible: =showLocation
-            Width: =640
-            X: =20
-            ZIndex: =29
+            Height: =Parent.Height
+            Width: =Parent.Width
+            X: =Parent.X
+            ZIndex: =1
 
-        Image5_6 As image:
+        imgRoom As image:
             BorderColor: =App.Theme.Colors.Darker40
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =579
-            Image: =varManageSelectedDesk.DeskLocation
-            Visible: =showLocation
-            Width: =575
-            X: =35
-            Y: =61
-            ZIndex: =30
+            Height: =rectBackground_room.Height
+            Image: |+
+                =If(
+                    IsBlankOrError(varManageSelectedDesk.RoomPhoto_image),
+                    Spinner,
+                    varManageSelectedDesk.RoomPhoto_image.Full
+                )
+                
+            Width: =rectBackground_room.Width
+            X: =rectBackground_room.X
+            Y: =rectBackground_room.Y
+            ZIndex: =2
 
-        Icon1_6 As icon.Cancel:
+        iconClose_room As icon:
             AccessibleLabel: ="Close Room"
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(255, 255, 255, 1)
+            BorderColor: =Self.Color
+            BorderThickness: =5
+            Color: =App.Theme.Colors.Lighter70
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledColor: =RGBA(244, 244, 244, 1)
-            Height: =61
-            Icon: =Icon.Cancel
-            OnSelect: |-
-                =UpdateContext({showLocation:!showLocation})
-            TabIndex: =11
-            Visible: =showLocation
-            X: =591
-            ZIndex: =31
-
-    Checkbox1_3 As checkbox:
-        BorderColor: =App.Theme.Colors.Darker40
-        CheckboxBorderColor: =App.Theme.Colors.Primary
-        CheckmarkFill: =App.Theme.Colors.Primary
-        Color: =RGBA(0, 0, 0, 1)
-        Default: |
-            =If(
-                varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.SmartBoard),
-                true,
-                false
-            )
-        DisplayMode: =DisplayMode.View
-        Font: =App.Theme.Font
-        Height: =58
-        HoverColor: =App.Theme.Colors.Darker30
-        OnSelect: =
-        Size: =21
-        Text: ="Smart Board"
-        Width: =280
-        X: =7
-        Y: =309
-        ZIndex: =33
-
-    Checkbox1_4 As checkbox:
-        BorderColor: =App.Theme.Colors.Darker40
-        CheckboxBorderColor: =App.Theme.Colors.Primary
-        CheckmarkFill: =App.Theme.Colors.Primary
-        Color: =RGBA(0, 0, 0, 1)
-        Default: |+
-            =If(
-                varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.VTel),
-                true,
-                false
-            )
-            
-        DisplayMode: =DisplayMode.View
-        Font: =App.Theme.Font
-        Height: =58
-        HoverColor: =App.Theme.Colors.Darker30
-        OnSelect: =
-        Size: =21
-        Text: ="VTel"
-        Width: =155
-        X: =250
-        Y: =309
-        ZIndex: =34
-
-    Checkbox1_5 As checkbox:
-        BorderColor: =App.Theme.Colors.Darker40
-        CheckboxBorderColor: =App.Theme.Colors.Primary
-        CheckmarkFill: =App.Theme.Colors.Primary
-        Color: =RGBA(0, 0, 0, 1)
-        Default: |
-            =If(
-                varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.Projector_x002f_TV),
-                true,
-                false
-            )
-        DisplayMode: =DisplayMode.View
-        Font: =App.Theme.Font
-        Height: =59
-        HoverColor: =App.Theme.Colors.Darker30
-        OnSelect: =
-        Size: =21
-        Text: ="Projector/TV"
-        Width: =196
-        X: =428
-        Y: =308
-        ZIndex: =35
-
-    grpMap_5 As group:
-        Height: =5
-        Width: =5
-        X: =20
-        Y: =60
-        ZIndex: =35
-
-        Rectangle3_10 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =640
-            Visible: =showRoom
-            Width: =640
-            X: =40
-            ZIndex: =32
-
-        Image5_7 As image:
-            BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =579
-            Image: =varManageSelectedDesk.RoomLocation0
-            ImagePosition: =ImagePosition.Fill
-            Visible: =showRoom
-            Width: =575
-            X: =55
-            Y: =61
-            ZIndex: =36
-
-        Icon1_7 As icon.Cancel:
-            AccessibleLabel: ="Close Room"
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(255, 255, 255, 1)
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(244, 244, 244, 1)
-            Height: =61
-            Icon: =Icon.Cancel
+            Fill: =App.Theme.Colors.Darker20
+            Height: =75
+            HoverBorderColor: =ColorFade(Self.BorderColor, -50%)
+            HoverColor: =ColorFade(Self.Color, -50%)
+            HoverFill: =ColorFade(Self.Color, 50%)
+            Icon: =Icon.CancelBadge
             OnSelect: |-
                 =UpdateContext({showRoom:!showRoom})
+            PaddingBottom: =10
+            PaddingLeft: =10
+            PaddingRight: =10
+            PaddingTop: =10
             TabIndex: =11
-            Visible: =showRoom
-            X: =611
-            ZIndex: =37
+            Width: |
+                =75
+            X: =Parent.Width - Self.Width - 10
+            Y: =10
+            ZIndex: =3
+
+    ctnImage_desk As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Height: =Parent.Height - Self.Y
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =showLocation
+        Width: =Parent.Width
+        Y: =ctnHeader.Y + ctnHeader.Height
+        ZIndex: =14
+
+        rectBackground_desk As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =Parent.Height
+            Visible: =true //showLocation
+            Width: =Parent.Width
+            X: =Parent.X
+            ZIndex: =1
+
+        imgDesk As image:
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Height: =rectBackground_desk.Height
+            Image: |+
+                =If(
+                    IsBlankOrError(varManageSelectedDesk.DeskPhoto_image),
+                    Spinner,
+                    varManageSelectedDesk.DeskPhoto_image.Full
+                )
+                
+            Visible: =true //showLocation
+            Width: =rectBackground_desk.Width
+            X: =rectBackground_desk.X
+            Y: =rectBackground_desk.Y
+            ZIndex: =2
+
+        iconClose_desk As icon.Cancel:
+            AccessibleLabel: ="Close Room"
+            BorderColor: =Self.Color
+            BorderThickness: =5
+            Color: =App.Theme.Colors.Lighter70
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Fill: =App.Theme.Colors.Darker20
+            Height: =75
+            HoverBorderColor: =ColorFade(Self.BorderColor, -50%)
+            HoverColor: =ColorFade(Self.Color, -50%)
+            HoverFill: =ColorFade(Self.Color, 50%)
+            Icon: =Icon.CancelBadge
+            OnSelect: |-
+                =UpdateContext({showLocation:!showLocation})
+            PaddingBottom: =10
+            PaddingLeft: =10
+            PaddingRight: =10
+            PaddingTop: =10
+            TabIndex: =11
+            Visible: =true //showLocation
+            Width: |
+                =75
+            X: =Parent.Width - Self.Width - 10
+            Y: =10
+            ZIndex: =3
+
+    ctnHeader As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Height: =Parent.Height / 8
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Width: =Parent.Width
+        ZIndex: =15
+
+        rectBackground_header As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(135, 78, 181, 0.65)
+            Height: =imgBackground_header.Height
+            Visible: =!imgBackground_header.Visible
+            Width: =imgBackground_header.Width
+            X: =imgBackground_header.X
+            Y: =imgBackground_header.Y
+            ZIndex: =1
+
+        imgBackground_header As image:
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Height: =Parent.Height
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Visible: |-
+                =If(
+                    IsBlankOrError(imgBackground_header.Image),
+                    false,
+                    true
+                )
+            Width: =Parent.Width
+            ZIndex: =4
+
+        lblTitle_header As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =Parent.Height / 2
+            Size: =28
+            Text: ="Editing '" & varManageSelectedDesk.Description_multilinePlainText & "'"
+            Width: =rectBackground_header.Width
+            X: |
+                =0
+            ZIndex: =5
+
+        ctnHeaderButtons As groupContainer.manualLayoutContainer:
+            Height: =btnUpdate_editDesk.Height
+            LayoutGridColumnMinWidth: =0
+            LayoutGridColumns: =6
+            LayoutGridRowMinHeight: =0
+            LayoutGridRows: =6
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            Width: =btnBack_editDesk.Width + btnUpdate_editDesk.Width + 50
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =lblTitle_header.Y + lblTitle_header.Height
+            ZIndex: =6
+
+            btnBack_editDesk As button:
+                BorderColor: =App.Theme.Colors.Primary
+                Color: =App.Theme.Colors.PrimaryForeground
+                DisabledBorderColor: =RGBA(244, 244, 244, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                Fill: =RGBA(128, 128, 128, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                HoverBorderColor: =App.Theme.Colors.Darker10
+                HoverColor: =App.Theme.Colors.PrimaryForeground
+                HoverFill: =ColorFade(Self.Fill, -20%)
+                OnSelect: |-
+                    =Reset(input_ItemTitle);
+                    Reset(input_Number_desk);
+                    Reset(input_Number_room);
+                    Reset(input_Number_floor);
+                    Reset(input_Number_building);
+                    Reset(input_Name_division);
+                    Reset(input_Description);
+                    Reset(dd_ItemType);
+                    Reset(toggle_ActiveBoolean);
+                    Reset(chkbox_Projector);
+                    Reset(chkbox_VTel);
+                    Reset(chkbox_SmartBoard);
+                    
+                    
+                    
+                    Navigate(ManageDesks);
+                PressedBorderColor: =App.Theme.Colors.Darker40
+                PressedColor: =Self.Color
+                PressedFill: =App.Theme.Colors.Darker40
+                Size: =24
+                Text: ="Back"
+                Width: =btnUpdate_editDesk.Width
+                X: =Parent.Width - Self.Width
+                ZIndex: =1
+
+            btnUpdate_editDesk As button:
+                BorderColor: =App.Theme.Colors.Primary
+                Color: =App.Theme.Colors.PrimaryForeground
+                DisabledBorderColor: =RGBA(244, 244, 244, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                Fill: =RGBA(135, 78, 181, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                HoverBorderColor: =App.Theme.Colors.Darker10
+                HoverColor: =App.Theme.Colors.PrimaryForeground
+                HoverFill: =ColorFade(Self.Fill, -20%)
+                OnSelect: |
+                    =Set(
+                        submitItem,
+                        Patch(
+                            Desks,
+                            Coalesce(
+                                varManageSelectedDesk,
+                                Defaults(Desks)
+                            ),
+                            {
+                                ItemID_title: input_ItemTitle.Text,
+                                ItemType_choice: dd_ItemType.Selected,
+                                Active_boolean: toggle_ActiveBoolean.Value,
+                                Active_text: Text(toggle_ActiveBoolean.Value),
+                                DeskName_text: "Desk " & input_Number_desk.Text,
+                                DeskNumber_number: Value(input_Number_desk.Text),
+                                RoomNumber_number: Value(input_Number_desk.Text),
+                                FloorNumber_number: Value(input_Number_floor.Text),
+                                //BuildingNumber_number: Value(input_Number_building.Text),
+                                DivisionName_text: input_Name_division.Text,
+                                CombinedLocationDetails_multilinePlainText:
+                                    (
+                                        "Desk " & Value(input_Number_desk.Text) & ","
+                                        & "Room " & Value(input_Number_desk.Text) & ","
+                                        & "Floor " & Value(input_Number_floor.Text) & ","
+                                        //& "Building " & Value(input_Number_building.Text) & ","
+                                        & "Division " & input_Name_division.Text & ","
+                                    ),
+                                Description_multilinePlainText: input_Description.Text,
+                                
+                                ProjectorEquipped_boolean: chkbox_Projector.Value,
+                                ProjectorEquipped_text: chkbox_Projector.Value,
+                                VtelEquipped_boolean: chkbox_VTel.Value,
+                                VtelEquipped_text: chkbox_VTel.Value,
+                                SmartboardEquipped_boolean: chkbox_SmartBoard.Value,
+                                SmartboardEquipped_text: chkbox_SmartBoard.Value
+                    
+                    
+                                //'Projector/TV':If(chkbox_Projector.Value = true,"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/vtel.png",Blank()),
+                                //VTel: If(chkbox_VTel.Value = true, "https://dvagov.sharepoint.com/sites/vhaaugroom/SiteAssets/images/projector.png",Blank()),
+                                //'Smart Board': If(chkbox_SmartBoard.Value = true,"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/smartboard.png",Blank())
+                            }
+                        )
+                    );
+                    If(
+                        IsBlankOrError(submitItem),
+                        Notify(
+                            "Something went wrong. Your item has not been submitted." & Last(Errors(Desks)).Message,
+                            NotificationType.Error,
+                            10000
+                        ),
+                        Notify(
+                            "Your item has been submitted. (ID: " & submitItem.ID & ")",
+                            NotificationType.Success,
+                            5000
+                        );
+                        Set(
+                            currentItem,
+                            submitItem
+                        )
+                    );
+                    Reset(input_Number_desk);
+                    Reset(input_ItemTitle);
+                    Reset(toggle_ActiveBoolean);
+                    Reset(input_Description);
+                    Navigate(ManageDesks)
+                PressedBorderColor: =App.Theme.Colors.Darker40
+                PressedColor: =Self.Color
+                PressedFill: =App.Theme.Colors.Darker40
+                Size: =24
+                Text: ="Update"
+                Width: =225
+                ZIndex: =2
 

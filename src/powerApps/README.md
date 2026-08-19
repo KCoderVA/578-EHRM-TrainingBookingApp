@@ -1,15 +1,12 @@
 # Power Apps (Canvas): EHRM Training & Booking App (Station #578)
 
-**Canvas app version**: v0.9.26 (2026-08-04)
-**App package**: `.msapp/v0.9.26_578EHRMTrainingApp.msapp`
+**Canvas app version**: v0.12.2 (2026-08-12)
+**App package**: `.msapp/v0.12.2_578EHRMTrainingApp.msapp`
 
-> Component versioning note: this Canvas app component is now on its own SemVer line at
-> **v0.9.26**, *ahead* of the project-wide release (`VERSION` file = **0.8.17**), per the
-> repo's hybrid versioning policy. `App.OnStart` now stamps `varRepoVersion "0.9.26"`
-> (corrected from the prior `"0.8.12"`), so the Dashboard version badge is accurate; a
-> smaller drift remains — the manifest `AppDescription` still reads **"v0.9.17"** — and
-> is tracked as a follow-up in
-> [`v0.9.26_recentChangesSummary.md`](v0.9.26_recentChangesSummary.md) §9.
+> Component versioning note: this Canvas app component now aligns with the project-wide
+> release line at **v0.12.2** for the current go-live cycle. Version identity is now
+> consistent across package name, `App.OnStart` `varRepoVersion`, and
+> `CanvasManifest.AppDescription` (`0.12.2`).
 
 ## Provenance / credits (v0.0.1 baseline)
 
@@ -18,7 +15,31 @@
 
 ---
 
-## What changed in v0.9.26 (current)
+## What changed in v0.12.2 (current)
+
+This release is a go-live readiness leap from **v0.9.26 -> v0.12.2** with substantial
+screen topology and integration updates:
+
+1. Added **`ManageUsers`** and **`CreateMeeting`** screens.
+2. Removed legacy **`alt_ManageDesks`**, **`Screen1`**, and **`Screen2`** screens.
+3. Expanded SharePoint bindings to include **`MasterScheduleList`**,
+    **`SuperUserList`**, **`backupList_DeskReservations`**, and
+    **`Learning Lab Sessions`**.
+4. Strengthened reservation write behavior in `Confirm` with explicit main/fallback and
+    backup patch paths.
+5. Reduced manifest `BindingErrorCount` from `329` to `120`.
+6. Resolved prior version drift (`v0.9.17` manifest string) to unified `v0.12.2`.
+
+Detailed release documentation for this cycle:
+
+- [`v0.12.2_diffAnalysis.md`](v0.12.2_diffAnalysis.md)
+- [`v0.12.2_changeSummary.md`](v0.12.2_changeSummary.md)
+- [`v0.12.2_knownIssues.md`](v0.12.2_knownIssues.md)
+- [`v0.12.2_recommendations.md`](v0.12.2_recommendations.md)
+
+---
+
+## What changed in v0.9.26 (previous)
 
 Where v0.8.14 was about *access* (an app-wide RBAC engine, impersonation, and a first-draft Class/Session Picker), **v0.9.26 is about *data*** — it turns every booking into a complete, persisted training record and lays the SharePoint groundwork for a trainer approval + automated-reminder workflow. No screens were added; the booking pipeline (POCSUPERVISOR → Confirm) was deepened and the back-end lists were re-shaped. A full file-by-file structural/behavioral diff (hash/size analysis of every unpacked screen and data-source, with per-change rationale) lives in [`v0.9.26_recentChangesSummary.md`](v0.9.26_recentChangesSummary.md). The headline changes:
 
@@ -290,7 +311,8 @@ All three connectors (Office 365 Outlook, Office 365 Users, SharePoint) now refe
 
 | Version          | Date                 | Summary                                                                                                                                                                                                                                                                                                                           |
 | ---------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **v0.9.26** | **2026-08-04** | **`Desk Reservations` schema expanded by ~40 columns (submitter / student / reservation / trainer-approval / reminder families); Class/Session Picker now persisted in the Confirm SUBMIT `Patch`; POCSUPERVISOR reworked (`+63 KB`) with an attendee people-picker (book-on-behalf) and semantic picker names; Reservation Details enriched; `Desks` list normalized to typed columns; `varRepoVersion`→0.9.26 and `varIsImpersonating` fix. See [`v0.9.26_recentChangesSummary.md`](v0.9.26_recentChangesSummary.md).** |
+| **v0.12.2** | **2026-08-12** | **Go-live readiness release: added `ManageUsers` + `CreateMeeting`; removed legacy `alt_ManageDesks`, `Screen1`, `Screen2`; expanded data-source bindings (`MasterScheduleList`, `SuperUserList`, `backupList_DeskReservations`, `Learning Lab Sessions`); strengthened `Confirm` main/fallback/backup patch pipeline; aligned version identity at `0.12.2`; and reduced `BindingErrorCount` 329 -> 120. See [`v0.12.2_diffAnalysis.md`](v0.12.2_diffAnalysis.md) and [`v0.12.2_changeSummary.md`](v0.12.2_changeSummary.md).** |
+| **v0.9.26** | **2026-08-04** | **`Desk Reservations` schema expanded by ~40 columns (submitter / student / reservation / trainer-approval / reminder families); Class/Session Picker now persisted in the Confirm SUBMIT `Patch`; POCSUPERVISOR reworked (`+63 KB`) with an attendee people-picker (book-on-behalf) and semantic picker names; Reservation Details enriched; `Desks` list normalized to typed columns; `varRepoVersion`->0.9.26 and `varIsImpersonating` fix. See [`v0.9.26_recentChangesSummary.md`](v0.9.26_recentChangesSummary.md).** |
 | v0.8.14 | 2026-07-28 | App-wide RBAC engine in `App.OnStart` (8 tiers), impersonation, zero-touch user auto-provisioning, new training Class/Session Picker (`ctn_PopUp_ClassPicker`) on POCSUPERVISOR, new `alt_ManageDesks` CRUD screen, Dashboard redesign, calendar/`chkWeekDays` refinements, assets 6→38, new `Tabs_altColor` component |
 | v0.3.4 | 2026-07-09 | Role-based access control (8 tiers), smart scheduling defaults, conflict detection, cancellation confirmation dialog, Daily Calendar screen replacement (scrn_DailyCal), grid layout modernization, explicit action buttons on MyAppts, Reservation detail relabeling, app version variable, connector/platform updates |
 | v0.0.2           | 2026-01-02           | SharePoint binding fixes, screen behavior improvements (Dashboard, MyAppts, POCSUPERVISOR, chkWeekDays)                                                                                                                                                                                                                           |
@@ -300,7 +322,7 @@ All three connectors (Office 365 Outlook, Office 365 Users, SharePoint) now refe
 
 ## Screenshots
 
-> **v0.9.26 screenshots not yet recaptured.** The screenshots below are from the v0.3.4 app and remain the most recent captures. New screenshots of the reworked Class/Session Picker (with the attendee people-picker), the enriched Confirm review, and the Reservation Details screen should be captured from the live v0.9.26 app and added under [`assets/images/screenshots/appGuide/`](../../assets/images/screenshots/appGuide/) with a `v0.9.26_*` prefix.
+> **v0.12.2 screenshots not yet recaptured.** The screenshots below are from earlier app versions and should be refreshed from live `v0.12.2` for `ManageUsers`, `CreateMeeting`, updated `Confirm`, and updated `Dashboard` states under [`assets/images/screenshots/appGuide/`](../../assets/images/screenshots/appGuide/) with a `v0.12.2_*` prefix.
 
 ### Screenshots (v0.3.4)
 
@@ -335,38 +357,37 @@ Screenshots captured 2026-07-09 from the live v0.3.4 app. Stored under [`assets/
 - **App Type**: Phone layout (landscape orientation)
 - **Connectors**: Office 365 Outlook, Office 365 Users, SharePoint
 - **Data Sources**:
-  - **SharePoint**: Desk Reservations *(v0.9.26: schema expanded with submitter / student / reservation / trainer-approval / reminder column families — see [`v0.9.26_recentChangesSummary.md`](v0.9.26_recentChangesSummary.md) §7)*, DeskAccessControl, Desks *(v0.9.26: normalized to typed `*_choice`/`*_text`/`*_boolean` columns)*
-  - **Office 365 Outlook**: CalendarGetTables, V3CalendarPostItem, V2CalendarPostItem, FindMeetingTimes, GetRoomLists, GetRooms, GetRoomsInRoomList
-  - **Office 365 Users**: SearchUser, MyProfileV2, ManagerV2, UserProfileV2
+    - **SharePoint**: Desk Reservations, DeskAccessControl, Desks, MasterScheduleList, SuperUserList, backupList_DeskReservations, Learning Lab Sessions
+    - **Office 365 Outlook**: CalendarGetTables, V4CalendarPostItem, V2CalendarPostItem, FindMeetingTimes, GetRoomLists, GetRooms, GetRoomsInRoomList, SendEmailV2
+    - **Office 365 Users**: SearchUser, SearchUserV2, MyProfileV2, ManagerV2, UserProfileV2, UserPhotoV2
 
-## 2. Screens (v0.9.26 — 22 screens)
+## 2. Screens (v0.12.2 — 21 screens)
 
 | #  | Screen Name         | Purpose                                                                                                        |
 | -- | ------------------- | -------------------------------------------------------------------------------------------------------------- |
-| 0  | `alt_ManageDesks` | Modern responsive CRUD console for the `Desks` list (add/edit/delete); staged alongside legacy `ManageDesks` *(added v0.8.14)* |
-| 1  | `Dashboard`       | Welcome, upcoming reservations preview, role-based menu, impersonation controls (admin)                        |
-| 2  | `MyAppts`         | My Reservations — Upcoming / Previous tabs with CANCEL action                                                 |
-| 3  | `POCSUPERVISOR`   | Create a new reservation — employee, supervisor, training type selection                                      |
-| 4  | `chkWeekDays`     | Select Date(s)/Time — calendar, time pickers, recurrence, conflict checker                                    |
-| 5  | `DeskSelect`      | Select a Location — filterable room/desk picker with feature indicators                                       |
-| 6  | `Confirm`         | Multi-step confirmation flow (Terms → Acknowledgement → Review)                                              |
-| 7  | `Success`         | Booking confirmed — "You're booked!"                                                                          |
-| 8  | `ManageDesks`     | Admin: Active/Inactive desk list with DELETE/EDIT/DEACTIVATE actions                                           |
-| 9  | `NewDesk`         | Admin: Add a new desk/room record                                                                              |
-| 10 | `NewEditDesk`     | Admin: Edit an existing desk/room record                                                                       |
-| 11 | `Reservation`     | Reservation Details view for a selected booking                                                                |
-| 12 | `SuccessDeskMod`  | Desk modification success confirmation                                                                         |
-| 13 | `ReleaseNotes`    | In-app release notes (new features and bug fixes)                                                              |
-| 14 | `Screen3`         | *(utility screen)*                                                                                           |
-| 15 | `scrn_MoCalendar` | Monthly Calendar — full month grid view with booking entries                                                  |
-| 16 | `scrn_WeeklyCal`  | Weekly Calendar — 7-day grid with booking entries                                                             |
-| 17 | `scrn_DailyCal`   | Daily Calendar List — daily training room reservation list view *(added v0.3.4, replaced scrn_WeeklyCal_1)* |
-| 18 | `DebuggingScreen` | Developer debugging utilities                                                                                  |
-| 19 | `Screen1`         | *(utility screen)*                                                                                           |
-| 20 | `PDFScreen`       | PDF export/preview                                                                                             |
-| 21 | `Screen2`         | *(utility screen)*                                                                                           |
+| 1  | `Dashboard`       | Welcome, upcoming reservations preview, role-based menu, impersonation controls (admin) |
+| 2  | `MyAppts`         | My Reservations — Upcoming / Previous tabs with CANCEL action |
+| 3  | `POCSUPERVISOR`   | Create a new reservation — employee, supervisor, training type selection |
+| 4  | `chkWeekDays`     | Select Date(s)/Time — calendar, time pickers, recurrence, conflict checker |
+| 5  | `DeskSelect`      | Select a Location — filterable room/desk picker with feature indicators |
+| 6  | `Confirm`         | Multi-step confirmation flow (Terms -> Acknowledgement -> Review) |
+| 7  | `Success`         | Booking confirmed — "You're booked!" |
+| 8  | `ManageDesks`     | Admin: Active/Inactive desk list with DELETE/EDIT/DEACTIVATE actions |
+| 9  | `ManageUsers`     | Admin: User access and role management workflows |
+| 10 | `NewDesk`         | Admin: Add a new desk/room record |
+| 11 | `NewEditDesk`     | Admin: Edit an existing desk/room record |
+| 12 | `Reservation`     | Reservation Details view for a selected booking |
+| 13 | `SuccessDeskMod`  | Desk modification success confirmation |
+| 14 | `ReleaseNotes`    | In-app release notes (new features and bug fixes) |
+| 15 | `scrn_MoCalendar` | Monthly Calendar — full month grid view with booking entries |
+| 16 | `scrn_WeeklyCal`  | Weekly Calendar — 7-day grid with booking entries |
+| 17 | `scrn_DailyCal`   | Daily Calendar List — daily training room reservation list view |
+| 18 | `DebuggingScreen` | Developer debugging utilities |
+| 19 | `CreateMeeting`   | Structured meeting creation workflow |
+| 20 | `PDFScreen`       | PDF export/preview |
+| 21 | `Screen3`         | Utility screen |
 
-> **Note**: `scrn_WeeklyCal_1` was removed and replaced by `scrn_DailyCal` in v0.3.4; `alt_ManageDesks` was added in v0.8.14. **No screens were added or removed in v0.9.26** (still 22 total).
+> **Note**: `scrn_WeeklyCal_1` was removed and replaced by `scrn_DailyCal` in v0.3.4; `alt_ManageDesks` (added in v0.8.14) was removed in v0.12.2; `ManageUsers` and `CreateMeeting` were added in v0.12.2. Net current total: 21 screens.
 
 ## 3. ALM workflow (pack/unpack)
 

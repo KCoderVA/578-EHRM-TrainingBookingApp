@@ -99,7 +99,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1144,
+        "PublishOrderIndex": 879,
         "Rules": [
           {
             "Category": "Data",
@@ -462,7 +462,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1145,
+        "PublishOrderIndex": 880,
         "Rules": [
           {
             "Category": "Data",
@@ -914,7 +914,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1146,
+        "PublishOrderIndex": 881,
         "Rules": [
           {
             "Category": "Data",
@@ -1449,7 +1449,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1147,
+        "PublishOrderIndex": 882,
         "Rules": [
           {
             "Category": "Data",
@@ -1838,7 +1838,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1148,
+        "PublishOrderIndex": 883,
         "Rules": [
           {
             "Category": "Data",
@@ -2061,7 +2061,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galWeekdays",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 1150,
+            "PublishOrderIndex": 885,
             "Rules": [
               {
                 "Category": "Data",
@@ -2182,7 +2182,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galWeekdays",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 1151,
+            "PublishOrderIndex": 886,
             "Rules": [
               {
                 "Category": "Data",
@@ -2499,7 +2499,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1149,
+        "PublishOrderIndex": 884,
         "Rules": [
           {
             "Category": "Data",
@@ -2772,7 +2772,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 1153,
+            "PublishOrderIndex": 888,
             "Rules": [
               {
                 "Category": "Data",
@@ -2951,7 +2951,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 1154,
+            "PublishOrderIndex": 889,
             "Rules": [
               {
                 "Category": "Data",
@@ -3381,7 +3381,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 1155,
+            "PublishOrderIndex": 890,
             "Rules": [
               {
                 "Category": "Data",
@@ -3691,7 +3691,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 1156,
+            "PublishOrderIndex": 891,
             "Rules": [
               {
                 "Category": "Data",
@@ -3923,7 +3923,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1152,
+        "PublishOrderIndex": 887,
         "Rules": [
           {
             "Category": "Data",
@@ -4235,7 +4235,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1157,
+        "PublishOrderIndex": 892,
         "Rules": [
           {
             "Category": "Data",
@@ -4510,7 +4510,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 1158,
+        "PublishOrderIndex": 893,
         "Rules": [
           {
             "Category": "Data",
@@ -4857,7 +4857,7 @@
       },
       "OnChangeCal"
     ],
-    "LastModifiedTimestamp": "639211155875980921",
+    "LastModifiedTimestamp": "639220786792140886",
     "Name": "Calendar",
     "Rules": [
       {
@@ -5138,7 +5138,7 @@
   "IsPcfControl": false,
   "IsPremiumPcfControl": false,
   "IsWidgetTemplate": false,
-  "LastModifiedTimestamp": "639211155875980921",
+  "LastModifiedTimestamp": "639220786792140886",
   "Name": "0c469c74dd37480dbc0b81f64833370c",
   "OverridableProperties": {},
   "TemplateOriginalName": "fe29d6eb8ed24c219f22b476f07be944",

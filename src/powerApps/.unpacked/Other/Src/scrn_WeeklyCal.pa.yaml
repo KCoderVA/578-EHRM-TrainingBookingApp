@@ -73,7 +73,7 @@ Screens:
             ShowColumns(
                 Filter(
                     Desks,
-                    Asset.Value = "Room"
+                    ItemType_choice.Value = "Room"
                 ),
                 ItemID_title
             )
@@ -204,7 +204,7 @@ Screens:
                       Properties:
                         DelayItemLoading: =false
                         Height: =456
-                        Items: "=/*Filter('Desk Reservations',(DateValue(Text('Check Out From'))<= DateAdd(_firstDayofWeek2, ThisItem.Value, TimeUnit.Days)) &&\r\n(DateValue(Text('Check Out To'))>= DateAdd(_firstDayofWeek2, ThisItem.Value, TimeUnit.Days)))*/\r\n// Items property of your Gallery\r\n// Items property of your Gallery\r\n// Items property of your Gallery\r\n// Items property of your Gallery\r\nFilter(\r\n    'Desk Reservations',\r\n    (DateValue(Text('Check Out From')) <= DateAdd(_firstDayofWeek2, ThisItem.Value, TimeUnit.Days)) &&\r\n    (DateValue(Text('Check Out To')) >= DateAdd(_firstDayofWeek2, ThisItem.Value, TimeUnit.Days)) &&\r\n    (\r\n        Dropdown2.Selected.Title = \"All\" ||\r\n        DeskFloor = Dropdown2.Selected.Title \r\n        \r\n    )\r\n)\r\n"
+                        Items: "=Filter(\r\n    'Desk Reservations',\r\n    (DateValue(Text('Check Out From')) <= DateAdd(_firstDayofWeek2, ThisItem.Value, TimeUnit.Days)) &&\r\n    (DateValue(Text('Check Out To')) >= DateAdd(_firstDayofWeek2, ThisItem.Value, TimeUnit.Days)) &&\r\n    (\r\n        Dropdown2.Selected.Title = \"All\" ||\r\n        reservationFloor_text = Dropdown2.Selected.Title \r\n        \r\n    )\r\n)\r\n/*Filter('Desk Reservations',(DateValue(Text('Check Out From'))<= DateAdd(_firstDayofWeek2, ThisItem.Value, TimeUnit.Days)) &&\r\n(DateValue(Text('Check Out To'))>= DateAdd(_firstDayofWeek2, ThisItem.Value, TimeUnit.Days)))*/"
                         LoadingSpinner: =LoadingSpinner.None
                         TemplatePadding: =0
                         TemplateSize: =66
@@ -221,7 +221,7 @@ Screens:
                               OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
                               Size: =9
                               Text: |-
-                                =Concatenate(ThisItem.Reasonfordeskreservation," ",Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM"))
+                                =Concatenate(ThisItem.reservationJustification_multilinetext," ",Text(ThisItem.'Check Out From', "hh:mm AM/PM") & "  to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM"))
 
                                 //&& Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)
                               Visible: =false
@@ -407,7 +407,7 @@ Screens:
                   AccessibleLabel: ="Floor Input"
                   BorderColor: =RGBA(179, 179, 179, 1)
                   BorderThickness: =1
-                  Default: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation
+                  Default: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomNumber_number
                   Fill: =RGBA(0, 0, 0, 0)
                   Font: =Font.'Segoe UI'
                   Height: =47
@@ -452,7 +452,7 @@ Screens:
                   Default: |-
                     =
 
-                    varSelectedReservation.Reasonfordeskreservation
+                    varSelectedReservation.reservationJustification_multilinetext
                     //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
                   Font: =Font.'Segoe UI'
                   Height: =111
@@ -543,7 +543,7 @@ Screens:
                 Group: grpMap_8
                 Properties:
                   Height: =415
-                  Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation0
+                  Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomName_choice.Value
                   ImagePosition: =ImagePosition.Stretch
                   Visible: =showMap
                   Width: =1022

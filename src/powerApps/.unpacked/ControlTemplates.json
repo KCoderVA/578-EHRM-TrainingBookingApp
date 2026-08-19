@@ -1,18 +1,4 @@
 {
-  "addMedia": {
-    "CustomGroupControlTemplateName": "",
-    "FirstParty": true,
-    "Id": "http://microsoft.com/appmagic/addMedia",
-    "IsComponentTemplate": false,
-    "IsCustomGroupControlTemplate": false,
-    "IsPcfControl": false,
-    "IsPremiumPcfControl": false,
-    "IsWidgetTemplate": true,
-    "LastModifiedTimestamp": "0",
-    "Name": "addMedia",
-    "OverridableProperties": {},
-    "Version": "2.2.1"
-  },
   "appinfo": {
     "CustomGroupControlTemplateName": "",
     "FirstParty": true,
@@ -40,20 +26,6 @@
     "Name": "AppTest",
     "OverridableProperties": {},
     "Version": "1.0"
-  },
-  "attachments": {
-    "CustomGroupControlTemplateName": "",
-    "FirstParty": true,
-    "Id": "http://microsoft.com/appmagic/attachments",
-    "IsComponentTemplate": false,
-    "IsCustomGroupControlTemplate": false,
-    "IsPcfControl": false,
-    "IsPremiumPcfControl": false,
-    "IsWidgetTemplate": true,
-    "LastModifiedTimestamp": "0",
-    "Name": "attachments",
-    "OverridableProperties": {},
-    "Version": "2.3.0"
   },
   "button": {
     "CustomGroupControlTemplateName": "",
@@ -381,20 +353,6 @@
     "OverridableProperties": {},
     "Version": "1.0.0"
   },
-  "modernTextInput": {
-    "CustomGroupControlTemplateName": "",
-    "FirstParty": true,
-    "Id": "http://microsoft.com/appmagic/modernTextInput",
-    "IsComponentTemplate": false,
-    "IsCustomGroupControlTemplate": false,
-    "IsPcfControl": false,
-    "IsPremiumPcfControl": false,
-    "IsWidgetTemplate": true,
-    "LastModifiedTimestamp": "0",
-    "Name": "modernTextInput",
-    "OverridableProperties": {},
-    "Version": "1.1.1"
-  },
   "pdfViewer": {
     "CustomGroupControlTemplateName": "",
     "FirstParty": true,
@@ -536,6 +494,21 @@
     "Name": "timer",
     "OverridableProperties": {},
     "Version": "2.1.0"
+  },
+  "Toggle": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/powercontrol/PowerApps_CoreControls_Toggle",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": true,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": false,
+    "LastModifiedTimestamp": "0",
+    "Name": "PowerApps_CoreControls_Toggle",
+    "OverridableProperties": {},
+    "TemplateDisplayName": "Toggle",
+    "Version": "1.1.5"
   },
   "toggleSwitch": {
     "CustomGroupControlTemplateName": "",

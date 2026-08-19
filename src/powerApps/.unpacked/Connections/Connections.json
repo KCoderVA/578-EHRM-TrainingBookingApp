@@ -7,7 +7,8 @@
       "FindMeetingTimes",
       "GetRoomLists",
       "GetRooms",
-      "GetRoomsInRoomList"
+      "GetRoomsInRoomList",
+      "SendEmailV2"
     ],
     "connectionRef": {
       "apiTier": "Standard",
@@ -29,9 +30,11 @@
     "appActions": [
       "UserProfileV2",
       "Manager",
+      "SearchUserV2",
       "MyProfileV2",
       "ManagerV2",
-      "SearchUser"
+      "SearchUser",
+      "UserPhotoV2"
     ],
     "connectionRef": {
       "apiTier": "Standard",
@@ -64,8 +67,18 @@
       "parameterHintsV2": {}
     },
     "datasets": {
+      "https://dvagov.sharepoint.com/sites/HinesEHRM": {
+        "dataSources": {
+          "SuperUserList": {
+            "tableName": "69fd683b-582f-418e-8e2e-edb219ec1292"
+          }
+        }
+      },
       "https://dvagov.sharepoint.com/sites/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp": {
         "dataSources": {
+          "backupList_DeskReservations": {
+            "tableName": "42f268ce-51b7-4792-8c1d-c667adc25bc0"
+          },
           "Desk Reservations": {
             "tableName": "b7c9bc66-7839-49a4-a55d-5e45dd6870d2"
           },
@@ -74,6 +87,16 @@
           },
           "Desks": {
             "tableName": "f7451f42-cc26-4df2-9a8d-8fec25ff916a"
+          },
+          "MasterScheduleList": {
+            "tableName": "c06cab86-ad2b-4c34-90c2-d668414f5662"
+          }
+        }
+      },
+      "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/": {
+        "dataSources": {
+          "Learning Lab Sessions": {
+            "tableName": "894222d5-e954-4fcb-8461-a38da348cbe6"
           }
         }
       }
@@ -81,7 +104,11 @@
     "dataSources": [
       "Desk Reservations",
       "DeskAccessControl",
-      "Desks"
+      "Desks",
+      "MasterScheduleList",
+      "SuperUserList",
+      "backupList_DeskReservations",
+      "Learning Lab Sessions"
     ],
     "dependencies": {},
     "dependents": [],

@@ -665,15 +665,15 @@ Screens:
               =SortByColumns(
                 Filter(
                   Desks,
-                  Active = 1,
-                  Asset.Value in ["Desks","Item", "Room"],
+                  Active_text = 1,
+                  ItemType_choice.Value in ["Desks","Item", "Room"],
                   // Exclude any title in the overlapped-reservation list:
                   Not(ItemID_title in colDeskChckRecur.DeskText),
                   // Honor the room selector:
                   If(
                     Dropdown1.Selected.Value = "All EHRM Training Rooms",
-                    Asset.Value <> "Desk" && Asset.Value <> "Item",
-                    'Room Location' = Dropdown1.Selected.Value
+                    ItemType_choice.Value <> "Desk" && ItemType_choice.Value <> "Item",
+                    RoomName_choice.Value = Dropdown1.Selected.Value
                   )
                 ),
                 "Title",
@@ -722,3 +722,27 @@ Screens:
             Text: =""
             Visible: =false
             Width: =Parent.Width
+      - Timer4_1:
+          Control: Timer@2.1.0
+          Properties:
+            AutoStart: =true
+            Duration: =1000
+            Height: =31
+            OnTimerEnd: |-
+              =/*If(
+                  Self.Visible,
+                  Notify("TESTING! The control named 'Timer4' has ended, and the page typically would now self-navigate forward to the 'Confirm' screen at this time.........",NotificationType.Information, 1000),
+                  ""
+              );
+              */
+
+              Select(btnContinueDesk);
+            Repeat: =true
+            Visible: |-
+              =If(
+                  Lower(User().Email) = "kyle.coder@va.gov",
+                  true,
+                  false
+              )
+            X: =434
+            Y: =609
