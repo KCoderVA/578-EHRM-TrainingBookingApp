@@ -2,13 +2,14 @@
 
 This document describes the current public state of the EHRM Training & Booking App repository and what is included/excluded as of the latest release.
 
-## Status summary (v0.12.2)
+## Status summary (v0.12.3)
 
-- **Release type**: Feature (go-live readiness) — the Canvas app component advances **v0.9.26 → v0.12.2**. This release adds `ManageUsers` and `CreateMeeting`, removes legacy screens (`alt_ManageDesks`, `Screen1`, `Screen2`), expands SharePoint bindings (`MasterScheduleList`, `SuperUserList`, `backupList_DeskReservations`, `Learning Lab Sessions`), and strengthens fallback/backup patch paths in `Confirm`. Version drift is resolved (`varRepoVersion` + manifest + package now all `0.12.2`) and `BindingErrorCount` improves `329 → 120`.
-- **Project release**: v0.12.2 (2026-08-12)
+- **Release type (v0.12.3)**: Patch (Power Automate) — adds the new `SendReminders` ("Send Email Reminder") flow and re-exports the `AppUserList` flow; no Canvas app changes (the Canvas app component remains v0.12.2).
+- **Previous release type (v0.12.2)**: Feature (go-live readiness) — the Canvas app component advances **v0.9.26 → v0.12.2**. This release adds `ManageUsers` and `CreateMeeting`, removes legacy screens (`alt_ManageDesks`, `Screen1`, `Screen2`), expands SharePoint bindings (`MasterScheduleList`, `SuperUserList`, `backupList_DeskReservations`, `Learning Lab Sessions`), and strengthens fallback/backup patch paths in `Confirm`. Version drift is resolved (`varRepoVersion` + manifest + package now all `0.12.2`) and `BindingErrorCount` improves `329 → 120`.
+- **Project release**: v0.12.3 (2026-08-20)
 - **Component versions**:
   - Canvas app: **v0.12.2** (source-controlled unpacked source under `src/powerApps/.unpacked/`; package at `src/powerApps/.msapp/v0.12.2_578EHRMTrainingApp.msapp`, tracked via `.gitignore` `!*.msapp`). See [src/powerApps/README.md](../src/powerApps/README.md), [src/powerApps/v0.12.2_diffAnalysis.md](../src/powerApps/v0.12.2_diffAnalysis.md), and [src/powerApps/v0.12.2_changeSummary.md](../src/powerApps/v0.12.2_changeSummary.md).
-  - Power Automate: `AppUserList` v0.1.0 (source-controlled unpacked source under `src/powerAutomate/AppUserList/.unpacked/`)
+  - Power Automate: `AppUserList` (re-exported at v0.12.3; unpacked under `src/powerAutomate/AppUserList/.unpacked/`) + **`SendReminders`** *(new in v0.12.3 — "Send Email Reminder" flow; unpacked under `src/powerAutomate/SendReminders/.unpacked/`)*. See [src/powerAutomate/README.md](../src/powerAutomate/README.md).
   - SharePoint: `src/sharePoint/list/<listName>/local/` (raw exports, local-only) + `src/sharePoint/searchConfig/SearchConfiguration.xml` (tracked) — see [src/sharePoint/README.md](../src/sharePoint/README.md)
   - Analytics: `src/analytics/powerBI/` (Power BI `.pbit` template tracked) + `src/analytics/sql/` (scaffolded, currently empty) — see [src/analytics/README.md](../src/analytics/README.md)
 
@@ -16,6 +17,7 @@ This document describes the current public state of the EHRM Training & Booking 
 
 | Version | Date | Type |
 |---------|------|------|
+| v0.12.3 | 2026-08-20 | Patch (Power Automate) — added `SendReminders` ("Send Email Reminder") flow; re-exported `AppUserList`; no Canvas app changes |
 | v0.12.2 | 2026-08-12 | Feature (go-live readiness) — Canvas app v0.9.26 → v0.12.2: added `ManageUsers` + `CreateMeeting`, removed `alt_ManageDesks`/`Screen1`/`Screen2`, expanded data-source/list bindings, improved `Confirm` fallback/backup patch strategy, aligned app/manifest/package version strings, and reduced binding errors (`329 → 120`) |
 | v0.9.26 | 2026-08-04 | Feature — Canvas app v0.8.14 → v0.9.26: `Desk Reservations` schema expanded ~40 columns, Class/Session Picker persisted, submitter/student identity split, attendee people-picker (book-on-behalf), POCSUPERVISOR reworked, `Desks` list normalized; project version realigned `0.8.16 → 0.9.26` (superseding 0.8.17) |
 | v0.8.16 | 2026-07-28 | Feature — Canvas app v0.8.14 imported: app-wide RBAC engine, impersonation, zero-touch onboarding, training Class/Session Picker, new `alt_ManageDesks` CRUD screen, Dashboard redesign; project version realigned to `0.8.x` |
@@ -103,7 +105,7 @@ Before tagging/publishing a release:
 ## Next steps / roadmap (high level)
 
 - Populate `DeskAccessControl` list with correct `AccessLevel_Text` values for all intended users, and decide the unknown-user default (currently `User`, ideally `AccessDenied`) to fully activate the RBAC system.
-- **Build/validate trainer-approval and reminder Power Automate flows** — required to fully operationalize trainer/reminder fields and post-create lifecycle actions.
+- **Build/validate trainer-approval and reminder Power Automate flows** — the reminder flow (`SendReminders`) was **added in v0.12.3**; validate its end-to-end wiring to the reservation/schedule lifecycle. The trainer-approval flow is still pending.
 - **Burn down remaining App Checker findings** — `BindingErrorCount` improved to `120` in v0.12.2 but should be reduced further before broad production load.
 - ~~Finish reconciling version strings~~ — **done in v0.12.2** (`varRepoVersion`, package label, and manifest description are now aligned at `0.12.2`).
 - ~~Persist the Class/Session Picker selections~~ — **done in v0.9.26** (retained in v0.12.2).
