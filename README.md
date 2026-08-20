@@ -1,14 +1,14 @@
 # EHRM Training & Booking App (Station 578)
 
-[![Release](https://img.shields.io/badge/release-v0.12.2-blue)](CHANGELOG.md)
+[![Release](https://img.shields.io/badge/release-v0.12.3-blue)](CHANGELOG.md)
 
 This repository contains the **unpacked (source-controlled)** Microsoft Power Platform assets, documentation, and ALM helpers for the EHRM Training & Booking App used at Edward Hines Jr. VA Hospital (Station #578), VISN12.
 
 ## Current versions
 
-- **Project release (repo)**: v0.12.2 (2026-08-12) — see [CHANGELOG.md](CHANGELOG.md)
-- **Canvas app (component)**: v0.12.2 *(major go-live update: new `ManageUsers` + `CreateMeeting` screens, expanded SharePoint list bindings, stronger backup/fallback reservation patching, and aligned app/manifest version strings)* — see [src/powerApps/README.md](src/powerApps/README.md)
-- **Power Automate (component)**: `AppUserList` v0.1.0 *(unchanged)* — see [src/powerAutomate/AppUserList/README.md](src/powerAutomate/AppUserList/README.md)
+- **Project release (repo)**: v0.12.3 (2026-08-20) — see [CHANGELOG.md](CHANGELOG.md)
+- **Canvas app (component)**: v0.12.2 *(unchanged in v0.12.3; go-live update: `ManageUsers` + `CreateMeeting` screens, expanded SharePoint list bindings, stronger backup/fallback reservation patching, aligned app/manifest version strings)* — see [src/powerApps/README.md](src/powerApps/README.md)
+- **Power Automate (component)**: `AppUserList` (re-exported) + **`SendReminders`** *(new in v0.12.3 — "Send Email Reminder" flow)* — see [src/powerAutomate/README.md](src/powerAutomate/README.md)
 
 ## Repository layout
 

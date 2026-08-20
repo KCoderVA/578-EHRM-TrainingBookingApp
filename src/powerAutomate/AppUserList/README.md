@@ -1,6 +1,6 @@
 # Power Automate Flow: AppUserList
 
-**Flow (component) version**: v0.1.0 (current)
+**Flow (component) version**: v0.1.1 (current)
 
 ## Purpose
 
@@ -12,10 +12,15 @@ When a user’s email and access level are added/changed by an admin, the flow p
 
 - `.zip/flowAppUserList_578EHRMTrainingApp.zip`
   - Packaged export artifact downloaded from Power Automate.
-- `.json/578EHRMTrainingApp_AppUserList.json`
+- `.json/v0.12.2_578EHRMTrainingApp_AppUserList.json`
   - JSON export (template-like) downloaded from Power Automate.
 - `.unpacked/`
   - Unpacked source generated from the export (includes the flow `definition.json` under `.unpacked/Microsoft.Flow/flows/...`).
+
+## What changed in v0.1.1 (re-export at project v0.12.3)
+
+- Re-exported from Power Automate; connection/API/manifest maps refreshed (`apisMap.json`, `connectionsMap.json`, `manifest.json`, `definition.json`).
+- The `.json` export was renamed with the `v0.12.2_` project-version prefix to match the repository's versioned-artifact naming convention.
 
 ## What changed in v0.1.0 (compared to archived v0.0.1)
 

@@ -19,6 +19,35 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [0.12.3] - 2026-08-20
+
+> **Power Automate release:** introduces the new `SendReminders` ("Send Email Reminder") flow and refreshes the `AppUserList` flow export. No Canvas app changes — the Canvas app component remains **v0.12.2**.
+
+### Added
+
+- **New Power Automate flow `SendReminders` ("Send Email Reminder")** in `src/powerAutomate/SendReminders/`:
+  - Unpacked source under `.unpacked/Microsoft.Flow/flows/ecd1d899-5df4-4795-a98b-f1a1b55ee837/`.
+  - Adaptive-card email design at `adaptiveCards/v0.12.4_flowSendReminders_adaptiveCard.json` — sends a "You are scheduled for EHRM Learning Lab training!" confirmation/reminder pulling name, email, role, scheduled-by, and access window from `DeskAccessControl`.
+  - Packed export `.zip/v0.12.2_578EHRMTrainingApp_SendEmailReminder_20260812115737.zip` (local-only; `.zip` is git-ignored).
+  - Directly addresses the previously-tracked roadmap item to build the reminder flow.
+- **`assets/images/screenshots/2026.08.12_confirmationEmailChangeRequest.png`** — screenshot of the `AppUserList` access-change confirmation email.
+
+### Changed
+
+- **`VERSION`** — `0.12.2 -> 0.12.3`.
+- **`src/powerAutomate/AppUserList/`** — flow re-exported (connection/API/manifest map refresh); export `.json` renamed with the `v0.12.2_` project-version prefix (`578EHRMTrainingApp_AppUserList.json -> v0.12.2_578EHRMTrainingApp_AppUserList.json`).
+- **`src/powerAutomate/README.md`** — documented the new `SendReminders` flow and the `AppUserList` re-export; added a component-version table.
+- **`README.md`** — project badge and current-version references updated to v0.12.3; Power Automate component list now includes `SendReminders`.
+- **`docs/PROJECT_STATUS.md`** — status summary, component versions, release history, and roadmap updated for the new reminder flow.
+
+### Notes
+
+- Canvas app component unchanged (remains **v0.12.2**); this is a Power Automate-only patch.
+- These `src/powerAutomate/**` changes were intentionally excluded from the v0.12.2 release and are landed here.
+- The superseded older adaptive-card design `v0.12.2_flowSendReminders_adaptiveCard.json` was moved to local-only `archive/` (git-ignored).
+
+---
+
 ## [0.12.2] - 2026-08-12
 
 > **Go-live readiness release:** this version advances the project-wide release line to `0.12.2` and aligns the Canvas app, solution manifest, and release artifacts around a single semantic baseline for imminent production deployment.

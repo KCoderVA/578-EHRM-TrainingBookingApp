@@ -1,0 +1,288 @@
+{
+    "$schema": "https://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.6",
+    "body": [
+        {
+            "type": "Container",
+            "style": "accent",
+            "bleed": true,
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "✅ You are scheduled for EHRM Learning Lab training!",
+                    "weight": "Bolder",
+                    "size": "Large",
+                    "wrap": true
+                },
+                {
+                    "type": "TextBlock",
+                    "text": "Please review the prerequisites & event information below about the EHRM Learning Lab training class that has been scheduled for you:",
+                    "isSubtle": true,
+                    "wrap": true
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "spacing": "Small",
+            "items": [
+                {
+                    "type": "ColumnSet",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "Status:",
+                                    "weight": "Bolder",
+                                    "spacing": "None",
+                                    "size": "Large"
+                                }
+                            ],
+                            "verticalContentAlignment": "Center"
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "SCHEDULED",
+                                    "color": "Good",
+                                    "weight": "Bolder",
+                                    "spacing": "None",
+                                    "size": "Large"
+                                }
+                            ],
+                            "verticalContentAlignment": "Center"
+                        },
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "horizontalAlignment": "Center",
+                                    "text": "Scheduled by [(@{body('Get_item')?['Author']?['Email']})]((@{body('Get_item')?['Author']?['Email']})) on @{formatDateTime(body('Get_item')?['AccessStop_dateTime'], 'MMMM d, yyyy ''at'' h:mmtt')}",
+                                    "isSubtle": true,
+                                    "spacing": "None",
+                                    "wrap": true
+                                }
+                            ],
+                            "verticalContentAlignment": "Center"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "items": [
+                {
+                    "type": "ColumnSet",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "items": [
+                                {
+                                    "type": "FactSet",
+                                    "facts": [
+                                        {
+                                            "title": "Name:",
+                                            "value": "   @{toUpper(body('Get_item')?['DisplayName_Text'])}"
+                                        },
+                                        {
+                                            "title": "Email:",
+                                            "value": "   @{body('Get_item')?['UserPrincipleName_Text']}"
+                                        },
+                                        {
+                                            "title": "Role:",
+                                            "value": "   @{body('Get_item')?['AccessLevel_Text']}"
+                                        },
+                                        {
+                                            "title": "Scenario:",
+                                            "value": "   @{body('Get_item')?['UserPrincipleName_Text']}"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "items": [
+                                {
+                                    "type": "FactSet",
+                                    "facts": [
+                                        {
+                                            "title": "Class Date:",
+                                            "value": "   @{formatDateTime(body('Get_item')?['AccessStop_dateTime'], 'MMMM d, yyyy ''at'' h:mmtt')}"
+                                        },
+                                        {
+                                            "title": "Class Time:",
+                                            "value": "   @{formatDateTime(body('Get_item')?['AccessStart_dateTime'], 'MMMM d, yyyy ''at'' h:mmtt')}"
+                                        },
+                                        {
+                                            "title": "Class Location:",
+                                            "value": "   @{body('Get_item')?['UserPrincipleName_Text']}"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "separator": true,
+            "spacing": "Small"
+        },
+        {
+            "type": "Container",
+            "spacing": "Medium",
+            "items": [
+                {
+                    "type": "ColumnSet",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "125px",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "text": "[CRITICAL!]",
+                                    "horizontalAlignment": "Center",
+                                    "color": "Warning",
+                                    "weight": "Bolder",
+                                    "size": "ExtraLarge",
+                                    "fontType": "Default",
+                                    "style": "heading",
+                                    "isSubtle": false
+                                }
+                            ],
+                            "verticalContentAlignment": "Center",
+                            "backgroundImage": {
+                                "verticalAlignment": "Center"
+                            }
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "wrap": true,
+                                    "text": "The following mandatory prerequisites be completed AT LEAST FOUR WEEKS prior to your training date:",
+                                    "color": "Warning",
+                                    "horizontalAlignment": "Center"
+                                }
+                            ],
+                            "backgroundImage": {
+                                "verticalAlignment": "Center"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "Table",
+                    "columns": [
+                        {
+                            "width": "auto"
+                        },
+                        {
+                            "width": "auto"
+                        }
+                    ],
+                    "rows": [
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Step #1:",
+                                            "weight": "Bolder",
+                                            "color": "Attention",
+                                            "size": "Large"
+                                        }
+                                    ],
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "You MUST complete the 'Sandbox Access' course in TMS\n (ID [#4686318](https://launcher.myapps.microsoft.com/api/signin/3c9f19d2-1cb5-4bde-a0ff-f984f4e3c242?tenantId=e95f1b23-abaf-45ee-821d-b7ab251ab3bf)). After completion, the Oracle Sandbox\nteam will provision your account within four weeks (look\nfor email from VA-Account-Provisioning_US@Oracle.Com).",
+                                            "wrap": true,
+                                            "maxLines": 5,
+                                            "horizontalAlignment": "Left"
+                                        }
+                                    ],
+                                    "verticalContentAlignment": "Center"
+                                }
+                            ],
+                            "separator": true
+                        },
+                        {
+                            "type": "TableRow",
+                            "cells": [
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "Step #2:",
+                                            "weight": "Bolder",
+                                            "color": "Attention",
+                                            "size": "Large"
+                                        }
+                                    ],
+                                    "verticalContentAlignment": "Center"
+                                },
+                                {
+                                    "type": "TableCell",
+                                    "items": [
+                                        {
+                                            "type": "TextBlock",
+                                            "text": "You MUST complete the 'Sandbox Access' course in TMS\n (ID [#4686318](https://launcher.myapps.microsoft.com/api/signin/3c9f19d2-1cb5-4bde-a0ff-f984f4e3c242?tenantId=e95f1b23-abaf-45ee-821d-b7ab251ab3bf)). After completion, the Oracle Sandbox\nteam will provision your account within four weeks (look\nfor email from VA-Account-Provisioning_US@Oracle.Com).",
+                                            "wrap": true,
+                                            "maxLines": 5,
+                                            "horizontalAlignment": "Left"
+                                        }
+                                    ],
+                                    "verticalContentAlignment": "Center"
+                                }
+                            ]
+                        }
+                    ],
+                    "showGridLines": false
+                },
+                {
+                    "type": "TextBlock",
+                    "text": "*Additional support & instructions are available on the Edward Hines Jr. VA Hospital's EHRM Deployment SharePoint site: [Hines EHRM SharePoint site](https://dvagov.sharepoint.com/sites/HinesEHRM)*",
+                    "spacing": "Large",
+                    "wrap": true,
+                    "seperator": true,
+                    "size": "Small",
+                    "color": "Accent",
+                    "horizontalAlignment": "Center"
+                }
+            ],
+            "separator": true
+        }
+    ],
+    "actions": [
+        {
+            "type": "Action.OpenUrl",
+            "title": "Open the '578 EHRM Training App'",
+            "style": "positive",
+            "url": "https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079"
+        }
+    ]
+}
