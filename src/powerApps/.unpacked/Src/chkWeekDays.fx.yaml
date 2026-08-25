@@ -971,8 +971,16 @@ chkWeekDays As screen:
                 Default: |-
                     =If(
                         IsBlankOrError(varDefaultTime),
-                        DateAdd(TimeFromdd.Selected.Value, TimeUnit.Hours, 1),
-                        DateAdd(varDefaultTime, TimeUnit.Hours, 1)
+                        DateAdd(
+                            DateTime(Year(TimeFromdd.Selected.Value),Month(TimeFromdd.Selected.Value),Day(TimeFromdd.Selected.Value),Hour(TimeFromdd.Selected.Value),Minute(TimeFromdd.Selected.Value),Second(TimeFromdd.Selected.Value)), //Time(Hour(TimeFromdd.Selected.Value),Minute(TimeFromdd.Selected.Value),Second(TimeFromdd.Selected.Value)),
+                            TimeUnit.Hours,
+                            1
+                        ),
+                        DateAdd(
+                            varDefaultTime,
+                            TimeUnit.Hours,
+                            1
+                        )
                     )
                 DisabledBorderColor: =RGBA(166, 166, 166, 1)
                 DisabledColor: =RGBA(166, 166, 166, 1)
@@ -2479,191 +2487,170 @@ chkWeekDays As screen:
         HoverColor: =App.Theme.Colors.PrimaryForeground
         HoverFill: =App.Theme.Colors.Darker10
         OnTimerEnd: |-
-            =// =====================================================================
-            // SET varEmailBody  —  578 EHRM Learning Lab calendar-invite body
-            // =====================================================================
+            =//=====================================================================
+            //SET var_EmailBody  —  578 EHRM Learning Lab calendar-invite body
+            //=====================================================================
+            
             Set(
                 var_EmailBody,
             
-                // ---------- HEADER ----------
-                $"<meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"">
+            //<!-- ===== CRITICAL PREREQUISITES ===== -->
+                $"
+                <!-- ===== CRITICAL PREREQUISITES ===== -->
+                <meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"">
                 <table style=""max-width:1200px;width:1200px;margin:0 auto;font-family:Arial,sans-serif;border-collapse:collapse;background-color:#D5FFFF;"" border=""1"" cellspacing=""0"" cellpadding=""0"">
                   <tr>
                     <td style=""background-color:#28a745;padding:15px;text-align:center;"">
-                      <span style=""color:#ffffff;padding:2px 2px;border-radius:2px;font-size:8px;font-weight:bold;letter-spacing:1px;display:inline-block;""> - AN AUTOMATED MESSAGE FROM THE EDWARD HINES JR. VA HOSPITAL - </span>
-                      <h2 style=""background-color:#28a745;color:#ffffff;padding:8px 14px;border-radius:25px;font-size:20px;font-weight:bold;display:inline-block;margin:15px 0 5px 0;"">&nbsp;&nbsp;&#10003;&nbsp;&nbsp;&nbsp;&nbsp;REGISTRATION CONFIRMED - EHRM Learning Lab Training</h2>
-                      <div style=""color:#ffffff;font-size:12px;font-weight:400;"">
-                        <a style=""color:#000080;text-decoration:underline;"" href=""https://www.va.gov/hines-health-care/"" target=""_blank"">Edward Hines Jr. VA Hospital</a>
-                        &nbsp;|&nbsp;
-                        <a style=""color:#000080;text-decoration:underline;"" href=""https://www.va.gov/"" target=""_blank"">U.S. Department of Veterans Affairs</a>
+                      <span style=""color:#ffffff;padding:1px 1px;border-radius:2px;font-size:8px;font-weight:bold;letter-spacing:1px;display:inline-block;"">&nbsp;---&nbsp;&nbsp;AN AUTOMATED MESSAGE FROM THE EDWARD HINES JR. VA HOSPITAL&nbsp;&nbsp;---&nbsp;</span>
+                      <h2 style=""background-color:#28a745;color:#ffffff;padding:8px 14px;border-radius:25px;font-size:32px;font-weight:bold;display:inline-block;margin:15px 0 5px 0;"">&nbsp;&nbsp;</h2><h2 style=""background-color:#28a745;color:#ffffff;padding:8px 14px;border-radius:25px;font-size:20px;font-weight:bold;display:inline-block;margin:15px 0 5px 0;"">&#127881;&nbsp;&nbsp;&nbsp;&nbsp;REGISTRATION CONFIRMED - EHRM Learning Lab Training</h2>
+                      <div style=""color:#ffffff;font-size:16px;font-weight:400;"">
+                        <a style=""color:#000080;text-decoration:underline;font-size:18px;"" href=""https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Federal-Electronic-Health-Record.aspx"" target=""_blank""><strong>Hines EHRM SharePoint</strong></a>
+                        <span style=""font-size:22px;"">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                        <a style=""color:#000080;text-decoration:underline;font-size:18px;"" href=""https:www.va.gov/hines-health-care/"" target=""_blank""><strong>Edward Hines Jr. VA Hospital</strong></a>
+                        <span style=""font-size:22px;"">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                        <a style=""color:#000080;text-decoration:underline;font-size:18px;"" href=""https:www.va.gov/"" target=""_blank""><strong>U.S. Department of Veterans Affairs</strong></a>
                       </div>
                     </td>
                   </tr>
-                  <!-- ===== INTRO / THANK YOU ===== -->
-                  <tr><td style=""padding:20px 15px 0 15px;"">
-                    <table style=""width:100%;background-color:#d4edda;border-left:5px solid #28a745;border-collapse:collapse;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
-                      <tr><td style=""padding:15px;"">
-                        <h3 style=""color:#155724;margin:0 0 10px 0;font-size:20px;font-weight:bold;"">&nbsp;&nbsp;&#127881;&nbsp;&nbsp;Thank you for registering for EHRM training!</h3>
-                        <p style=""color:#155724;margin:0;font-size:15px;line-height:1.6;"">Your registration for the <strong>578 EHRM Learning Lab</strong> session has been successfully submitted. We look forward to seeing you there!</p>
+                "
+            
+            //<!-- ===== CRITICAL PREREQUISITES ===== -->
+                & $"
+                  <!-- ===== CRITICAL PREREQUISITES ===== -->
+                  <tr><td style=""padding:20px 15px 15px 15px;"">
+                    <table style=""width:100%;border:6px solid #b30000;border-collapse:collapse;background-color:#fff0f0;box-shadow:0 0 0 3px #ff0000;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                      <tr><td style=""background-color:#cc0000;color:#ffffff;padding:16px 14px;font-size:26px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;border-bottom:4px solid #cc0000;"">&#128680;&nbsp;&nbsp;CRITICAL PREREQUISITES&nbsp;&nbsp;</td></tr>
+                      <tr><td style=""background-color:#ffffff;"">
+                        <p style=""color:#cc0000;margin:0 3px 8px 3px;font-size:20px;font-weight:bold;line-height:1.5;background-color:#ffe6e6;border:2px dashed #cc0000;padding:12px;""><span style=""font-size:24px;""><strong><u>ATTENTION!</u></strong></span>&nbsp;&nbsp;&nbsp;You <b><u><i>must</i></u></b> have Sandbox access in order to participate in Learning Labs. Access can take <span style=""background-color:#ffff00;color:#cc0000;padding:0 4px;"">up to four weeks!</span><br>Follow the steps below to ensure you are ready to participate:</p>
+                        <ul style=""margin:0;padding-left:22px;font-size:16px;color:#0D0D0D;line-height:1.6;"">
+                          <li style=""margin-bottom:12px;""><strong style=""color:#cc0000;font-size:20px;""><u>STEP 1:</u></strong>&nbsp;&nbsp;&nbsp;Complete the TMS course for Sandbox access (<strong>TMS ID 4686318</strong>). After watching the 10-minute video, the Sandbox team will provision you within four weeks. You will receive an email from the Oracle team (sent from their <strong><i>VA-Account-Provisioning_US@Oracle.com</i></strong> email address) once you have been granted access. <em>If you have already completed this step, skip to Step 2.</em></li>
+                          <li style=""margin-bottom:4px;""><strong style=""color:#cc0000;font-size:20px;""><u>STEP 2:</u></strong>&nbsp;&nbsp;&nbsp;Log in to the Sandbox to confirm your access. View the step-by-step <a style=""color:#000080;text-decoration:underline;font-weight:bold;"" href=""https:dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/_layouts/15/embed.aspx?UniqueId=81a58232-44f3-4c74-83df-6f8ca1a67de9"" target=""_blank""><i>Sandbox Login Instructions here</i></a>).</li>
+                        </ul>
+                      </td></tr>
+                      <tr><td style=""background-color:#ffffff;"">
+                        <p style=""color:#cc0000;margin:0 3px 8px 3px;font-size:20px;line-height:1.5;font-weight:bold;background-color:#ffe6e6;border:2px dashed #cc0000;padding:10px;"">If you have completed the TMS more than four weeks ago AND you are still unable to log in, please email <a style=""color:#000080;text-decoration:underline;"" href=""mailto:VAEHRMSandbox@va.gov"" target=""_blank""><i>VAEHRMSandbox@va.gov</i></a> for assistance as soon as possible!</p>
                       </td></tr>
                     </table>
                   </td></tr>
+                "
+            
+            //<!-- ===== EVENT DETAILS ===== -->
+                & $"
                   <!-- ===== EVENT DETAILS ===== -->
-                  <tr><td style=""padding:20px 15px 0 15px;"">
+                  <tr><td style=""padding:20px 15px 15px 15px;"">
                     <table style=""width:100%;border:4px solid #0066cc;border-collapse:collapse;background-color:#e7f3ff;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
-                      <tr><td style=""background-color:#0066cc;color:#ffffff;padding:10px 12px;font-size:16px;font-weight:bold;"">&#128197;&nbsp;&nbsp;Event Details</td></tr>
+                      <tr><td style=""background-color:#0066cc;color:#ffffff;padding:10px 12px;font-size:26px;font-weight:bold;"">&#128197;&nbsp;&nbsp;&nbsp;Event Details</td></tr>
                       <tr><td style=""padding:10px;background-color:#ffffff;"">
                         <table style=""width:100%;"" border=""0"" cellspacing=""0"" cellpadding=""6"">
                           <tr>
-                            <td style=""color:#0066cc;font-size:11px;width:28%;vertical-align:top;"">Training Scenario:</td>
-                            <td style=""font-size:16px;color:#333333;""><strong>578 EHRM Learning Lab &#8211; {"" & var_reservationScenario & ""} </strong></td>
+                            <td style=""color:#0066cc;font-size:11px;width:15%;vertical-align:top;""><i>Training Scenario:</i></td>
+                            <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_reservationScenario & ""}</b></strong></td>
                           </tr>
                           <tr>
-                            <td style=""color:#0066cc;font-size:11px;vertical-align:top;"">Training Role:</td>
+                            <td style=""color:#0066cc;font-size:11px;vertical-align:top;""><i>Training Role:</i></td>
                             <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_reservationRole & ""}</b></strong></td>
                           </tr>
                           <tr>
-                            <td style=""color:#0066cc;font-size:11px;vertical-align:top;"">Class Date:</td>
+                            <td style=""color:#0066cc;font-size:11px;vertical-align:top;""><i>Training Date:</i></td>
                             <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_Date_central & ""}</b></strong></td>
                           </tr>
                           <tr>
-                            <td style=""color:#0066cc;font-size:11px;vertical-align:top;"">Class Time:</td>
+                            <td style=""color:#0066cc;font-size:11px;vertical-align:top;""><i>Training Time:</i></td>
                             <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_secondHalfTime_central & ""}</b></strong></td>
                           </tr>
                           <tr>
-                            <td style=""color:#0066cc;font-size:11px;vertical-align:top;"">Class Location:</td>
+                            <td style=""color:#0066cc;font-size:11px;vertical-align:top;""><i>Training Location:</i></td>
                             <td style=""font-size:16px;color:#333333;""><strong><b>{"" & "Room #" & var_reservationRoomNumber & ", Floor #" & var_reservationFloorNumber & ", Building #" & var_reservationBuildingNumber & ", " & var_reservationDivision & ""}</b></strong></td>
                           </tr>
+                          </td></tr>
                         </table>
                       </td></tr>
                     </table>
                   </td></tr>
-                  <!-- ===== CRITICAL PREREQUISITES ===== -->
-                  <tr><td style=""padding:20px 15px 0 15px;"">
-                    <table style=""width:100%;border:4px solid #155724;border-collapse:collapse;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
-                      <tr><td style=""background-color:#155724;color:#ffffff;padding:10px 12px;font-size:18px;font-weight:bold;"">&nbsp;&nbsp;&#128680;&nbsp;&nbsp;&nbsp;&nbsp;CRITICAL PREREQUISITES</td></tr>
-                      <tr><td style=""padding:5px;background-color:#ffffff;"">
-                      <p style=""color:#0D0D0D;margin:0;font-size:16px;line-height:1.6;""><strong>AT LEAST THREE WEEKS IN ADVANCE</strong> of training, you <b><u><i>must</i></u></b>  complete the following steps to successfully gain access to the EHRM Sandbox environment:</p>
-                        <ol style=""margin:0;padding-left:12px;font-size:14px;color:#0D0D0D;line-height:1.2;"">
-                          <li>Complete the TMS ""<strong>EHRM Sandbox Login and Orientation Video</strong>"" course (NFED #4686318).</li>
-                          <li>&nbsp;&nbsp;Wait up to 21 days until you receive confirmation email from <strong>VA-Account-Provisioning_US@oracle.com</strong>, confirming your account has been provisioned.</li>
-                          <li>Identify the correct version of <strong>Sandbox web portal</strong> according to your assigned EHRM Role (<a style=""color:#000080;text-decoration:underline;"" href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx?csf=1&web=1&e=ohGdcr#which-sandbox-citrix-storefront-application-do-i-use"" target=""_blank"">VIEW HELP GUIDE</a>).</li>
-                          <li><strong>Successfully login</strong> to your own Sandbox web portal using your newly provisioned Oracle account information & the <a style=""color:#000080;text-decoration:underline;"" href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/_layouts/15/embed.aspx?UniqueId=81a58232-44f3-4c74-83df-6f8ca1a67de9"" target=""_blank"">EHRM Sandbox Login Instructions</a> user guide. (<a style=""color:#000080;text-decoration:underline;"" href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/SitePages/HinesSandbox.aspx"" target=""_blank"">VIEW HELP GUIDE</a>).</li>
-                          <li>If you are still unable to login to your Sandbox web portal <strong> more than three weeks after</strong> completing the TMS course, you should <b><u><i>immediately</i></u></b> contact the <a style=""color:#000080;text-decoration:underline;"" href=""mailto:VAEHRMSandbox@va.gov"" target=""_blank"">VA EHRM Sandbox</a> national team for assistance.</li>
-                          </ol>
-                        <p style=""color:#0D0D0D;margin:0;font-size:16px;line-height:1.6;"">Failure to complete all of these prerequisite tasks <strong>IN ADVANCE</strong> of your scheduled training event date, will negatively impact the mandatory EHRM roll-out process significantly!
-                        </p>
-                      </td></tr>
-                    </table>
-                  </td></tr>
-                  <!-- ===== REGISTRATION DETAILS ===== -->
-                  <tr><td style=""padding:20px 15px 0 15px;"">
-                    <table style=""width:100%;border:4px solid #636363;border-collapse:collapse;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
-                      <tr><td colspan=""2"" style=""background-color:#636363;color:#ffffff;padding:10px 12px;font-size:16px;font-weight:bold;"">&nbsp;&nbsp;&#128203;&nbsp;&nbsp;&nbsp;&nbsp;Your Registration Details</td></tr>
-                      <tr>
-                        <td style=""background-color:#f1c40f;color:#2c3e50;padding:3px 3px;font-weight:bold;font-size:10px;text-transform:uppercase;width:35%;border-bottom:2px solid #d4a017;"">Field/Parameter</td>
-                        <td style=""background-color:#f1c40f;color:#2c3e50;padding:3px 3px;font-weight:bold;font-size:10px;text-transform:uppercase;width:65%;border-bottom:2px solid #d4a017;"">Your VALUES</td>
-                      </tr>
-                      <tr>
-                        <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Registration Status:</td>
-                        <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong>SUBMITTED / PENDING APPROVAL</strong></em></td>
-                      </tr>
-                      <tr>
-                        <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">First Name:</td>
-                        <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.GivenName & ""}</b></strong></em></td>
-                      </tr>
-                      <tr>
-                        <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Last Name:</td>
-                        <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.Surname & ""}</b></strong></em></td>
-                      </tr>
-                      <tr>
-                        <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Title:</td>
-                        <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.JobTitle & ""}</b></strong></em></td>
-                      </tr>
-                      <tr>
-                        <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Email Address:</td>
-                        <td style=""padding:5px;color:#000080;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.Mail & ""}</b></strong></em></td>
-                      </tr>
-                      <tr>
-                        <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Network Account :</td>
-                        <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.MailNickname & ""}</b></strong></em></td>
-                      </tr>
-                      <tr>
-                        <td style=""padding:12px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;"">Submission Date/Time:</td>
-                        <td style=""padding:12px;color:#495057;font-size:16px;background-color:#fafbfc;""><em><strong><b>{"" & Now() & ""}</b></strong></em></td>
-                      </tr>
-                    </table>
-                  </td></tr>"
+                "
             
-                // =================================================================
-                // IMAGE BLOCK #1 — REGISTRATION QR CODE   *** DISABLED ***
-                // To enable: remove the leading // on the next line AND on every
-                // line of the segment below (including the closing "$"...").
-                // Then swap the placeholder src URL for your public https image.
-                // -----------------------------------------------------------------
-                // & $"
-                //   <tr><td style=""padding:20px 15px 0 15px;text-align:center;"">
-                //     <table style=""width:100%;background-color:#e1f5f8;border:4px solid #17a2b8;border-collapse:collapse;"" border=""0"" cellspacing=""0"" cellpadding=""10"">
-                //       <tr><td style=""text-align:center;"">
-                //         <p style=""margin:0 0 8px 0;font-size:14px;color:#0c5460;font-weight:bold;"">&#128242;&nbsp;Scan to Register Others</p>
-                //         <img src=""https://PLACEHOLDER-URL/registration-qr.png"" alt=""Registration QR code"" width=""160"" height=""160"" style=""border:3px solid #17a2b8;border-radius:8px;display:block;margin:0 auto;"">
-                //       </td></tr>
-                //     </table>
-                //   </td></tr>
-                // "
             
-                // =================================================================
-                // IMAGE BLOCK #2 — EVENT FLYER   *** DISABLED ***
-                // Same enable procedure as Block #1.
-                // -----------------------------------------------------------------
-                // & $"
-                //   <tr><td style=""padding:20px 15px 0 15px;text-align:center;"">
-                //     <img src=""https://PLACEHOLDER-URL/event-flyer.png"" alt=""EHRM Learning Lab flyer"" width=""280"" style=""border:3px solid #17a2b8;border-radius:8px;display:block;margin:0 auto;"">
-                //   </td></tr>
-                // "
-            
-                // =================================================================
-                // IMAGE BLOCK #3 — VA / HINES LOGO (FOOTER)   *** DISABLED ***
-                // Same enable procedure as Block #1.
-                // -----------------------------------------------------------------
-                // & $"
-                //   <tr><td style=""padding:15px;text-align:center;background-color:#1f4e79;"">
-                //     <img src=""https://PLACEHOLDER-URL/hines-va-logo.png"" alt=""Edward Hines Jr. VA Hospital"" width=""360"" style=""display:block;margin:0 auto;"">
-                //   </td></tr>
-                // "
-            
-                // ---------- CONTACT + FOOTER (always on) ----------
+            //<!-- ===== CONTACT/HELP ===== -->
                 & $"
-                  <tr><td style=""padding:20px 15px 0 15px;"">
+                  <!-- ===== CONTACT/HELP ===== -->
+                  <tr><td style=""padding:20px 15px 15px 15px;"">
                     <table style=""width:100%;border:4px solid #6c757d;border-collapse:collapse;background-color:#fff9e6;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
-                      <tr><td style=""background-color:#6c757d;color:#ffffff;padding:10px 12px;font-size:16px;font-weight:bold;"">&#10067;&nbsp;&nbsp;Questions or Need Assistance?</td></tr>
+                      <tr><td style=""background-color:#6c757d;color:#ffffff;padding:10px 12px;font-size:26px;font-weight:bold;"">&#10067;&nbsp;&nbsp;&nbsp;Have Questions or Need Assistance?</td></tr>
                       <tr><td style=""padding:15px;background-color:#ffffff;"">
-                        <p style=""margin:0 0 10px 0;font-size:14px;color:#333333;line-height:1.5;"">Contact the Edward Hines Jr. VA Hospital's EHRM Team:</p>
-                        <p style=""margin:0 0 6px 0;font-size:14px;color:#333333;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#128222;&nbsp;&nbsp;&nbsp;Call the Clinical Informatics direct help line via <a style=""color:#000080;text-decoration:underline;"" href=""tel:+17082022777"">(708) 202-2777</a></p>
-                        <p style=""margin:0;font-size:14px;color:#333333;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#128231;&nbsp;&nbsp;&nbsp;Email the EHRM Training Coordinators via <a style=""color:#000080;text-decoration:underline;"" href=""mailto:VHAHINInformaticsTrainingAndSupport@va.gov"">VHAHINInformaticsTrainingAndSupport@va.gov</a></p>
-                        <p style=""margin:12px 0 0 0;font-size:13px;color:#333333;"">Keep your Registration ID (<strong><u><i><b>{"" & (Max('Desk Reservations', Value(ID)) + 1) & ""}</u></i></b></strong>) handy when contacting us.</p>
+                        <p style=""margin:0 0 10px 0;font-size:20px;color:#333333;line-height:1.5;"">Contact the EHRM Training Coordinators at the Edward Hines Jr. VA Hospital:</p>
+                        <p style=""margin:0 0 6px 0;font-size:20px;color:#333333;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#128222;<p style=""margin:0 0 6px 0;font-size:16px;color:#333333;"">&nbsp;&nbsp;&nbsp;Reach your Clinical Informatics direct help line, by calling us at <a style=""color:#000080;text-decoration:underline;"" href=""tel:+17082022777"">(708)</a><a style=""color:#000080;text-decoration:none;"" href=""tel:+17082022777""> </a><a style=""color:#000080;text-decoration:underline;"" href=""tel:+17082022777"">202-2777</a></p>
+                        <p style=""margin:0;font-size:20px;color:#333333;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#128231;<p style=""margin:0;font-size:16px;color:#333333;"">&nbsp;&nbsp;&nbsp;Connect with your Hines EHRM Training Coordinators, by emailing us at <a style=""color:#000080;text-decoration:underline;"" href=""mailto:VHAHINInformaticsTrainingAndSupport@va.gov"">VHAHINInformaticsTrainingAndSupport@va.gov</a></p>
+                        <p style=""margin:12px 0 0 0;font-size:16px;color:#333333;"">Please reference your Registration ID number (&nbsp;#<strong><u><i><b>{"" & (Max('Desk Reservations', Value(ID)) + 1) & ""}</u></i></b></strong>&nbsp;) handy when contacting our team!</p>
                       </td></tr>
                     </table>
                   </td></tr>
                   <br>
+                "
             
+            
+            //<!-- ===== FOOTER ===== -->
+                & $"
+                  <!-- ===== Footer ===== -->
                   <tr><td style=""padding:8px 8px;background-color:#1f4e79;border-top:4px solid #e03e2d;text-align:center;"">
-                    <p style=""margin:0;color:#ffffff;font-size:12px;line-height:1.5;""><i>This is an automated confirmation from the Clinical Informatics Team at Edward Hines Jr. VA Hospital. <em><strong>Please do not reply to this email.</i></strong></em></p>
+                    <p style=""margin:0;color:#ffffff;font-size:12px;line-height:1;""><i>This is an automated confirmation from the Edward Hines Jr. VA Hospital's CLINICAL INFORMATICS TEAM.<br><em><strong>Please do not reply back directly to this email.</i></strong></em></p>
                   </td></tr>
-            
                 </table>"
             );
             
             Select(ContinueDatebtn);
+            
+            
+            
+            
+            
+            
+            //     ---------- YOUR REGISTRATION DETAILS ----------
+            /*    & $"
+                  <!-- ===== YOUR REGISTRATION DETAILS ===== --> 
+                   <tr><td style=""padding:20px 15px 0 15px;"">
+                     <table style=""width:100%;border:4px solid #636363;border-collapse:collapse;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                       <tr><td colspan=""2"" style=""background-color:#636363;color:#ffffff;padding:10px 12px;font-size:16px;font-weight:bold;"">&nbsp;&nbsp;&#128203;&nbsp;&nbsp;&nbsp;&nbsp;Your Registration Details</td></tr>
+                       <tr>
+                         <td style=""background-color:#f1c40f;color:#2c3e50;padding:3px 3px;font-weight:bold;font-size:10px;text-transform:uppercase;width:35%;border-bottom:2px solid #d4a017;"">Field/Parameter</td>
+                         <td style=""background-color:#f1c40f;color:#2c3e50;padding:3px 3px;font-weight:bold;font-size:10px;text-transform:uppercase;width:65%;border-bottom:2px solid #d4a017;"">Your VALUES</td>
+                       </tr>
+                       <tr>
+                         <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Registration Status:</td>
+                         <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong>SUBMITTED / PENDING APPROVAL</strong></em></td>
+                       </tr>
+                       <tr>
+                         <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">First Name:</td>
+                         <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.GivenName & ""}</b></strong></em></td>
+                       </tr>
+                       <tr>
+                         <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Last Name:</td>
+                         <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.Surname & ""}</b></strong></em></td>
+                       </tr>
+                       <tr>
+                         <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Title:</td>
+                         <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.JobTitle & ""}</b></strong></em></td>
+                       </tr>
+                       <tr>
+                         <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Email Address:</td>
+                         <td style=""padding:5px;color:#000080;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.Mail & ""}</b></strong></em></td>
+                       </tr>
+                       <tr>
+                         <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Network Account :</td>
+                         <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.MailNickname & ""}</b></strong></em></td>
+                       </tr>
+                       <tr>
+                         <td style=""padding:12px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;"">Submission Date/Time:</td>
+                         <td style=""padding:12px;color:#495057;font-size:16px;background-color:#fafbfc;""><em><strong><b>{"" & Now() & ""}</b></strong></em></td>
+                       </tr>
+                     </table>
+                   </td></tr>"
+            */
         PressedBorderColor: =App.Theme.Colors.Darker40
         PressedColor: =Self.Color
         PressedFill: =App.Theme.Colors.Darker40
         Repeat: =true
         Size: =30
-        Text: |-
-            ="LOADING. . . ."
-            //Text(Time(0, 0, Self.Value/1000), "hh:mm:ss")
-        Visible: =false
+        Text: =
         Width: =Preloader_2.Width
         X: =Preloader_2.X
         Y: =Preloader_2.Y

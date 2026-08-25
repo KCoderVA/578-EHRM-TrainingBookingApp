@@ -13,6 +13,11 @@
         // Decide once whether everything succeeded. Only start the auto-
         // redirect timer when it did; otherwise the user stays here to read
         // the warning and must dismiss manually.
+        
+        //TEMP: KYLE - Remove after testing: 
+            Set(varShowRedirect, true);
+        
+        
         If(
             (varCalendarOK = true && (varMainOK = true || varMainSimpleOK = true) && (varBackupOK = true || varBackupSimpleOK = true)),
             Set(varAllOK, true) && Set(varShowRedirect, varAllOK),
@@ -121,19 +126,13 @@
             Set(varPopUp_ClassPicker_scenarioSplit, Blank());
             Set(varPopUp_ClassPicker_scenarioStart24, Blank());
             Set(varPopUp_ClassPicker_scenarioStartTime, Blank());
-            Set(_dateSelected, Blank());
             Set(_dateSelected2, Blank());
-            Set(_firstDayInView, Blank());
             Set(_FirstDayinView2, Blank());
-            Set(_firstDayOfMonth, Blank());
             Set(_firstDayOfMonth2, Blank());
             Set(_firstDayofWeek2, Blank());
-            Set(_lastDayOfMonth, Blank());
             Set(_LastDayOfMonth2, Blank());
-            Set(_maxDate, Blank());
             Set(_MaxDate, Blank());
             Set(_MaxDate2, Blank());
-            Set(_minDate, Blank());
             Set(_MinDate, Blank());
             Set(_MinDate2, Blank());
             Set(gv_item, Blank());
@@ -193,7 +192,12 @@
         FontWeight: =FontWeight.Bold
         Height: =150
         Size: =48
-        Text: ="Success!"
+        Text: |-
+            =If(
+                varAllOK,
+                "Success!",
+                "Submitted!"
+            )
         Width: =Parent.Width
         X: =(Parent.Width - Self.Width) / 2
         ZIndex: =8
@@ -208,9 +212,9 @@
         AutoStart: |-
             =If(
                 IsBlankOrError(varShowRedirect),
-                false,
+                    false,
                 varShowRedirect = true,
-                varShowRedirect,
+                    varShowRedirect,
                 false
             )
         BorderColor: =App.Theme.Colors.Primary
@@ -219,7 +223,14 @@
         DisabledBorderColor: =RGBA(244, 244, 244, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
-        Duration: =2500
+        Duration: |-
+            =If(
+                IsBlankOrError(varShowRedirect) || ( varAllOK = false && user_isAdmin = false),
+                    25000,
+                varShowRedirect = true,
+                    4000,
+                4000
+            )
         Fill: =RGBA(255, 255, 255, 0)
         Font: =App.Theme.Font
         FontWeight: =FontWeight.Lighter
@@ -227,7 +238,11 @@
         HoverColor: =App.Theme.Colors.PrimaryForeground
         HoverFill: =App.Theme.Colors.Darker10
         OnSelect: |-
-            =If(
+            =//TEMP: KYLE - Remove after testing: 
+                Set(varShowRedirect, true);
+            
+            
+            If(
                 IsBlankOrError(varShowRedirect),
                 Launch("mailto:Kyle.coder@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov&subject=Error%20saving%20my%20submission%20into%20your%20'578%20EHRM%20Training%20App'"),
                 varShowRedirect = false,
@@ -235,14 +250,6 @@
                 false
             )
         OnTimerEnd: |-
-            =If(
-                IsBlankOrError(varShowRedirect),
-                false,
-                varShowRedirect = true,
-                Navigate(Dashboard),
-                false
-            )
-        OnTimerStart: |-
             =If(
                 IsBlankOrError(varShowRedirect),
                 false,
@@ -257,34 +264,20 @@
                     Refresh(backupList_DeskReservations),
                     Refresh('Learning Lab Sessions'),
                     ResetForm(Form1),
-                    ResetForm(Form2),
-                    Set(_allRoomsConcat, Blank()),
-                    Set(_calendarVisible, Blank()),
-                    Set(_dateSelected, Blank()),
+                    ResetForm(form_EditDesks),
+            
                     Set(_dateSelected2, Blank()),
-                    Set(_firstDayInView, Blank()),
                     Set(_FirstDayinView2, Blank()),
-                    Set(_firstDayOfMonth, Blank()),
                     Set(_firstDayOfMonth2, Blank()),
                     Set(_firstDayofWeek2, Blank()),
-                    Set(_lastDayOfMonth, Blank()),
                     Set(_LastDayOfMonth2, Blank()),
-                    Set(_maxDate, Blank()),
                     Set(_MaxDate, Blank()),
                     Set(_MaxDate2, Blank()),
-                    Set(_minDate, Blank()),
                     Set(_MinDate, Blank()),
                     Set(_MinDate2, Blank()),
-                    Set(_myCalendarName, Blank()),
-                    Set(_myScheduledMeeting, Blank()),
-                    Set(_noRoomLists, Blank()),
-                    Set(_roomListSelected, Blank()),
-                    Set(_selectedMeetingTime, Blank()),
-                    Set(_selectedRoom, Blank()),
-                    Set(_selectedRoomList, Blank()),
-                    Set(_selectedUser, Blank()),
-                    Set(_showDetails, Blank()),
-                    Set(_showMeetingTimes, Blank()),
+                    
+                    
+                    
                     Set(currentItem, Blank()),
                     Set(endByDate, Blank()),
                     Set(gv_item, Blank()),
@@ -377,9 +370,286 @@
                     Set(varUserExists, Blank()),
                     //Set(varUser_details, Blank()),
                     Set(varWeekday, Blank()),
-                    Clear(AllRooms),
-                    Clear(AvailableRooms),
-                    Clear(AvailableRoomsOptimal),
+                    //KYLE -  Likely remove:  Clear(col_EventBuildDetails),
+                    Clear(col_EventCombinedDetails),
+                    Clear(col_MasterSchedule),
+                    Clear(colCombinedRecurrence),
+                    Clear(colDates),
+                    //Clear(colDeskAccess),
+                    Clear(colDeskChckRecur),
+                    Clear(CollectionRecurrence),
+                    //Clear(colMenu),
+                    Clear(colRoomFilter),
+                    Clear(colSelectedDesks),
+                    Clear(colSmartboard),
+                    //Clear(colUser_details),
+                    Clear(WeekdaysOnly),
+                    Clear(wkDays),
+                    Clear(wkDaysTemp)
+                ),
+                false
+            );
+            
+            If(
+                IsBlankOrError(varShowRedirect) && varRealEmail = "kyle.coder@va.gov",
+                    Navigate(DebuggingScreen),
+                varShowRedirect = true,
+                    Navigate(Dashboard),
+                varShowRedirect <> true && varRealEmail = "kyle.coder@va.gov",
+                    Navigate(DebuggingScreen),
+                false
+            );
+        OnTimerStart: |-
+            =// ╔═══════════════════════════════════════════════════════════════════════╗
+            // ║  BLOCK 2 of 2                                                          ║
+            // ║  PASTE INTO:  "Success" screen                                         ║
+            // ║  PROPERTY:    OnVisible                                                ║
+            // ║                                                                        ║
+            // ║  Does: look up (by the GUID in OutlookSeriesID) whether the detailed  ║
+            // ║        Patch actually created the row. If NOT, run the paired         ║
+            // ║        SIMPLIFIED fallback into both lists. Then recompute varAllOK   ║
+            // ║        and run cleanup only on full success.                          ║
+            // ║                                                                        ║
+            // ║  Reminder: make sure your 5-second redirect Timer starts AFTER this   ║
+            // ║  OnVisible finishes (it does — OnVisible runs first).                 ║
+            // ╚═══════════════════════════════════════════════════════════════════════╝
+            
+            Clear(colFallbackResults);
+            
+            // Did the detailed Patch actually create the row? Look it up by the GUID
+            // we stored in OutlookSeriesID. Text-to-text compare = delegable & safe.
+            Set(
+                varDetailedRowExists,
+                !IsBlank(LookUp('Desk Reservations', OutlookSeriesID = varSubmissionID))
+            );
+            
+            If(
+                // Only run the fallback if the row is missing (detailed patch failed).
+                Not(varDetailedRowExists),
+            
+                ForAll(
+                    CollectionRecurrence As recS,
+                    ForAll(
+                        colSelectedDesks As deskS,
+            
+                        // simplified MAIN
+                        Collect(
+                            colFallbackResults,
+                            {
+                                list: "main",
+                                ok: !IsError(
+                                    Patch(
+                                        'Desk Reservations',
+                                        Defaults('Desk Reservations'),
+                                        {
+                                            OutlookSeriesID: varSubmissionID,
+                                            Title: If(IsBlankOrError(var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")"), "(not provided)", var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")"),
+                                            submitterName_text:  If(IsBlankOrError(varMyProfile.displayName), "(not provided)", varMyProfile.displayName),
+                                            submitterEmail_text: If(IsBlankOrError(Lower(varMyProfile.mail)), "(not provided)", Lower(varMyProfile.mail)),
+                                            studentName_text:  If(IsBlankOrError(varStudentProfile.displayName), "(not provided)", varStudentProfile.displayName),
+                                            studentEmail_text: If(IsBlankOrError(Lower(varStudentProfile.mail)), "(not provided)", Lower(varStudentProfile.mail)),
+                                            reservationRole_text:     If(IsBlankOrError(var_reservationRole), "(not provided)", var_reservationRole),
+                                            reservationScenario_text: If(IsBlankOrError(var_reservationScenario), "(not provided)", var_reservationScenario),
+                                            reservationStart_datetime: If(IsBlankOrError(var_StartDateTime_central), Blank(), var_StartDateTime_central),
+                                            reservationEnd_datetime:   If(IsBlankOrError(var_EndDateTime_central), Blank(), var_EndDateTime_central),
+                                            Active_choice: {Value: Text("true")}
+                                        }
+                                    )
+                                )
+                            }
+                        );
+            
+                        // simplified BACKUP
+                        Collect(
+                            colFallbackResults,
+                            {
+                                list: "backup",
+                                ok: !IsError(
+                                    Patch(
+                                        backupList_DeskReservations,
+                                        Defaults('Desk Reservations'),
+                                        {
+                                            OutlookSeriesID: varSubmissionID,
+                                            Title: If(IsBlankOrError(var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")"), "(not provided)", var_Attendees & " – " & var_MeetingCategory & " - " & var_reservationScenario & " (" & var_reservationRole & ")"),
+                                            submitterName_text:  If(IsBlankOrError(varMyProfile.displayName), "(not provided)", varMyProfile.displayName),
+                                            submitterEmail_text: If(IsBlankOrError(Lower(varMyProfile.mail)), "(not provided)", Lower(varMyProfile.mail)),
+                                            studentName_text:  If(IsBlankOrError(varStudentProfile.displayName), "(not provided)", varStudentProfile.displayName),
+                                            studentEmail_text: If(IsBlankOrError(Lower(varStudentProfile.mail)), "(not provided)", Lower(varStudentProfile.mail)),
+                                            reservationRole_text:     If(IsBlankOrError(var_reservationRole), "(not provided)", var_reservationRole),
+                                            reservationScenario_text: If(IsBlankOrError(var_reservationScenario), "(not provided)", var_reservationScenario),
+                                            reservationStart_datetime: If(IsBlankOrError(var_StartDateTime_central), Blank(), var_StartDateTime_central),
+                                            reservationEnd_datetime:   If(IsBlankOrError(var_EndDateTime_central), Blank(), var_EndDateTime_central),
+                                            Active_choice: {Value: Text("true")}
+                                        }
+                                    )
+                                )
+                            }
+                        )
+                    )
+                );
+            
+                // fallback outcome
+                Set(
+                    varFallbackOK,
+                    CountRows(colFallbackResults) > 0 And CountIf(colFallbackResults, Not(ok)) = 0
+                )
+                // else branch: row already existed -> varFallbackOK stays TRUE (default from BLOCK 1)
+            );
+            
+            // ── Re-compute varAllOK now that the fallback outcome is known ───────────
+            // Main list is "saved" if the detailed row exists OR the fallback succeeded.
+            Set(
+                varAllOK,
+                varCalendarOK And
+                (varDetailedRowExists Or varFallbackOK) And
+                varEmailOK And
+                varPatchSuperUsersOK
+            );
+            
+            // ── Cleanup ONLY on full success ────────────────────────────────────────
+            If(
+                varAllOK,
+                Concurrent(
+                    Set(varAccept, Blank()),
+                    Set(varAccept3, Blank()),
+                    Set(varAccept4, Blank()),
+                    ResetForm(Form1),
+                    Reset(ddImportance),
+                    Reset(ddRecurrenceFrequency),
+                    Reset(Calendar_1),
+                    Reset(Gallery6),
+                    Reset(DatePickerCanvas2),
+                    Reset(Gallery3_1),
+                    Clear(colSelectedDesks),
+                    Clear(CollectionRecurrence),
+                    Clear(colDeskChckRecur),
+                    Clear(colCombinedRecurrence),
+                    Clear(wkDays),
+                    Clear(wkDaysTemp)
+                )
+            );
+            
+            /*  MOVED TO 'Timer2_1.OnTimerEnd' property instead
+            If(
+                IsBlankOrError(varShowRedirect),
+                false,
+                varShowRedirect = true,
+                Concurrent(
+                    Set(varTimer, true),
+                    Refresh('Desk Reservations'),
+                    Refresh(DeskAccessControl),
+                    Refresh(MasterScheduleList),
+                    Refresh(Desks),
+                    Refresh(SuperUserList),
+                    Refresh(backupList_DeskReservations),
+                    Refresh('Learning Lab Sessions'),
+                    ResetForm(Form1),
+                    ResetForm(form_EditDesks),
+            
+                    Set(_dateSelected2, Blank()),
+                    Set(_FirstDayinView2, Blank()),
+                    Set(_firstDayOfMonth2, Blank()),
+                    Set(_firstDayofWeek2, Blank()),
+                    Set(_LastDayOfMonth2, Blank()),
+                    Set(_MaxDate, Blank()),
+                    Set(_MaxDate2, Blank()),
+                    Set(_MinDate, Blank()),
+                    Set(_MinDate2, Blank()),
+                    
+                    
+                    
+                    Set(currentItem, Blank()),
+                    Set(endByDate, Blank()),
+                    Set(gv_item, Blank()),
+                    Set(maxOccurrence, Blank()),
+                    Set(NthWeekdayRecord, Blank()),
+                    Set(numWorkDays, Blank()),
+                    Set(PDFPrint, Blank()),
+                    Set(startWeekday, Blank()),
+                    Set(submitItem, Blank()),
+                    //Set(user_isAdmin, Blank()),
+                    //Set(userAccessLevel_text, Blank()),
+                    Set(var_Attendees, Blank()),
+                    //Set(var_AuthorInfo, Blank(),
+                    Set(var_Date, Blank()),
+                    Set(var_Date_central, Blank()),
+                    Set(var_DayOfWeek, Blank()),
+                    Set(var_Duration, Blank()),
+                    Set(var_Duration_central, Blank()),
+                    Set(var_EmailBody, Blank()),
+                    Set(var_EndDateTime_central, Blank()),
+                    Set(var_EndTime, Blank()),
+                    Set(var_EndTime_central, Blank()),
+                    Set(var_firstHalfDuration, Blank()),
+                    Set(var_firstHalfDuration_central, Blank()),
+                    Set(var_ManagerEmail, Blank()),
+                    Set(var_MeetingCategory, Blank()),
+                    Set(var_OptionalAttendees, Blank()),
+                    Set(var_reservationBuildingNumber, Blank()),
+                    Set(var_reservationDivision, Blank()),
+                    Set(var_reservationFloorNumber, Blank()),
+                    Set(var_reservationFullDateTime, Blank()),
+                    Set(var_reservationFullLocation, Blank()),
+                    Set(var_reservationRole, Blank()),
+                    Set(var_reservationRoomNumber, Blank()),
+                    Set(var_reservationScenario, Blank()),
+                    Set(var_scenarioTrainingMaterialsURL, Blank()),
+                    Set(var_secondHalfTime, Blank()),
+                    Set(var_secondHalfTime_central, Blank()),
+                    Set(var_Service, Blank()),
+                    Set(var_StartDateTime_central, Blank()),
+                    Set(var_StartTime, Blank()),
+                    Set(var_StartTime_central, Blank()),
+                    Set(varAccept, Blank()),
+                    Set(varAccept3, Blank()),
+                    Set(varAccept4, Blank()),
+                    Set(varAttendees, Blank()),
+                    Set(varCancelContainer, Blank()),
+                    Set(varDaily, Blank()),
+                    Set(varDefaultEndTime, Blank()),
+                    Set(varDescription, Blank()),
+                    //Set(varDeskAccessControl_record, Blank()),
+                    Set(varDeskMode, Blank()),
+                    Set(varEndDate, Blank()),
+                    Set(varEventEndTime, Blank()),
+                    Set(varEventStartTime, Blank()),
+                    Set(varImportance, Blank()),
+                    Set(varIsImpersonating, Blank()),
+                    Set(varManageSelectedDesk, Blank()),
+                    Set(varMeetCat, Blank()),
+                    Set(varOptionalAttendees, Blank()),
+                    Set(varPopUp_ClassPicker, Blank()),
+                    Set(varPopUp_ClassPicker_scenario, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioDate, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioDateTime, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioEnd24, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioEndTime, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioLocation, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioName, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioRole, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioSplit, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioStart24, Blank()),
+                    Set(varPopUp_ClassPicker_scenarioStartTime, Blank()),
+                    //Set(varRealEmail, Blank()),
+                    //Set(varRealEntraID, Blank()),
+                    Set(varRecurrence, Blank()),
+                    Set(varRecurrenceID, Blank()),
+                    Set(varReminder, Blank()),
+                    //Set(varRepoVersion, Blank()),
+                    Set(varReservePOC, Blank()),
+                    Set(varSelectedDesk, Blank()),
+                    Set(varSelectedReservation, Blank()),
+                    Set(varSelectedStartDate, Blank()),
+                    Set(varsmartboardck, Blank()),
+                    //Set(varTargetEmail, Blank()),
+                    //Set(varTargetEntraID, Blank()),
+                    Set(varTitle, Blank()),
+                    Set(varURL, Blank()),
+                    Set(varURLName, Blank()),
+                    Set(varUserExists, Blank()),
+                    //Set(varUser_details, Blank()),
+                    Set(varWeekday, Blank()),
                     Clear(col_EventBuildDetails),
                     Clear(col_EventCombinedDetails),
                     Clear(col_MasterSchedule),
@@ -393,16 +663,13 @@
                     Clear(colSelectedDesks),
                     Clear(colSmartboard),
                     //Clear(colUser_details),
-                    Clear(MeetingTimes),
-                    Clear(MyPeople),
-                    Clear(RoomsLists),
-                    Clear(RoomTimeSuggestions),
                     Clear(WeekdaysOnly),
                     Clear(wkDays),
                     Clear(wkDaysTemp)
                 ),
                 false
             )
+            */
         PressedBorderColor: =App.Theme.Colors.Darker40
         PressedColor: =Self.Color
         PressedFill: =App.Theme.Colors.Darker40
@@ -410,10 +677,10 @@
         Size: =18
         Text: |-
             =If(
-                IsBlankOrError(varShowRedirect),
-                "Kyle.Coder@va.gov",
+                IsBlankOrError(varShowRedirect) || ( varAllOK = false && user_isAdmin = false),
+                    "Kyle.Coder@va.gov",
                 varShowRedirect = true,
-                Text(DateAdd(Self.Duration, - (Time(0,0,0, Self.Value)), TimeUnit.Milliseconds), "sfff"),
+                    Text(DateAdd(Self.Duration, - (Time(0,0,0, Self.Value)), TimeUnit.Milliseconds), "sfff"),
                 ""
             )
         Width: |
@@ -439,35 +706,40 @@
                 varAllOK = true && user_isAdmin = true,
                 "You now have a Outlook calendar invite for the date/time you selected, which contains more important details about your upcoming training event/class!"
                     & Char(10) &
-                    If(varMainOK = true, "• Main reservation list = SUCCESS" & Char(10), varMainOK = false, "• Main reservation list = FAILED" & Char(10)) &
-                    If(varMainSimpleOK = true, "• Main (simple) reservation list = SUCCESS" & Char(10), varMainSimpleOK = false, "• Main (simple) reservation list = FAILED" & Char(10)) &
-                    If(varBackupOK = true, "• Backup reservation list = SUCCESS" & Char(10), varBackupOK = false, "• Backup reservation list = FAILED" & Char(10)) &
-                    If(varBackupSimpleOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10), varBackupSimpleOK = false, "• Backup (simple) reservation list = FAILED" & Char(10)) &
+                    If(varDetailedOK = true, "• Main (detailed) reservation list = SUCCESS" & Char(10), varDetailedOK = false, "• Main (detailed) reservation list = FAILED" & Char(10)) &
+                    If(varFallbackOK = true, "• Fallback (simple) reservation list = SUCCESS" & Char(10), varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10)) &
+                    If(varEmailOK = true, "• Email Sent = SUCCESS" & Char(10), varEmailOK = false, "• Email sent = FAILED" & Char(10)) &
+                    If(varPatchSuperUsersOK = true, "• SuperUser list patched = SUCCESS" & Char(10), varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10)) &
                     If(varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10), varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10)),
                 varAllOK = true && user_isAdmin = false,
                     "You now have a Outlook calendar invite for the date/time you selected, which contains more important details about your upcoming training event/class!"
-                    & Char(10) &
-                    If(varMainOK = true, "• Main reservation list = SUCCESS" & Char(10), varMainOK = false, "• Main reservation list = FAILED" & Char(10)) &
-                    //If(varMainSimpleOK = true, "• Main (simple) reservation list = SUCCESS" & Char(10), varMainSimpleOK = false, "• Main (simple) reservation list = FAILED" & Char(10)) &
-                    //If(varBackupOK = true, "• Backup reservation list = SUCCESS" & Char(10), varBackupOK = false, "• Backup reservation list = FAILED" & Char(10)) &
-                    If(varBackupSimpleOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10), varBackupSimpleOK = false, "• Backup (simple) reservation list = FAILED" & Char(10)) &
-                    If(varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10), varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10)),
+                    & Char(10), 
+                    //&
+                    //If(varDetailedOK = true, "• Main (detailed) reservation list = SUCCESS" & Char(10), varDetailedOK = false, "• Main (detailed) reservation list = FAILED" & Char(10)) &
+                    //If(varFallbackOK = true, "• Fallback (simple) reservation list = SUCCESS" & Char(10), varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10)) &
+                    //If(varEmailOK = true, "• Email Sent = SUCCESS" & Char(10), varEmailOK = false, "• Email sent = FAILED" & Char(10)) &
+                    //If(varPatchSuperUsersOK = true, "• SuperUser list patched = SUCCESS" & Char(10), varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10)) &
+                    //If(varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10), varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10)),
                 varAllOK = false && user_isAdmin = true,
                 "The following did NOT complete successfully:" & Char(10) &
                     If(varMainOK = false, "• Main reservation list = FAILED" & Char(10), varMainOK = true, "• Main reservation list = SUCCESS" & Char(10)) &
                     If(varMainSimpleOK = false, "• Main (simple) reservation list = FAILED" & Char(10), varMainSimpleOK = true, "• Main (simple) reservation list = SUCCESS" & Char(10)) &
                     If(varBackupOK = false, "• Backup reservation list = FAILED" & Char(10), varBackupOK = true, "• Backup reservation list = SUCCESS" & Char(10)) &
                     If(varBackupSimpleOK = false, "• Backup (simple) reservation list = FAILED" & Char(10), varBackupSimpleOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10)) &
-                    If(varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10), varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10)) & 
-                    "Please refresh the app (reload the web page) and submit again. If this error repeats another time, please contact the app admins via Kyle.Coder@va.gov.",
+                    If(varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10), varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10))
+                    & "
+                    Please refresh the app's webpage & submit again. If this error message continues to appear after refreshing, please contact the app admins via:
+                    Kyle.Coder@va.gov",
                 varAllOK = false && user_isAdmin = false,
                 "The following did NOT complete successfully:" & Char(10) &
-                    If(varMainOK = false, "• Main reservation list = FAILED" & Char(10), varMainOK = true, "• Main reservation list = SUCCESS" & Char(10)) &
-                    //If(varMainSimpleOK = false, "• Main (simple) reservation list = FAILED" & Char(10), varMainSimpleOK = true, "• Main (simple) reservation list = SUCCESS" & Char(10)) &
-                    //If(varBackupOK = false, "• Backup reservation list = FAILED" & Char(10), varBackupOK = true, "• Backup reservation list = SUCCESS" & Char(10)) &
-                    If(varBackupSimpleOK = false, "• Backup (simple) reservation list = FAILED" & Char(10), varBackupSimpleOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10)) &
-                    If(varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10), varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10)) & 
-                    "Please refresh the app (reload the web page) and submit again. If this error repeats another time, please contact the app admins via Kyle.Coder@va.gov."
+                    If(varDetailedOK = false, "• Main (detailed) reservation list = FAILED" & Char(10), Blank()) &
+                    If(varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10), Blank()) &
+                    If(varEmailOK = false, "• Email sent = FAILED" & Char(10), Blank()) &
+                    If(varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10), Blank()) &
+                    If(varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10), Blank())
+                    & Char(10) & "
+                    Please refresh the app's webpage & submit again. If this error message continues to appear after refreshing, please contact the app admins via:
+                    Kyle.Coder@va.gov"
             )
         Width: =LblSuccessMsg1.Width / 1.2
         X: =(Parent.Width / 2) - (Self.Width / 2)
@@ -485,8 +757,8 @@
         Size: =20
         Text: |-
             =If(
-                IsBlankOrError(varShowRedirect),
-                "If this error repeats another time, please contact the app admins via",
+                IsBlankOrError(varShowRedirect) || ( varAllOK = false && user_isAdmin = false),
+                "If this error repeats another time, please contact the app admins via:",
                 varShowRedirect = true,
                 "Moving back to home screen in. . . . "
             )

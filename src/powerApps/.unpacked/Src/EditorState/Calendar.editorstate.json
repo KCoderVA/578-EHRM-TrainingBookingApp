@@ -3810,7 +3810,14 @@
         "DisabledBorderColor",
         "BorderColor",
         "Live",
-        "HoverColor",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "ColorValue(\"#0707077\")",
+          "InvariantPropertyName": "HoverColor",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "Color",
         "PressedColor",
         "DisabledColor",
@@ -3962,7 +3969,7 @@
         {
           "Category": "Design",
           "PropertyName": "HoverColor",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Design",

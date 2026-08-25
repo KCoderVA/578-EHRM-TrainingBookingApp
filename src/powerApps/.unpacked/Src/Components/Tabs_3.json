@@ -88,7 +88,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Tabs_3",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 872,
+        "PublishOrderIndex": 935,
         "Rules": [
           {
             "Category": "Design",
@@ -281,7 +281,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Tabs_3",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 873,
+        "PublishOrderIndex": 936,
         "Rules": [
           {
             "Category": "Data",
@@ -433,7 +433,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4_1",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 875,
+            "PublishOrderIndex": 938,
             "Rules": [
               {
                 "Category": "Design",
@@ -679,7 +679,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4_1",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 876,
+            "PublishOrderIndex": 939,
             "Rules": [
               {
                 "Category": "Data",
@@ -1051,7 +1051,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4_1",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 877,
+            "PublishOrderIndex": 940,
             "Rules": [
               {
                 "Category": "Data",
@@ -1386,7 +1386,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4_1",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 878,
+            "PublishOrderIndex": 941,
             "Rules": [
               {
                 "Category": "Data",
@@ -1811,7 +1811,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Tabs_3",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 874,
+        "PublishOrderIndex": 937,
         "Rules": [
           {
             "Category": "Data",
@@ -1833,7 +1833,7 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "Tabs_3.templateWidth - 2",
+            "InvariantScript": "If(\r\n    !IsBlankOrError(CountRows(Tabs_3.Items)),\r\n        Tabs_3.Width / CountRows(Tabs_3.Items),\r\n    IsBlankOrError(CountRows(Tabs_3.Items)),\r\n        Tabs_3.Width / 6,\r\n    101\r\n)\r\n//Tabs_3.templateWidth - 2\r\n\r\n\r\n/*\r\nIf(\r\n    !IsBlankOrError(CountRows(Tabs.Items)),\r\n        Tabs.Width / CountRows(Tabs.Items),\r\n    IsBlankOrError(CountRows(Tabs.Items)),\r\n        Parent.Width / 6,\r\n    //!IsBlankOrError(CountRows(colMenu),\r\n    //    Tabs.Width / CountRows(colMenu)),\r\n    101\r\n)\r\n*/",
             "Property": "TemplateSize",
             "RuleProviderType": "User"
           },
@@ -1929,7 +1929,7 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "CountRows(Tabs_3.Items) & 110",
+            "InvariantScript": "CountRows(Tabs_3.Items) * 110",
             "Property": "Width",
             "RuleProviderType": "User"
           },
@@ -2091,7 +2091,7 @@
         "NameMapSourceSchema": "?"
       }
     ],
-    "LastModifiedTimestamp": "639220786792213958",
+    "LastModifiedTimestamp": "639228189825658534",
     "Name": "Tabs_3",
     "Rules": [
       {
@@ -2227,7 +2227,7 @@
   "IsPcfControl": false,
   "IsPremiumPcfControl": false,
   "IsWidgetTemplate": false,
-  "LastModifiedTimestamp": "639220786792213958",
+  "LastModifiedTimestamp": "639228189825658534",
   "Name": "3fa2258c1f03450ab5305c6f930ecd3b",
   "OverridableProperties": {},
   "TemplateOriginalName": "9ac8466133f3416a8cb020a4ca8549de",

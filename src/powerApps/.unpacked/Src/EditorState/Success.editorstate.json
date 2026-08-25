@@ -2411,7 +2411,7 @@
         {
           "Category": "Behavior",
           "PropertyName": "OnTimerEnd",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         }
       ],
       "StyleName": "defaultTimerStyle",
@@ -2421,7 +2421,14 @@
       "AllowAccessToGlobals": true,
       "ControlPropertyState": [
         "Start",
-        "Duration",
+        {
+          "AFDDataSourceName": "",
+          "AutoRuleBindingEnabled": false,
+          "AutoRuleBindingString": "",
+          "InvariantPropertyName": "Duration",
+          "IsLockable": false,
+          "NameMapSourceSchema": "?"
+        },
         "Repeat",
         "Reset",
         {
@@ -2436,7 +2443,7 @@
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "ResetForm(Form1);\nResetForm(Form1_2);\nResetForm(Form2);\n\n\nSet(_allRoomsConcat, Blank());\nSet(_calendarVisible, Blank());\nSet(_dateSelected, Blank());\nSet(_dateSelected2, Blank());\nSet(_firstDayInView, Blank());\nSet(_FirstDayinView2, Blank());\nSet(_firstDayOfMonth, Blank());\nSet(_firstDayOfMonth2, Blank());\nSet(_firstDayofWeek2, Blank());\nSet(_lastDayOfMonth, Blank());\nSet(_LastDayOfMonth2, Blank());\nSet(_maxDate, Blank());\nSet(_MaxDate, Blank());\nSet(_MaxDate2, Blank());\nSet(_minDate, Blank());\nSet(_MinDate, Blank());\nSet(_MinDate2, Blank());\nSet(_myCalendarName, Blank());\nSet(_myScheduledMeeting, Blank());\nSet(_noRoomLists, Blank());\nSet(_roomListSelected, Blank());\nSet(_selectedMeetingTime, Blank());\nSet(_selectedRoom, Blank());\nSet(_selectedRoomList, Blank());\nSet(_selectedUser, Blank());\nSet(_showDetails, Blank());\nSet(_showMeetingTimes, Blank());\nSet(currentItem, Blank());\nSet(endByDate, Blank());\nSet(gv_item, Blank());\nSet(maxOccurrence, Blank());\nSet(NthWeekdayRecord, Blank());\nSet(numWorkDays, Blank());\nSet(PDFPrint, Blank());\nSet(startWeekday, Blank());\nSet(submitItem, Blank());\n//Set(user_isAdmin, Blank());\n//Set(userAccessLevel_text, Blank());\nSet(var_Attendees, Blank());\n//Set(var_AuthorInfo, Blank();\nSet(var_Date, Blank());\nSet(var_Date_central, Blank());\nSet(var_DayOfWeek, Blank());\nSet(var_Duration, Blank());\nSet(var_Duration_central, Blank());\nSet(var_EmailBody, Blank());\nSet(var_EndDateTime_central, Blank());\nSet(var_EndTime, Blank());\nSet(var_EndTime_central, Blank());\nSet(var_firstHalfDuration, Blank());\nSet(var_firstHalfDuration_central, Blank());\nSet(var_ManagerEmail, Blank());\nSet(var_MeetingCategory, Blank());\nSet(var_OptionalAttendees, Blank());\nSet(var_reservationBuildingNumber, Blank());\nSet(var_reservationDivision, Blank());\nSet(var_reservationFloorNumber, Blank());\nSet(var_reservationFullDateTime, Blank());\nSet(var_reservationFullLocation, Blank());\nSet(var_reservationRole, Blank());\nSet(var_reservationRoomNumber, Blank());\nSet(var_reservationScenario, Blank());\nSet(var_scenarioTrainingMaterialsURL, Blank());\nSet(var_secondHalfTime, Blank());\nSet(var_secondHalfTime_central, Blank());\nSet(var_Service, Blank());\nSet(var_StartDateTime_central, Blank());\nSet(var_StartTime, Blank());\nSet(var_StartTime_central, Blank());\nSet(varAccept, Blank());\nSet(varAccept3, Blank());\nSet(varAccept4, Blank());\nSet(varAttendees, Blank());\nSet(varCancelContainer, Blank());\nSet(varDaily, Blank());\nSet(varDefaultEndTime, Blank());\nSet(varDescription, Blank());\n//Set(varDeskAccessControl_record, Blank());\nSet(varDeskMode, Blank());\nSet(var_EmailBody, Blank());\nSet(varEndDate, Blank());\nSet(varEventEndTime, Blank());\nSet(varEventStartTime, Blank());\nSet(varImportance, Blank());\nSet(varIsImpersonating, Blank());\nSet(varManageSelectedDesk, Blank());\nSet(varMeetCat, Blank());\nSet(varOptionalAttendees, Blank());\nSet(varPopUp_ClassPicker, Blank());\nSet(varPopUp_ClassPicker_scenario, Blank());\nSet(varPopUp_ClassPicker_scenarioDate, Blank());\nSet(varPopUp_ClassPicker_scenarioDateTime, Blank());\nSet(varPopUp_ClassPicker_scenarioDayOfWeek, Blank());\nSet(varPopUp_ClassPicker_scenarioEnd24, Blank());\nSet(varPopUp_ClassPicker_scenarioEndTime, Blank());\nSet(varPopUp_ClassPicker_scenarioLocation, Blank());\nSet(varPopUp_ClassPicker_scenarioName, Blank());\nSet(varPopUp_ClassPicker_scenarioRole, Blank());\nSet(varPopUp_ClassPicker_scenarioSplit, Blank());\nSet(varPopUp_ClassPicker_scenarioStart24, Blank());\nSet(varPopUp_ClassPicker_scenarioStartTime, Blank());\n//Set(varRealEmail, Blank());\n//Set(varRealEntraID, Blank());\nSet(varRecurrence, Blank());\nSet(varRecurrenceID, Blank());\nSet(varReminder, Blank());\n//Set(varRepoVersion, Blank());\nSet(varReservePOC, Blank());\nSet(varSelectedDesk, Blank());\nSet(varSelectedReservation, Blank());\nSet(varSelectedStartDate, Blank());\nSet(varsmartboardck, Blank());\n//Set(varTargetEmail, Blank());\n//Set(varTargetEntraID, Blank());\nSet(varTimer, Blank());\nSet(varTitle, Blank());\nSet(varURL, Blank());\nSet(varURLName, Blank());\nSet(varUserExists, Blank());\n//Set(varUser_details, Blank());\nSet(varWeekday, Blank());\n\n\nClear(AllRooms);\nClear(AvailableRooms);\nClear(AvailableRoomsOptimal);\nClear(col_EventBuildDetails);\nClear(col_EventCombinedDetails);\nClear(col_MasterSchedule);\nClear(col_selectedRecord);\nClear(colCombinedRecurrence);\nClear(colDates);\n//Clear(colDeskAccess);\nClear(colDeskChckRecur);\nClear(CollectionRecurrence);\n//Clear(colMenu);\nClear(colRoomFilter);\nClear(colSelectedDesks);\nClear(colSmartboard);\n//Clear(colUser_details);\nClear(MeetingTimes);\nClear(MyPeople);\nClear(RoomsLists);\nClear(RoomTimeSuggestions);\nClear(WeekdaysOnly);\nClear(wkDays);\nClear(wkDaysTemp);\n\nRefresh(Desks);\nRefresh('Desk Reservations');\nRefresh(MasterScheduleList);\nRefresh(DeskAccessControl);",
+          "AutoRuleBindingString": "",
           "InvariantPropertyName": "OnTimerStart",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
@@ -2597,7 +2604,7 @@
         {
           "Category": "Data",
           "PropertyName": "Duration",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",

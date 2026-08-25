@@ -1,35 +1,77 @@
-# SharePoint (Lists & Search Configuration)
+# SharePoint — Lists, Libraries & Reference Data
 
-This folder documents the SharePoint lists that back the EHRM Training & Booking App, along with sanitized/local sample data and search configuration exports.
+This folder documents the SharePoint back-end for the EHRM Training & Booking App. The solution spans
+**two SharePoint environments**:
 
-## Structure (current — introduced v0.3.8)
+1. **The app's own lists** (read/write) on
+   `…/sites/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp` — where the canvas app and the flows
+   store bookings, access control, and inventory.
+2. **National EHRM reference data** (read-only) on `…/sites/vacoehrmioeue/Sandbox` — the program's
+   "Sandbox Resource Center" lists and the **Learning Labs Library**, which supply the scenario / role /
+   session / service-line reference data surfaced in the app's pickers and the Power BI reports.
+
+> **Current release:** `v1.0.12`. See [`v1.0.12_differenceAnalysis.md`](v1.0.12_differenceAnalysis.md).
+
+## Structure (current — reorganized at v1.0.12)
 
 ```
 src/sharePoint/
 ├── list/
-│   ├── deskAccessControl/local/   — DeskAccessControl.csv (raw export; git-ignored)
-│   ├── deskReservations/local/    — Desk Reservations.csv (raw export; git-ignored)
-│   ├── desks/local/                — Desks.csv, Desks.xlsx, versioned variants (raw exports; git-ignored)
-│   └── schedule/local/             — Schedule list staging data (raw export; git-ignored) — see "Schedule list (new/planned)" below
-└── searchConfig/
-    └── SearchConfiguration.xml     — SharePoint search configuration export (tracked)
+│   ├── deskAccessControl/local/          — app list: RBAC (git-ignored data)
+│   ├── deskReservations/local/           — app list: booking records
+│   ├── desks/local/                       — app list: bookable asset inventory
+│   ├── masterScheduleList/local/          — app list: master schedule (replaces old schedule/)
+│   ├── superUserList/local/               — app list: Super User roster
+│   ├── backupList_DeskReservations/local/ — app list: email-sourced backup reservations
+│   └── nationalEHRM/sandbox/              — national reference lists (see table)
+│       ├── ehrmRoles/                     — *.url shortcut (tracked) + local/ CSV+IQY
+│       ├── ehrmScenarios/
+│       ├── ehrmServiceLines/
+│       ├── learningLabLibrary/
+│       ├── learningLabSessions/
+│       ├── learningLabSignups/
+│       └── scenarioWorkflows/
+├── library/nationalEHRM/sandbox/learningLabLibrary/local/  — document-library export (git-ignored)
+├── events/nationalEHRM/sandbox/calendarInvites/local/      — calendar-invite export (git-ignored)
+└── searchConfig/                          — (SharePoint search config export)
 ```
 
-Everything under a `local/` subfolder is **local-only and git-ignored by design** (both by file extension — `.csv`/`.xlsx`/etc. — and by folder name, per [`.gitignore`](../../.gitignore) §10–§11). These raw exports may contain real VA scheduling data and must never be committed as-is. Only `searchConfig/SearchConfiguration.xml` is tracked in this component.
+Everything under a `local/` subfolder is **git-ignored by design** (by extension — `.csv`/`.xlsx`/`.iqy`/
+`.zip` — and by folder name). The only **tracked/public** files in this component are this README, the
+per-list `*.url` view shortcuts, and (when present) `searchConfig/SearchConfiguration.xml`.
 
-## Lists
+## The app's own lists (read/write) — site `578_EHRM_TrainingApp`
 
-| List | Folder | Status |
+| List | Folder | Role |
 |---|---|---|
-| `DeskAccessControl` | `list/deskAccessControl/` | Active — drives Canvas app RBAC (`AccessLevel_Text` column) |
-| `Desk Reservations` | `list/deskReservations/` | Active — booking records. **Expanded in Canvas app v0.9.26** into a full training-registration record: ~40 columns added (`submitter*`, `student*`, `reservation*` scenario/role/session/location, narrative bodies, `trainer*` approval, `reminder*` tracking); 3 legacy columns removed (`DeskFloor`, `Floor`, `Reason for desk reservation`). The `trainer*`/`reminder*` families are written blank by the app and are the contract for companion Power Automate flows. See [src/powerApps/v0.9.26_recentChangesSummary.md](../powerApps/v0.9.26_recentChangesSummary.md) §7. |
-| `Desks` | `list/desks/` | Active — bookable location/room inventory. **Normalized in v0.9.26** to typed `*_choice`/`*_text`/`*_boolean` columns (legacy untyped duplicates removed). |
-| `Schedule` | `list/schedule/` | **New/planned** — scaffold only; no list schema exported yet. Staged from `SULL_Jesse_Brown_Schedule_7.10.26 - Integrated.xlsx` in support of the ongoing "desk reservation" → "training booking" terminology migration (see [docs/PROJECT_STATUS.md](../../docs/PROJECT_STATUS.md)) |
+| `DeskAccessControl` | `list/deskAccessControl/` | Drives canvas-app RBAC (`AccessLevel_Text` / `AccessLevel_Choice`); enriched by the `AppUserList` flow. |
+| `Desk Reservations` | `list/deskReservations/` | Primary booking/registration records (submitter/student/reservation/trainer/reminder families). |
+| `Desks` | `list/desks/` | Bookable asset inventory (Desk/Room/Floor/Building; typed columns). |
+| `MasterScheduleList` | `list/masterScheduleList/` | Master training schedule (replaces the former `schedule/` folder). |
+| `SuperUserList` | `list/superUserList/` | Super User roster; bulk-synced into `DeskAccessControl` by the app. |
+| `backupList_DeskReservations` | `list/backupList_DeskReservations/` | Redundant reservation records written by the `CreateBackups` flow from confirmation emails. |
 
-## Provenance / prior structure
+## National EHRM reference lists (read-only) — site `vacoehrmioeue/Sandbox`
 
-The original flat sample layout (`src/sharePoint/Desk Reservations/`, `DeskAccessControl/`, `Desks/`) used through v0.3.7 has been superseded by the `list/<listName>/local/` structure above and archived locally to `archive/src/sharePoint/` per the project's [archive naming conventions](../../.github/copilot-instructions.md). Those files were never tracked in git history under their new paths, and the previously-tracked sanitized CSVs at the old paths have since been untracked (`git rm --cached -r src/sharePoint/`).
+Each folder holds a tracked `*.url` shortcut to the live list view plus a git-ignored `local/` CSV/IQY
+snapshot of its schema + data.
+
+| List | Folder | SharePoint list |
+|---|---|---|
+| EHRM Roles | `nationalEHRM/sandbox/ehrmRoles/` | `Lists/EHRM Roles` |
+| Scenario | `nationalEHRM/sandbox/ehrmScenarios/` | `Lists/Scenario` |
+| Service Line (Sandbox) | `nationalEHRM/sandbox/ehrmServiceLines/` | `Lists/SPserviceLine` |
+| Learning Lab Sessions | `nationalEHRM/sandbox/learningLabSessions/` | `Lists/Learning Lab Sessions` |
+| Learning Lab Signups | `nationalEHRM/sandbox/learningLabSignups/` | `Lists/Learning Lab Signups` (filtered `Facility = Hines`) |
+| Scenario Workflows | `nationalEHRM/sandbox/scenarioWorkflows/` | `Lists/Scenario  Workflows` |
+| Learning Labs **Library** | `library/…/learningLabLibrary/` | Document library (read-only; class/scenario materials) |
+
+## Recreating the lists in your environment
+The `local/` CSV exports embed the full SharePoint `ListSchema` (`schemaXmlList` field definitions) — use
+them as the column reference to recreate each list in your own site, then re-point the canvas app and flow
+data sources to your GUIDs. The `*.url` shortcuts show the source list views on the national tenant.
 
 ## Note on environment-specific values
-
-`searchConfig/SearchConfiguration.xml` and any future tracked exports should be reviewed for site URLs, GUIDs, or other environment-specific identifiers before being committed to the public-facing repository. See [.github/SECURITY.md](../../.github/SECURITY.md).
+`*.url` shortcuts and any `searchConfig` export contain VA site URLs and view GUIDs; the `local/` exports
+may contain real VA scheduling/roster data. Review/sanitize per [`.github/SECURITY.md`](../../.github/SECURITY.md)
+before publishing broadly. **Never** commit `local/` data.

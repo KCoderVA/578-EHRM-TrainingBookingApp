@@ -1,32 +1,50 @@
-# Power Automate Flow: SendReminders
+# Power Automate Flow: `SendReminders`
 
-**Flow (component) version**: v0.1.0 (current, new in project v0.12.3)
+**Display name:** `578EHRMTrainingApp_SendEmailReminder` · **Flow GUID:** `ecd1d899-5df4-4795-a98b-f1a1b55ee837`
+· **Component version:** v0.2.0 (updated at project v1.0.12)
 
 ## Purpose
 
-The "Send Email Reminder" flow emails a **"You are scheduled for EHRM Learning Lab training!"** confirmation/reminder to users who have been scheduled for an EHRM Learning Lab training session.
+Notifies a scheduled trainee that they are booked for an EHRM Learning Lab session. As of v1.0.12 the flow
+delivers the reminder through **two channels** — a formatted **email** and a **Microsoft Teams adaptive
+card** — and it schedules the send relative to the session time.
 
-It reads the scheduled user's details from the `DeskAccessControl` SharePoint list — display name, user principal (email), access level/role, the scheduling admin (`Author`), and the access window (`AccessStop_dateTime`) — and formats them into an Adaptive Card email body so the recipient can review prerequisites and event information.
+## Trigger
+
+- **SharePoint — "When an item is created"** (`GetOnNewItems`) on the app's site
+  `…/HinesInformatics&AdvancedAnalytics/578_EHRM_TrainingApp` (list GUID `b7c9bc66-7839-49a4-a55d-5e45dd6870d2`).
+- **Polling interval: every 5 minutes** (reduced from every 1 minute in the prior version to lower API
+  throughput / throttling).
+
+## Logic (high level)
+
+1. `Get_item` — read the full new reservation row.
+2. `cmp_MinutesUntilSend` / `cmp_SendTime` — compute when the reminder should go out.
+3. `cond_ShouldWait` → `Delay_Until` — hold until the computed send time.
+4. `cmp_Style` / `cmp_Greeting` / `cmp_EventDetails` / `cmp_Prereqs` / `cmp_Footer` / `cmp_FullBody` —
+   compose the HTML message body.
+5. `Delay(5s)` → `Update_item` — mark the row as reminded.
+6. **`Post_card_in_a_chat_or_channel`** — post the reminder as a **Teams adaptive card**.
+7. **`Condition (CreatedBy = "Kyle.Coder")`** → `Send_an_email_(V2)` — send the email reminder. *(This gate
+   is **intentional**: items the developer submits behave differently from live end-user submissions, so
+   email reminders are sent only for the developer's own records.)*
+8. **`Post_card_in_a_chat_or_channel_1`** — second Teams card post.
 
 ## Artifacts in this folder
 
-- `.unpacked/`
-  - Unpacked source generated from the export (flow `ecd1d899-5df4-4795-a98b-f1a1b55ee837`; includes `definition.json`, `apisMap.json`, `connectionsMap.json`, and manifests under `.unpacked/Microsoft.Flow/flows/...`).
-- `.zip/v0.12.2_578EHRMTrainingApp_SendEmailReminder_20260812115737.zip`
-  - Packaged export artifact downloaded from Power Automate *(local-only; `.zip` is git-ignored)*.
-- `adaptiveCards/v0.12.4_flowSendReminders_adaptiveCard.json`
-  - Standalone Adaptive Card design (the email body) for editing in the Adaptive Card Designer. The flow `definition.json` also embeds the card inline. The superseded v0.12.2 card design is retained locally under `archive/` (git-ignored).
+- `.unpacked/` — unpacked flow source (`Microsoft.Flow/flows/ecd1d899…/definition.json`).
+- `.zip/v1.0.12_578EHRMTrainingApp_SendEmailReminders_20260821124012.zip` — packaged export *(git-ignored)*.
+- `adaptiveCards/` — adaptive-card JSON design(s); the flow definition also embeds the card inline.
 
-## Connectors / data sources
+## What changed at v1.0.12 (from v0.12.3)
 
-- **Office 365 Outlook** — sends the reminder email (Adaptive Card body).
-- **SharePoint** — `Get_item` from the `DeskAccessControl` list for the scheduled user's details.
+- **Added Teams delivery** — two `Post_card_in_a_chat_or_channel` actions (adaptive cards).
+- **Email send is conditional** on `CreatedBy` — an intentional developer-vs-end-user differentiation (kept by design).
+- **Polling reduced** 1 min → 5 min.
+- Action order revised so `Update_item` runs before the notifications.
 
-## Status / follow-up
+See [`../v1.0.12_differenceAnalysis.md`](../v1.0.12_differenceAnalysis.md) for the full action-by-action diff.
 
-- New in v0.12.3. This fulfills the previously-tracked roadmap item to build the reminder Power Automate flow.
-- Validate end-to-end wiring to the reservation/schedule lifecycle (trigger conditions, recipient resolution, and send-time scheduling) before broad production use.
-
-## Important note (public repo)
-
-The unpacked flow definition can include environment-specific identifiers and internal URLs/emails from the source environment. Review and sanitize as appropriate before publishing broadly.
+## Note on environment-specific values
+The definition contains the source SharePoint site URL, list GUID, and Teams recipient/channel identifiers.
+Re-point these to your environment before use.

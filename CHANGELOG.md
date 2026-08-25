@@ -19,6 +19,46 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [1.0.12] - 2026-08-25
+
+> **First production / go-live release line.** The app went live as v1.0.0; this documents the public **v1.0.12** milestone (Canvas app v0.12.2 → v1.0.12). Project version jumps `0.12.4 → 1.0.12` (the interim 0.12.4 release-note stubs were never shipped). Full technical detail is in the per-component `v1.0.12_differenceAnalysis.md` files under [src/](src/).
+
+### Added
+
+- **Canvas app** — single-student **proxy registration** (a POC/supervisor can register a student on their behalf); **Learning Labs Library** class/scenario picker (new read-only SharePoint document library on `vacoehrmioeue/Sandbox`); printable **Power BI `Screen1`** (GOV-cloud embed); **series-vs-single** reservation cancellation; **bulk SuperUser autosync** in `ManageUsers`.
+- **Power Automate** — new **`CreateBackups`** flow (`5bf4e999…`): Outlook-triggered on the confirmation-email subject `[REGISTERED] EHRM Learning Lab Training -`, parses the email and writes a backup reservation record.
+- **Power Automate** — `SendReminders` now also posts **Microsoft Teams adaptive cards** (in addition to email).
+- **SharePoint** — national EHRM **Sandbox Resource Center** reference lists added as tracked `.url` shortcuts (EHRM Roles, Scenario, Service Line, Learning Lab Sessions, Learning Lab Signups, Scenario Workflows) plus the Learning Labs Library; new `library/` and `events/` areas.
+- **Analytics** — new **`SuperUserDashboard-Final`** Power BI report (WIP) and new **`tms/`** TMS-completion data-staging folder.
+- **Docs** — content READMEs and verbose `v1.0.12_differenceAnalysis.md` for every component (powerApps, powerAutomate, sharePoint, analytics).
+
+### Changed
+
+- **`VERSION`** — `0.12.4 → 1.0.12` (first 1.x / production line).
+- **Canvas app** — RBAC hardened to **default-to-`User`-first** (self-provisions an access row with a 6-month window; eliminates the new-user `AccessDenied` race); `Learning Lab Sessions` scoped to `Facility = Hines`; partial **classic → modern control** migration (host control enabled); audit trails now use `varRealEmail`.
+- **`SendReminders`** — trigger polling reduced 1 min → 5 min; email send gated behind a `CreatedBy` rollout condition; actions reordered.
+- **SharePoint** — `list/` reorganized into a `nationalEHRM/sandbox/` namespace; `schedule/` → `masterScheduleList/`; added `superUserList/` and `backupList_DeskReservations/`.
+- **`src/solution.xml`** — version → 1.0.12; description refreshed; `SendReminders` + `CreateBackups` added to root components (regenerate on next `pac solution export`).
+- Component READMEs (powerApps, powerAutomate, sharePoint, analytics, powerBI) rewritten/updated for the import audience.
+
+### Removed
+
+- **Canvas app** — deleted two dead Microsoft-template screens (`CreateMeeting`, `Screen3`); screen count 21 → 20.
+- **Security** — removed the hard-coded developer **impersonation backdoor** in `App.OnStart` (it previously spoofed one developer's identity to another user).
+
+### Fixed
+
+- **Canvas app** — binding errors driven **120 → 0**: pervasive `IsBlankOrError()` guards; `Tabs`/`Tabs_3` empty-menu `TemplateSize` guard; `Tabs_3` width `&` → `*` bug; `Calendar` invalid hex `#0707077` → `#070707`.
+
+### Notes
+
+- Public release is **v1.0.12**; the `.msapp` and flow `.zip` artifacts are named `v1.0.12_*` to match. *(The `.msapp` binary's internal build number aligns fully on the next export from the editor at version 1.0.12.)*
+- A ~6.6 GB `OneDrive_1_8-21-2026.zip` sits in `src/sharePoint/library/.../learningLabLibrary/local/` (git-ignored; intentionally retained as developer-only content).
+- `src/sharePoint/searchConfig/SearchConfiguration.xml` restored (valid baseline search-schema export).
+- Assets: no tracked/public changes this cycle.
+
+---
+
 ## [0.12.3] - 2026-08-20
 
 > **Power Automate release:** introduces the new `SendReminders` ("Send Email Reminder") flow and refreshes the `AppUserList` flow export. No Canvas app changes — the Canvas app component remains **v0.12.2**.

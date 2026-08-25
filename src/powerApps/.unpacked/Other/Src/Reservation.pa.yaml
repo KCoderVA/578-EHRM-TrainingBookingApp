@@ -230,13 +230,19 @@ Screens:
       - btnCancel:
           Control: Classic/Button@2.2.0
           Properties:
+            DisplayMode: =Toggle1.DisplayMode
             Fill: =RGBA(184, 0, 0, 1)
             Height: =btnBack.Height
             HoverFill: =ColorFade(Self.Fill, -20%)
             OnSelect: =UpdateContext({varConfirmCancel:true})
             Size: =18
             Text: ="Cancel This Reservation"
-            Visible: =Toggle1.Checked
+            Visible: |-
+              =If(
+                  Toggle1.DisplayMode = DisplayMode.Edit,
+                  true,
+                  false
+              )
             Width: =btnBack.Width
             X: =btnBack.X - Self.Width - 20
             Y: =btnBack.Y
@@ -505,7 +511,7 @@ Screens:
               =Launch(
                   "mailto:VHAHINInformaticsTrainingAndSupport@va.gov?"
                   & "cc="
-                      & User().Email
+                      & varRealEmail
                       & ",Kyle.Coder@va.gov"
                   & "&subject="
                       & "Assistance%20requested%20regarding%20reservation%20%23"
@@ -580,6 +586,14 @@ Screens:
                   tbTo_5.Text = Text(false),
                   false,
                   Blank()
+              )
+            DisplayMode: |-
+              =If(
+                  (userAccessLevel_text = "View-Only" || userAccessLevel_text = "AccessDenied"),
+                      DisplayMode.View,
+                  IsBlankOrError(userAccessLevel_text),
+                      DisplayMode.View,
+                  DisplayMode.Edit
               )
             Height: =tbTo_5.Height
             Label: =
@@ -789,7 +803,7 @@ Screens:
                         varSelectedReservation,
                         {
                             Active_choice: {Value: false},
-                            reservationComments_multilinetext: "Canceled by " & User().Email & " @ " & Now()
+                            reservationComments_multilinetext: "Canceled by " & varRealEmail & " @ " & Now()
                         }
                     );
                     Refresh('Desk Reservations');
@@ -815,6 +829,7 @@ Screens:
           Control: Classic/Button@2.2.0
           Properties:
             BorderThickness: =0
+            DisplayMode: =Toggle1.DisplayMode
             Fill: =RGBA(255, 255, 255, 0)
             Height: =Toggle1.Height + 4
             HoverBorderColor: =

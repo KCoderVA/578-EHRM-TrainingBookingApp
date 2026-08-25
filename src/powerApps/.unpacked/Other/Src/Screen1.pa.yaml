@@ -1,0 +1,37 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  Screen1:
+    Properties:
+      Height: =794
+      Width: =1123
+    Children:
+      - PowerBI2:
+          Control: PowerBI@2.4.0
+          Properties:
+            DashboardId: ="e948a0b5-96a3-43a5-a1b3-500c4fe926fa"
+            Height: =794
+            TileUrl: ="https://app.powerbigov.us/embed?dashboardId=e948a0b5-96a3-43a5-a1b3-500c4fe926fa&tileId=550f8ee5-4d01-4a9e-906b-e10833e8d4d7&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUdPVi1WSVJHSU5JQS1yZWRpcmVjdC5hbmFseXNpcy51c2dvdmNsb3VkYXBpLm5ldCIsImVtYmVkRmVhdHVyZXMiOnt9fQ%3d%3d"
+            Width: =1123
+            WorkspaceId: ="f9a21156-7cbd-49e0-8cec-3b7b6e47b9e9"
+      - PrintButton1:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(0, 0, 0, 1)
+            Color: =App.Theme.Colors.Lighter10
+            Height: =32
+            OnSelect: =Print()
+            Size: =13
+            TabIndex: =0
+            Text: ="Print"
+            Visible: =Not(Parent.Printing)
+            Width: =96
+            X: =Parent.Width - Self.Width - 25
+            Y: =25

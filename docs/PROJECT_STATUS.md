@@ -2,21 +2,22 @@
 
 This document describes the current public state of the EHRM Training & Booking App repository and what is included/excluded as of the latest release.
 
-## Status summary (v0.12.3)
+## Status summary (v1.0.12)
 
-- **Release type (v0.12.3)**: Patch (Power Automate) — adds the new `SendReminders` ("Send Email Reminder") flow and re-exports the `AppUserList` flow; no Canvas app changes (the Canvas app component remains v0.12.2).
-- **Previous release type (v0.12.2)**: Feature (go-live readiness) — the Canvas app component advances **v0.9.26 → v0.12.2**. This release adds `ManageUsers` and `CreateMeeting`, removes legacy screens (`alt_ManageDesks`, `Screen1`, `Screen2`), expands SharePoint bindings (`MasterScheduleList`, `SuperUserList`, `backupList_DeskReservations`, `Learning Lab Sessions`), and strengthens fallback/backup patch paths in `Confirm`. Version drift is resolved (`varRepoVersion` + manifest + package now all `0.12.2`) and `BindingErrorCount` improves `329 → 120`.
-- **Project release**: v0.12.3 (2026-08-20)
+- **Release type (v1.0.12)**: Major / production go-live — the Canvas app advances **v0.12.2 → v1.0.12** (public). The app is live to ~100–150 hospital staff. Project version jumps `0.12.4 → 1.0.12` (the interim 0.12.4 was never shipped).
+- **Highlights**: removed the hard-coded impersonation backdoor; RBAC hardened to default-to-`User`; single-student **proxy registration**; **Learning Labs Library** class/scenario picker; new **`CreateBackups`** flow + **Teams** reminders; national EHRM **Sandbox** reference lists; new **`SuperUserDashboard-Final`** Power BI report + **`tms/`** staging; binding errors `120 → 0`; two dead screens removed (`CreateMeeting`, `Screen3`).
+- **Project release**: v1.0.12 (2026-08-25)
 - **Component versions**:
-  - Canvas app: **v0.12.2** (source-controlled unpacked source under `src/powerApps/.unpacked/`; package at `src/powerApps/.msapp/v0.12.2_578EHRMTrainingApp.msapp`, tracked via `.gitignore` `!*.msapp`). See [src/powerApps/README.md](../src/powerApps/README.md), [src/powerApps/v0.12.2_diffAnalysis.md](../src/powerApps/v0.12.2_diffAnalysis.md), and [src/powerApps/v0.12.2_changeSummary.md](../src/powerApps/v0.12.2_changeSummary.md).
-  - Power Automate: `AppUserList` (re-exported at v0.12.3; unpacked under `src/powerAutomate/AppUserList/.unpacked/`) + **`SendReminders`** *(new in v0.12.3 — "Send Email Reminder" flow; unpacked under `src/powerAutomate/SendReminders/.unpacked/`)*. See [src/powerAutomate/README.md](../src/powerAutomate/README.md).
-  - SharePoint: `src/sharePoint/list/<listName>/local/` (raw exports, local-only) + `src/sharePoint/searchConfig/SearchConfiguration.xml` (tracked) — see [src/sharePoint/README.md](../src/sharePoint/README.md)
-  - Analytics: `src/analytics/powerBI/` (Power BI `.pbit` template tracked) + `src/analytics/sql/` (scaffolded, currently empty) — see [src/analytics/README.md](../src/analytics/README.md)
+  - Canvas app: **v1.0.12** (unpacked source under `src/powerApps/.unpacked/`; package at `src/powerApps/.msapp/v1.0.12_578EHRMTrainingApp.msapp`, tracked via `.gitignore` `!*.msapp`). See [src/powerApps/README.md](../src/powerApps/README.md) and [src/powerApps/v1.0.12_differenceAnalysis.md](../src/powerApps/v1.0.12_differenceAnalysis.md).
+  - Power Automate: `AppUserList` (unchanged) + `SendReminders` (updated — email + Teams card) + **`CreateBackups`** *(new — email-triggered backup-reservation flow)*. See [src/powerAutomate/README.md](../src/powerAutomate/README.md) and [src/powerAutomate/v1.0.12_differenceAnalysis.md](../src/powerAutomate/v1.0.12_differenceAnalysis.md).
+  - SharePoint: app lists + national EHRM **Sandbox** reference lists (`.url` shortcuts) + Learning Labs Library; `local/` data git-ignored. See [src/sharePoint/README.md](../src/sharePoint/README.md) and [src/sharePoint/v1.0.12_differenceAnalysis.md](../src/sharePoint/v1.0.12_differenceAnalysis.md).
+  - Analytics: Power BI `Signup Tool` (`.pbit` tracked) + `SuperUserDashboard-Final` (WIP) + `tms/` staging. See [src/analytics/README.md](../src/analytics/README.md) and [src/analytics/v1.0.12_differenceAnalysis.md](../src/analytics/v1.0.12_differenceAnalysis.md).
 
 ## Release history
 
 | Version | Date | Type |
 |---------|------|------|
+| v1.0.12 | 2026-08-25 | Major / production go-live — Canvas app v0.12.2 → v1.0.12: removed impersonation backdoor, hardened RBAC (default-to-`User`), single-student proxy registration, Learning Labs Library class picker, printable Power BI screen, series-vs-single cancellation, bulk SuperUser autosync; removed dead `CreateMeeting`/`Screen3` (21 → 20 screens); binding errors 120 → 0; partial modern-control migration. New `CreateBackups` flow + Teams reminders; national EHRM Sandbox reference lists; new `SuperUserDashboard-Final` PBI report + `tms/` staging |
 | v0.12.3 | 2026-08-20 | Patch (Power Automate) — added `SendReminders` ("Send Email Reminder") flow; re-exported `AppUserList`; no Canvas app changes |
 | v0.12.2 | 2026-08-12 | Feature (go-live readiness) — Canvas app v0.9.26 → v0.12.2: added `ManageUsers` + `CreateMeeting`, removed `alt_ManageDesks`/`Screen1`/`Screen2`, expanded data-source/list bindings, improved `Confirm` fallback/backup patch strategy, aligned app/manifest/package version strings, and reduced binding errors (`329 → 120`) |
 | v0.9.26 | 2026-08-04 | Feature — Canvas app v0.8.14 → v0.9.26: `Desk Reservations` schema expanded ~40 columns, Class/Session Picker persisted, submitter/student identity split, attendee people-picker (book-on-behalf), POCSUPERVISOR reworked, `Desks` list normalized; project version realigned `0.8.16 → 0.9.26` (superseding 0.8.17) |
@@ -73,14 +74,15 @@ The baseline artifacts are driven by SharePoint lists. As of v0.12.2 the reserva
 - `MasterScheduleList` *(bound and active in v0.12.2)*
 - `SuperUserList` *(bound and active in v0.12.2)*
 - `backupList_DeskReservations` *(bound and used for backup persistence in v0.12.2)*
-- `Learning Lab Sessions` *(bound and active in v0.12.2)*
-- `Schedule` *(new in v0.3.8 — scaffold only; no list schema exported yet)*
+- `Learning Lab Sessions` *(bound; scoped to `Facility = Hines` in v1.0.12)*
+- `MasterScheduleList` *(renamed from the former `schedule/` staging folder)*
+- National EHRM **Sandbox** reference lists *(read-only, new in v1.0.12: EHRM Roles, Scenario, Service Line, Learning Lab Sessions/Signups, Scenario Workflows, Learning Labs Library on `vacoehrmioeue/Sandbox`)*
 
-The Canvas app now contains 21 screens in v0.12.2 (added `ManageUsers` + `CreateMeeting`; removed `alt_ManageDesks`, `Screen1`, `Screen2`). Some naming still reflects legacy desk/room terminology, but the app continues moving toward training-centric operation with integrated user management and schedule/super-user list dependencies.
+The Canvas app now contains **20 screens** in v1.0.12 (added the printable Power BI `Screen1`; removed the dead Microsoft-template screens `CreateMeeting` and `Screen3`). Some naming still reflects legacy desk/room terminology, but the app is now a training-centric, production system with integrated user management, proxy registration, and national EHRM reference-data dependencies.
 
 ### Canvas app access control model (v0.12.2)
 
-The RBAC logic (introduced in v0.8.14 and expanded through v0.12.2) is resolved once per session in `App.OnStart` and enforced across navigation/screen access. Access is driven by `DeskAccessControl.AccessLevel_Text`. Valid levels in active branches include `ProjectLeader`, `Manager`, `ServiceChief`, `AppAdmin`, `SuperUser`, `User`, `View-Only`, and `AccessDenied`. The engine still auto-provisions first-launch users with default `"User"` access and still contains hard-coded admin identity checks in impersonation branches. **Open gap:** unknown users default to `User` rather than `AccessDenied`.
+The RBAC logic (introduced in v0.8.14 and matured through v1.0.12) is resolved once per session in `App.OnStart` and enforced across navigation/screen access. Access is driven by `DeskAccessControl.AccessLevel_Text`. Valid levels include `ProjectLeader`, `Manager`, `ServiceChief`, `AppAdmin`, `SuperUser`, `User`, `View-Only`, and `AccessDenied`. As of v1.0.12 the **hard-coded impersonation backdoor was removed** (the app uses the real signed-in identity; a controlled proxy path lets a POC register a student). The engine now **intentionally** sets a safe `"User"` baseline for anyone with network access and self-provisions a new access row (6-month window) — resolving the former new-user `AccessDenied` race.
 
 ### Connectors & data sources
 

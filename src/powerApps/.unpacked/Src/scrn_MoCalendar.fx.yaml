@@ -378,10 +378,9 @@ scrn_MoCalendar As screen:
                 Items: |-
                     =Filter(
                         'Desk Reservations',
-                        Active_choice.Value = Text(true),
-                        reservationStart_datetime = Label18_1.Text
+                        Active_choice.Value = "true"
+                        //Value(Day(DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))) = Value(Day(reservationStart_datetime))
                     )
-                    
                     /*
                     If(
                         (userAccessLevel_text = "AppAdmin"),
@@ -409,7 +408,7 @@ scrn_MoCalendar As screen:
                                     (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
                                     && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
                                     && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
-                                    && (Lower('Created By'.Email) = Lower(varTargetEmail) || Lower('Reserved By'.Email) = Lower(varTargetEmail))
+                                    && ('Created By'.Email = Lower(varTargetEmail) || 'Reserved By'.Email = Lower(varTargetEmail))
                                 ),
                                 "Title",
                                 SortOrder.Ascending
@@ -421,7 +420,7 @@ scrn_MoCalendar As screen:
                                     (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
                                     && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
                                     && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
-                                    && (Lower('Created By'.Email) = Lower(varTargetEmail) || Lower('Reserved By'.Email) = Lower(varTargetEmail))
+                                    && ('Created By'.Email = Lower(varTargetEmail) || 'Reserved By'.Email = Lower(varTargetEmail))
                                 ),
                                 "Title",
                                 SortOrder.Ascending

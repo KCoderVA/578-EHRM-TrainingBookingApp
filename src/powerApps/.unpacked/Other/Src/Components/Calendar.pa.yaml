@@ -509,7 +509,7 @@ ComponentDefinitions:
                   FontWeight: =FontWeight.Bold
                   Height: =Parent.Height
                   HoverBorderColor: =RGBA(0,0,0,0)
-                  HoverColor: =ColorValue("#0707077")
+                  HoverColor: =ColorValue("#070707")
                   HoverFill: =RGBA(0,0,0,0)
                   OnSelect: =Select(Parent)
                   PaddingBottom: =0

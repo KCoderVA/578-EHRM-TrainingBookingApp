@@ -26,9 +26,8 @@ EditorState:
     - scrn_WeeklyCal
     - scrn_DailyCal
     - DebuggingScreen
-    - CreateMeeting
     - PDFScreen
-    - Screen3
+    - Screen1
   ComponentDefinitionsOrder:
     - Preloader
     - Tabs

@@ -76,10 +76,48 @@ Screens:
                     ),
                     Set(varPopUp_ClassPicker_scenarioLocation, dropdown_LocationPicker.Selected.Value)
                 )
-        )
+        );
+        If(
+            LookUp(
+                SuperUserList,
+                Lower(DataCardValue3.Selected.Email) = Lower('Enter Super User VA email address'), true) = true,
+            Set(user_IsSuperUser, true),
+            LookUp(
+                SuperUserList,
+                Lower(DataCardValue3.Selected.Email) = Lower('Enter Super User VA email address'), true) <> true,
+            Set(user_IsSuperUser, false)
+        );
+
+        Set(varStudentProfile, First(Office365Users.SearchUserV2({searchTerm: DataCardValue3.Selected.Email}).value));
+        Set(varStudentMgrMail, Office365Users.ManagerV2(DataCardValue3.Selected.Email).userPrincipalName);
+        //Set(varStudentMgrProfile, First(Office365Users.SearchUserV2({searchTerm: Office365Users.ManagerV2(DataCardValue3.Selected.Email).userPrincipalName}).value));
+        Set(varStudentMgrProfile, IfError(Office365Users.ManagerV2(varTargetEntraID), Blank()));
       Width: =Max(App.Width, App.DesignWidth)
     Children:
-      - Label16:
+      - Rectangle2_11:
+          Control: Rectangle@2.3.0
+          Group: grpHeader_11
+          Properties:
+            Fill: =RGBA(135, 78, 181, 0.65)
+            Height: =ctn_PopUp_ClassPicker_Header.Height
+            Width: =Parent.Width
+      - Image2_12:
+          Control: Image@2.2.3
+          Group: grpHeader_11
+          Properties:
+            Height: =ctn_PopUp_ClassPicker_Header.Height
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+      - rectButtonsBackground:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(180, 214, 250, 1)
+            Height: =80
+            Width: =Parent.Width
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =Parent.Height - Self.Height
+      - lblPOCSUPER_missingRequired:
           Control: Label@2.5.1
           Properties:
             Align: =Align.Center
@@ -92,12 +130,81 @@ Screens:
               You may not proceed until you provide an answer to all required questions!"
             Visible: |-
               =If(
-                  btnContinueDate_1.DisplayMode = DisplayMode.Disabled,
+                  btnPOCSUPER_continue.DisplayMode = DisplayMode.Disabled,
                   true,
                   false
               )
             Width: =1136
-            Y: =536
+            Y: =rectButtonsBackground.Y - Self.Height
+      - btnPOCSUPER_continue:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(9, 33, 98, 1)
+            BorderThickness: =5
+            DisplayMode: |-
+              =If(
+                  DropdownCanvas1.Selected.Value = Blank() || IsBlank(var_MeetingCategory),
+                      DisplayMode.Disabled,
+                  DropdownCanvas1.Selected.Value <> Blank() && var_MeetingCategory <> Blank(),
+                      DisplayMode.Edit,
+                  DisplayMode.Disabled
+              )
+            Fill: =RGBA(15, 108, 189, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =btnPOCSUPER_back.Height
+            HoverBorderColor: =RGBA(255, 255, 255, 1)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(9, 33, 98, 1)
+            OnSelect: |-
+              =If(
+                  (user_IsSuperUser = true && !IsBlankOrError(user_IsSuperUser)),
+                      Set(var_PopUp_SuperUser, false) && Set(varPopUp_ClassPicker, 1),
+                  (user_IsSuperUser = false || IsBlankOrError(user_IsSuperUser)),
+                      Set(var_PopUp_SuperUser, true)
+              );
+            Size: |-
+              =If(
+                  btnPOCSUPER_continue.DisplayMode = DisplayMode.Disabled,
+                  16,
+                  24
+              )
+            Text: |-
+              =If(
+                  btnPOCSUPER_continue.DisplayMode = DisplayMode.Disabled,
+                  "Response Missing",
+                  "CONTINUE"
+              )
+            Tooltip: =If(Self.DisplayMode = DisplayMode.Disabled, "You have not completed all required fields.")
+            Width: =200
+            X: =btnPOCSUPER_back.X + btnPOCSUPER_back.Width + 20
+            Y: =btnPOCSUPER_back.Y
+      - btnPOCSUPER_back:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =RGBA(9, 33, 98, 1)
+            BorderThickness: =5
+            Fill: =RGBA(128, 128, 128, 1)
+            Height: =50
+            HoverBorderColor: =RGBA(255, 255, 255, 1)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =RGBA(9, 33, 98, 1)
+            OnSelect: |-
+              =/*
+              Reset(tbFloorDesk);
+              Reset(tbNameDesk);
+              Reset(toggleActive);
+              Reset(tbDescrDesk);
+              Reset(tbMapDesk);
+              Reset(tbDeskLocation_2);
+              Reset(tbRoomPhoto);
+              Reset(ddAsset) ;Back()
+              */
+              ResetForm(Form1);
+              Navigate(Dashboard);
+            Text: ="Back"
+            Width: =200
+            X: =(Parent.Width - (Self.Width + 20 + btnPOCSUPER_continue.Width)) / 2
+            Y: =rectButtonsBackground.Y + (Self.Height / 3)
       - Form1:
           Control: Form@2.4.4
           Variant: Classic
@@ -105,10 +212,18 @@ Screens:
           Properties:
             DataSource: ='Desk Reservations'
             DefaultMode: =FormMode.New
-            Height: =490
+            Height: |-
+              =If(
+                  lblPOCSUPER_missingRequired.Visible = true,
+                      Parent.Height - Self.Y - (rectButtonsBackground.Height + lblPOCSUPER_missingRequired.Height),
+                  lblPOCSUPER_missingRequired.Visible = false,
+                      Parent.Height - Self.Y - (rectButtonsBackground.Height), //476.66
+                  'Reserved By_DataCard1'.Height + Service_DataCard1.Height + Description_DataCard2.Height //499
+                  //Parent.Height - Self.Y - rectButtonsBackground.Height - lblPOCSUPER_missingRequired.Height
+              )
             NumberOfColumns: =2
             Width: =1136
-            Y: =150
+            Y: =Image2_12.Y + Image2_12.Height
           Children:
             - Reserved By_DataCard1:
                 Control: TypedDataCard@1.0.7
@@ -132,11 +247,17 @@ Screens:
                         BorderColor: =RGBA(0, 0, 0, 1)
                         Color: =App.Theme.Colors.Darker30
                         Height: =48
+                        Italic: =true
                         Size: =16
                         Text: ="The EMPLOYEE I am creating a reservation for is:"
                         Width: =Parent.Width - 60
                         Wrap: =false
-                        X: =21
+                        X: |-
+                          =If(
+                              And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, IsBlank(DataCardValue3)),
+                              StarVisible3.Width,
+                              10
+                          )
                   - ErrorMessage3:
                       Control: Label@2.5.1
                       MetadataKey: ErrorMessage
@@ -170,7 +291,7 @@ Screens:
                         Text: ="*"
                         Visible: |-
                           =If(
-                              And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, IsBlank(DataCardValue3)),
+                              !Parent.Valid,
                               true,
                               false
                           )
@@ -182,10 +303,10 @@ Screens:
                       Properties:
                         DefaultSelectedItems: |-
                           ={
-                              Claims: "i:0#.f|membership|" & Office365Users.MyProfileV2().userPrincipalName,
-                              DisplayName: Office365Users.MyProfileV2().displayName,
-                              Email: Office365Users.MyProfileV2().mail,
-                              ID: Office365Users.MyProfileV2().id
+                              Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).UserPrincipalName, //Office365Users.MyProfileV2().userPrincipalName,
+                              DisplayName: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).DisplayName,
+                              Email: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).Mail,
+                              ID: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).Id
                           }
                         DisplayFields: =["DisplayName","Email","Picture","ID"]
                         DisplayMode: =Parent.DisplayMode
@@ -196,6 +317,14 @@ Screens:
                         OnChange: |-
                           =Set(var_Attendees, Self.Selected.Email);
                           Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
+                          Set(varStudentProfile, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
+                          Set(varStudentMgrMail, Office365Users.ManagerV2(varStudentProfile.Id).userPrincipalName);
+                          //Set(varStudentMgrProfile, First(Office365Users.SearchUserV2({searchTerm: varStudentMgrMail}).value));
+                          Set(varStudentMgrProfile, IfError(Office365Users.ManagerV2(varStudentProfile.Id), Blank()));
+
+                          Reset(DataCardValue7);
+                          Reset(DataCardValue8);
+                          Reset(DropdownCanvas1);
                           Set(varTargetEmail, Self.Selected.Email);
                           Set(varTargetEntraID, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value).Id);
                           {
@@ -206,9 +335,26 @@ Screens:
                           };
                           Set(varUser_details, Office365Users.UserProfileV2(varTargetEmail));
                           ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+                          If(
+                              LookUp(
+                                  SuperUserList,
+                                  Lower(DataCardValue3.Selected.Email) = Lower('Enter Super User VA email address'),
+                                  true
+                              ) = true,
+                              Set(user_IsSuperUser, true),
+                              Set(user_IsSuperUser, false)
+                          );
+                          Set(var_Service, DataCardValue8.Text);
+                          Set(var_ManagerEmail, DataCardValue7.Selected.Email);
                         OnSelect: |-
                           =Set(var_Attendees, Self.Selected.Email);
                           Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
+                          Set(varStudentProfile, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
+                          Set(varStudentMgrMail, Office365Users.ManagerV2(varStudentProfile.Id).userPrincipalName);
+                          Set(varStudentMgrProfile, First(Office365Users.SearchUserV2({searchTerm: varStudentMgrMail}).value));
+                          Reset(DataCardValue7);
+                          Reset(DataCardValue8);
+                          Reset(DropdownCanvas1);
                           Set(varTargetEmail, Self.Selected.Email);
                           Set(varTargetEntraID, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value).Id);
                           {
@@ -219,10 +365,17 @@ Screens:
                           };
                           Set(varUser_details, Office365Users.UserProfileV2(varTargetEmail));
                           ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
-
-
-
-                          //Set(test_3, Office365Users.SearchUserV2({searchTerm:(varTargetEmail)}).value);
+                          If(
+                              LookUp(
+                                  SuperUserList,
+                                  Lower(DataCardValue3.Selected.Email) = Lower('Enter Super User VA email address'),
+                                  true
+                              ) = true,
+                              Set(user_IsSuperUser, true),
+                              Set(user_IsSuperUser, false)
+                          );
+                          Set(var_Service, DataCardValue8.Text);
+                          Set(var_ManagerEmail, DataCardValue7.Selected.Email);
                         PaddingBottom: =5
                         PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                         PaddingRight: =5
@@ -256,11 +409,17 @@ Screens:
                         BorderColor: =RGBA(0, 0, 0, 1)
                         Color: =App.Theme.Colors.Darker30
                         Height: =48
+                        Italic: =DataCardKey3.Italic
                         Size: =16
                         Text: ="The selected employee's SUPERVISOR is:"
                         Width: =Parent.Width - 60
                         Wrap: =false
-                        X: =21
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
                   - DataCardValue7:
                       Control: Classic/ComboBox@2.4.0
                       MetadataKey: FieldValue
@@ -332,7 +491,7 @@ Screens:
                         Text: ="*"
                         Visible: |-
                           =If(
-                              And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, IsBlank(DataCardValue7)),
+                              !Parent.Valid,
                               true,
                               false
                           )
@@ -362,11 +521,17 @@ Screens:
                         BorderColor: =RGBA(0, 0, 0, 1)
                         Color: =App.Theme.Colors.Darker30
                         Height: =48
+                        Italic: =DataCardKey3.Italic
                         Size: =16
                         Text: ="The selected employee's SERVICE LINE/TEAM is:"
                         Width: =Parent.Width - 60
                         Wrap: =false
-                        X: =28
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
                   - DataCardValue8:
                       Control: Classic/TextInput@2.3.2
                       MetadataKey: FieldValue
@@ -375,28 +540,27 @@ Screens:
                         Default: |-
                           =TrimEnds(
                               Concatenate(
-                                  Office365Users.MyProfileV2().department,
+                                  varStudentProfile.Department,
                                   " ",
-                                  Office365Users.MyProfileV2().officeLocation,
+                                  varStudentProfile.OfficeLocation,
                                   " ",
-                                  Office365Users.MyProfileV2().companyName
+                                  varStudentProfile.CompanyName
                               )
                           )
-                          /*
-                          If(
-                              IsBlankOrError(DataCardValue3), // || IsBlankOrError(DataCardValue3.Selected.Email),
+                          /*If(
+                              IsBlankOrError(varStudentProfile), // || IsBlankOrError(DataCardValue3.Selected.Email),
                                   //then
                                   Parent.Default,
-                              IsBlankOrError(Office365Users.MyProfileV2().department) & IsBlankOrError(Office365Users.MyProfileV2().officeLocation),
+                              IsBlankOrError(varStudentProfile.Department) & IsBlankOrError(varStudentProfile.OfficeLocation),
                                   //then
                                   Parent.Default,
-                              !IsBlankOrError(Office365Users.MyProfileV2().department) & IsBlankOrError(Office365Users.MyProfileV2().officeLocation),
+                              !IsBlankOrError(varStudentProfile.Department) & IsBlankOrError(varStudentProfile.OfficeLocation),
                                   //then
-                                  Concatenate(Office365Users.MyProfileV2().department, "; "),
-                              IsBlankOrError(Office365Users.MyProfileV2().department) & !IsBlankOrError(Office365Users.MyProfileV2().officeLocation),
-                                  Concatenate(Office365Users.MyProfileV2().officeLocation, "; "),
-                              !IsBlankOrError(Office365Users.MyProfileV2().department) & !IsBlankOrError(Office365Users.MyProfileV2().officeLocation),
-                                  Concatenate(Office365Users.MyProfileV2().department, "; ", Office365Users.MyProfileV2().officeLocation, "; ")
+                                  Concatenate(DataCardValue3.Selected.Department, "; "),
+                              IsBlankOrError(varStudentProfile.Department) & !IsBlankOrError(varStudentProfile.OfficeLocation),
+                                  Concatenate(varStudentProfile.OfficeLocation, "; "),
+                              !IsBlankOrError(varStudentProfile.Department) & !IsBlankOrError(varStudentProfile.OfficeLocation),
+                                  Concatenate(varStudentProfile.Department, "; ", varStudentProfile.OfficeLocation, "; ")
                           )
                           */
                         DelayOutput: =true
@@ -454,7 +618,7 @@ Screens:
                         Text: ="*"
                         Visible: |-
                           =If(
-                              And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, IsBlank(DataCardValue8)),
+                              !Parent.Valid,
                               true,
                               false
                           )
@@ -482,11 +646,17 @@ Screens:
                         BorderColor: =RGBA(0, 0, 0, 1)
                         Color: =App.Theme.Colors.Darker30
                         Height: =48
+                        Italic: =DataCardKey3.Italic
                         Size: =16
                         Text: ="The TRAINING the selected employee needs is:"
                         Width: =Parent.Width - 60
                         Wrap: =false
-                        X: =21
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
                   - ErrorMessage13:
                       Control: Label@2.5.1
                       MetadataKey: ErrorMessage
@@ -516,11 +686,16 @@ Screens:
                         Color: =Color.Red // App.Theme.Colors.Darker30
                         FontWeight: =FontWeight.Bold
                         Height: =DataCardKey13.Height
+                        Italic: =true
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
                         Size: =30
                         Text: ="*"
                         Visible: |-
                           =If(
-                              And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, !IsBlank(DropdownCanvas1)),
+                              !Parent.Valid,
                               true,
                               false
                           )
@@ -533,9 +708,11 @@ Screens:
                         DisplayFields: =["Value"]
                         FontWeight: =FontWeight.Bold
                         Height: =DataCardValue3.Height
+                        InputTextPlaceholder: ="...choose one..."
                         IsSearchable: =false
                         Items: |-
                           =[
+                              "",
                               "Super User Learning Lab"
                               //"TESTING (DO NOT USE)"
                           ]
@@ -647,8 +824,68 @@ Screens:
 
                           ]
                           */
-                        OnChange: =
-                        OnSelect: =Set(var_MeetingCategory, Self.Selected.Value)
+                        OnChange: |-
+                          =Set(var_MeetingCategory, Self.Selected.Value);
+                          Set(var_Attendees, DataCardValue3.Selected.Email);
+                          Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: DataCardValue3.Selected.Email}).value));
+                          Set(varStudentProfile, First(Office365Users.SearchUserV2({searchTerm: DataCardValue3.Selected.Email}).value));
+                          Set(varStudentMgrMail, Office365Users.ManagerV2(varStudentProfile.Id).userPrincipalName);
+                          Set(varStudentMgrProfile, First(Office365Users.SearchUserV2({searchTerm: varStudentMgrMail}).value));
+                          Reset(DataCardValue7);
+                          Reset(DataCardValue8);
+                          //Reset(DropdownCanvas1);
+                          Set(varTargetEmail, DataCardValue3.Selected.Email);
+                          Set(varTargetEntraID, First(Office365Users.SearchUserV2({searchTerm: DataCardValue3.Selected.Email}).value).Id);
+                          {
+                              Claims: "i:0#.f|membership|" & Office365Users.UserProfileV2(varTargetEntraID).displayName,
+                              DisplayName: Office365Users.UserProfileV2(varTargetEntraID).displayName,
+                              Email: Office365Users.UserProfileV2(varTargetEntraID).mail,
+                              ID: Office365Users.UserProfileV2(varTargetEntraID).id
+                          };
+                          Set(varUser_details, Office365Users.UserProfileV2(varTargetEmail));
+                          ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+                          If(
+                              LookUp(
+                                  SuperUserList,
+                                  Lower(DataCardValue3.Selected.Email) = Lower('Enter Super User VA email address'),
+                                  true
+                              ) = true,
+                              Set(user_IsSuperUser, true),
+                              Set(user_IsSuperUser, false)
+                          );
+                          Set(var_Service, DataCardValue8.Text);
+                          Set(var_ManagerEmail, DataCardValue7.Selected.Email);
+                        OnSelect: |-
+                          =Set(var_MeetingCategory, Self.Selected.Value);
+                          Set(var_Attendees, DataCardValue3.Selected.Email);
+                          Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: DataCardValue3.Selected.Email}).value));
+                          Set(varStudentProfile, First(Office365Users.SearchUserV2({searchTerm: DataCardValue3.Selected.Email}).value));
+                          Set(varStudentMgrMail, Office365Users.ManagerV2(varStudentProfile.Id).userPrincipalName);
+                          Set(varStudentMgrProfile, First(Office365Users.SearchUserV2({searchTerm: varStudentMgrMail}).value));
+                          Reset(DataCardValue7);
+                          Reset(DataCardValue8);
+                          //Reset(DropdownCanvas1);
+                          Set(varTargetEmail, DataCardValue3.Selected.Email);
+                          Set(varTargetEntraID, First(Office365Users.SearchUserV2({searchTerm: DataCardValue3.Selected.Email}).value).Id);
+                          {
+                              Claims: "i:0#.f|membership|" & Office365Users.UserProfileV2(varTargetEntraID).displayName,
+                              DisplayName: Office365Users.UserProfileV2(varTargetEntraID).displayName,
+                              Email: Office365Users.UserProfileV2(varTargetEntraID).mail,
+                              ID: Office365Users.UserProfileV2(varTargetEntraID).id
+                          };
+                          Set(varUser_details, Office365Users.UserProfileV2(varTargetEmail));
+                          ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+                          If(
+                              LookUp(
+                                  SuperUserList,
+                                  Lower(DataCardValue3.Selected.Email) = Lower('Enter Super User VA email address'),
+                                  true
+                              ) = true,
+                              Set(user_IsSuperUser, true),
+                              Set(user_IsSuperUser, false)
+                          );
+                          Set(var_Service, DataCardValue8.Text);
+                          Set(var_ManagerEmail, DataCardValue7.Selected.Email);
                         PaddingBottom: =5
                         PaddingLeft: =5
                         PaddingRight: =5
@@ -659,97 +896,6 @@ Screens:
                         Width: =DataCardValue3.Width
                         X: =35
                         Y: =DataCardKey13.Y + DataCardKey13.Height + 5
-            - Reason for desk reservation_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicTextualEdit
-                Properties:
-                  DataField: ="reservationJustification_multilinetext"
-                  Default: =ThisItem.reservationJustification_multilinetext
-                  DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,reservationJustification_multilinetext) //DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Reasonfordeskreservation)
-                  Height: =127
-                  MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Description)
-                  Required: =false
-                  Update: =DataCardValue1.Text
-                  Visible: =false
-                  Width: |-
-                    =Parent.Width
-                    // 568
-                  X: =0
-                  Y: =2
-                Children:
-                  - DataCardKey1:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =38
-                        Italic: =true
-                        LineHeight: =1
-                        PaddingRight: =25
-                        Size: =12
-                        Text: |-
-                          ="OPTIONAL:    
-                               Free-text any additional comments, concerns, learning accommodations, or any other relevant information about this reservation in the box below:"
-                        Width: =DataCardValue1.Width
-                        X: =30
-                  - DataCardValue1:
-                      Control: Classic/TextInput@2.3.2
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Parent.Default
-                        DelayOutput: =true
-                        DisplayMode: =Parent.DisplayMode
-                        EnableSpellCheck: =true
-                        FontWeight: =FontWeight.Bold
-                        Height: =88
-                        HintText: =
-                        MaxLength: =Parent.MaxLength
-                        Mode: =TextMode.MultiLine
-                        PaddingLeft: =5
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
-                        Size: =14
-                        Tooltip: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        X: =35
-                        Y: =DataCardKey1.Y + DataCardKey1.Height + 5
-                  - ErrorMessage1:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue1.Y + DataCardValue1.Height
-                  - StarVisible1:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey1.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey1.Y
             - Description_DataCard2:
                 Control: TypedDataCard@1.0.7
                 Variant: ClassicTextualEdit
@@ -757,19 +903,20 @@ Screens:
                   DataField: ="reservationDescription_multilinetext" // "Description"
                   Default: =ThisItem.reservationDescription_multilinetext //ThisItem.Description
                   DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,reservationDescription_multilinetext) //DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Description)
-                  Height: =266
+                  Height: |+
+                    =DataCardKey14.Height + HtmlText4.Height + 10 //247 // 303
                   MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, reservationDescription_multilinetext) //DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Description)
                   Required: =false
                   Update: =DataCardValue13.Text
                   Visible: |-
                     =If(
-                        btnContinueDate_1.DisplayMode <> DisplayMode.Disabled,
+                        btnPOCSUPER_continue.DisplayMode = DisplayMode.Edit,
                         true,
                         false
                     )
                   Width: =Parent.Width
                   X: =0
-                  Y: =3
+                  Y: =2
                 Children:
                   - DataCardKey14:
                       Control: Label@2.5.1
@@ -779,13 +926,20 @@ Screens:
                         BorderColor: =RGBA(0, 0, 0, 1)
                         Color: =App.Theme.Colors.Darker30
                         Height: =38
+                        Italic: =DataCardKey3.Italic
                         Size: =16
                         Text: |-
                           =//Parent.DisplayName
                           "Selected training DESCRIPTION:"
+                        Visible: =Parent.Visible
                         Width: =Parent.Width - 60
                         Wrap: =false
-                        X: =21
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
                   - DataCardValue13:
                       Control: Classic/TextInput@2.3.2
                       MetadataKey: FieldValue
@@ -811,7 +965,7 @@ Screens:
                         Visible: =false
                         Width: =Parent.Width - 60
                         X: =30
-                        Y: =DataCardKey14.Y + DataCardKey14.Height + 5
+                        Y: =DataCardKey14.Y + DataCardKey14.Height
                   - ErrorMessage14:
                       Control: Label@2.5.1
                       MetadataKey: ErrorMessage
@@ -828,7 +982,7 @@ Screens:
                         PaddingTop: =0
                         Size: =24
                         Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Visible: =false
                         Width: =Parent.Width - 60
                         X: =30
                         Y: =DataCardValue13.Y + DataCardValue13.Height
@@ -841,7 +995,12 @@ Screens:
                         Color: =App.Theme.Colors.Darker30
                         Height: =DataCardKey14.Height
                         Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Visible: |-
+                          =If(
+                              !Parent.Valid,
+                              true,
+                              false
+                          )
                         Width: =30
                         Wrap: =false
                         Y: =DataCardKey14.Y
@@ -849,7 +1008,7 @@ Screens:
                       Control: HtmlViewer@2.1.0
                       Properties:
                         DisplayMode: =DisplayMode.View
-                        Height: =223
+                        Height: =200
                         HtmlText: |-
                           =If(
 
@@ -859,15 +1018,15 @@ Screens:
                                     <tr><td style=""padding:2px;background-color:#ffffff;"">
                                       <table style=""width:100%;"" border=""0"" cellspacing=""0"" cellpadding=""6"">
                                         <tr>
-                                          <td style=""font-weight:bold;color:#0066cc;font-size:13px;width:12%;vertical-align:top;border-bottom:1px solid black;"">Super User Learning Lab:</td>
+                                          <td style=""font-weight:bold;color:#0066cc;font-size:14px;width:12%;vertical-align:middle;border-bottom:1px solid black;""><center>Super User Learning Lab:</center></td>
                                           <td style=""font-size:14px;color:#333333;border-bottom:1px solid black;""><strong>Learning lab sessions bring care teams together in a computer lab setting to practice completion of VA-approved, interdisciplinary workflow-based scenarios in the Sandbox domain, an environment designed to simulate the Federal Electronic Health Record (EHR).</strong></td>
                                         </tr>
                                         <tr>
-                                          <td style=""font-weight:bold;color:#0066cc;font-size:13px;vertical-align:top;border-bottom:1px solid black;"">Training Location(s):</td>
+                                          <td style=""font-weight:bold;color:#0066cc;font-size:14px;vertical-align:middle;border-bottom:1px solid black;""><center>Training Location(s):</center></td>
                                           <td style=""font-size:14px;color:#333333;border-bottom:1px solid black;""><strong>In-person training events/classes for Super User Learning Lab sessions will be conducted in a computer lab setting, generally located in Building #20 at the Edward Hines Jr. VA Hospital's main campus. For CBOCs/Remote/Clinical Resource Hub (CRH) users only, training events/classes for Super User Learning Lab sessions will be conducted virtually.</strong></td>
                                         </tr>
                                         <tr>
-                                          <td style=""font-weight:bold;color:#0066cc;font-size:13px;vertical-align:top;"">Training Date/Time(s):</td>
+                                          <td style=""font-weight:bold;color:#0066cc;font-size:14px;vertical-align:middle;""><center>Training Date/Time(s):</center></td>
                                           <td style=""font-size:14px;color:#333333;""><strong>The specific date, time, and duration of Super User Learning Lab sessions varies significantly by the role, scenario, and department. All sessions will occur on business dates between October 26, 2026 thru December 11, 2026.</strong></td>
                                         </tr>
                                       </table>
@@ -912,6 +1071,7 @@ Screens:
                                 </td></tr>"
                           )
                         Size: =14
+                        Visible: =Parent.Visible
                         Width: =DataCardValue13.Width
                         X: =DataCardValue13.X
                         Y: =DataCardValue13.Y
@@ -937,10 +1097,16 @@ Screens:
                         BorderColor: =RGBA(0, 0, 0, 1)
                         Color: =App.Theme.Colors.Darker30
                         Height: =48
+                        Italic: =DataCardKey3.Italic
                         Text: =Parent.DisplayName
                         Width: =Parent.Width - 60
                         Wrap: =false
-                        X: =30
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
                         Y: =10
                   - DataCardValue16:
                       Control: Classic/ComboBox@2.4.0
@@ -994,86 +1160,6 @@ Screens:
                         Width: =30
                         Wrap: =false
                         Y: =DataCardKey17.Y
-            - Active_choice_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicComboBoxEdit
-                IsLocked: true
-                Properties:
-                  DataField: ="Active_choice"
-                  Default: =ThisItem.Active_choice
-                  DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Active_choice)
-                  Required: =false
-                  Update: =DataCardValue17.Selected
-                  Visible: =false
-                  Width: =568
-                  X: =1
-                  Y: =4
-                Children:
-                  - DataCardKey18:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DataCardValue17:
-                      Control: Classic/ComboBox@2.4.0
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        DefaultSelectedItems: =Parent.Default
-                        DisplayFields: =["Value"]
-                        DisplayMode: =Parent.DisplayMode
-                        Items: =Choices([@'Desk Reservations'].Active_choice)
-                        PaddingBottom: =5
-                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
-                        PaddingRight: =5
-                        PaddingTop: =5
-                        SearchFields: =["Value"]
-                        SelectMultiple: =false
-                        Tooltip: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardKey18.Y + DataCardKey18.Height + 5
-                  - ErrorMessage16:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue17.Y + DataCardValue17.Height
-                  - StarVisible16:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey18.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey18.Y
             - Title_DataCard2:
                 Control: TypedDataCard@1.0.7
                 Variant: ClassicTextualEdit
@@ -1087,8 +1173,8 @@ Screens:
                   Update: =DataCardValue19.Text
                   Visible: =false
                   Width: =568
-                  X: =0
-                  Y: =5
+                  X: =1
+                  Y: =4
                 Children:
                   - DataCardKey20:
                       Control: Label@2.5.1
@@ -1098,10 +1184,16 @@ Screens:
                         BorderColor: =RGBA(0, 0, 0, 1)
                         Color: =App.Theme.Colors.Darker30
                         Height: =48
+                        Italic: =DataCardKey3.Italic
                         Text: =Parent.DisplayName
                         Width: =Parent.Width - 60
                         Wrap: =false
-                        X: =30
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
                         Y: =10
                   - DataCardValue19:
                       Control: Classic/TextInput@2.3.2
@@ -1154,135 +1246,6 @@ Screens:
                         Width: =30
                         Wrap: =false
                         Y: =DataCardKey20.Y
-            - Check Out From_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicDateTimeEdit
-                IsLocked: true
-                Properties:
-                  DataField: ="CheckOutFrom"
-                  Default: =ThisItem.'Check Out From'
-                  DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Check Out From')
-                  Required: =false
-                  Update: =If(Not IsBlank(DateValue1.SelectedDate), DateTime(Year(DateValue1.SelectedDate), Month(DateValue1.SelectedDate), Day(DateValue1.SelectedDate), Value(HourValue1.Selected.Value), Value(MinuteValue1.Selected.Value), 0))
-                  Visible: =false
-                  Width: =568
-                  X: =1
-                  Y: =5
-                Children:
-                  - DataCardKey21:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DateValue1:
-                      Control: Classic/DatePicker@2.6.0
-                      MetadataKey: DateFieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        DefaultDate: =Parent.Default
-                        DisplayMode: =Parent.DisplayMode
-                        EndYear: =Year(Today())+100
-                        IsEditable: =true
-                        PaddingBottom: =0
-                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
-                        StartYear: =1899
-                        Tooltip: =Parent.DisplayName
-                        Width: =(Parent.Width - 60) / 2
-                        X: =30
-                        Y: =DataCardKey21.Y + DataCardKey21.Height + 5
-                  - HourValue1:
-                      Control: Classic/DropDown@2.3.1
-                      MetadataKey: HourFieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Text(Hour(Parent.Default),"00")
-                        DisplayMode: =Parent.DisplayMode
-                        Height: =DateValue1.Height
-                        Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
-                        Items.Value: =Value
-                        PaddingBottom: =5
-                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
-                        PaddingRight: =5
-                        PaddingTop: =5
-                        Tooltip: =Parent.DisplayName
-                        Width: =DateValue1.Width / 2 - 10
-                        X: =DateValue1.X + DateValue1.Width + 10
-                        Y: =DateValue1.Y
-                  - Separator2:
-                      Control: Label@2.5.1
-                      MetadataKey: HourMinuteSeparator
-                      Properties:
-                        Align: =Align.Center
-                        FontWeight: =FontWeight.Bold
-                        Height: =HourValue1.Height
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Text: =":"
-                        Width: =10
-                        Wrap: =false
-                        X: =HourValue1.X + HourValue1.Width
-                        Y: =HourValue1.Y
-                  - MinuteValue1:
-                      Control: Classic/DropDown@2.3.1
-                      MetadataKey: MinuteFieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Text(Minute(Parent.Default),"00")
-                        DisplayMode: =Parent.DisplayMode
-                        Height: =HourValue1.Height
-                        Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"]
-                        Items.Value: =Value
-                        PaddingBottom: =5
-                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
-                        PaddingRight: =5
-                        PaddingTop: =5
-                        Tooltip: =Parent.DisplayName
-                        Width: =HourValue1.Width
-                        X: =HourValue1.X + HourValue1.Width + Separator2.Width
-                        Y: =HourValue1.Y
-                  - ErrorMessage19:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =HourValue1.Y + HourValue1.Height
-                  - StarVisible19:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey21.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey21.Y
             - Check Out To_DataCard1:
                 Control: TypedDataCard@1.0.7
                 Variant: ClassicDateTimeEdit
@@ -1296,7 +1259,7 @@ Screens:
                   Visible: =false
                   Width: =568
                   X: =0
-                  Y: =6
+                  Y: =5
                 Children:
                   - DataCardKey22:
                       Control: Label@2.5.1
@@ -1306,10 +1269,16 @@ Screens:
                         BorderColor: =RGBA(0, 0, 0, 1)
                         Color: =App.Theme.Colors.Darker30
                         Height: =48
+                        Italic: =DataCardKey3.Italic
                         Text: =Parent.DisplayName
                         Width: =Parent.Width - 60
                         Wrap: =false
-                        X: =30
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
                         Y: =10
                   - DateValue2:
                       Control: Classic/DatePicker@2.6.0
@@ -1412,77 +1381,6 @@ Screens:
                         Width: =30
                         Wrap: =false
                         Y: =DataCardKey22.Y
-            - RoomReservation_DataCard1:
-                Control: TypedDataCard@1.0.7
-                Variant: ClassicToggleEdit
-                IsLocked: true
-                Properties:
-                  DataField: ="RoomReservation"
-                  Default: =ThisItem.RoomReservation
-                  DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,RoomReservation)
-                  Required: =false
-                  Update: =DataCardValue21.Value
-                  Visible: =false
-                  Width: =568
-                  X: =1
-                  Y: =6
-                Children:
-                  - DataCardKey24:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldName
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =48
-                        Text: =Parent.DisplayName
-                        Width: =Parent.Width - 60
-                        Wrap: =false
-                        X: =30
-                        Y: =10
-                  - DataCardValue21:
-                      Control: Classic/Toggle@2.1.0
-                      MetadataKey: FieldValue
-                      Properties:
-                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                        Default: =Parent.Default
-                        DisplayMode: =Parent.DisplayMode
-                        Tooltip: =Parent.DisplayName
-                        X: =30
-                        Y: =DataCardKey24.Y + DataCardKey24.Height + 5
-                  - ErrorMessage22:
-                      Control: Label@2.5.1
-                      MetadataKey: ErrorMessage
-                      Properties:
-                        AutoHeight: =true
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(168, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =10
-                        Live: =Live.Assertive
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =24
-                        Text: =Parent.Error
-                        Visible: =Parent.DisplayMode=DisplayMode.Edit
-                        Width: =Parent.Width - 60
-                        X: =30
-                        Y: =DataCardValue21.Y + DataCardValue21.Height
-                  - StarVisible22:
-                      Control: Label@2.5.1
-                      MetadataKey: FieldRequired
-                      Properties:
-                        Align: =Align.Center
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =App.Theme.Colors.Darker30
-                        Height: =DataCardKey24.Height
-                        Text: ="*"
-                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                        Width: =30
-                        Wrap: =false
-                        Y: =DataCardKey24.Y
             - Asset_DataCard2:
                 Control: TypedDataCard@1.0.7
                 Variant: ClassicComboBoxEdit
@@ -1495,8 +1393,8 @@ Screens:
                   Update: =DataCardValue23.Selected
                   Visible: =false
                   Width: =568
-                  X: =0
-                  Y: =7
+                  X: =1
+                  Y: =5
                 Children:
                   - DataCardKey26:
                       Control: Label@2.5.1
@@ -1506,10 +1404,16 @@ Screens:
                         BorderColor: =RGBA(0, 0, 0, 1)
                         Color: =App.Theme.Colors.Darker30
                         Height: =48
+                        Italic: =DataCardKey3.Italic
                         Text: =Parent.DisplayName
                         Width: =Parent.Width - 60
                         Wrap: =false
-                        X: =30
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
                         Y: =10
                   - DataCardValue23:
                       Control: Classic/ComboBox@2.4.0
@@ -1563,149 +1467,550 @@ Screens:
                         Width: =30
                         Wrap: =false
                         Y: =DataCardKey26.Y
-      - Rectangle2_11:
-          Control: Rectangle@2.3.0
-          Group: grpHeader_11
-          Properties:
-            Fill: =RGBA(135, 78, 181, 0.65)
-            Height: =150
-            Width: =Parent.Width
-      - Image2_12:
-          Control: Image@2.2.3
-          Group: grpHeader_11
-          Properties:
-            Height: =150
-            Image: =abstractBackground
-            ImagePosition: =ImagePosition.Fill
-            Width: =Parent.Width
-      - btnContinueDate_1:
-          Control: Classic/Button@2.2.0
-          Properties:
-            DisplayMode: |-
-              =If(
-                  Form1.Valid,
-                      DisplayMode.Edit,
-                  !IsBlank(var_MeetingCategory) || !IsBlankOrError(DropdownCanvas1.SelectedItems),
-                      DisplayMode.Edit,
-                  DisplayMode.Disabled
-              )
-            Fill: =RGBA(15, 108, 189, 1)
-            FontWeight: =FontWeight.Bold
-            Height: =45
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-              =// 1. Set global variables
-              //Set(varAttendees, Concat(DataCardValue3.SelectedItems, Email, ";")); // CBPeoplepicker
-              Set(var_Attendees, Concat(DataCardValue3.SelectedItems, Email, ";")); // CBPeoplepicker
-              //Set(varOptionalAttendees, Concat(OptionAttendeesPP.SelectedItems, Email, ";"));
-              Set(var_OptionalAttendees, Concat(DataCardValue16.SelectedItems, Email, ";"));
-              //Set(varMeetCat, DropdownCanvas1.Selected.Value);
-              Set(var_MeetingCategory, DropdownCanvas1.Selected.Value);
-              //Set(varReservePOC, DataCardValue7.Selected.Email); // CBMPeoplepicker
-              Set(var_ManagerEmail, DataCardValue7.Selected.Email);
-              Set(varTitle, "Hines EHRM Training Room & Desk Reservation");
-              //DataCardValue8.Text); // TBService
-              Set(var_Service, DataCardValue8.Text); 
-              Set(varDescription, DataCardValue1.Text); // RDReason 
-              Set(
-                  var_EmailBody,
-                  "You have a confirmed reservation for EHRM Training at the Edward Hines Jr. VA Hospital!
-                  <br>
-                  <br>
-                  Please follow this Link to view or cancel your EHRM Training reservations: 
-                  <br>
-                  https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079
-                  <br>
-                  <br>
-                  <i>***FOLLOW THE LINK ABOVE and then Click on My Bookings or Click the BLUE button to see your Training Calander for your EHRM DESK RESERVATIONS THAT HAVE BEEN BOOKED***<i>
-                  <br>"
-              );
-              Set(varURL,"https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079"
-              );
-              Set(varURLName, "578 EHRM Training App");
-              {
-                  '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
-                  Claims: "i:0#.f|membership|" & Office365Users.UserProfileV2(varTargetEntraID).displayName,
-                  DisplayName: Office365Users.UserProfileV2(varTargetEntraID).displayName,
-                  Email: Office365Users.UserProfileV2(varTargetEntraID).mail,
-                  Id: Office365Users.UserProfileV2(varTargetEntraID).id
-              };
-
-              //Set(_selectedUser, DataCardValue3.Selected);
-              Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: DataCardValue3.Selected.Email}).value));
-
-
-
-              //Navigate(chkWeekDays)
-              If(
-                  DropdownCanvas1.Selected.Value = "Super User Learning Lab",
-                      Set(varPopUp_ClassPicker, 1),
-                  DropdownCanvas1.Selected.Value = "TESTING (DO NOT USE)",
-                      Set(varPopUp_ClassPicker, 0)
-                      & Reset(DropdownCanvas1)
-                      & Notify(
-                          "You selected an invalid choice in the 'TRAINING' drop down box below! Please make a different selection before you can move on.....",
-                          NotificationType.Warning,
-                          5000
-                      ),
-                  IsBlankOrError(DropdownCanvas1.SelectedItems) || IsBlankOrError(DropdownCanvas1.Selected.Value) || DropdownCanvas1.Selected.Value = "",
-                      Set(varPopUp_ClassPicker, 0)
-                      & Notify(
-                          "You MUST select one of the options in the 'TRAINING' drop down box below, before you can move on.....",
-                          NotificationType.Warning,
-                          5000
-                      )
-              );
-            Size: |-
-              =If(
-                  btnContinueDate_1.DisplayMode = DisplayMode.Disabled,
-                  16,
-                  24
-              )
-            Text: |-
-              =If(
-                  btnContinueDate_1.DisplayMode = DisplayMode.Disabled,
-                  "Response Missing",
-                  "CONTINUE"
-              )
-            Tooltip: =If(Self.DisplayMode = DisplayMode.Disabled, "You have not completed all required fields.")
-            Width: =200
-            X: =btnBackDate_1.X + btnBackDate_1.Width + 20
-            Y: =btnBackDate_1.Y
-      - btnBackDate_1:
-          Control: Classic/Button@2.2.0
-          Properties:
-            Fill: =RGBA(128, 128, 128, 1)
-            Height: =45
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-              =/*
-              Reset(tbFloorDesk);
-              Reset(tbNameDesk);
-              Reset(toggleActive);
-              Reset(tbDescrDesk);
-              Reset(tbMapDesk);
-              Reset(tbDeskLocation_2);
-              Reset(tbRoomPhoto);
-              Reset(ddAsset) ;Back()
-              */
-              ResetForm(Form1);
-              Navigate(Dashboard);
-            Text: ="Back"
-            Width: =200
-            X: =(Parent.Width - (Self.Width + 20 + btnContinueDate_1.Width)) / 2
-            Y: =70
-      - lblSelectDate_1:
+            - Active_choice_DataCard1:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicComboBoxEdit
+                IsLocked: true
+                Properties:
+                  DataField: ="Active_choice"
+                  Default: =ThisItem.Active_choice
+                  DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Active_choice)
+                  Required: =false
+                  Update: =DataCardValue17.Selected
+                  Visible: =false
+                  Width: =568
+                  X: =0
+                  Y: =6
+                Children:
+                  - DataCardKey18:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =App.Theme.Colors.Darker30
+                        Height: =48
+                        Italic: =DataCardKey3.Italic
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60
+                        Wrap: =false
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
+                        Y: =10
+                  - DataCardValue17:
+                      Control: Classic/ComboBox@2.4.0
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                        DefaultSelectedItems: =Parent.Default
+                        DisplayFields: =["Value"]
+                        DisplayMode: =Parent.DisplayMode
+                        Items: =Choices([@'Desk Reservations'].Active_choice)
+                        PaddingBottom: =5
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                        PaddingRight: =5
+                        PaddingTop: =5
+                        SearchFields: =["Value"]
+                        SelectMultiple: =false
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60
+                        X: =30
+                        Y: =DataCardKey18.Y + DataCardKey18.Height + 5
+                  - ErrorMessage16:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60
+                        X: =30
+                        Y: =DataCardValue17.Y + DataCardValue17.Height
+                  - StarVisible16:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =App.Theme.Colors.Darker30
+                        Height: =DataCardKey18.Height
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30
+                        Wrap: =false
+                        Y: =DataCardKey18.Y
+            - Check Out From_DataCard1:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicDateTimeEdit
+                IsLocked: true
+                Properties:
+                  DataField: ="CheckOutFrom"
+                  Default: =ThisItem.'Check Out From'
+                  DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Check Out From')
+                  Required: =false
+                  Update: =If(Not IsBlank(DateValue1.SelectedDate), DateTime(Year(DateValue1.SelectedDate), Month(DateValue1.SelectedDate), Day(DateValue1.SelectedDate), Value(HourValue1.Selected.Value), Value(MinuteValue1.Selected.Value), 0))
+                  Visible: =false
+                  Width: =568
+                  X: =1
+                  Y: =6
+                Children:
+                  - DataCardKey21:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =App.Theme.Colors.Darker30
+                        Height: =48
+                        Italic: =DataCardKey3.Italic
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60
+                        Wrap: =false
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
+                        Y: =10
+                  - DateValue1:
+                      Control: Classic/DatePicker@2.6.0
+                      MetadataKey: DateFieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                        DefaultDate: =Parent.Default
+                        DisplayMode: =Parent.DisplayMode
+                        EndYear: =Year(Today())+100
+                        IsEditable: =true
+                        PaddingBottom: =0
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                        StartYear: =1899
+                        Tooltip: =Parent.DisplayName
+                        Width: =(Parent.Width - 60) / 2
+                        X: =30
+                        Y: =DataCardKey21.Y + DataCardKey21.Height + 5
+                  - HourValue1:
+                      Control: Classic/DropDown@2.3.1
+                      MetadataKey: HourFieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                        Default: =Text(Hour(Parent.Default),"00")
+                        DisplayMode: =Parent.DisplayMode
+                        Height: =DateValue1.Height
+                        Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
+                        Items.Value: =Value
+                        PaddingBottom: =5
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                        PaddingRight: =5
+                        PaddingTop: =5
+                        Tooltip: =Parent.DisplayName
+                        Width: =DateValue1.Width / 2 - 10
+                        X: =DateValue1.X + DateValue1.Width + 10
+                        Y: =DateValue1.Y
+                  - Separator2:
+                      Control: Label@2.5.1
+                      MetadataKey: HourMinuteSeparator
+                      Properties:
+                        Align: =Align.Center
+                        FontWeight: =FontWeight.Bold
+                        Height: =HourValue1.Height
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Text: =":"
+                        Width: =10
+                        Wrap: =false
+                        X: =HourValue1.X + HourValue1.Width
+                        Y: =HourValue1.Y
+                  - MinuteValue1:
+                      Control: Classic/DropDown@2.3.1
+                      MetadataKey: MinuteFieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                        Default: =Text(Minute(Parent.Default),"00")
+                        DisplayMode: =Parent.DisplayMode
+                        Height: =HourValue1.Height
+                        Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"]
+                        Items.Value: =Value
+                        PaddingBottom: =5
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                        PaddingRight: =5
+                        PaddingTop: =5
+                        Tooltip: =Parent.DisplayName
+                        Width: =HourValue1.Width
+                        X: =HourValue1.X + HourValue1.Width + Separator2.Width
+                        Y: =HourValue1.Y
+                  - ErrorMessage19:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60
+                        X: =30
+                        Y: =HourValue1.Y + HourValue1.Height
+                  - StarVisible19:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =App.Theme.Colors.Darker30
+                        Height: =DataCardKey21.Height
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30
+                        Wrap: =false
+                        Y: =DataCardKey21.Y
+            - RoomReservation_DataCard1:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicToggleEdit
+                IsLocked: true
+                Properties:
+                  DataField: ="RoomReservation"
+                  Default: =ThisItem.RoomReservation
+                  DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,RoomReservation)
+                  Required: =false
+                  Update: =DataCardValue21.Value
+                  Visible: =false
+                  Width: =568
+                  X: =0
+                  Y: =7
+                Children:
+                  - DataCardKey24:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =App.Theme.Colors.Darker30
+                        Height: =48
+                        Italic: =DataCardKey3.Italic
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60
+                        Wrap: =false
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
+                        Y: =10
+                  - DataCardValue21:
+                      Control: Classic/Toggle@2.1.0
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                        Default: =Parent.Default
+                        DisplayMode: =Parent.DisplayMode
+                        Tooltip: =Parent.DisplayName
+                        X: =30
+                        Y: =DataCardKey24.Y + DataCardKey24.Height + 5
+                  - ErrorMessage22:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60
+                        X: =30
+                        Y: =DataCardValue21.Y + DataCardValue21.Height
+                  - StarVisible22:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =App.Theme.Colors.Darker30
+                        Height: =DataCardKey24.Height
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30
+                        Wrap: =false
+                        Y: =DataCardKey24.Y
+            - Reason for desk reservation_DataCard1:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicTextualEdit
+                Properties:
+                  DataField: ="reservationJustification_multilinetext"
+                  Default: =ThisItem.reservationJustification_multilinetext
+                  DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,reservationJustification_multilinetext) //DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Reasonfordeskreservation)
+                  Height: =132
+                  MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Description)
+                  Required: =false
+                  Update: =DataCardValue1.Text
+                  Visible: =false
+                  Width: |-
+                    =Parent.Width
+                    // 568
+                  X: =0
+                  Y: =150
+                Children:
+                  - DataCardKey1:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =App.Theme.Colors.Darker30
+                        Height: =38
+                        Italic: =DataCardKey3.Italic
+                        LineHeight: =1
+                        PaddingRight: =25
+                        Size: =12
+                        Text: |-
+                          ="OPTIONAL:    
+                               Free-text any additional comments, concerns, learning accommodations, or any other relevant information about this reservation in the box below:"
+                        Width: =DataCardValue1.Width
+                        X: |-
+                          =If(
+                              !Parent.Valid,
+                              StarVisible3.Width,
+                              10
+                          )
+                  - DataCardValue1:
+                      Control: Classic/TextInput@2.3.2
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                        Default: =Parent.Default
+                        DelayOutput: =true
+                        DisplayMode: =Parent.DisplayMode
+                        EnableSpellCheck: =true
+                        FontWeight: =FontWeight.Bold
+                        Height: =88
+                        HintText: =
+                        MaxLength: =Parent.MaxLength
+                        Mode: =TextMode.MultiLine
+                        PaddingLeft: =5
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =14
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60
+                        X: =35
+                        Y: =DataCardKey1.Y + DataCardKey1.Height + 5
+                  - ErrorMessage1:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =24
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60
+                        X: =30
+                        Y: =DataCardValue1.Y + DataCardValue1.Height
+                  - StarVisible1:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =App.Theme.Colors.Darker30
+                        Height: =DataCardKey1.Height
+                        Text: ="*"
+                        Visible: |-
+                          =If(
+                              !Parent.Valid,
+                              true,
+                              false
+                          )
+                        Width: =30
+                        Wrap: =false
+                        Y: =DataCardKey1.Y
+      - lblPOCSUPER_title:
           Control: Label@2.5.1
           Properties:
             Align: =Align.Center
             Color: =RGBA(255, 255, 255, 1)
             FontWeight: =FontWeight.Bold
-            Height: =50
+            Height: =Image2_12.Height
             Size: =32
             Text: ="Create a new reservation..."
-            Width: =600
-            X: =(Parent.Width - Self.Width) / 2
+            Width: =Parent.Width
+      - btnPOCSUPER_AdminReset:
+          Control: ModernButton@1.0.0
+          Properties:
+            Height: =50
+            OnSelect: |-
+              =Reset(dropdown_RolePicker);
+              Reset(dropdown_ScenarioPicker);
+              Reset(dropdown_DateTimePicker);
+              Reset(dropdown_LocationPicker);
+
+              Navigate(DebuggingScreen);
+            Text: ="RESET"
+            Visible: |+
+              =//false
+              If(
+                  Lower(varRealEmail) = Lower("kyle.coder@va.gov") && user_isAdmin = true,
+                  true,
+                  false
+              )
+            Width: =176
+            Y: =590
+      - ctn_NonSuperUser:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =Parent.Height
+            Visible: |-
+              =If(
+                  var_PopUp_SuperUser = true,
+                  true,
+                  false
+              )
+            Width: =Parent.Width
+          Children:
+            - rectBackground:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(79, 90, 94, 0.8)
+                  Height: =Parent.Height
+                  Width: =Parent.Width
+                  X: =Parent.X
+                  Y: =Parent.Y
+            - ctn_NonSuperUser_foreground:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Height: =Parent.Height / 1.75
+                  Width: =Parent.Width / 1.75
+                  X: =(Parent.Width / 2) - (Self.Width / 2)
+                  Y: =(Parent.Height / 2) - (Self.Height / 2)
+                Children:
+                  - btn_background:
+                      Control: ModernButton@1.0.0
+                      Properties:
+                        Appearance: =ButtonAppearance.Secondary
+                        BorderColor: =RGBA(9, 33, 98, 1)
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =10
+                        Height: =Parent.Height
+                        IconStyle: =IconStyle.Filled
+                        RadiusBottomLeft: =50
+                        RadiusBottomRight: =50
+                        RadiusTopLeft: =50
+                        RadiusTopRight: =50
+                        Text: =
+                        Width: =Parent.Width
+                  - ctn_NonSUperUsers_buttons:
+                      Control: GroupContainer@1.5.0
+                      Variant: ManualLayout
+                      Properties:
+                        DropShadow: =DropShadow.None
+                        Height: =Parent.Height - Self.Y - btn_background.BorderThickness
+                        Width: =lbl_NonSuperUser_body.Width
+                        X: =lbl_NonSuperUser_body.X
+                        Y: =lbl_NonSuperUser_body.Y + lbl_NonSuperUser_body.Height
+                      Children:
+                        - btn_NonSuperUsers_nevermind:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(180, 214, 250, 1)
+                              BorderThickness: =5
+                              Color: =RGBA(255, 255, 255, 1)
+                              Fill: =RGBA(53, 61, 63, 1)
+                              FontWeight: =FontWeight.Bold
+                              Height: =50
+                              OnSelect: =Set(var_PopUp_SuperUser, false);
+                              RadiusBottomLeft: =25
+                              RadiusBottomRight: =25
+                              RadiusTopLeft: =25
+                              RadiusTopRight: =25
+                              Text: ="Nevermind"
+                              Width: =200
+                              X: =75
+                              Y: =(Parent.Height / 2) - (Self.Height / 2)
+                        - btn_NonSuperUsers_proceed:
+                            Control: Classic/Button@2.2.0
+                            Properties:
+                              BorderColor: =RGBA(180, 214, 250, 1)
+                              BorderThickness: =5
+                              Color: =RGBA(9, 33, 98, 1)
+                              Fill: =RGBA(0, 255, 0, 1)
+                              FontWeight: =FontWeight.Bold
+                              Height: =50
+                              OnSelect: =Set(varPopUp_ClassPicker, 1)
+                              RadiusBottomLeft: =25
+                              RadiusBottomRight: =25
+                              RadiusTopLeft: =25
+                              RadiusTopRight: =25
+                              Text: ="Proceed"
+                              Width: =200
+                              X: =Parent.Width - Self.Width - 75
+                              Y: =(Parent.Height / 2) - (Self.Height / 2)
+                  - lbl_NonSuperUser_body:
+                      Control: ModernText@1.0.0
+                      Properties:
+                        Align: =Align.Center
+                        AutoHeight: =true
+                        Text: |-
+                          ="The selection you have chosen is specifically reserved only for EHRM Super Users, and this training reservation may be canceled later...
+
+                          Are you sure that you still want to continue?"
+                        Width: =lbl_NonSuperUser_header.Width
+                        X: =lbl_NonSuperUser_header.X
+                        Y: =lbl_NonSuperUser_header.Y + lbl_NonSuperUser_header.Height
+                  - lbl_NonSuperUser_header:
+                      Control: ModernText@1.0.0
+                      Properties:
+                        Align: =Align.Center
+                        AutoHeight: =true
+                        FontWeight: =FontWeight.Bold
+                        Size: =27
+                        Text: =varStudentProfile.GivenName & " IS NOT on the list of designated EHRM Super Users at the Edward Hines Jr. VA Hospital!"
+                        Width: =btn_background.Width - (btn_background.BorderThickness * 2)
+                        X: =btn_background.X + btn_background.BorderThickness
+                        Y: =btn_background.Y + btn_background.BorderThickness
       - ctn_PopUp_ClassPicker:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
@@ -1715,6 +2020,68 @@ Screens:
             Visible: =If(varPopUp_ClassPicker = 1, true, false)
             Width: =Parent.Width
           Children:
+            - btnContinueDate_2:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(9, 33, 98, 1)
+                  BorderThickness: =5
+                  DisabledBorderColor: =Self.BorderColor
+                  DisplayMode: |-
+                    =If(
+                        IsBlankOrError(dropdown_LocationPicker.Selected) || dropdown_LocationPicker.Selected.Value = Blank(),
+                        DisplayMode.Disabled,
+                        DisplayMode.Edit
+                    )
+                  Fill: =RGBA(15, 108, 189, 1)
+                  Height: =50
+                  HoverBorderColor: =RGBA(255, 255, 255, 1)
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: =RGBA(9, 33, 98, 1)
+                  Italic: |-
+                    =If(
+                        Self.DisplayMode = DisplayMode.Disabled,
+                        true,
+                        false
+                    )
+                  OnSelect: "=Set(varPopUp_ClassPicker_scenarioLocation, dropdown_LocationPicker.Selected.Value);\nSet(var_reservationFullLocation, dropdown_LocationPicker.Selected.Value);\nIf(\n    (Len(dropdown_LocationPicker.Selected.Value) >= 14),\n        Set(\n            var_reservationRoomNumber,\n            Text(\n                Last(\n                    Filter(\n                        Split(\n                            dropdown_LocationPicker.Selected.Value,\n                            \" \"\n                            ),\n                            IsNumeric(Value)\n                    )\n                ).Value\n            )\n        );\n        Set(var_reservationFloorNumber, \"2\");\n        Set(\n            var_reservationBuildingNumber,\n            Text(\n                First(\n                    Filter(\n                        Split(\n                            dropdown_LocationPicker.Selected.Value,\n                            \" \"\n                        ),\n                        IsNumeric(Value)\n                    )\n                ).Value\n            )\n            \n        );\n        Set(var_reservationDivision, \"Edward Hines Jr. VA Hospital\"),\n    (Len(dropdown_LocationPicker.Selected.Value) <= 13),\n        Set(var_reservationRoomNumber, \"Virtual CBOC\");\n        Set(var_reservationFloorNumber, \"Virtual CBOC\");\n        Set(var_reservationBuildingNumber, \"Virtual CBOC\");\n        Set(var_reservationDivision, \"Edward Hines Jr. VA Hospital\"),\n    (Len(dropdown_LocationPicker.Selected.Value) <= 8),\n        Set(var_reservationRoomNumber, \"Virtual\");\n        Set(var_reservationFloorNumber, \"Virtual\");\n        Set(var_reservationBuildingNumber, \"Virtual\");\n        Set(var_reservationDivision, \"Edward Hines Jr. VA Hospital\")\n);\n\nClearCollect(\n    colSelectedDesks,\n    Filter(\n        Desks,\n        DeskNumber_number = 1 && RoomNumber_number = Value(var_reservationRoomNumber)\n    )\n);\n\n\nSet(var_reservationRole, dropdown_RolePicker.Selected.Value);\nSet(var_reservationScenario, dropdown_ScenarioPicker.Selected.Value);\nIf(\n    (IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank()),\n    Set(var_scenarioTrainingMaterialsURL, \"https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx\"),\n    Set(var_scenarioTrainingMaterialsURL, \n        Concatenate(\n            \"https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=\",\n            var_reservationScenario,\n            \"&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603\"\n        )\n    )\n);\nSet(varPopUp_ClassPicker_scenarioLocation, dropdown_LocationPicker.Selected.Value);\nSet(var_reservationFullLocation, dropdown_LocationPicker.Selected.Value);\nIf(\n    (Len(dropdown_LocationPicker.Selected.Value) >= 14),\n        Set(\n            var_reservationBuildingNumber,\n            Text(\n                First(\n                    Filter(\n                        Split(\n                            dropdown_LocationPicker.Selected.Value,\n                            \" \"\n                        ),\n                        IsNumeric(Value)\n                    )\n                ).Value\n            )\n            \n        );\n        Set(\n            var_reservationRoomNumber,\n            Text(\n                Last(\n                    Filter(\n                        Split(\n                            dropdown_LocationPicker.Selected.Value,\n                            \" \"\n                            ),\n                            IsNumeric(Value)\n                    )\n                ).Value\n            )\n        ),\n    (Len(dropdown_LocationPicker.Selected.Value) <= 13),\n        Set(var_reservationRoomNumber, \"Virtual\"),\n    (Len(dropdown_LocationPicker.Selected.Value) <= 8),\n        Set(var_reservationBuildingNumber, \"Virtual\")\n);\nSet(var_Attendees, Concat(DataCardValue3.SelectedItems, Email, \";\"));\nSet(var_OptionalAttendees, Concat(DataCardValue7.SelectedItems, Email, \";\"));\n\n\n\n// 1. Set global variables\nSet(varAttendees, Concat(DataCardValue3.SelectedItems, Email, \";\")); //e.g. \"First1.Last1@va.gov;\"\nSet(varOptionalAttendees, Concat(DataCardValue7.SelectedItems, Email, \";\")); //e.g. \"First2.Last2@va.gov;\"\nSet(varMeetCat, DropdownCanvas1.Selected.Value);  //e.g. \"Super User Learning Lab\"\nSet(varReservePOC, DataCardValue7.Selected.Email); //e.g. \"First2.Last2@va.gov;\"\nSet(varTitle, \"Hines EHRM Training Room & Desk Reservation\"); //DataCardValue8.Text); // TBService\nSet(varDescription, DataCardValue1.Text); // RDReason \nSet(\n    var_EmailBody,\n    \"You have a confirmed reservation for EHRM Learning Lab training at the Edward Hines Jr. VA Hospital!\n    <br>\n         <br>Scenario:          \" & varPopUp_ClassPicker_scenarioName &\n        \"<br>Role:              \" & varPopUp_ClassPicker_scenarioRole &\n        \"<br>Date:              \" & varPopUp_ClassPicker_scenarioDate &\n        \"<br>Date:              \" & var_StartDateTime_central &\n        \"<br>Location:          \" & varPopUp_ClassPicker_scenarioLocation &\n    \"<br>\n    <br>\n    Please follow this Link to view or cancel your EHRM Training reservations: \n    <br>\n    https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079<br>\n    <i>***FOLLOW THE LINK ABOVE and then Click on My Bookings or Click the BLUE button to see your Training Calander for your RESERVATION(s) THAT HAS BEEN SCHEDULED***<i>\n    <br>\"\n);\nSet(varURL,\"https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079\"\n);\nSet(varURLName, \"578 EHRM Training App\");\nSet(varPopUp_ClassPicker, 1);\n\nSet(varAccept, true);\nSet(varAccept3, true);\n/*If(\n    varAccept3 = false,\n    Set(varAccept3, Blank()),\n    IsBlankOrError(varAccept3),\n    varAccept3 = true,\n    Set(varAccept3, true),\n    Set(varAccept3, Blank())\n);*/\nIf(\n    varAccept4 = false,\n    Set(varAccept4, Blank()),\n    IsBlankOrError(varAccept4),\n    varAccept4 = true,\n    Set(varAccept4, true),\n    Set(varAccept4, Blank())\n);\n\nSet(varWeekday, [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\"]);\nIf(\n    IsBlankOrError(varWeekday),\n    Set(varWeekday, [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\"]),\n    Set(varWeekday, [])\n);\n\n//Navigate(Confirm)\nNavigate(chkWeekDays)"
+                  Size: |-
+                    =If(
+                        btnContinueDate_2.DisplayMode = DisplayMode.Disabled,
+                        16,
+                        24
+                    )
+                  Text: |-
+                    =If(
+                        btnContinueDate_2.DisplayMode = DisplayMode.Disabled,
+                        "Response Missing",
+                        "CONTINUE"
+                    )
+                  Tooltip: =If(Self.DisplayMode = DisplayMode.Disabled, "You have not completed all required fields.")
+                  Visible: =btnBackDate_2.Visible
+                  Width: =200
+                  X: =btnBackDate_2.X + btnBackDate_2.Width + 20
+                  Y: =btnBackDate_2.Y
+            - btnBackDate_2:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(9, 33, 98, 1)
+                  BorderThickness: =5
+                  Fill: =RGBA(128, 128, 128, 1)
+                  Height: =50
+                  HoverBorderColor: =RGBA(255, 255, 255, 1)
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: =RGBA(9, 33, 98, 1)
+                  OnSelect: =Set(varPopUp_ClassPicker, 0);
+                  Text: ="Back"
+                  Visible: =true //!Label16_1.Visible
+                  Width: =200
+                  X: =(Parent.Width - (Self.Width + 20 + btnContinueDate_2.Width)) / 2
+                  Y: |-
+                    =If(
+                        ctn_PopUp_ClassPicker_Location.Visible = true,
+                        Parent.Height - Self.Height - 25,
+                        Label16_1.Y - Self.Height - 10
+                    )
             - ctn_PopUp_ClassPicker_Location:
                 Control: GroupContainer@1.5.0
                 Variant: ManualLayout
@@ -1738,6 +2105,7 @@ Screens:
                   - dropdown_LocationPicker:
                       Control: ModernDropdown@1.0.2
                       Properties:
+                        FontWeight: =FontWeight.Bold
                         Height: =48
                         ItemDisplayText: =ThisItem.Value
                         Items: |-
@@ -1765,7 +2133,7 @@ Screens:
                               "Virtual CBOC"
                           ]
                           */
-                        OnChange: "=Set(varPopUp_ClassPicker_scenarioLocation, Self.Selected.Value);\r\nSet(var_reservationFullLocation, Self.Selected.Value);\r\nIf(\r\n    (Len(Self.Selected.Value) >= 14),\r\n        Set(\r\n            var_reservationRoomNumber,\r\n            Text(\r\n                Last(\r\n                    Filter(\r\n                        Split(\r\n                            Self.Selected.Value,\r\n                            \" \"\r\n                            ),\r\n                            IsNumeric(Value)\r\n                    )\r\n                ).Value\r\n            )\r\n        );\r\n        Set(var_reservationFloorNumber, \"2\");\r\n        Set(\r\n            var_reservationBuildingNumber,\r\n            Text(\r\n                First(\r\n                    Filter(\r\n                        Split(\r\n                            Self.Selected.Value,\r\n                            \" \"\r\n                        ),\r\n                        IsNumeric(Value)\r\n                    )\r\n                ).Value\r\n            )\r\n            \r\n        );\r\n        Set(var_reservationDivision, \"Edward Hines Jr. VA Hospital\"),\r\n    (Len(Self.Selected.Value) <= 13),\r\n        Set(var_reservationRoomNumber, \"Virtual CBOC\");\r\n        Set(var_reservationFloorNumber, \"Virtual CBOC\");\r\n        Set(var_reservationBuildingNumber, \"Virtual CBOC\");\r\n        Set(var_reservationDivision, \"Edward Hines Jr. VA Hospital\"),\r\n    (Len(Self.Selected.Value) <= 8),\r\n        Set(var_reservationRoomNumber, \"Virtual\");\r\n        Set(var_reservationFloorNumber, \"Virtual\");\r\n        Set(var_reservationBuildingNumber, \"Virtual\");\r\n        Set(var_reservationDivision, \"Edward Hines Jr. VA Hospital\")\r\n);\r\n\r\nClearCollect(\r\n    colSelectedDesks,\r\n    Filter(\r\n        Desks,\r\n        DeskNumber_number = 1 && RoomNumber_number = Value(var_reservationRoomNumber)\r\n    )\r\n);\r\n\r\n/*\r\nIf(\r\n    ((IsBlankOrError(Dropdown1) || IsBlankOrError(Dropdown1.SelectedText.Value) || IsBlankOrError(Dropdown1.Selected))\r\n    && (IsBlankOrError(Dropdown1_1) || IsBlankOrError(Dropdown1_1.SelectedText.Value) || IsBlankOrError(Dropdown1_1.Selected))),\r\n        Filter(\r\n            Desks,\r\n            (Active_text = \"yes\" || Active_boolean = true),\r\n            (DeskNumber_number <> Blank())\r\n        ),\r\n    ((!IsBlankOrError(Dropdown1) || !IsBlankOrError(Dropdown1.SelectedText.Value) || !IsBlankOrError(Dropdown1.Selected))\r\n    && (IsBlankOrError(Dropdown1_1) || IsBlankOrError(Dropdown1_1.SelectedText.Value) || IsBlankOrError(Dropdown1_1.Selected))),\r\n        Filter(\r\n            Desks,\r\n            (Active_text = \"yes\" || Active_boolean = true),\r\n            (DeskNumber_number <> Blank()),\r\n            (Dropdown1.SelectedText.Value = BuildingName_text)\r\n        ),\r\n    ((IsBlankOrError(Dropdown1) || IsBlankOrError(Dropdown1.SelectedText.Value) || IsBlankOrError(Dropdown1.Selected))\r\n    && (!IsBlankOrError(Dropdown1_1) || !IsBlankOrError(Dropdown1_1.SelectedText.Value) || !IsBlankOrError(Dropdown1_1.Selected))),\r\n        Filter(\r\n            Desks,\r\n            (Active_text = \"yes\" || Active_boolean = true),\r\n            (DeskNumber_number <> Blank()),\r\n            (Dropdown1_1.Selected.Value = RoomNumber_number)\r\n        ),\r\n    ((!IsBlankOrError(Dropdown1) || !IsBlankOrError(Dropdown1.SelectedText.Value) || !IsBlankOrError(Dropdown1.Selected))\r\n    && (!IsBlankOrError(Dropdown1_1) || !IsBlankOrError(Dropdown1_1.SelectedText.Value) || !IsBlankOrError(Dropdown1_1.Selected))),\r\n        Filter(\r\n            Desks,\r\n            (Active_text = \"yes\" || Active_boolean = true),\r\n            (DeskNumber_number <> Blank()),\r\n            (Dropdown1_1.Selected.Value = RoomNumber_number),\r\n            (Dropdown1.SelectedText.Value = BuildingName_text)\r\n        ),\r\n    Blank()\r\n)\r\n*/"
+                        OnChange: "=//dropdown_LocationPicker\r\nSet(varPopUp_ClassPicker_scenarioLocation, Self.Selected.Value);\r\nSet(var_reservationFullLocation, Self.Selected.Value);\r\nIf(\r\n    (Len(Self.Selected.Value) >= 14),\r\n        Set(\r\n            var_reservationRoomNumber,\r\n            Text(\r\n                Last(\r\n                    Filter(\r\n                        Split(\r\n                            Self.Selected.Value,\r\n                            \" \"\r\n                            ),\r\n                            IsNumeric(Value)\r\n                    )\r\n                ).Value\r\n            )\r\n        );\r\n        Set(var_reservationFloorNumber, \"2\");\r\n        Set(\r\n            var_reservationBuildingNumber,\r\n            Text(\r\n                First(\r\n                    Filter(\r\n                        Split(\r\n                            Self.Selected.Value,\r\n                            \" \"\r\n                        ),\r\n                        IsNumeric(Value)\r\n                    )\r\n                ).Value\r\n            )\r\n            \r\n        );\r\n        Set(var_reservationDivision, \"Edward Hines Jr. VA Hospital\"),\r\n    (Len(Self.Selected.Value) <= 13),\r\n        Set(var_reservationRoomNumber, \"Virtual CBOC\");\r\n        Set(var_reservationFloorNumber, \"Virtual CBOC\");\r\n        Set(var_reservationBuildingNumber, \"Virtual CBOC\");\r\n        Set(var_reservationDivision, \"Edward Hines Jr. VA Hospital\"),\r\n    (Len(Self.Selected.Value) <= 8),\r\n        Set(var_reservationRoomNumber, \"Virtual\");\r\n        Set(var_reservationFloorNumber, \"Virtual\");\r\n        Set(var_reservationBuildingNumber, \"Virtual\");\r\n        Set(var_reservationDivision, \"Edward Hines Jr. VA Hospital\")\r\n);\r\n\r\nClearCollect(\r\n    colSelectedDesks,\r\n    Filter(\r\n        Desks,\r\n        DeskNumber_number = 1 && RoomNumber_number = Value(var_reservationRoomNumber)\r\n    )\r\n);\r\n\r\n/*\r\nIf(\r\n    ((IsBlankOrError(Dropdown1) || IsBlankOrError(Dropdown1.SelectedText.Value) || IsBlankOrError(Dropdown1.Selected))\r\n    && (IsBlankOrError(Dropdown1_1) || IsBlankOrError(Dropdown1_1.SelectedText.Value) || IsBlankOrError(Dropdown1_1.Selected))),\r\n        Filter(\r\n            Desks,\r\n            (Active_text = \"yes\" || Active_boolean = true),\r\n            (DeskNumber_number <> Blank())\r\n        ),\r\n    ((!IsBlankOrError(Dropdown1) || !IsBlankOrError(Dropdown1.SelectedText.Value) || !IsBlankOrError(Dropdown1.Selected))\r\n    && (IsBlankOrError(Dropdown1_1) || IsBlankOrError(Dropdown1_1.SelectedText.Value) || IsBlankOrError(Dropdown1_1.Selected))),\r\n        Filter(\r\n            Desks,\r\n            (Active_text = \"yes\" || Active_boolean = true),\r\n            (DeskNumber_number <> Blank()),\r\n            (Dropdown1.SelectedText.Value = BuildingName_text)\r\n        ),\r\n    ((IsBlankOrError(Dropdown1) || IsBlankOrError(Dropdown1.SelectedText.Value) || IsBlankOrError(Dropdown1.Selected))\r\n    && (!IsBlankOrError(Dropdown1_1) || !IsBlankOrError(Dropdown1_1.SelectedText.Value) || !IsBlankOrError(Dropdown1_1.Selected))),\r\n        Filter(\r\n            Desks,\r\n            (Active_text = \"yes\" || Active_boolean = true),\r\n            (DeskNumber_number <> Blank()),\r\n            (Dropdown1_1.Selected.Value = RoomNumber_number)\r\n        ),\r\n    ((!IsBlankOrError(Dropdown1) || !IsBlankOrError(Dropdown1.SelectedText.Value) || !IsBlankOrError(Dropdown1.Selected))\r\n    && (!IsBlankOrError(Dropdown1_1) || !IsBlankOrError(Dropdown1_1.SelectedText.Value) || !IsBlankOrError(Dropdown1_1.Selected))),\r\n        Filter(\r\n            Desks,\r\n            (Active_text = \"yes\" || Active_boolean = true),\r\n            (DeskNumber_number <> Blank()),\r\n            (Dropdown1_1.Selected.Value = RoomNumber_number),\r\n            (Dropdown1.SelectedText.Value = BuildingName_text)\r\n        ),\r\n    Blank()\r\n)\r\n*/"
                         Required: =true
                         Width: =Parent.Width - Self.X - 10
                         X: =HtmlText7_3.X + 10
@@ -1775,7 +2143,7 @@ Screens:
                       Properties:
                         AutoHeight: =true
                         HtmlText: |-
-                          ="Pick a <b>LOCATION</b> that <b>" & _selectedUser.GivenName & "</b> will physically attend this training:"
+                          ="<i>Pick a <b>LOCATION</b> that <b>" & _selectedUser.GivenName & "</b> will physically attend this training:"
                           //"Pick a <b>LOCATION</b> that <b>" & varDeskAccessControl_record.GivenName_Text & "</b> will physically attend this training:"
                         Size: =14
                         Width: =Parent.Width - Self.X
@@ -1874,6 +2242,7 @@ Screens:
                   - dropdown_DateTimePicker:
                       Control: ModernDropdown@1.0.2
                       Properties:
+                        FontWeight: =FontWeight.Bold
                         Height: =48
                         ItemDisplayText: =ThisItem.Value
                         Items: |-
@@ -2349,12 +2718,12 @@ Screens:
                           =If(
                               (IsBlankOrError(dropdown_DateTimePicker.Selected) || dropdown_DateTimePicker.Selected.Value = Blank()),
                               // If(true), then:
-                              "<span style=""font-size:20px;font-weight:600;color:#000000;padding:0;margin:0;"">Pick a <b>Date & Time</b> that <b>" & _selectedUser.GivenName & "</b> will attend this training:</span>" & "<span style=""font-size:18
+                              "<i>Pick a <b>Date & Time</b> that <b>" & _selectedUser.GivenName & "</b> will attend this training:" & "<span style=""font-size:18
                           px;font-weight:600;color:#C41E3A;padding:0;margin:0;""><br>&nbsp;&nbsp;<i><u><b>NOTE</u>:&nbsp;All dates/times shown below are in Eastern Standard Time (EST)...</span>",
 
                               (!IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value <> Blank()),
                               // If(false), then:
-                              "<span style=""font-size:18px;font-weight:600;color:#000000;padding:0;margin:0;"">Pick a <b>Date & Time</b> that <b>" & _selectedUser.GivenName & "</b> will attend this training:</span>" & "<span style=""font-size:14px;font-weight:600;color:#C41E3A;padding:0;margin:0;""><i>&nbsp;&nbsp;&nbsp;&nbsp;<b><u>NOTE</u></b>:&nbsp;All dates/times shown above are displayed in Eastern Standard Time (EST)...</span>",
+                              "<i>Pick a <b>Date & Time</b> that <b>" & _selectedUser.GivenName & "</b> will attend this training:" & "<span style=""font-size:14px;font-weight:600;color:#C41E3A;padding:0;margin:0;""><i>&nbsp;&nbsp;&nbsp;&nbsp;<b><u>NOTE</u></b>:&nbsp;All dates/times shown below are in Eastern Standard Time (EST)...</span>",
 
                               (IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank()),
                               // Else then:
@@ -2389,7 +2758,7 @@ Screens:
                 Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
-                  Height: =HtmlText7.Height + dropdown_ScenarioPicker.Height + HtmlText8.Height + 5
+                  Height: =HtmlText7.Height + dropdown_ScenarioPicker.Height + Button9.Height + 10
                   Visible: |-
                     =If(
                         IsBlankOrError(dropdown_RolePicker.Selected) || dropdown_RolePicker.Selected.Value = Blank(),
@@ -2408,16 +2777,185 @@ Screens:
                           =If(
                               IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
                               0,
-                              70
+                              75
+
                           )
                         HtmlText: |-
                           =If(
                               IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                                  "<center><i>Browse the <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"">Learning Lab training material library</a>...",
+                              dropdown_ScenarioPicker.Selected.Value = "MY SCENARIO IS NOT LISTED!",
+                              "<center><i>Browse the <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"">Learning Lab training material library</a>...",
+                              "<center><i>View the full class materials file of the <a href=" & var_scenarioTrainingMaterialsURL & "><b> " & Upper(varPopUp_ClassPicker_scenarioName) & "</b></a> training scenario..."
+                          )
+
+
+                          /*
+                          If(
+                              IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
                               "<center><i>Click here to open the <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"">Learning Lab training material library</a> in another browser window...",
                               "<center><i>Click here to open the <a href=" & var_scenarioTrainingMaterialsURL & "><b> " & Upper(varPopUp_ClassPicker_scenarioName) & "</b></a> training scenario materials in another browser window..."
-                          )
+                          )*/
                         OnSelect: |-
                           =If(
+                              CountRows(
+                                  Filter(
+                                      'Learning Labs Library',
+                                      ThisRecord.'Type of Content'.Value = "Workbook" && "_Sandbox_WB.docx" in ThisRecord.'File name with extension' && Substitute(
+                                          Substitute(
+                                              Substitute(
+                                                  Substitute(
+                                                      Substitute(
+                                                          Substitute(
+                                                              Substitute(
+                                                                  Substitute(
+                                                                      Substitute(
+                                                                          dropdown_ScenarioPicker.Selected.Value,
+                                                                          "Residential Rehabilitation Treatment Program Admission",
+                                                                          "RRTP Admission"
+                                                                      ),
+                                                                      "Revenue Utilization Review",
+                                                                      "RUR"
+                                                                  ),
+                                                                  "  ",
+                                                                  ""
+                                                              ),
+                                                              " - Day 1",
+                                                              ""
+                                                          ),
+                                                          " - Day 2",
+                                                          ""
+                                                      ),
+                                                      " - Day 3",
+                                                      ""
+                                                  ),
+                                                  "Scenario 1 - ",
+                                                  ""
+                                              ),
+                                              "Scenario 2 - ",
+                                              ""
+                                          ),
+                                          "Scenario 3 - ",
+                                          ""
+                                      ) in ThisRecord.Scenario.Value
+                                  )
+                              ) = 0,
+                              Set(
+                                  var_viewPopUP_ScenarioPDF,
+                                  false
+                              ) && Set(
+                                  var_timerPopUP_ScenarioPDF,
+                                  false
+                              ) && Launch("https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"),
+                              CountRows(
+                                  Filter(
+                                      'Learning Labs Library',
+                                      ThisRecord.'Type of Content'.Value = "Workbook" && "_Sandbox_WB.docx" in ThisRecord.'File name with extension' && Substitute(
+                                          Substitute(
+                                              Substitute(
+                                                  Substitute(
+                                                      Substitute(
+                                                          Substitute(
+                                                              Substitute(
+                                                                  Substitute(
+                                                                      Substitute(
+                                                                          dropdown_ScenarioPicker.Selected.Value,
+                                                                          "Residential Rehabilitation Treatment Program Admission",
+                                                                          "RRTP Admission"
+                                                                      ),
+                                                                      "Revenue Utilization Review",
+                                                                      "RUR"
+                                                                  ),
+                                                                  "  ",
+                                                                  ""
+                                                              ),
+                                                              " - Day 1",
+                                                              ""
+                                                          ),
+                                                          " - Day 2",
+                                                          ""
+                                                      ),
+                                                      " - Day 3",
+                                                      ""
+                                                  ),
+                                                  "Scenario 1 - ",
+                                                  ""
+                                              ),
+                                              "Scenario 2 - ",
+                                              ""
+                                          ),
+                                          "Scenario 3 - ",
+                                          ""
+                                      ) in ThisRecord.Scenario.Value
+                                  )
+                              ) > 1,
+                              Set(
+                                  var_viewPopUP_ScenarioPDF,
+                                  false
+                              ) && Set(
+                                  var_timerPopUP_ScenarioPDF,
+                                  false
+                              ) && Launch("https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"),
+                              CountRows(
+                                  Filter(
+                                      'Learning Labs Library',
+                                      ThisRecord.'Type of Content'.Value = "Workbook" && "_Sandbox_WB.docx" in ThisRecord.'File name with extension' && Substitute(
+                                          Substitute(
+                                              Substitute(
+                                                  Substitute(
+                                                      Substitute(
+                                                          Substitute(
+                                                              Substitute(
+                                                                  Substitute(
+                                                                      Substitute(
+                                                                          dropdown_ScenarioPicker.Selected.Value,
+                                                                          "Residential Rehabilitation Treatment Program Admission",
+                                                                          "RRTP Admission"
+                                                                      ),
+                                                                      "Revenue Utilization Review",
+                                                                      "RUR"
+                                                                  ),
+                                                                  "  ",
+                                                                  ""
+                                                              ),
+                                                              " - Day 1",
+                                                              ""
+                                                          ),
+                                                          " - Day 2",
+                                                          ""
+                                                      ),
+                                                      " - Day 3",
+                                                      ""
+                                                  ),
+                                                  "Scenario 1 - ",
+                                                  ""
+                                              ),
+                                              "Scenario 2 - ",
+                                              ""
+                                          ),
+                                          "Scenario 3 - ",
+                                          ""
+                                      ) in ThisRecord.Scenario.Value
+                                  )
+                              ) = 1,
+                              Set(
+                                  var_viewPopUP_ScenarioPDF,
+                                  true
+                              ) && Set(
+                                  var_timerPopUP_ScenarioPDF,
+                                  false
+                              ),
+                              Set(
+                                  var_viewPopUP_ScenarioPDF,
+                                  false
+                              ) && Set(
+                                  var_timerPopUP_ScenarioPDF,
+                                  false
+                              ) && Launch("https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx")
+                          );
+
+                          /*
+                          If(
                               (IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank()),
                               Launch("https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx", LaunchTarget.New, ""),
                               Launch(
@@ -2429,6 +2967,7 @@ Screens:
                                   LaunchTarget.New, ""
                               )
                           )
+                          */
                         Size: |-
                           =//16
                           If(
@@ -2436,140 +2975,360 @@ Screens:
                               10,
                               Len(Self.HtmlText) >= 460,
                               12,
-                              Len(Self.HtmlText) >= 400,
+                              Len(Self.HtmlText) >= 385,
                               14,
-                              Len(Self.HtmlText) < 400,
+                              Len(Self.HtmlText) < 385,
                               18
                           )
-                        Width: =dropdown_ScenarioPicker.Width
-                        X: =dropdown_ScenarioPicker.X
-                        Y: =dropdown_ScenarioPicker.Y + dropdown_ScenarioPicker.Height
+                        Width: |-
+                          =If(
+                              IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                                  dropdown_ScenarioPicker.Width,
+                              dropdown_ScenarioPicker.Selected.Value = "MY SCENARIO IS NOT LISTED!",
+                                  dropdown_ScenarioPicker.Width,
+                              dropdown_ScenarioPicker.Width / 2
+                          )
+                        X: |-
+                          =If(
+                              IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                                  dropdown_ScenarioPicker.X,
+                              dropdown_ScenarioPicker.Selected.Value = "MY SCENARIO IS NOT LISTED!",
+                                  dropdown_ScenarioPicker.X,
+                              dropdown_ScenarioPicker.X + Self.Width
+                          )
+                        Y: =dropdown_ScenarioPicker.Y + dropdown_ScenarioPicker.Height + 5
+                  - Button9:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderThickness: =5
+                        Color: =Button9_1.Color
+                        Fill: =Button9_1.Fill
+                        FontWeight: =Button9_1.FontWeight
+                        Height: =HtmlText8.Height + 2
+                        HoverBorderColor: =Color.White
+                        HoverColor: =Button9_1.HoverColor
+                        HoverFill: =Button9_1.HoverFill
+                        Italic: =Button9_1.Italic
+                        OnSelect: |
+                          =If(
+                              CountRows(
+                                  Filter(
+                                      'Learning Labs Library',
+                                      ThisRecord.'Type of Content'.Value = "Workbook" && "_Sandbox_WB.docx" in ThisRecord.'File name with extension' && Substitute(
+                                          Substitute(
+                                              Substitute(
+                                                  Substitute(
+                                                      Substitute(
+                                                          Substitute(
+                                                              Substitute(
+                                                                  Substitute(
+                                                                      Substitute(
+                                                                          dropdown_ScenarioPicker.Selected.Value,
+                                                                          "Residential Rehabilitation Treatment Program Admission",
+                                                                          "RRTP Admission"
+                                                                      ),
+                                                                      "Revenue Utilization Review",
+                                                                      "RUR"
+                                                                  ),
+                                                                  "  ",
+                                                                  ""
+                                                              ),
+                                                              " - Day 1",
+                                                              ""
+                                                          ),
+                                                          " - Day 2",
+                                                          ""
+                                                      ),
+                                                      " - Day 3",
+                                                      ""
+                                                  ),
+                                                  "Scenario 1 - ",
+                                                  ""
+                                              ),
+                                              "Scenario 2 - ",
+                                              ""
+                                          ),
+                                          "Scenario 3 - ",
+                                          ""
+                                      ) in ThisRecord.Scenario.Value
+                                  )
+                              ) = 0,
+                              Set(
+                                  var_viewPopUP_ScenarioPDF,
+                                  false
+                              ) && Set(
+                                  var_timerPopUP_ScenarioPDF,
+                                  false
+                              ) && Select(HtmlText8),
+                              CountRows(
+                                  Filter(
+                                      'Learning Labs Library',
+                                      ThisRecord.'Type of Content'.Value = "Workbook" && "_Sandbox_WB.docx" in ThisRecord.'File name with extension' && Substitute(
+                                          Substitute(
+                                              Substitute(
+                                                  Substitute(
+                                                      Substitute(
+                                                          Substitute(
+                                                              Substitute(
+                                                                  Substitute(
+                                                                      Substitute(
+                                                                          dropdown_ScenarioPicker.Selected.Value,
+                                                                          "Residential Rehabilitation Treatment Program Admission",
+                                                                          "RRTP Admission"
+                                                                      ),
+                                                                      "Revenue Utilization Review",
+                                                                      "RUR"
+                                                                  ),
+                                                                  "  ",
+                                                                  ""
+                                                              ),
+                                                              " - Day 1",
+                                                              ""
+                                                          ),
+                                                          " - Day 2",
+                                                          ""
+                                                      ),
+                                                      " - Day 3",
+                                                      ""
+                                                  ),
+                                                  "Scenario 1 - ",
+                                                  ""
+                                              ),
+                                              "Scenario 2 - ",
+                                              ""
+                                          ),
+                                          "Scenario 3 - ",
+                                          ""
+                                      ) in ThisRecord.Scenario.Value
+                                  )
+                              ) > 1,
+                              Set(
+                                  var_viewPopUP_ScenarioPDF,
+                                  false
+                              ) && Set(
+                                  var_timerPopUP_ScenarioPDF,
+                                  false
+                              ) && Select(HtmlText8),
+                              CountRows(
+                                  Filter(
+                                      'Learning Labs Library',
+                                      ThisRecord.'Type of Content'.Value = "Workbook" && "_Sandbox_WB.docx" in ThisRecord.'File name with extension' && Substitute(
+                                          Substitute(
+                                              Substitute(
+                                                  Substitute(
+                                                      Substitute(
+                                                          Substitute(
+                                                              Substitute(
+                                                                  Substitute(
+                                                                      Substitute(
+                                                                          dropdown_ScenarioPicker.Selected.Value,
+                                                                          "Residential Rehabilitation Treatment Program Admission",
+                                                                          "RRTP Admission"
+                                                                      ),
+                                                                      "Revenue Utilization Review",
+                                                                      "RUR"
+                                                                  ),
+                                                                  "  ",
+                                                                  ""
+                                                              ),
+                                                              " - Day 1",
+                                                              ""
+                                                          ),
+                                                          " - Day 2",
+                                                          ""
+                                                      ),
+                                                      " - Day 3",
+                                                      ""
+                                                  ),
+                                                  "Scenario 1 - ",
+                                                  ""
+                                              ),
+                                              "Scenario 2 - ",
+                                              ""
+                                          ),
+                                          "Scenario 3 - ",
+                                          ""
+                                      ) in ThisRecord.Scenario.Value
+                                  )
+                              ) = 1,
+                              Set(
+                                  var_viewPopUP_ScenarioPDF,
+                                  true
+                              ) && Set(
+                                  var_timerPopUP_ScenarioPDF,
+                                  false
+                              ),
+                              Set(
+                                  var_viewPopUP_ScenarioPDF,
+                                  false
+                              ) && Set(
+                                  var_timerPopUP_ScenarioPDF,
+                                  false
+                              ) && Select(HtmlText8)
+                          );
+                        PressedBorderColor: =
+                        RadiusBottomLeft: =15
+                        RadiusBottomRight: =15
+                        RadiusTopLeft: =15
+                        RadiusTopRight: =15
+                        Size: =Button9_1.Size
+                        Text: |-
+                          =If(
+                              IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                                  "Browse the the Learning Lab training material library...",
+                              dropdown_ScenarioPicker.Selected.Value = "MY SCENARIO IS NOT LISTED!",
+                                  "Browse the the Learning Lab training material library...",
+                              "View the full training materials file of the " & Upper(varPopUp_ClassPicker_scenarioName) & " training scenario..."
+                          )
+                        Width: =(HtmlText8.Width + 4)
+                        X: =HtmlText8.X - 2
+                        Y: =HtmlText8.Y - 1
+                  - HtmlText8_2:
+                      Control: HtmlViewer@2.1.0
+                      Properties:
+                        AutoHeight: =true
+                        Height: =HtmlText8.Height
+                        HtmlText: |-
+                          =If(
+                              IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                              "", //"<center><i>Click here to open the <a href=""https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"">Learning Lab training material library</a> in another browser window...",
+                              "<center><i>Read a detailed description of the <a href=" & var_scenarioTrainingMaterialsURL & "><b> " & Upper(varPopUp_ClassPicker_scenarioName) & "</b></a> training scenario..."
+                          )
+                        OnSelect: |-
+                          =If(
+                              (IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank()),
+                              Set(var_ViewScenarioDescription, false),
+                              Set(var_ViewScenarioDescription, true)
+                          )
+                        Size: |-
+                          =//16
+                          If(
+                              Len(Self.HtmlText) >= 499,
+                              10,
+                              Len(Self.HtmlText) >= 460,
+                              12,
+                              Len(Self.HtmlText) >= 385,
+                              14,
+                              Len(Self.HtmlText) < 385,
+                              18
+                          )
+                        Width: |-
+                          =If(
+                              IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                                  0,
+                              dropdown_ScenarioPicker.Selected.Value = "MY SCENARIO IS NOT LISTED!",
+                                  0,
+                              HtmlText8.Width
+                          )
+                        X: |-
+                          =If(
+                              IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank(),
+                              0,
+                              dropdown_ScenarioPicker.X
+                          )
+                        Y: =HtmlText8.Y
+                  - Button9_1:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderThickness: =5
+                        Color: =RGBA(255, 255, 255, 0)
+                        Fill: =RGBA(0, 0, 0, 0)
+                        Height: =HtmlText8_2.Height + 2
+                        HoverBorderColor: =Color.White
+                        HoverColor: =RGBA(255, 255, 255, 1)
+                        HoverFill: =RGBA(9, 33, 98, 1)
+                        Italic: =true
+                        OnSelect: =Select(HtmlText8_2)
+                        PressedBorderColor: =
+                        RadiusBottomLeft: =15
+                        RadiusBottomRight: =15
+                        RadiusTopLeft: =15
+                        RadiusTopRight: =15
+                        Size: =12
+                        Text: ="Read a detailed description of the " & Upper(varPopUp_ClassPicker_scenarioName) & " training scenario..."
+                        Width: '=(HtmlText8_2.Width + 4) '
+                        X: =HtmlText8_2.X - 2
+                        Y: =HtmlText8_2.Y
                   - dropdown_ScenarioPicker:
                       Control: ModernDropdown@1.0.2
                       Properties:
+                        FontWeight: =FontWeight.Bold
                         Height: =48
                         ItemDisplayText: =ThisItem.Value
                         Items: |-
-                          =Sort(
+                          =If(
+                              dropdown_RolePicker.Selected.Value = "MY ROLE IS NOT LISTED!",
+                              Table(
+                                  Sort(
+                                      Distinct(
+                                          Filter(
+                                              'Learning Lab Sessions',
+                                              dropdown_RolePicker.Selected.Value = Role.Value
+                                          ),
+                                          Title
+                                      ),
+                                      Value
+                                  ),
+                                  ["MY SCENARIO IS NOT LISTED!"]
+                              ),
+                              Sort(
+                                  Distinct(
+                                      Filter(
+                                          'Learning Lab Sessions',
+                                          dropdown_RolePicker.Selected.Value = Role.Value
+                                      ),
+                                      Title
+                                  ),
+                                  Value
+                              )
+                          )
+                          /*
+                          Sort(
                               Distinct(
                                   Filter(
-                                      MasterScheduleList,
-                                      RoleName_text = dropdown_RolePicker.Selected.Value
+                                      'Learning Lab Sessions',
+                                      dropdown_RolePicker.Selected.Value = Role.Value
                                   ),
-                                  ScenarioName_text
+                                  Title
                               ),
                               Value
                           )
-
-                          /*
-                          [
-                              "Anatomic Pathology",
-                              "Anesthesia",
-                              "Audiology Hearing Aid Check",
-                              "Behavioral Health - Inpatient",
-                              "Behavioral Health - Outpatient",
-                              "Between Visit Encounter",
-                              "Blind Rehabilitation",
-                              "Blood Bank",
-                              "Caregiver Support Program",
-                              "Case Management to Primary Care to Mental Health",
-                              "Clinical Contact Center",
-                              "Clinical Resource Hub",
-                              "Coding Health Information Management",
-                              "Community Care Referral",
-                              "Community Living Center - Leave of Absence",
-                              "Community Living Center - Pre-Admission Screening",
-                              "Community Living Center Admission",
-                              "Consult to Dietitian",
-                              "Dental Care with Follow Up",
-                              "Dentistry Simple",
-                              "Ear Nose Throat Visit",
-                              "Emergency Department",
-                              "Emergency Department to Intensive Care Unit Admission",
-                              "Eye Care Visit",
-                              "Gastroenterology",
-                              "General Laboratory",
-                              "Health Resource Center",
-                              "Holiday",
-                              "Home and Community Based Care",
-                              "Home Based Primary Care - Discipline Visits",
-                              "Home Based Primary Care - Nurse and Provider Visit",
-                              "Homeless Services and Programs",
-                              "Infection Control Worklist",
-                              "Infection Prevention",
-                              "Inpatient Nurse",
-                              "Inpatient Pharmacy",
-                              "Insurance Verification",
-                              "Intensive Care Unit to Discharge",
-                              "Long-Acting Injectables",
-                              "Mental Health New Visit",
-                              "Microbiology",
-                              "Nurse Visit",
-                              "Occupational Therapy",
-                              "Oncology Infusion Visit",
-                              "Oncology Office Visit",
-                              "Orthopedic Clinic with Physical Therapy",
-                              "Orthopedic Referral",
-                              "Orthotics and Prosthetics",
-                              "Outpatient Billing with Revenue Utilization Review",
-                              "Outpatient Case Management",
-                              "Outpatient Hemodialysis",
-                              "Outpatient Palliative Care",
-                              "Palliative Care Consult",
-                              "Patient Accounting",
-                              "Pharmacist Provider",
-                              "Pharmacy Outpatient",
-                              "Pharmacy Supply Chain - Electronic Purchase Orders",
-                              "Pharmacy Supply Chain Receiving",
-                              "Pharmacy Technician",
-                              "Physical Medicine and Rehabilitation",
-                              "Physical Therapy",
-                              "Podiatry",
-                              "Primary Care Established",
-                              "Primary Care Focused",
-                              "Primary Care Mental Health Integration",
-                              "Primary Care to Primary Care Mental Health Integration",
-                              "Primary Care with Home Telehealth Referral",
-                              "Primary Care with Lab and Pharmacy",
-                              "Primary Care with Podiatry and Wound Care",
-                              "Primary Care with Pulmonary and Cardiothoracic Surgery",
-                              "Primary Care with Radiology",
-                              "Primary Care with Referral Management and Clinical Resource Hub - Day 1",
-                              "Primary Care with Referral Management and Clinical Resource Hub - Day 2",
-                              "Primary Care with Spinal Cord Injuries and Disorders and Physical Therapy",
-                              "Primary Care with Suicidal Ideation",
-                              "Pulmonology",
-                              "Radiology",
-                              "Recreation Therapy",
-                              "Release of Information Specialist",
-                              "Research Initial Visit",
-                              "Residential Rehabilitation Treatment Program",
-                              "Residential Rehabilitation Treatment Program Admission",
-                              "Respiratory Therapy",
-                              "Scenario 1 - Mr. Frank - Day 1",
-                              "Scenario 1 - Mr. Frank - Day 2",
-                              "Scenario 2 - Mr. Lee - Day 1",
-                              "Scenario 2 - Mr. Lee - Day 2",
-                              "Scenario 3 - Ms. White - Day 1",
-                              "Scenario 3 - Ms. White - Day 2",
-                              "Social Work Inpatient",
-                              "Solid Organ Transplant Referral",
-                              "Specialty Care Office Visit",
-                              "Speech Language Pathology",
-                              "Spinal Cord Injury Home Care",
-                              "Standard Surgery - Day 1",
-                              "Standard Surgery - Day 2",
-                              "Tele-Health Visit",
-                              "Tele-Imaging",
-                              "Urgent Care",
-                              "Women's Health & Gynecology Procedure",
-                              "Women's Health Visit",
-                              "Wound Care",
-
-                          ]
                           */
                         OnChange: |-
-                          =Set(varPopUp_ClassPicker_scenarioName, Self.Selected.Value);
+                          =Set(
+                              var_scenarioSession_record,
+                              First(
+                                  Filter(
+                                      'Learning Lab Sessions',
+                                      ThisRecord.Facility.Value = "Hines"
+                                      && dropdown_RolePicker.Selected.Value = ThisRecord.Role.Value
+                                      && dropdown_ScenarioPicker.Selected.Value = ThisRecord.Title
+                                      && Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(dropdown_ScenarioPicker.Selected.Value, " - Day 1", ""), " - Day 2", ""), " - Day 3", ""), "Scenario 1 - ", ""), "Scenario 2 - ", ""), "Scenario 3 - ", "") in ThisRecord.Title
+                                  )
+                              ) //.Name
+                          );
+                          Set(
+                              var_scenarioDocument_record,
+                              First(
+                                  Filter(
+                                      'Learning Labs Library',
+                                      ThisRecord.'Type of Content'.Value = "Workbook"
+                                      && "_Sandbox_WB.docx" in ThisRecord.'File name with extension'
+                                      && Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(dropdown_ScenarioPicker.Selected.Value, "Residential Rehabilitation Treatment Program Admission", "RRTP Admission"), "Revenue Utilization Review", "RUR"), "  ", ""), " - Day 1", ""), " - Day 2", ""), " - Day 3", ""), "Scenario 1 - ", ""), "Scenario 2 - ", ""), "Scenario 3 - ", "") in ThisRecord.Scenario.Value
+                                  )
+                              ) //.'File name with extension'
+                          );
+                          Set(
+                              var_scenarioDocumentName_text,
+                              var_scenarioDocument_record.'File name with extension'
+                          );
+                          Set(
+                              var_scenarioDocumentLink_text,
+                              var_scenarioDocument_record.'Link to item'
+                          );
+                          Set(varPopUp_ClassPicker_scenarioName, Self.Selected.Value);
                           Set(varPopUp_ClassPicker_scenarioSplit, Substitute(Text(Self.Selected.Value), " ", "%20"));
                           Set(var_reservationScenario, Self.Selected.Value);
                           If(
@@ -2591,32 +3350,11 @@ Screens:
                       Control: HtmlViewer@2.1.0
                       Properties:
                         AutoHeight: =true
-                        HtmlText: |-
-                          ="Pick a training <b>SCENARIO</b> for <b>" & _selectedUser.GivenName & "'s</b> Learning Lab:"
-                          //"Pick a <b>SCENARIO</b> for <b>" & varDeskAccessControl_record.GivenName_Text & "'s</b> Learning Lab:"
+                        HtmlText: |+
+                          ="<i>Pick a training <b>SCENARIO</b> for <b>" & _selectedUser.GivenName & "'s</b> Learning Lab:"
                         Size: =14
                         Width: =Parent.Width - Self.X
                         X: =Label3.X + Label3.Width
-                  - Button9:
-                      Control: Classic/Button@2.2.0
-                      Properties:
-                        BorderColor: =RGBA(0, 0, 0, 0)
-                        Fill: =RGBA(0, 0, 0, 0)
-                        FontWeight: =FontWeight.Normal
-                        Height: =HtmlText8.Height + 2
-                        HoverBorderColor: =RGBA(9, 33, 98, 1)
-                        HoverFill: =RGBA(9, 33, 98, 0.25)
-                        OnSelect: =Select(HtmlText8)
-                        PressedBorderColor: =
-                        RadiusBottomLeft: =15
-                        RadiusBottomRight: =15
-                        RadiusTopLeft: =15
-                        RadiusTopRight: =15
-                        Size: =20
-                        Text: =
-                        Width: =HtmlText8.Width + 4
-                        X: =HtmlText8.X - 2
-                        Y: =HtmlText8.Y - 1
                   - Label3:
                       Control: Label@2.5.1
                       Properties:
@@ -2660,14 +3398,20 @@ Screens:
                   - dropdown_RolePicker:
                       Control: ModernDropdown@1.0.2
                       Properties:
+                        FontWeight: =FontWeight.Bold
                         Height: =48
                         ItemDisplayText: =ThisItem.Value
                         Items: |-
-                          =Sort(
-                              Distinct(MasterScheduleList, RoleName_text),
-                              Value
+                          =Table(
+                              Sort(
+                                  Distinct(
+                                      MasterScheduleList,
+                                      RoleName_text
+                                  ),
+                                  Value
+                              ),
+                              ["MY ROLE IS NOT LISTED!"]
                           )
-
                           /*
                           [
                               "Accounts Management – Cash Poster",
@@ -2855,7 +3599,7 @@ Screens:
                       Properties:
                         AutoHeight: =true
                         HtmlText: |-
-                          ="What is the <b>ROLE</b> that <b>" & _selectedUser.GivenName & "</b> will play during this training:"
+                          ="<i>What is the <b>ROLE</b> that <b>" & _selectedUser.GivenName & "</b> will play during this training:"
                           //"What is the <b>ROLE</b> that <b>" & varDeskAccessControl_record.GivenName_Text & "'s</b> will play during this training:"
                         Size: =14
                         Width: =Parent.Width - Self.X
@@ -2886,7 +3630,7 @@ Screens:
                 Control: GroupContainer@1.5.0
                 Variant: ManualLayout
                 Properties:
-                  Height: =Image2_14.Height
+                  Height: =Image2_14.Height / 1.8
                   Width: =Parent.Width
                 Children:
                   - Rectangle2_12:
@@ -2902,46 +3646,6 @@ Screens:
                         Image: =abstractBackground
                         ImagePosition: =ImagePosition.Fill
                         Width: =Parent.Width
-                  - btnContinueDate_2:
-                      Control: Classic/Button@2.2.0
-                      Properties:
-                        DisplayMode: |-
-                          =If(
-                              IsBlankOrError(dropdown_LocationPicker.Selected) || dropdown_LocationPicker.Selected.Value = Blank(),
-                              DisplayMode.Disabled,
-                              DisplayMode.Edit
-                          )
-                        Fill: =RGBA(15, 108, 189, 1)
-                        Height: =45
-                        HoverFill: =ColorFade(Self.Fill, -20%)
-                        OnSelect: "=Set(var_reservationRole, dropdown_RolePicker.Selected.Value);\nSet(var_reservationScenario, dropdown_ScenarioPicker.Selected.Value);\nIf(\n    (IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank()),\n    Set(var_scenarioTrainingMaterialsURL, \"https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx\"),\n    Set(var_scenarioTrainingMaterialsURL, \n        Concatenate(\n            \"https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=\",\n            var_reservationScenario,\n            \"&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603\"\n        )\n    )\n);\nSet(varPopUp_ClassPicker_scenarioLocation, dropdown_LocationPicker.Selected.Value);\nSet(var_reservationFullLocation, dropdown_LocationPicker.Selected.Value);\nIf(\n    (Len(dropdown_LocationPicker.Selected.Value) >= 14),\n        Set(\n            var_reservationBuildingNumber,\n            Text(\n                First(\n                    Filter(\n                        Split(\n                            dropdown_LocationPicker.Selected.Value,\n                            \" \"\n                        ),\n                        IsNumeric(Value)\n                    )\n                ).Value\n            )\n            \n        );\n        Set(\n            var_reservationRoomNumber,\n            Text(\n                Last(\n                    Filter(\n                        Split(\n                            dropdown_LocationPicker.Selected.Value,\n                            \" \"\n                            ),\n                            IsNumeric(Value)\n                    )\n                ).Value\n            )\n        ),\n    (Len(dropdown_LocationPicker.Selected.Value) <= 13),\n        Set(var_reservationRoomNumber, \"Virtual\"),\n    (Len(dropdown_LocationPicker.Selected.Value) <= 8),\n        Set(var_reservationBuildingNumber, \"Virtual\")\n);\nSet(var_Attendees, Concat(DataCardValue3.SelectedItems, Email, \";\"));\nSet(var_OptionalAttendees, Concat(DataCardValue7.SelectedItems, Email, \";\"));\n\n\n\n// 1. Set global variables\nSet(varAttendees, Concat(DataCardValue3.SelectedItems, Email, \";\")); //e.g. \"First1.Last1@va.gov;\"\nSet(varOptionalAttendees, Concat(DataCardValue7.SelectedItems, Email, \";\")); //e.g. \"First2.Last2@va.gov;\"\nSet(varMeetCat, DropdownCanvas1.Selected.Value);  //e.g. \"Super User Learning Lab\"\nSet(varReservePOC, DataCardValue7.Selected.Email); //e.g. \"First2.Last2@va.gov;\"\nSet(varTitle, \"Hines EHRM Training Room & Desk Reservation\"); //DataCardValue8.Text); // TBService\nSet(varDescription, DataCardValue1.Text); // RDReason \nSet(\n    var_EmailBody,\n    \"You have a confirmed reservation for EHRM Learning Lab training at the Edward Hines Jr. VA Hospital!\n    <br>\n         <br>Scenario:          \" & varPopUp_ClassPicker_scenarioName &\n        \"<br>Role:              \" & varPopUp_ClassPicker_scenarioRole &\n        \"<br>Date:              \" & varPopUp_ClassPicker_scenarioDate &\n        \"<br>Date:              \" & var_StartDateTime_central &\n        \"<br>Location:          \" & varPopUp_ClassPicker_scenarioLocation &\n    \"<br>\n    <br>\n    Please follow this Link to view or cancel your EHRM Training reservations: \n    <br>\n    https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079<br>\n    <i>***FOLLOW THE LINK ABOVE and then Click on My Bookings or Click the BLUE button to see your Training Calander for your RESERVATION(s) THAT HAS BEEN SCHEDULED***<i>\n    <br>\"\n);\nSet(varURL,\"https://apps.gov.powerapps.us/play/e/default-e95f1b23-abaf-45ee-821d-b7ab251ab3bf/a/d0958d55-fe85-425c-83f6-03c659bf4079\"\n);\nSet(varURLName, \"578 EHRM Training App\");\nSet(varPopUp_ClassPicker, 1);\n\nSet(varAccept, true);\nSet(varAccept3, true);\n/*If(\n    varAccept3 = false,\n    Set(varAccept3, Blank()),\n    IsBlankOrError(varAccept3),\n    varAccept3 = true,\n    Set(varAccept3, true),\n    Set(varAccept3, Blank())\n);*/\nIf(\n    varAccept4 = false,\n    Set(varAccept4, Blank()),\n    IsBlankOrError(varAccept4),\n    varAccept4 = true,\n    Set(varAccept4, true),\n    Set(varAccept4, Blank())\n);\n\nSet(varWeekday, [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\"]);\nIf(\n    IsBlankOrError(varWeekday),\n    Set(varWeekday, [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\"]),\n    Set(varWeekday, [])\n);\n\nClearCollect(\n    colSelectedDesks,\n    LookUp(\n        Desks,\n        DeskNumber_number = Value(\"1\") && RoomNumber_number = Value(var_reservationRoomNumber)\n    )\n);\n\n//Navigate(Confirm)\nNavigate(chkWeekDays)"
-                        Size: |-
-                          =If(
-                              btnContinueDate_2.DisplayMode = DisplayMode.Disabled,
-                              16,
-                              24
-                          )
-                        Text: |-
-                          =If(
-                              btnContinueDate_2.DisplayMode = DisplayMode.Disabled,
-                              "Response Missing",
-                              "CONTINUE"
-                          )
-                        Tooltip: =If(Self.DisplayMode = DisplayMode.Disabled, "You have not completed all required fields.")
-                        Width: =200
-                        X: =btnBackDate_2.X + btnBackDate_2.Width + 20
-                        Y: =btnBackDate_2.Y
-                  - btnBackDate_2:
-                      Control: Classic/Button@2.2.0
-                      Properties:
-                        Fill: =RGBA(128, 128, 128, 1)
-                        Height: =45
-                        HoverFill: =ColorFade(Self.Fill, -20%)
-                        OnSelect: =Set(varPopUp_ClassPicker, 0);
-                        Text: ="Back"
-                        Width: =200
-                        X: =(Parent.Width - (Self.Width + 20 + btnContinueDate_2.Width)) / 2
-                        Y: =70
                   - lblSelectDate_2:
                       Control: Label@2.5.1
                       Properties:
@@ -2966,7 +3670,7 @@ Screens:
                         (Self.Visible = true && ctn_PopUp_ClassPicker_Location.Visible = false),
                         75,
                         (Self.Visible = true && (IsBlankOrError(dropdown_LocationPicker) || dropdown_LocationPicker.Selected.Value = Blank())),
-                        55,
+                        75,
                         (Self.Visible = true && (!IsBlankOrError(dropdown_LocationPicker) || dropdown_LocationPicker.Selected.Value <> Blank())),
                         0
                     )
@@ -2984,209 +3688,432 @@ Screens:
                     You may not proceed until you provide an answer to all required questions!"
                   Visible: |-
                     =If(
+                        ctn_PopUp_ClassPicker_Location.Visible,
+                            false,
                         (IsBlankOrError(dropdown_DateTimePicker.Selected) || dropdown_DateTimePicker.Selected.Value = Blank() && ctn_PopUp_ClassPicker_DateTime.Visible),
-                        true,
+                            true,
                         ((IsBlankOrError(dropdown_LocationPicker.Selected.Value) || dropdown_LocationPicker.Selected.Value = Blank()) && ctn_PopUp_ClassPicker_Location.Visible),
-                        true,
+                            true,
                         ((!IsBlankOrError(dropdown_LocationPicker.Selected.Value) || dropdown_LocationPicker.Selected.Value <> Blank()) && ctn_PopUp_ClassPicker_Location.Visible),
-                        false,
+                            false,
                         !ctn_PopUp_ClassPicker_Location.Visible,
-                        true,
+                            true,
                         true
                     )
                   Width: =1136
                   Y: =Parent.Height - Self.Height
-      - Button1:
-          Control: ModernButton@1.0.0
+      - ctn_PopUp_ScenarioDescription:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
           Properties:
-            Height: =50
-            OnSelect: |-
-              =Reset(dropdown_RolePicker);
-              Reset(dropdown_ScenarioPicker);
-              Reset(dropdown_DateTimePicker);
-              Reset(dropdown_LocationPicker);
-              /*
-              Reset(DataCardValue1);
-              Reset(DataCardValue3);
-              Reset(DataCardValue7);
-              Reset(DataCardValue8);
-              Reset(DropdownCanvas1);
-              Reset(DataCardValue13);
-              Reset(DataCardValue16);
-              Reset(DataCardValue17);
-              Reset(DataCardValue19);
-              Reset(MinuteValue1);
-              Reset(HourValue1);
-              Reset(DateValue1);
-              Reset(MinuteValue2);
-              Reset(HourValue2);
-              Reset(DateValue2);
-              Reset(DataCardValue21);
-              Reset(DataCardValue23);
-              */
-              ResetForm(Form1);
-              ResetForm(Form2);
-
-
-              Set(_allRoomsConcat, Blank());
-              Set(_calendarVisible, Blank());
-              Set(_dateSelected, Blank());
-              Set(_dateSelected2, Blank());
-              Set(_firstDayInView, Blank());
-              Set(_FirstDayinView2, Blank());
-              Set(_firstDayOfMonth, Blank());
-              Set(_firstDayOfMonth2, Blank());
-              Set(_firstDayofWeek2, Blank());
-              Set(_lastDayOfMonth, Blank());
-              Set(_LastDayOfMonth2, Blank());
-              Set(_maxDate, Blank());
-              Set(_MaxDate, Blank());
-              Set(_MaxDate2, Blank());
-              Set(_minDate, Blank());
-              Set(_MinDate, Blank());
-              Set(_MinDate2, Blank());
-              Set(_myCalendarName, Blank());
-              Set(_myScheduledMeeting, Blank());
-              Set(_noRoomLists, Blank());
-              Set(_roomListSelected, Blank());
-              Set(_selectedMeetingTime, Blank());
-              Set(_selectedRoom, Blank());
-              Set(_selectedRoomList, Blank());
-              Set(_selectedUser, Blank());
-              Set(_showDetails, Blank());
-              Set(_showMeetingTimes, Blank());
-              Set(currentItem, Blank());
-              Set(endByDate, Blank());
-              Set(gv_item, Blank());
-              Set(maxOccurrence, Blank());
-              Set(NthWeekdayRecord, Blank());
-              Set(numWorkDays, Blank());
-              Set(PDFPrint, Blank());
-              Set(startWeekday, Blank());
-              Set(submitItem, Blank());
-              //Set(user_isAdmin, Blank());
-              //Set(userAccessLevel_text, Blank());
-              Set(var_Attendees, Blank());
-              //Set(var_AuthorInfo, Blank();
-              Set(var_Date, Blank());
-              Set(var_Date_central, Blank());
-              Set(var_DayOfWeek, Blank());
-              Set(var_Duration, Blank());
-              Set(var_Duration_central, Blank());
-              Set(var_EmailBody, Blank());
-              Set(var_EndDateTime_central, Blank());
-              Set(var_EndTime, Blank());
-              Set(var_EndTime_central, Blank());
-              Set(var_firstHalfDuration, Blank());
-              Set(var_firstHalfDuration_central, Blank());
-              Set(var_ManagerEmail, Blank());
-              Set(var_MeetingCategory, Blank());
-              Set(var_OptionalAttendees, Blank());
-              Set(var_reservationBuildingNumber, Blank());
-              Set(var_reservationDivision, Blank());
-              Set(var_reservationFloorNumber, Blank());
-              Set(var_reservationFullDateTime, Blank());
-              Set(var_reservationFullLocation, Blank());
-              Set(var_reservationRole, Blank());
-              Set(var_reservationRoomNumber, Blank());
-              Set(var_reservationScenario, Blank());
-              Set(var_scenarioTrainingMaterialsURL, Blank());
-              Set(var_secondHalfTime, Blank());
-              Set(var_secondHalfTime_central, Blank());
-              Set(var_Service, Blank());
-              Set(var_StartDateTime_central, Blank());
-              Set(var_StartTime, Blank());
-              Set(var_StartTime_central, Blank());
-              Set(varAccept, Blank());
-              Set(varAccept3, Blank());
-              Set(varAccept4, Blank());
-              Set(varAttendees, Blank());
-              Set(varCancelContainer, Blank());
-              Set(varDaily, Blank());
-              Set(varDefaultEndTime, Blank());
-              Set(varDescription, Blank());
-              //Set(varDeskAccessControl_record, Blank());
-              Set(varDeskMode, Blank());
-              Set(var_EmailBody, Blank());
-              Set(varEndDate, Blank());
-              Set(varEventEndTime, Blank());
-              Set(varEventStartTime, Blank());
-              Set(varImportance, Blank());
-              Set(varIsImpersonating, Blank());
-              Set(varManageSelectedDesk, Blank());
-              Set(varMeetCat, Blank());
-              Set(varOptionalAttendees, Blank());
-              Set(varPopUp_ClassPicker, Blank());
-              Set(varPopUp_ClassPicker_scenario, Blank());
-              Set(varPopUp_ClassPicker_scenarioDate, Blank());
-              Set(varPopUp_ClassPicker_scenarioDateTime, Blank());
-              Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank());
-              Set(varPopUp_ClassPicker_scenarioEnd24, Blank());
-              Set(varPopUp_ClassPicker_scenarioEndTime, Blank());
-              Set(varPopUp_ClassPicker_scenarioLocation, Blank());
-              Set(varPopUp_ClassPicker_scenarioName, Blank());
-              Set(varPopUp_ClassPicker_scenarioRole, Blank());
-              Set(varPopUp_ClassPicker_scenarioSplit, Blank());
-              Set(varPopUp_ClassPicker_scenarioStart24, Blank());
-              Set(varPopUp_ClassPicker_scenarioStartTime, Blank());
-              //Set(varRealEmail, Blank());
-              //Set(varRealEntraID, Blank());
-              Set(varRecurrence, Blank());
-              Set(varRecurrenceID, Blank());
-              Set(varReminder, Blank());
-              //Set(varRepoVersion, Blank());
-              Set(varReservePOC, Blank());
-              Set(varSelectedDesk, Blank());
-              Set(varSelectedReservation, Blank());
-              Set(varSelectedStartDate, Blank());
-              Set(varsmartboardck, Blank());
-              //Set(varTargetEmail, Blank());
-              //Set(varTargetEntraID, Blank());
-              Set(varTimer, Blank());
-              Set(varTitle, Blank());
-              Set(varURL, Blank());
-              Set(varURLName, Blank());
-              Set(varUserExists, Blank());
-              //Set(varUser_details, Blank());
-              Set(varWeekday, Blank());
-
-
-              Clear(AllRooms);
-              Clear(AvailableRooms);
-              Clear(AvailableRoomsOptimal);
-              Clear(col_EventBuildDetails);
-              Clear(col_EventCombinedDetails);
-              Clear(col_MasterSchedule);
-              Clear(colCombinedRecurrence);
-              Clear(colDates);
-              //Clear(colDeskAccess);
-              Clear(colDeskChckRecur);
-              Clear(CollectionRecurrence);
-              //Clear(colMenu);
-              Clear(colRoomFilter);
-              Clear(colSelectedDesks);
-              Clear(colSmartboard);
-              //Clear(colUser_details);
-              Clear(MeetingTimes);
-              Clear(MyPeople);
-              Clear(RoomsLists);
-              Clear(RoomTimeSuggestions);
-              Clear(WeekdaysOnly);
-              Clear(wkDays);
-              Clear(wkDaysTemp);
-
-              Refresh(Desks);
-              Refresh('Desk Reservations');
-              Refresh(MasterScheduleList);
-              Refresh(DeskAccessControl);
-
-
-              Navigate(DebuggingScreen);
-            Text: ="RESET"
+            Fill: =RGBA(53, 61, 63, 0.75)
+            Height: =Parent.Height
             Visible: |-
               =If(
-                  Lower(User().Email) = Lower("kyle.coder@va.gov"),
+                  var_ViewScenarioDescription = true,
                   true,
                   false
               )
-            Width: =176
+            Width: =Parent.Width
+          Children:
+            - Button6:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(9, 33, 98, 1)
+                  BorderThickness: =5
+                  Color: =
+                  DisplayMode: =DisplayMode.View
+                  Fill: =RGBA(255, 255, 255, 1)
+                  Height: =Parent.Height / 1.3
+                  RadiusBottomLeft: =25
+                  RadiusBottomRight: =25
+                  RadiusTopLeft: =25
+                  RadiusTopRight: =25
+                  Text: =
+                  Width: =Parent.Width / 1.3
+                  X: =(Parent.Width / 2) - (Self.Width / 2)
+                  Y: =(Parent.Height / 2) - (Self.Height / 2)
+            - Text1:
+                Control: ModernText@1.0.0
+                Properties:
+                  Align: =Align.Center
+                  AutoHeight: =true
+                  FontWeight: =FontWeight.Bold
+                  Size: |-
+                    =//16
+                    If(
+                        Len(Self.Text) >= 75,
+                        16,
+                        Len(Self.Text) >= 60,
+                        20,
+                        Len(Self.Text) >= 48,
+                        22,
+                        Len(Self.Text) < 40,
+                        24
+                    )
+                  Text: ="Detailed Description of '" & var_reservationScenario & "':"
+                  Width: =Button6.Width - Button6.PaddingRight - Icon3.Width
+                  X: =Button6.X + Button6.PaddingLeft
+                  Y: =Button6.Y + Button6.PaddingTop
+            - Text3:
+                Control: ModernText@1.0.0
+                Properties:
+                  BorderColor: =RGBA(9, 33, 98, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =3
+                  Height: =Button6.Height - Icon3.Height - (Button6.PaddingBottom * 3)
+                  RadiusBottomLeft: =25
+                  RadiusBottomRight: =25
+                  RadiusTopLeft: =25
+                  RadiusTopRight: =25
+                  Size: =18
+                  Text: |-
+                    =LookUp(
+                        col_nationalEHRMLearningLabSessions,
+                        var_reservationScenario = ThisRecord.Title,
+                        ThisRecord.Description
+                    )
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =Button6.Width - (Button6.PaddingRight * 2)
+                  X: =Text1.X
+                  Y: =Icon3.Y + Icon3.Height
+            - Icon3:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(255, 255, 255, 0)
+                  BorderThickness: =3
+                  Height: |+
+                    =50
+                  HoverBorderColor: =RGBA(9, 33, 98, 1)
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: =RGBA(9, 33, 98, .5)
+                  Icon: =Icon.CancelBadge
+                  OnSelect: |-
+                    =If(
+                        var_ViewScenarioDescription = true,
+                        Set(var_ViewScenarioDescription, false),
+                        Set(var_ViewScenarioDescription, true)
+                    )
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  Width: =Icon3.Height
+                  X: =Text1.X + Text1.Width - Button6.PaddingRight - 10
+                  Y: =Text1.Y + 3
+      - ctn_PopUp_ScenarioPDF:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(53, 61, 63, 0.75)
+            Height: =Parent.Height
+            Visible: |-
+              =If(
+                  var_viewPopUP_ScenarioPDF = true,
+                  true,
+                  false
+              )
+            Width: =Parent.Width
+          Children:
+            - Timer5:
+                Control: Timer@2.1.0
+                Properties:
+                  AutoStart: |-
+                    =If(
+                        var_viewPopUP_ScenarioPDF = true,
+                        true,
+                        false
+                    )
+                  Duration: |-
+                    =If(
+                        var_viewPopUP_ScenarioPDF = true,
+                        15000,
+                        0
+                    )
+                  OnTimerEnd: |-
+                    =If(
+                        ctn_PopUp_ScenarioPDF.Visible = true || var_viewPopUP_ScenarioPDF = true,
+                            Set(var_timerPopUP_ScenarioPDF, true),
+                        ctn_PopUp_ScenarioPDF.Visible = false || var_viewPopUP_ScenarioPDF = false || IsBlank(var_viewPopUP_ScenarioPDF),
+                            Set(var_timerPopUP_ScenarioPDF, false),
+                        Set(var_timerPopUP_ScenarioPDF, false)
+                    )
+                  Repeat: |-
+                    =false
+                    /*
+                    If(
+                        var_viewPopUP_ScenarioPDF = true,
+                        true,
+                        false
+                    )
+                    */
+                  X: =398
+                  Y: =225
+            - Button6_2:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(9, 33, 98, 1)
+                  BorderThickness: =5
+                  Color: =
+                  DisplayMode: =DisplayMode.View
+                  Fill: =RGBA(255, 255, 255, 1)
+                  Height: =Parent.Height - 25
+                  RadiusBottomLeft: =25
+                  RadiusBottomRight: =25
+                  RadiusTopLeft: =25
+                  RadiusTopRight: =25
+                  Text: =
+                  Width: =Parent.Width - 25
+                  X: =(Parent.Width / 2) - (Self.Width / 2)
+                  Y: =(Parent.Height / 2) - (Self.Height / 2)
+            - Image3:
+                Control: Image@2.2.3
+                Properties:
+                  Height: =300
+                  Image: =Spinner
+                  PaddingBottom: =10
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =10
+                  Width: =300
+                  X: =(Parent.Width / 2) - (Self.Width / 2)
+                  Y: =271
+            - Text1_1:
+                Control: ModernText@1.0.0
+                Properties:
+                  Align: =Align.Center
+                  AutoHeight: =true
+                  Color: =RGBA(9, 33, 98, 1)
+                  FontWeight: =FontWeight.Bold
+                  Size: |-
+                    =//16
+                    If(
+                        Len(Self.Text) >= 90,
+                        18,
+                        Len(Self.Text) >= 70,
+                        24,
+                        Len(Self.Text) >= 48,
+                        28,
+                        Len(Self.Text) < 48,
+                        30
+                    )
+                  Text: ="PDF Preview of '" & var_reservationScenario & "' Training Materials:"
+                  Width: =Button6_2.Width - Button6_2.PaddingRight - Icon3_2.Width - Button6_2.PaddingRight - 10
+                  X: =Button6_2.X + Button6_2.PaddingLeft
+                  Y: =Button6_2.Y + Button6_2.PaddingTop
+            - Text3_1:
+                Control: ModernText@1.0.0
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(9, 33, 98, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =3
+                  FontWeight: =FontWeight.Bold
+                  Height: =Parent.Height - Self.Y - Button6_2.Y - (Self.PaddingBottom)
+                  Italic: =true
+                  RadiusBottomLeft: =25
+                  RadiusBottomRight: =25
+                  RadiusTopLeft: =25
+                  RadiusTopRight: =25
+                  Size: =54
+                  Text: |-
+                    ="WARNING!
+                    Loading preview of this large
+                    file may take a few minutes...
+
+
+
+
+                    "
+                  Width: =Button6_2.Width - 10
+                  X: =Text1_1.X
+                  Y: =Icon3_2.Y + Icon3_2.Height
+            - Gallery2:
+                Control: Gallery@2.15.0
+                Variant: Vertical
+                Properties:
+                  Fill: =RGBA(255, 255, 255, 1)
+                  Height: =Text3_1.Height
+                  Items: |-
+                    =First(
+                        Filter(
+                                'Learning Labs Library',
+                                ThisRecord.'Type of Content'.Value = "Workbook"
+                                && "_Sandbox_WB.docx" in ThisRecord.'File name with extension'
+                                && Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(dropdown_ScenarioPicker.Selected.Value, "Residential Rehabilitation Treatment Program Admission", "RRTP Admission"), "Revenue Utilization Review", "RUR"), "  ", ""), " - Day 1", ""), " - Day 2", ""), " - Day 3", ""), "Scenario 1 - ", ""), "Scenario 2 - ", ""), "Scenario 3 - ", "") in ThisRecord.Scenario.Value
+                            )
+                        )
+
+                    /*
+                    First(
+                        Filter(
+                            'Learning Labs Library',
+                            ThisRecord.'Type of Content'.Value = "Workbook"
+                            &&  (
+                                    dropdown_ScenarioPicker.Selected.Value = ThisRecord.Scenario.Value
+                                    || dropdown_ScenarioPicker.Selected.Value in ThisRecord.Scenario.Value
+                                    //|| ForAll(testing_scenarioToSplit, !Blank()) in ThisRecord.Scenario.Value
+                                )
+                        )
+                    )
+                    */
+                  Visible: =false
+                  Width: =Button6_2.Width - Button6_2.BorderThickness - Button6_2.PaddingRight
+                  X: =Text3_1.X
+                  Y: =Text3_1.Y
+                Children:
+                  - Text4:
+                      Control: ModernText@1.0.0
+                      Properties:
+                        Height: =44
+                        OnSelect: =Select(Parent)
+                        Size: =16
+                        Text: =ThisItem.Title
+                        Width: =814
+                  - Text5:
+                      Control: ModernText@1.0.0
+                      Properties:
+                        OnSelect: =Select(Parent)
+                        Size: =16
+                        Text: =ThisItem.'Type of Content'.Value
+                        Width: =814
+                        Y: =40
+                  - Text6:
+                      Control: ModernText@1.0.0
+                      Properties:
+                        OnSelect: |-
+                          =Launch(
+                              Concatenate(
+                                  Self.Text
+                              )
+                          )
+                        Size: =16
+                        Text: |-
+                          =ThisItem.'Link to item'
+                          //"https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/" & ThisItem.'Full Path'
+                        Width: =814
+                        Y: =82
+                  - Text8:
+                      Control: ModernText@1.0.0
+                      Properties:
+                        OnSelect: =Launch(Self.Text)
+                        Size: =16
+                        Text: |-
+                          =ThisItem.'Link to item'
+                          //Substitute(ThisItem.Thumbnail.Large, "/thumbnail", "/pdf")
+                        Width: =814
+                        Y: =82
+            - Icon3_2:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(255, 255, 255, 0)
+                  BorderThickness: =3
+                  Height: |
+                    =50
+                  HoverBorderColor: =RGBA(9, 33, 98, 1)
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: =RGBA(9, 33, 98, .5)
+                  Icon: =Icon.CancelBadge
+                  OnSelect: |-
+                    =If(
+                        var_viewPopUP_ScenarioPDF = true,
+                        Set(var_viewPopUP_ScenarioPDF, false) && Set(var_timerPopUP_ScenarioPDF, false),
+                        Set(var_viewPopUP_ScenarioPDF, true) && Set(var_timerPopUP_ScenarioPDF, false)
+                    );
+                    Reset(Gallery2);
+                    Reset(Timer5);
+                  PaddingBottom: =3
+                  PaddingLeft: =3
+                  PaddingRight: =3
+                  PaddingTop: =3
+                  Width: =Icon3_2.Height
+                  X: =Text1_1.X + Text1_1.Width
+                  Y: =Text1_1.Y + 3
+            - Text10:
+                Control: ModernText@1.0.0
+                Group: Group1
+                Properties:
+                  Align: =Align.Center
+                  FontWeight: =FontWeight.Semibold
+                  Italic: =true
+                  OnSelect: =Select(Icon7)
+                  Size: =22
+                  Text: |-
+                    ="Tip: If file preview is slow to load or to print PDF, click the      " & "    toolbar button to open in a new window..."
+                  Width: =Button6_2.Width - (Button6_2.PaddingRight * 4)
+                  X: =Button6_2.X + (Button6_2.PaddingLeft * 2)
+                  Y: =Button6_2.Height - Self.Height
+            - Icon7:
+                Control: Classic/Icon@2.5.0
+                Group: Group1
+                Properties:
+                  Height: =Text10.Height
+                  Icon: =Icon.OpenInNewWindow
+                  OnSelect: =Launch(var_scenarioDocumentLink_text)
+                  PaddingBottom: =5
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  PaddingTop: =5
+                  Width: =Self.Height
+                  X: =Text10.X + (Text10.Width / 1.82 )
+                  Y: =Text10.Y
+      - PdfViewer2:
+          Control: PDFViewer@2.5.0
+          Properties:
+            Document: |-
+              =IfError(
+                  Substitute(Gallery2.Selected.Thumbnail.Large, "/thumbnail", "/pdf"),
+                  "var_scenarioDocument_record.'Link to item"
+              )
+              //Substitute(Gallery2.Selected.Thumbnail.Large, "/thumbnail", "/pdf")
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =Gallery2.Height
+            ShowControls: =true
+            Visible: |+
+              =If(
+                  var_timerPopUP_ScenarioPDF = true,
+                  true,
+                  false
+              )
+            Width: =Text3_1.Width
+            X: =Text3_1.X
+            Y: =Gallery2.Y
+      - Icon5:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            Height: |+
+              =58
+            Icon: =Icon.Print
+            OnSelect: |-
+              =UpdateContext({hideForPDF: true});
+              Set(
+                  PDFPrint2,
+                  PDF(
+                      Gallery2, //Substitute(Gallery2.Selected.Thumbnail.Large, "/thumbnail", "/pdf"),
+                      {
+                          Size: PaperSize.Letter,
+                          Orientation: PaperOrientation.Portrait,
+                          ExpandContainers: true
+                          //PaperSize: PaperSize.Letter,
+                          //PaperOrientation: PaperOrientation.Portrait
+                      }
+                  )
+              );
+              UpdateContext({hideForPDF: false});
+              //Print();
+              //Navigate(PDFScreen);
+            PaddingBottom: =12
+            PaddingLeft: =5
+            PaddingRight: =12
+            PaddingTop: =12
+            Visible: =false
+            Width: =Self.Height
+            X: |+
+              =PdfViewer2.X + PdfViewer2.Width - 215
+            Y: =PdfViewer2.Y
+      - Button12:
+          Control: ModernButton@1.0.0
+          Properties:
+            OnSelect: =Launch(var_scenarioDocument_record.'Link to item')
+            Visible: =false

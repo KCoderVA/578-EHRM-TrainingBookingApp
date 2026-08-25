@@ -74,7 +74,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Tabs",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 866,
+        "PublishOrderIndex": 929,
         "Rules": [
           {
             "Category": "Data",
@@ -220,7 +220,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 868,
+            "PublishOrderIndex": 931,
             "Rules": [
               {
                 "Category": "Design",
@@ -352,7 +352,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 869,
+            "PublishOrderIndex": 932,
             "Rules": [
               {
                 "Category": "Data",
@@ -735,7 +735,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 870,
+            "PublishOrderIndex": 933,
             "Rules": [
               {
                 "Category": "Data",
@@ -1138,7 +1138,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 871,
+            "PublishOrderIndex": 934,
             "Rules": [
               {
                 "Category": "Data",
@@ -1548,7 +1548,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Tabs",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 867,
+        "PublishOrderIndex": 930,
         "Rules": [
           {
             "Category": "Data",
@@ -1570,7 +1570,7 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "Tabs.Width / CountRows(Tabs.Items)",
+            "InvariantScript": "If(\r\n    !IsBlankOrError(CountRows(Tabs.Items)),\r\n        Tabs.Width / CountRows(Tabs.Items),\r\n    IsBlankOrError(CountRows(Tabs.Items)),\r\n        Parent.Width / 6,\r\n    101\r\n)\r\n/*\r\nIf(\r\n    !IsBlankOrError(CountRows(Tabs.Items)),\r\n        Tabs.Width / CountRows(Tabs.Items),\r\n    IsBlankOrError(CountRows(Tabs.Items)),\r\n        Parent.Width / 6,\r\n    //!IsBlankOrError(CountRows(colMenu),\r\n    //    Tabs.Width / CountRows(colMenu)),\r\n    101\r\n)\r\n*/",
             "Property": "TemplateSize",
             "RuleProviderType": "User"
           },
@@ -1791,7 +1791,7 @@
       },
       "HomePage"
     ],
-    "LastModifiedTimestamp": "639220786792096890",
+    "LastModifiedTimestamp": "639228189825584038",
     "Name": "Tabs",
     "Rules": [
       {
@@ -1882,7 +1882,7 @@
   "IsPcfControl": false,
   "IsPremiumPcfControl": false,
   "IsWidgetTemplate": false,
-  "LastModifiedTimestamp": "639220786792096890",
+  "LastModifiedTimestamp": "639228189825584038",
   "Name": "9ac8466133f3416a8cb020a4ca8549de",
   "OverridableProperties": {},
   "TemplateOriginalName": "6eadfe97a9d744baa7654bf7e19d679f",

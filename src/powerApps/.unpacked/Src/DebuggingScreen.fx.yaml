@@ -2,9 +2,17 @@ DebuggingScreen As screen:
     Fill: =Color.LightGray
     Height: =App.Height
     LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnHidden: |-
+        =Set(var_DebuggingScreen, false);
+        Set(var_DebuggingTimerDuration, 12000);
+    OnVisible: |-
+        =Set(var_DebuggingScreen, true);
+        Set(var_DebuggingTimerDuration, 12000);
     Width: =App.Width
 
     ctnDebugScreen_content As groupContainer.manualLayoutContainer:
+        BorderColor: =RGBA(9, 33, 98, 1)
+        BorderThickness: =3
         DropShadow: =DropShadow.Light
         Height: =Parent.Height - ctnDebugScreen_header.Height
         LayoutGridColumnMinWidth: =0
@@ -20,6 +28,8 @@ DebuggingScreen As screen:
         ZIndex: =5
 
         Container4 As groupContainer.manualLayoutContainer:
+            BorderColor: =RGBA(9, 33, 98, 1)
+            BorderThickness: =1
             DropShadow: =DropShadow.Light
             Height: =Gallery1.Height
             LayoutGridColumnMinWidth: =0
@@ -33,7 +43,7 @@ DebuggingScreen As screen:
             Width: =Gallery1.Width
             X: =Gallery1.X + Gallery1.Width
             Y: =Gallery1.Y
-            ZIndex: =2
+            ZIndex: =1
 
             HtmlText5 As htmlViewer:
                 DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -45,183 +55,1166 @@ DebuggingScreen As screen:
                 ZIndex: =1
 
             Timer2 As timer:
-                AutoStart: =true
+                AutoPause: |-
+                    =If(
+                        Self.Duration > 1,
+                        true,
+                        false
+                    )
+                AutoStart: |-
+                    =If(
+                        Self.Duration > 1,
+                        true,
+                        false
+                    )
                 BorderColor: =App.Theme.Colors.Primary
                 Color: =App.Theme.Colors.PrimaryForeground
                 DisabledBorderColor: =RGBA(244, 244, 244, 1)
                 DisabledColor: =RGBA(166, 166, 166, 1)
                 DisabledFill: =RGBA(244, 244, 244, 1)
-                Duration: =2500
+                Duration: =var_DebuggingTimerDuration
                 Fill: =App.Theme.Colors.Primary
                 Font: =App.Theme.Font
                 Height: =100
                 HoverBorderColor: =App.Theme.Colors.Darker10
                 HoverColor: =App.Theme.Colors.PrimaryForeground
                 HoverFill: =App.Theme.Colors.Darker10
-                OnSelect: =
+                OnSelect: |-
+                    =If(
+                        Self.Duration >= 1,
+                        Set(var_DebuggingTimerDuration, Blank()),
+                        Set(var_DebuggingTimerDuration, 12000)
+                    )
                 OnTimerEnd: =Navigate(Dashboard);
-                OnTimerStart: |-
+                OnTimerStart: |
                     =ResetForm(Form1);
-                    ResetForm(Form2);
-                    
-                    
-                    Set(_allRoomsConcat, Blank());
-                    Set(_calendarVisible, Blank());
-                    Set(_dateSelected, Blank());
-                    Set(_dateSelected2, Blank());
-                    Set(_firstDayInView, Blank());
-                    Set(_FirstDayinView2, Blank());
-                    Set(_firstDayOfMonth, Blank());
-                    Set(_firstDayOfMonth2, Blank());
-                    Set(_firstDayofWeek2, Blank());
-                    Set(_lastDayOfMonth, Blank());
-                    Set(_LastDayOfMonth2, Blank());
-                    Set(_maxDate, Blank());
-                    Set(_MaxDate, Blank());
-                    Set(_MaxDate2, Blank());
-                    Set(_minDate, Blank());
-                    Set(_MinDate, Blank());
-                    Set(_MinDate2, Blank());
-                    Set(_myCalendarName, Blank());
-                    Set(_myScheduledMeeting, Blank());
-                    Set(_noRoomLists, Blank());
-                    Set(_roomListSelected, Blank());
-                    Set(_selectedMeetingTime, Blank());
-                    Set(_selectedRoom, Blank());
-                    Set(_selectedRoomList, Blank());
-                    Set(_selectedUser, Blank());
-                    Set(_showDetails, Blank());
-                    Set(_showMeetingTimes, Blank());
-                    Set(currentItem, Blank());
-                    Set(endByDate, Blank());
-                    Set(gv_item, Blank());
-                    Set(maxOccurrence, Blank());
-                    Set(NthWeekdayRecord, Blank());
-                    Set(numWorkDays, Blank());
-                    Set(PDFPrint, Blank());
-                    Set(startWeekday, Blank());
-                    Set(submitItem, Blank());
-                    //Set(user_isAdmin, Blank());
-                    //Set(userAccessLevel_text, Blank());
-                    Set(var_Attendees, Blank());
-                    //Set(var_AuthorInfo, Blank();
-                    Set(var_Date, Blank());
-                    Set(var_Date_central, Blank());
-                    Set(var_DayOfWeek, Blank());
-                    Set(var_Duration, Blank());
-                    Set(var_Duration_central, Blank());
-                    Set(var_EmailBody, Blank());
-                    Set(var_EndDateTime_central, Blank());
-                    Set(var_EndTime, Blank());
-                    Set(var_EndTime_central, Blank());
-                    Set(var_firstHalfDuration, Blank());
-                    Set(var_firstHalfDuration_central, Blank());
-                    Set(var_ManagerEmail, Blank());
-                    Set(var_MeetingCategory, Blank());
-                    Set(var_OptionalAttendees, Blank());
-                    Set(var_reservationBuildingNumber, Blank());
-                    Set(var_reservationDivision, Blank());
-                    Set(var_reservationFloorNumber, Blank());
-                    Set(var_reservationFullDateTime, Blank());
-                    Set(var_reservationFullLocation, Blank());
-                    Set(var_reservationRole, Blank());
-                    Set(var_reservationRoomNumber, Blank());
-                    Set(var_reservationScenario, Blank());
-                    Set(var_scenarioTrainingMaterialsURL, Blank());
-                    Set(var_secondHalfTime, Blank());
-                    Set(var_secondHalfTime_central, Blank());
-                    Set(var_Service, Blank());
-                    Set(var_StartDateTime_central, Blank());
-                    Set(var_StartTime, Blank());
-                    Set(var_StartTime_central, Blank());
-                    Set(varAccept, Blank());
-                    Set(varAccept3, Blank());
-                    Set(varAccept4, Blank());
-                    Set(varAttendees, Blank());
-                    Set(varCancelContainer, Blank());
-                    Set(varDaily, Blank());
-                    Set(varDefaultEndTime, Blank());
-                    Set(varDescription, Blank());
-                    //Set(varDeskAccessControl_record, Blank());
-                    Set(varDeskMode, Blank());
-                    Set(var_EmailBody, Blank());
-                    Set(varEndDate, Blank());
-                    Set(varEventEndTime, Blank());
-                    Set(varEventStartTime, Blank());
-                    Set(varImportance, Blank());
-                    Set(varIsImpersonating, Blank());
-                    Set(varManageSelectedDesk, Blank());
-                    Set(varMeetCat, Blank());
-                    Set(varOptionalAttendees, Blank());
-                    Set(varPopUp_ClassPicker, Blank());
-                    Set(varPopUp_ClassPicker_scenario, Blank());
-                    Set(varPopUp_ClassPicker_scenarioDate, Blank());
-                    Set(varPopUp_ClassPicker_scenarioDateTime, Blank());
-                    Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank());
-                    Set(varPopUp_ClassPicker_scenarioEnd24, Blank());
-                    Set(varPopUp_ClassPicker_scenarioEndTime, Blank());
-                    Set(varPopUp_ClassPicker_scenarioLocation, Blank());
-                    Set(varPopUp_ClassPicker_scenarioName, Blank());
-                    Set(varPopUp_ClassPicker_scenarioRole, Blank());
-                    Set(varPopUp_ClassPicker_scenarioSplit, Blank());
-                    Set(varPopUp_ClassPicker_scenarioStart24, Blank());
-                    Set(varPopUp_ClassPicker_scenarioStartTime, Blank());
-                    //Set(varRealEmail, Blank());
-                    //Set(varRealEntraID, Blank());
-                    Set(varRecurrence, Blank());
-                    Set(varRecurrenceID, Blank());
-                    Set(varReminder, Blank());
+                    ResetForm(Form3);
+                    ResetForm(form_EditDesks);
+                    ResetForm(form_EditUsers);
+                    Set(
+                        _dateSelected2,
+                        Blank()
+                    );
+                    Set(
+                        _FirstDayinView2,
+                        Blank()
+                    );
+                    Set(
+                        _firstDayOfMonth2,
+                        Blank()
+                    );
+                    Set(
+                        _firstDayofWeek2,
+                        Blank()
+                    );
+                    Set(
+                        _LastDayOfMonth2,
+                        Blank()
+                    );
+                    Set(
+                        _MaxDate,
+                        Blank()
+                    );
+                    Set(
+                        _MaxDate2,
+                        Blank()
+                    );
+                    Set(
+                        _MinDate,
+                        Blank()
+                    );
+                    Set(
+                        _MinDate2,
+                        Blank()
+                    );
+                    Set(
+                        _selectedUser,
+                        Blank()
+                    );
+                    Set(
+                        adminSelected,
+                        Blank()
+                    );
+                    Set(
+                        currentItem,
+                        Blank()
+                    );
+                    Set(
+                        endByDate,
+                        Blank()
+                    );
+                    Set(
+                        gv_item,
+                        Blank()
+                    );
+                    Set(
+                        maxOccurrence,
+                        Blank()
+                    );
+                    Set(
+                        NthWeekdayRecord,
+                        Blank()
+                    );
+                    Set(
+                        numWorkDays,
+                        Blank()
+                    );
+                    Set(
+                        PDFPrint,
+                        Blank()
+                    );
+                    Set(
+                        restrictSelected,
+                        Blank()
+                    );
+                    Set(
+                        startWeekday,
+                        Blank()
+                    );
+                    Set(
+                        submitItem,
+                        Blank()
+                    );
+                    Set(
+                        user_isAdmin,
+                        Blank()
+                    );
+                    //Set(
+                    //    user_IsSuperUser,
+                    //    Blank()
+                    //);
+                    Set(
+                        userAccessLevel_text,
+                        Blank()
+                    );
+                    Set(
+                        usersSelected,
+                        Blank()
+                    );
+                    Set(
+                        var_Attendees,
+                        Blank()
+                    );
+                    //Set(
+                    //var_AuthorInfo,
+                    //Blank()
+                    //);
+                    Set(
+                        var_Date,
+                        Blank()
+                    );
+                    Set(
+                        var_Date_central,
+                        Blank()
+                    );
+                    Set(
+                        var_DayOfWeek,
+                        Blank()
+                    );
+                    Set(
+                        var_DebuggingScreen,
+                        Blank()
+                    );
+                    Set(
+                        var_DebuggingTimerDuration,
+                        Blank()
+                    );
+                    Set(
+                        var_Duration,
+                        Blank()
+                    );
+                    Set(
+                        var_Duration_central,
+                        Blank()
+                    );
+                    Set(
+                        var_EmailBody,
+                        Blank()
+                    );
+                    Set(
+                        var_EndDateTime_central,
+                        Blank()
+                    );
+                    Set(
+                        var_EndTime,
+                        Blank()
+                    );
+                    Set(
+                        var_EndTime_central,
+                        Blank()
+                    );
+                    Set(
+                        var_firstHalfDuration,
+                        Blank()
+                    );
+                    Set(
+                        var_firstHalfDuration_central,
+                        Blank()
+                    );
+                    Set(
+                        var_loading,
+                        Blank()
+                    );
+                    Set(
+                        var_ManagerEmail,
+                        Blank()
+                    );
+                    Set(
+                        var_MeetingCategory,
+                        Blank()
+                    );
+                    Set(
+                        var_OptionalAttendees,
+                        Blank()
+                    );
+                    Set(
+                        var_PopUp_AddNewUser,
+                        Blank()
+                    );
+                    Set(
+                        var_PopUp_SuperUser,
+                        Blank()
+                    );
+                    Set(
+                        var_reservationAgreementBody,
+                        Blank()
+                    );
+                    Set(
+                        var_reservationBuildingNumber,
+                        Blank()
+                    );
+                    Set(
+                        var_reservationDivision,
+                        Blank()
+                    );
+                    Set(
+                        var_reservationFloorNumber,
+                        Blank()
+                    );
+                    Set(
+                        var_reservationFullDateTime,
+                        Blank()
+                    );
+                    Set(
+                        var_reservationFullLocation,
+                        Blank()
+                    );
+                    Set(
+                        var_reservationRole,
+                        Blank()
+                    );
+                    Set(
+                        var_reservationRoomNumber,
+                        Blank()
+                    );
+                    Set(
+                        var_reservationScenario,
+                        Blank()
+                    );
+                    Set(
+                        var_scenarioTrainingMaterialsURL,
+                        Blank()
+                    );
+                    Set(
+                        var_secondHalfTime,
+                        Blank()
+                    );
+                    Set(
+                        var_secondHalfTime_central,
+                        Blank()
+                    );
+                    Set(
+                        var_Service,
+                        Blank()
+                    );
+                    Set(
+                        var_StartDateTime_central,
+                        Blank()
+                    );
+                    Set(
+                        var_StartTime,
+                        Blank()
+                    );
+                    Set(
+                        var_StartTime_central,
+                        Blank()
+                    );
+                    Set(
+                        varAccept,
+                        Blank()
+                    );
+                    Set(
+                        varAccept3,
+                        Blank()
+                    );
+                    Set(
+                        varAccept4,
+                        Blank()
+                    );
+                    Set(
+                        varAllOK,
+                        Blank()
+                    );
+                    Set(
+                        varAttendees,
+                        Blank()
+                    );
+                    Set(
+                        varBackupOK,
+                        Blank()
+                    );
+                    Set(
+                        varBackupSimpleOK,
+                        Blank()
+                    );
+                    Set(
+                        varCalendarOK,
+                        Blank()
+                    );
+                    Set(
+                        varCancelContainer,
+                        Blank()
+                    );
+                    Set(
+                        varDaily,
+                        Blank()
+                    );
+                    Set(
+                        varDefaultEndTime,
+                        Blank()
+                    );
+                    Set(
+                        varDescription,
+                        Blank()
+                    );
+                    //Set(
+                    //    varDeskAccessControl_record,
+                    //    Blank()
+                    //);
+                    Set(
+                        varDeskMode,
+                        Blank()
+                    );
+                    Set(
+                        varEmailOK,
+                        Blank()
+                    );
+                    Set(
+                        varEndDate,
+                        Blank()
+                    );
+                    Set(
+                        varEventEndTime,
+                        Blank()
+                    );
+                    Set(
+                        varEventStartTime,
+                        Blank()
+                    );
+                    Set(
+                        varImportance,
+                        Blank()
+                    );
+                    Set(
+                        varIsImpersonating,
+                        Blank()
+                    );
+                    Set(
+                        varMainOK,
+                        Blank()
+                    );
+                    Set(
+                        varMainSimpleOK,
+                        Blank()
+                    );
+                    Set(
+                        varManageSelectedDesk,
+                        Blank()
+                    );
+                    Set(
+                        varMeetCat,
+                        Blank()
+                    );
+                    Set(
+                        varMyProfile,
+                        Blank()
+                    );
+                    Set(
+                        varNewAccessLevelToAdd,
+                        Blank()
+                    );
+                    Set(
+                        varNewEmailToAdd,
+                        Blank()
+                    );
+                    Set(
+                        varNewEventLine,
+                        Blank()
+                    );
+                    Set(
+                        varOptionalAttendees,
+                        Blank()
+                    );
+                    Set(
+                        varPatchSuperUsersOK,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenario,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioDate,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioDateTime,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioDayOfWeek,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioEnd24,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioEndTime,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioLocation,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioName,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioRole,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioSplit,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioStart24,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioStartTime,
+                        Blank()
+                    );
+                    /*
+                    Set(
+                        varRealEmail,
+                        Blank()
+                    );
+                    Set(
+                        varRealEntraID,
+                        Blank()
+                    );
+                    */
+                    Set(
+                        varRecurrence,
+                        Blank()
+                    );
+                    Set(
+                        varRecurrenceID,
+                        Blank()
+                    );
+                    Set(
+                        varReminder,
+                        Blank()
+                    );
+                    //Set(
+                    //varRepoVersion,
+                    //Blank()
+                    //);
+                    Set(
+                        varReservePOC,
+                        Blank()
+                    );
+                    Set(
+                        varSelectedDesk,
+                        Blank()
+                    );
+                    Set(
+                        varSelectedReservation,
+                        Blank()
+                    );
+                    Set(
+                        varSelectedStartDate,
+                        Blank()
+                    );
+                    Set(
+                        varShowRedirect,
+                        Blank()
+                    );
+                    Set(
+                        varsmartboardck,
+                        Blank()
+                    );
+                    Set(
+                        varStudentMgrMail,
+                        Blank()
+                    );
+                    Set(
+                        varStudentMgrProfile,
+                        Blank()
+                    );
+                    Set(
+                        varStudentProfile,
+                        Blank()
+                    );
+                    Set(
+                        varSuperUserRow,
+                        Blank()
+                    );
+                    Set(
+                        varTargetEmail,
+                        Blank()
+                    );
+                    Set(
+                        varTargetEntraID,
+                        Blank()
+                    );
+                    Set(
+                        varTimer,
+                        Blank()
+                    );
+                    Set(
+                        varTitle,
+                        Blank()
+                    );
+                    Set(
+                        varURL,
+                        Blank()
+                    );
+                    Set(
+                        varURLName,
+                        Blank()
+                    );
+                    /*
+                    Set(
+                        varUser_details,
+                        Blank()
+                    );
+                    */
+                    Set(
+                        varUserExists,
+                        Blank()
+                    );
+                    Set(
+                        varUserMode,
+                        Blank()
+                    );
+                    Set(
+                        varWeekday,
+                        Blank()
+                    );
+                    /////////////////
+                    Set(
+                        var_EmailBody,
+                        Blank()
+                    );
+                    Set(
+                        varEndDate,
+                        Blank()
+                    );
+                    Set(
+                        varEventEndTime,
+                        Blank()
+                    );
+                    Set(
+                        varEventStartTime,
+                        Blank()
+                    );
+                    Set(
+                        varImportance,
+                        Blank()
+                    );
+                    Set(
+                        varIsImpersonating,
+                        Blank()
+                    );
+                    Set(
+                        varManageSelectedDesk,
+                        Blank()
+                    );
+                    Set(
+                        varMeetCat,
+                        Blank()
+                    );
+                    Set(
+                        varOptionalAttendees,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenario,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioDate,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioDateTime,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioDayOfWeek,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioEnd24,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioEndTime,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioLocation,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioName,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioRole,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioSplit,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioStart24,
+                        Blank()
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioStartTime,
+                        Blank()
+                    );
+                    /*
+                    Set(
+                        varRealEmail,
+                        Blank()
+                    );
+                    Set(
+                        varRealEntraID,
+                        Blank()
+                    );
+                    */
+                    Set(
+                        varRecurrence,
+                        Blank()
+                    );
+                    Set(
+                        varRecurrenceID,
+                        Blank()
+                    );
+                    Set(
+                        varReminder,
+                        Blank()
+                    );
                     //Set(varRepoVersion, Blank());
-                    Set(varReservePOC, Blank());
-                    Set(varSelectedDesk, Blank());
-                    Set(varSelectedReservation, Blank());
-                    Set(varSelectedStartDate, Blank());
-                    Set(varsmartboardck, Blank());
+                    Set(
+                        varReservePOC,
+                        Blank()
+                    );
+                    Set(
+                        varSelectedDesk,
+                        Blank()
+                    );
+                    Set(
+                        varSelectedReservation,
+                        Blank()
+                    );
+                    Set(
+                        varSelectedStartDate,
+                        Blank()
+                    );
+                    Set(
+                        varsmartboardck,
+                        Blank()
+                    );
+                    Set(
+                        varStudentMgrMail,
+                        Blank()
+                    );
+                    Set(
+                        varStudentMgrProfile,
+                        Blank()
+                    );
+                    Set(
+                        varStudentProfile,
+                        Blank()
+                    );
+                    Set(
+                        varSuperUserRow,
+                        Blank()
+                    );
                     //Set(varTargetEmail, Blank());
                     //Set(varTargetEntraID, Blank());
-                    Set(varTimer, Blank());
-                    Set(varTitle, Blank());
-                    Set(varURL, Blank());
-                    Set(varURLName, Blank());
-                    Set(varUserExists, Blank());
-                    //Set(varUser_details, Blank());
-                    Set(varWeekday, Blank());
+                    Set(
+                        varTimer,
+                        Blank()
+                    );
+                    Set(
+                        varTitle,
+                        Blank()
+                    );
+                    Set(
+                        varURL,
+                        Blank()
+                    );
+                    Set(
+                        varURLName,
+                        Blank()
+                    );
+                    Set(
+                        varUserExists,
+                        Blank()
+                    );
+                    /*
+                    Set(
+                        varUser_details,
+                        Blank()
+                    );
+                    */
+                    Set(
+                        varUserMode,
+                        Blank()
+                    );
+                    Set(
+                        varWeekday,
+                        Blank()
+                    );
                     
                     
-                    Clear(AllRooms);
-                    Clear(AvailableRooms);
-                    Clear(AvailableRoomsOptimal);
-                    Clear(col_EventBuildDetails);
+                    
+                    // ============================================================
+                    // 1. Initialization & Setup
+                    // ============================================================
+                    // Set initialization loading screen
+                    Set(
+                        varTimer,
+                        true
+                    );
+                    // Real signed-in identity — never changes, cannot be spoofed
+                    /*
+                    Set(
+                        varRealEmail,
+                        Lower(varRealEmail)
+                    );
+                    Set(
+                        varRealEntraID,
+                        varRealEntraID
+                    );
+                    */
+                    // The pseudonym identity of the user the app is currently 'acting as' (defaults to the real user until changed).
+                    Set(
+                        varTargetEmail,
+                        varRealEmail
+                    );
+                    Set(
+                        varTargetEntraID,
+                        varRealEntraID
+                    );
+                    Set(
+                        varIsImpersonating,
+                        If(
+                            varTargetEmail = "kyle.coder@va.gov",
+                            false,
+                            varRealEmail <> varTargetEmail,
+                            true,
+                            false
+                        )
+                    );
+                    // Refresh SharePoint list/data sources, then ClearCollect newest info
+                    Refresh('Desk Reservations');
+                    Refresh(DeskAccessControl);
+                    Refresh(Desks);
+                    Refresh(MasterScheduleList);
+                    Refresh(SuperUserList);
+                    Refresh(backupList_DeskReservations);
+                    Refresh('Learning Lab Sessions');
+                    Clear(col_backupDeskReservations);
+                    //Clear(col_EventBuildDetails);
                     Clear(col_EventCombinedDetails);
                     Clear(col_MasterSchedule);
+                    Clear(col_nationalEHRMLearningLabSessions);
+                    Clear(col_SuperUserList);
+                    Clear(colBackupPatchResults);
                     Clear(colCombinedRecurrence);
                     Clear(colDates);
-                    //Clear(colDeskAccess);
+                    Clear(colDeskAccess);
                     Clear(colDeskChckRecur);
                     Clear(CollectionRecurrence);
-                    //Clear(colMenu);
+                    Clear(colMainFullResults);
+                    Clear(colMenu);
                     Clear(colRoomFilter);
                     Clear(colSelectedDesks);
                     Clear(colSmartboard);
-                    //Clear(colUser_details);
-                    Clear(MeetingTimes);
-                    Clear(MyPeople);
-                    Clear(RoomsLists);
-                    Clear(RoomTimeSuggestions);
+                    Clear(colUser_details);
                     Clear(WeekdaysOnly);
                     Clear(wkDays);
                     Clear(wkDaysTemp);
-                    
-                    Refresh(Desks);
-                    Refresh('Desk Reservations');
-                    Refresh(MasterScheduleList);
-                    Refresh(DeskAccessControl);
+                    ClearCollect(
+                        colDeskAccess,
+                        DeskAccessControl
+                    );
+                    ClearCollect(
+                        col_MasterSchedule,
+                        MasterScheduleList
+                    );
+                    ClearCollect(
+                        colUser_details,
+                        Office365Users.UserProfileV2(varTargetEntraID)
+                    );
+                    ClearCollect(
+                        col_SuperUserList,
+                        SuperUserList
+                    );
+                    ClearCollect(
+                        col_backupDeskReservations,
+                        backupList_DeskReservations
+                    );
+                    ClearCollect(
+                        col_nationalEHRMLearningLabSessions,
+                        'Learning Lab Sessions'
+                    );
+                    // Declare global app rules
+                    Set(
+                        user_isAdmin,
+                        false
+                    );
+                    // ============================================================
+                    // 2. Find the target user's existing record (if any)
+                    // ============================================================
+                    /*
+                    Set(
+                        varDeskAccessControl_record,
+                        LookUp(
+                            DeskAccessControl,
+                            (Email_Text = Lower(varTargetEmail))
+                        )
+                    );
+                    Set(
+                        varUserExists,
+                        !IsBlank(varDeskAccessControl_record)
+                    );
+                    */
+                    // ============================================================
+                    // 4. Resolve access level (fallback to AccessDenied if blank)
+                    // ============================================================
+                    /*
+                    (Set(
+                        userAccessLevel_text,
+                        If(
+                            IsBlankOrError(varDeskAccessControl_record),
+                            LookUp(
+                                DeskAccessControl,
+                                (Email_Text = Lower(varTargetEmail)),
+                                AccessLevel_Choice.Value
+                            ),
+                            !IsBlankOrError(varDeskAccessControl_record),
+                            Coalesce(
+                                varDeskAccessControl_record.AccessLevel_Text,
+                                "AccessDenied"
+                            ),
+                            LookUp(
+                                colDeskAccess,
+                                Email_Text = Lower(varTargetEmail),
+                                AccessLevel_text.Value
+                            )
+                        )
+                    );
+                    */
+                    // ============================================================
+                    // 3. If user is missing, add them as default "User", then re-lookup.
+                    // ============================================================
+                    If(
+                        !varUserExists && Lower(varTargetEmail) = Lower(varRealEmail),
+                        Patch(
+                            DeskAccessControl,
+                            Defaults(DeskAccessControl),
+                            {
+                                Email_Text: varTargetEmail,
+                                AccessLevel_Text: "User",
+                                AccessLevel_Choice: {Value: "User"},
+                                'utcNow()_value': Now(),
+                                Id_Text: varTargetEntraID,
+                                AccessStart_dateTime: Now(),
+                                AccessStop_dateTime: DateAdd(Now(),6,TimeUnit.Months),
+                                Approver_Email_Text: varRealEmail,
+                                Manager_Email_Text: Lower(Office365Users.Manager(varTargetEntraID).Mail),
+                                Title: varTargetEntraID,
+                                'addMinutes(utcNow(),10)': DateAdd(Now(),10,TimeUnit.Minutes),
+                                'Created Via': Text("New User to 578 EHRM Training App"),
+                                NetworkAccount_Text: varUser_details.mailNickname
+                            }
+                        );
+                        Refresh(DeskAccessControl);
+                        ClearCollect(
+                            colDeskAccess,
+                            DeskAccessControl
+                        );
+                        /*
+                        Set(
+                            userAccessLevel_text,
+                            If(
+                                IsBlankOrError(varDeskAccessControl_record),
+                                LookUp(
+                                    DeskAccessControl,
+                                    (Email_Text = Lower(varTargetEmail)),
+                                    AccessLevel_Choice.Value
+                                ),
+                                !IsBlankOrError(varDeskAccessControl_record),
+                                Coalesce(
+                                    varDeskAccessControl_record.AccessLevel_Text,
+                                    "AccessDenied"
+                                ),
+                                LookUp(
+                                    colDeskAccess,
+                                    Email_Text = Lower(varTargetEmail),
+                                    AccessLevel_text.Value
+                                )
+                            )
+                        )
+                        */
+                    );
+                    // ============================================================
+                    // 5. Elevated / admin flag
+                    // ============================================================
+                    //Set(
+                    //    user_isAdmin,
+                    //    userAccessLevel_text = "AppAdmin"
+                    //);
+                    //Set(
+                    //    user_IsSuperUser,
+                    //    userAccessLevel_text = "SuperUser"
+                    //);
+                    // ============================================================
+                    // 6. Build the navigation menu based on level
+                    // ============================================================
+                    Switch(
+                        true,
+                    // Top Elevated Roles: full menu
+                        userAccessLevel_text in [
+                            "Manager",
+                            "ServiceChief",
+                            "AppAdmin"
+                        ],
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name: "Items",
+                                Icon: Icon.Bookmark,
+                                Page: MyAppts,
+                                Visible: true
+                            },
+                            {
+                                Name: "Desks",
+                                Icon: Icon.ComputerDesktop,
+                                Page: ManageDesks,
+                                Visible: true
+                            },
+                            {
+                                Name: "Users",
+                                Icon: Icon.People,
+                                Page: ManageUsers,
+                                Visible: true
+                            },
+                            {
+                                Name: "Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            },
+                            {
+                                Name: "New",
+                                Icon: Icon.Add,
+                                Page: POCSUPERVISOR,
+                                Visible: true
+                            }
+                        ),
+                    // Advanced 'Project Leader' Role: full menu without UserManagement
+                        userAccessLevel_text in ["ProjectLeader"],
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name: "Items",
+                                Icon: Icon.Bookmark,
+                                Page: MyAppts,
+                                Visible: true
+                            },
+                            {
+                                Name: "Desks",
+                                Icon: Icon.ComputerDesktop,
+                                Page: ManageDesks,
+                                Visible: true
+                            },
+                            {
+                                Name: "Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            },
+                            {
+                                Name: "New",
+                                Icon: Icon.Add,
+                                Page: POCSUPERVISOR,
+                                Visible: true
+                            }
+                        ),
+                    // Standard user
+                        userAccessLevel_text in [
+                            "User",
+                            "SuperUser"
+                        ],
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name: "Items",
+                                Icon: Icon.Bookmark,
+                                Page: MyAppts,
+                                Visible: true
+                            },
+                            {
+                                Name: "Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            },
+                            {
+                                Name: "New",
+                                Icon: Icon.Add,
+                                Page: POCSUPERVISOR,
+                                Visible: true
+                            }
+                        ),
+                    // View-only
+                        userAccessLevel_text in ["View-Only"],
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name: "Items",
+                                Icon: Icon.Bookmark,
+                                Page: MyAppts,
+                                Visible: true
+                            },
+                            {
+                                Name: "Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            }
+                        ),
+                    // View-only
+                        userAccessLevel_text in ["AccessDenied"],
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name: "Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            }
+                        ),
+                    // AccessDenied or anything else: empty menu
+                        IsBlankOrError(userAccessLevel_text),
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name: "Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            }
+                        )
+                    );
+                    Set(
+                        varTimer,
+                        true
+                    );
+                    ClearCollect(
+                        colDeskAccess,
+                        DeskAccessControl
+                    );
+                    ClearCollect(
+                        col_MasterSchedule,
+                        MasterScheduleList
+                    );
+                    ClearCollect(
+                        colUser_details,
+                        Office365Users.UserProfileV2(varTargetEntraID)
+                    );
                 PressedBorderColor: =App.Theme.Colors.Darker40
                 PressedColor: =Self.Color
                 PressedFill: =App.Theme.Colors.Darker40
-                Repeat: =true
+                Repeat: |-
+                    =If(
+                        Self.Duration > 1,
+                        true,
+                        false
+                    )
                 Size: =25
-                Text: ="Going home in . . . . . . " & Text(DateAdd(Self.Duration, - (Time(0,0,0, Self.Value)), TimeUnit.Milliseconds), "s.fff")
+                Text: |-
+                    =If(
+                        Self.Duration > 1,
+                        "Going home in . . . . . . " & Text(DateAdd(Self.Duration, - (Time(0,0,0, Self.Value)), TimeUnit.Milliseconds), "s.fff"),
+                        "Timer Paused"
+                    )
                 Width: =Container4.Width
                 Y: =Container4.Height - Self.Height
                 ZIndex: =2
@@ -229,7 +1222,8 @@ DebuggingScreen As screen:
         "Gallery1 As gallery.'BrowseLayout_Vertical_TwoTextOneImageVariant_ver4.0'":
             '#CopilotOverlayLabel': ="Filtered"
             BorderColor: =App.Theme.Colors.Darker40
-            Height: =Form2.Height
+            BorderThickness: =1
+            Height: =form_EditDesks.Height
             Items: |-
                 =Filter(
                     Desks,
@@ -239,10 +1233,10 @@ DebuggingScreen As screen:
             Layout: =Layout.Vertical
             TemplatePadding: =0
             TemplateSize: =lbl_DeskNumber.Height + lbl_RoomNumber.Height + lbl_FloorNumber.Height + lbl_BuildingNumber.Height + (Separator1.Height + Separator1.BorderThickness)
-            Width: =Form2.Width
-            X: =Form2.X + Form2.Width
-            Y: =Form2.Y
-            ZIndex: =3
+            Width: =form_EditDesks.Width
+            X: =form_EditDesks.X + form_EditDesks.Width
+            Y: =form_EditDesks.Y
+            ZIndex: =2
 
             Separator1 As rectangle:
                 BorderColor: =App.Theme.Colors.Darker40
@@ -370,218 +1364,168 @@ DebuggingScreen As screen:
                 Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
                 ZIndex: =7
 
-        Form2 As form:
+        form_EditUsers As form.ModernForm:
+            AcceptsFocus: =false
             BorderColor: =App.Theme.Colors.Darker40
-            DataSource: =Desks
-            Height: =Parent.Height
-            Width: =Parent.Width / 3
-            ZIndex: =4
+            BorderThickness: =1
+            DataSource: =DeskAccessControl
+            Height: =form_EditDesks.Height
+            NumberOfColumns: =1
+            Visible: =!form_EditDesks.Visible
+            Width: =378
+            X: =form_EditDesks.X
+            Y: =form_EditDesks.Y
+            ZIndex: =3
 
-            Title_DataCard1 As typedDataCard.textualEditCard:
+            AccessLevel_Choice_DataCard1 As typedDataCard.modernComboBoxEditCard:
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
-                DataField: ="Title"
-                Default: =ThisItem.ItemID_title
+                DataField: ="AccessLevel_Choice"
+                Default: =ThisItem.AccessLevel_Choice
                 DisplayMode: =Parent.DisplayMode
-                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,ItemID_title)
+                DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,AccessLevel_Choice)
                 Fill: =RGBA(0, 0, 0, 0)
-                Height: =60
-                MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, ItemID_title)
+                Height: =70
                 Required: =true
-                Update: =DataCardValue2.Text
-                Width: =Parent.Width
+                Update: =DataCardValue14.Selected
+                Width: =377
                 X: =0
                 Y: =0
-                ZIndex: =3
+                ZIndex: =4
 
-                DataCardKey2 As label:
-                    AutoHeight: =true
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =48
-                    Size: =21
+                DataCardKey15 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
                     Text: =Parent.DisplayName
-                    Width: =Parent.Width - 60
+                    Width: =Parent.Width - 48
                     Wrap: =false
-                    X: =30
+                    X: =24
                     Y: =10
                     ZIndex: =1
 
-                DataCardValue2 As text:
-                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                    BorderThickness: =2
-                    Color: =RGBA(0, 0, 0, 1)
-                    Default: =Parent.Default
-                    DelayOutput: =true
-                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    DisabledFill: =RGBA(244, 244, 244, 1)
+                DataCardValue14 As modernCombobox:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
+                    DefaultSelectedItems: =[Parent.Default]
                     DisplayMode: =Parent.DisplayMode
-                    FocusedBorderThickness: =4
-                    Font: =App.Theme.Font
-                    Height: =70
-                    HoverBorderColor: =App.Theme.Colors.Darker40
-                    HoverColor: =RGBA(0, 0, 0, 1)
-                    HoverFill: =App.Theme.Colors.Lighter70
-                    MaxLength: =Parent.MaxLength
-                    PaddingLeft: =5
-                    RadiusBottomLeft: =0
-                    RadiusBottomRight: =0
-                    RadiusTopLeft: =0
-                    RadiusTopRight: =0
-                    Size: =21
-                    Tooltip: =Parent.DisplayName
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardKey2.Y + DataCardKey2.Height + 5
+                    ItemDisplayText: =ThisItem.Value
+                    Items: =Choices([@DeskAccessControl].AccessLevel_Choice)
+                    SelectMultiple: =false
+                    ValidationState: =ValidationState.None
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey15.Y + DataCardKey15.Height + 4
                     ZIndex: =2
 
-                ErrorMessage2 As label:
-                    AutoHeight: =true
-                    Color: =RGBA(168, 0, 0, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    FontWeight: =FontWeight.Semibold
-                    Height: =10
-                    Live: =Live.Assertive
-                    PaddingBottom: =0
-                    PaddingLeft: =0
-                    PaddingRight: =0
-                    PaddingTop: =0
-                    Size: =24
+                ErrorMessage17 As modernText:
+                    Height: =30
+                    Size: =14
                     Text: =Parent.Error
-                    Visible: =Parent.DisplayMode=DisplayMode.Edit
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardValue2.Y + DataCardValue2.Height
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue14.Y + DataCardValue14.Height
                     ZIndex: =3
 
-                StarVisible2 As label:
+                StarVisible17 As modernText:
                     Align: =Align.Center
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =DataCardKey2.Height
-                    Size: =21
+                    Color: =Color.Red
+                    Height: =DataCardKey15.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
-                    Wrap: =false
-                    Y: =DataCardKey2.Y
+                    Y: =DataCardKey15.Y
                     ZIndex: =4
 
-            Description_DataCard1 As typedDataCard.textualEditCard:
+            Email_Text_DataCard1 As typedDataCard.modernTextualEditCard:
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
-                DataField: ="Description"
-                Default: =ThisItem.Description
+                DataField: ="Email_Text"
+                Default: =ThisItem.Email_Text
                 DisplayMode: =Parent.DisplayMode
-                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Description)
+                DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,Email_Text)
                 Fill: =RGBA(0, 0, 0, 0)
-                Height: =Title_DataCard1.Height
-                MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Description)
-                Required: =false
-                Update: =DataCardValue4.Text
-                Width: =Parent.Width
+                Height: =70
+                MaxLength: =DataSourceInfo([@DeskAccessControl], DataSourceInfo.MaxLength, Email_Text)
+                Required: =true
+                Update: =DataCardValue15.Text
+                Width: =377
                 X: =0
                 Y: =1
-                ZIndex: =3
+                ZIndex: =4
 
-                DataCardKey4 As label:
-                    AutoHeight: =true
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =48
-                    Size: =21
+                DataCardKey16 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
                     Text: =Parent.DisplayName
-                    Width: =Parent.Width - 60
+                    Width: =Parent.Width - 48
                     Wrap: =false
-                    X: =30
+                    X: =24
                     Y: =10
                     ZIndex: =1
 
-                DataCardValue4 As text:
-                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                    BorderThickness: =2
-                    Color: =RGBA(0, 0, 0, 1)
+                DataCardValue15 As modernTextInput:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
                     Default: =Parent.Default
-                    DelayOutput: =true
-                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    DisabledFill: =RGBA(244, 244, 244, 1)
                     DisplayMode: =Parent.DisplayMode
-                    FocusedBorderThickness: =4
-                    Font: =App.Theme.Font
-                    Height: =70
-                    HoverBorderColor: =App.Theme.Colors.Darker40
-                    HoverColor: =RGBA(0, 0, 0, 1)
-                    HoverFill: =App.Theme.Colors.Lighter70
                     MaxLength: =Parent.MaxLength
-                    PaddingLeft: =5
-                    RadiusBottomLeft: =0
-                    RadiusBottomRight: =0
-                    RadiusTopLeft: =0
-                    RadiusTopRight: =0
-                    Size: =21
-                    Tooltip: =Parent.DisplayName
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardKey4.Y + DataCardKey4.Height + 5
+                    Placeholder: ="Enter text"
+                    Required: =Parent.Required
+                    TriggerOutput: =TriggerOutput.Keypress
+                    ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey16.Y + DataCardKey16.Height + 4
                     ZIndex: =2
 
-                ErrorMessage4 As label:
-                    AutoHeight: =true
-                    Color: =RGBA(168, 0, 0, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    FontWeight: =FontWeight.Semibold
-                    Height: =10
-                    Live: =Live.Assertive
-                    PaddingBottom: =0
-                    PaddingLeft: =0
-                    PaddingRight: =0
-                    PaddingTop: =0
-                    Size: =24
+                ErrorMessage21 As modernText:
+                    Height: =30
+                    Size: =14
                     Text: =Parent.Error
-                    Visible: =Parent.DisplayMode=DisplayMode.Edit
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardValue4.Y + DataCardValue4.Height
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue15.Y + DataCardValue15.Height
                     ZIndex: =3
 
-                StarVisible4 As label:
+                StarVisible21 As modernText:
                     Align: =Align.Center
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =DataCardKey4.Height
-                    Size: =21
+                    Color: =Color.Red
+                    Height: =DataCardKey16.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
-                    Wrap: =false
-                    Y: =DataCardKey4.Y
+                    Y: =DataCardKey16.Y
                     ZIndex: =4
 
-            "'Map Link_DataCard1' As typedDataCard.urlEditCard":
+            AccessStart_dateTime_DataCard1 As typedDataCard.dateTimeEditCard:
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
-                DataField: ="MapLink"
-                Default: =ThisItem.MapLink
+                DataField: ="AccessStart_dateTime"
+                Default: =ThisItem.AccessStart_dateTime
                 DisplayMode: =Parent.DisplayMode
-                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,MapLink)
+                DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,AccessStart_dateTime)
                 Fill: =RGBA(0, 0, 0, 0)
-                Height: =Title_DataCard1.Height
+                Height: =50
                 Required: =false
-                Update: =DataCardValue5.Text
-                Width: =Parent.Width
+                Update: =If(Not IsBlank(DateValue3.SelectedDate), DateTime(Year(DateValue3.SelectedDate), Month(DateValue3.SelectedDate), Day(DateValue3.SelectedDate), Value(HourValue3.Selected.Value), Value(MinuteValue3.Selected.Value), 0))
+                Width: =377
                 X: =0
                 Y: =2
-                ZIndex: =3
+                ZIndex: =4
 
-                DataCardKey5 As label:
+                DataCardKey19 As label:
                     AutoHeight: =true
                     Color: =App.Theme.Colors.Darker30
                     DisabledColor: =RGBA(166, 166, 166, 1)
@@ -595,286 +1539,34 @@ DebuggingScreen As screen:
                     Y: =10
                     ZIndex: =1
 
-                DataCardValue5 As text:
+                DateValue3 As datepicker:
                     BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                    BorderThickness: =2
+                    CalendarHeaderFill: =App.Theme.Colors.Primary
                     Color: =RGBA(0, 0, 0, 1)
-                    Default: =Parent.Default
-                    DelayOutput: =true
+                    DefaultDate: =Parent.Default
                     DisabledBorderColor: =RGBA(166, 166, 166, 1)
                     DisabledColor: =RGBA(166, 166, 166, 1)
                     DisabledFill: =RGBA(244, 244, 244, 1)
                     DisplayMode: =Parent.DisplayMode
-                    FocusedBorderThickness: =4
+                    EndYear: =Year(Today())+100
                     Font: =App.Theme.Font
                     Height: =70
-                    HoverBorderColor: =App.Theme.Colors.Darker40
-                    HoverColor: =RGBA(0, 0, 0, 1)
-                    HoverFill: =App.Theme.Colors.Lighter70
-                    PaddingLeft: =5
-                    RadiusBottomLeft: =0
-                    RadiusBottomRight: =0
-                    RadiusTopLeft: =0
-                    RadiusTopRight: =0
-                    Size: =21
+                    HoverDateFill: =App.Theme.Colors.Lighter70
+                    IconBackground: =App.Theme.Colors.Primary
+                    IconFill: =App.Theme.Colors.PrimaryForeground
+                    IsEditable: =true
+                    PaddingBottom: =0
+                    PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                    SelectedDateFill: =App.Theme.Colors.Primary
+                    Size: =24
+                    StartYear: =1899
                     Tooltip: =Parent.DisplayName
-                    Width: =Parent.Width - 60
+                    Width: =(Parent.Width - 60) / 2
                     X: =30
-                    Y: =DataCardKey5.Y + DataCardKey5.Height + 5
+                    Y: =DataCardKey19.Y + DataCardKey19.Height + 5
                     ZIndex: =2
 
-                ErrorMessage5 As label:
-                    AutoHeight: =true
-                    Color: =RGBA(168, 0, 0, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    FontWeight: =FontWeight.Semibold
-                    Height: =10
-                    Live: =Live.Assertive
-                    PaddingBottom: =0
-                    PaddingLeft: =0
-                    PaddingRight: =0
-                    PaddingTop: =0
-                    Size: =24
-                    Text: =Parent.Error
-                    Visible: =Parent.DisplayMode=DisplayMode.Edit
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardValue5.Y + DataCardValue5.Height
-                    ZIndex: =3
-
-                StarVisible5 As label:
-                    Align: =Align.Center
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =DataCardKey5.Height
-                    Size: =21
-                    Text: ="*"
-                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                    Width: =30
-                    Wrap: =false
-                    Y: =DataCardKey5.Y
-                    ZIndex: =4
-
-            Active_DataCard1 As typedDataCard.numberEditCard:
-                BorderColor: =App.Theme.Colors.Darker40
-                BorderStyle: =BorderStyle.Solid
-                DataField: ="Active"
-                Default: =ThisItem.Active
-                DisplayMode: =Parent.DisplayMode
-                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Active)
-                Fill: =RGBA(0, 0, 0, 0)
-                Height: =Title_DataCard1.Height
-                Required: =false
-                Update: =Value(DataCardValue6.Text)
-                Width: =Parent.Width
-                X: =0
-                Y: =3
-                ZIndex: =3
-
-                DataCardKey6 As label:
-                    AutoHeight: =true
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =48
-                    Size: =21
-                    Text: =Parent.DisplayName
-                    Width: =Parent.Width - 60
-                    Wrap: =false
-                    X: =30
-                    Y: =10
-                    ZIndex: =1
-
-                DataCardValue6 As text:
-                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                    BorderThickness: =2
-                    Color: =RGBA(0, 0, 0, 1)
-                    Default: =Parent.Default
-                    DelayOutput: =true
-                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    DisabledFill: =RGBA(244, 244, 244, 1)
-                    DisplayMode: =Parent.DisplayMode
-                    FocusedBorderThickness: =4
-                    Font: =App.Theme.Font
-                    Format: =TextFormat.Number
-                    Height: =70
-                    HoverBorderColor: =App.Theme.Colors.Darker40
-                    HoverColor: =RGBA(0, 0, 0, 1)
-                    HoverFill: =App.Theme.Colors.Lighter70
-                    PaddingLeft: =5
-                    RadiusBottomLeft: =0
-                    RadiusBottomRight: =0
-                    RadiusTopLeft: =0
-                    RadiusTopRight: =0
-                    Size: =21
-                    Tooltip: =Parent.DisplayName
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardKey6.Y + DataCardKey6.Height + 5
-                    ZIndex: =2
-
-                ErrorMessage6 As label:
-                    AutoHeight: =true
-                    Color: =RGBA(168, 0, 0, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    FontWeight: =FontWeight.Semibold
-                    Height: =10
-                    Live: =Live.Assertive
-                    PaddingBottom: =0
-                    PaddingLeft: =0
-                    PaddingRight: =0
-                    PaddingTop: =0
-                    Size: =24
-                    Text: =Parent.Error
-                    Visible: =Parent.DisplayMode=DisplayMode.Edit
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardValue6.Y + DataCardValue6.Height
-                    ZIndex: =3
-
-                StarVisible6 As label:
-                    Align: =Align.Center
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =DataCardKey6.Height
-                    Size: =21
-                    Text: ="*"
-                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                    Width: =30
-                    Wrap: =false
-                    Y: =DataCardKey6.Y
-                    ZIndex: =4
-
-            RoomLocation_DataCard1 As typedDataCard.textualEditCard:
-                BorderColor: =App.Theme.Colors.Darker40
-                BorderStyle: =BorderStyle.Solid
-                DataField: ="Floor"
-                Default: =ThisItem.RoomLocation
-                DisplayMode: =Parent.DisplayMode
-                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,RoomLocation)
-                Fill: =RGBA(0, 0, 0, 0)
-                Height: =Title_DataCard1.Height
-                MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, RoomLocation)
-                Required: =false
-                Update: =DataCardValue9.Text
-                Width: =Parent.Width
-                X: =0
-                Y: =4
-                ZIndex: =3
-
-                DataCardKey7 As label:
-                    AutoHeight: =true
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =48
-                    Size: =21
-                    Text: =Parent.DisplayName
-                    Width: =Parent.Width - 60
-                    Wrap: =false
-                    X: =30
-                    Y: =10
-                    ZIndex: =1
-
-                DataCardValue9 As text:
-                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                    BorderThickness: =2
-                    Color: =RGBA(0, 0, 0, 1)
-                    Default: =Parent.Default
-                    DelayOutput: =true
-                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    DisabledFill: =RGBA(244, 244, 244, 1)
-                    DisplayMode: =Parent.DisplayMode
-                    FocusedBorderThickness: =4
-                    Font: =App.Theme.Font
-                    Height: =70
-                    HoverBorderColor: =App.Theme.Colors.Darker40
-                    HoverColor: =RGBA(0, 0, 0, 1)
-                    HoverFill: =App.Theme.Colors.Lighter70
-                    MaxLength: =Parent.MaxLength
-                    PaddingLeft: =5
-                    RadiusBottomLeft: =0
-                    RadiusBottomRight: =0
-                    RadiusTopLeft: =0
-                    RadiusTopRight: =0
-                    Size: =21
-                    Tooltip: =Parent.DisplayName
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardKey7.Y + DataCardKey7.Height + 5
-                    ZIndex: =2
-
-                ErrorMessage7 As label:
-                    AutoHeight: =true
-                    Color: =RGBA(168, 0, 0, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    FontWeight: =FontWeight.Semibold
-                    Height: =10
-                    Live: =Live.Assertive
-                    PaddingBottom: =0
-                    PaddingLeft: =0
-                    PaddingRight: =0
-                    PaddingTop: =0
-                    Size: =24
-                    Text: =Parent.Error
-                    Visible: =Parent.DisplayMode=DisplayMode.Edit
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardValue9.Y + DataCardValue9.Height
-                    ZIndex: =3
-
-                StarVisible7 As label:
-                    Align: =Align.Center
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =DataCardKey7.Height
-                    Size: =21
-                    Text: ="*"
-                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
-                    Width: =30
-                    Wrap: =false
-                    Y: =DataCardKey7.Y
-                    ZIndex: =4
-
-            Asset_DataCard1 As typedDataCard.comboBoxEditCard:
-                BorderColor: =App.Theme.Colors.Darker40
-                BorderStyle: =BorderStyle.Solid
-                DataField: ="Asset"
-                Default: =ThisItem.Asset
-                DisplayMode: =Parent.DisplayMode
-                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Asset)
-                Fill: =RGBA(0, 0, 0, 0)
-                Height: =Title_DataCard1.Height
-                Required: =false
-                Update: =DataCardValue10.Selected
-                Width: =Parent.Width
-                X: =0
-                Y: =5
-                ZIndex: =3
-
-                DataCardKey8 As label:
-                    AutoHeight: =true
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =48
-                    Size: =21
-                    Text: =Parent.DisplayName
-                    Width: =Parent.Width - 60
-                    Wrap: =false
-                    X: =30
-                    Y: =10
-                    ZIndex: =1
-
-                DataCardValue10 As combobox:
+                HourValue3 As dropdown:
                     BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
                     ChevronBackground: =App.Theme.Colors.Primary
                     ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
@@ -882,33 +1574,86 @@ DebuggingScreen As screen:
                     ChevronFill: =App.Theme.Colors.PrimaryForeground
                     ChevronHoverBackground: =App.Theme.Colors.Darker10
                     ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
-                    DefaultSelectedItems: =Parent.Default
+                    Default: =Text(Hour(Parent.Default),"00")
                     DisabledBorderColor: =RGBA(166, 166, 166, 1)
                     DisabledColor: =RGBA(166, 166, 166, 1)
                     DisabledFill: =RGBA(244, 244, 244, 1)
-                    DisplayFields: =["Value"]
                     DisplayMode: =Parent.DisplayMode
                     Font: =App.Theme.Font
-                    Height: =70
+                    Height: =DateValue3.Height
                     HoverColor: =RGBA(0, 0, 0, 1)
                     HoverFill: =App.Theme.Colors.Lighter70
-                    Items: =Choices([@Desks].Asset)
+                    Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
+                    PaddingBottom: =5
                     PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                    PaddingRight: =5
+                    PaddingTop: =5
                     PressedColor: =App.Theme.Colors.PrimaryForeground
                     PressedFill: =App.Theme.Colors.Darker30
-                    SearchFields: =["Value"]
-                    SearchItems: =Choices(Desks.Asset,DataCardValue10.SearchText)
                     SelectionColor: =App.Theme.Colors.PrimaryForeground
                     SelectionFill: =App.Theme.Colors.Primary
-                    SelectMultiple: =false
                     Size: =21
                     Tooltip: =Parent.DisplayName
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardKey8.Y + DataCardKey8.Height + 5
-                    ZIndex: =2
+                    Width: =DateValue3.Width / 2 - 10
+                    X: =DateValue3.X + DateValue3.Width + 10
+                    Y: =DateValue3.Y
+                    ZIndex: =3
 
-                ErrorMessage8 As label:
+                Separator9 As label:
+                    Align: =Align.Center
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(0, 0, 0, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Bold
+                    Height: =HourValue3.Height
+                    PaddingBottom: =0
+                    PaddingLeft: =0
+                    PaddingRight: =0
+                    PaddingTop: =0
+                    Size: =21
+                    Text: |-
+                        =":"
+                    Width: =10
+                    Wrap: =false
+                    X: =HourValue3.X + HourValue3.Width
+                    Y: =HourValue3.Y
+                    ZIndex: =4
+
+                MinuteValue3 As dropdown:
+                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                    ChevronBackground: =App.Theme.Colors.Primary
+                    ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                    ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                    ChevronFill: =App.Theme.Colors.PrimaryForeground
+                    ChevronHoverBackground: =App.Theme.Colors.Darker10
+                    ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                    Default: =Text(Minute(Parent.Default),"00")
+                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    DisabledFill: =RGBA(244, 244, 244, 1)
+                    DisplayMode: =Parent.DisplayMode
+                    Font: =App.Theme.Font
+                    Height: =HourValue3.Height
+                    HoverColor: =RGBA(0, 0, 0, 1)
+                    HoverFill: =App.Theme.Colors.Lighter70
+                    Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"]
+                    PaddingBottom: =5
+                    PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                    PaddingRight: =5
+                    PaddingTop: =5
+                    PressedColor: =App.Theme.Colors.PrimaryForeground
+                    PressedFill: =App.Theme.Colors.Darker30
+                    SelectionColor: =App.Theme.Colors.PrimaryForeground
+                    SelectionFill: =App.Theme.Colors.Primary
+                    Size: =21
+                    Tooltip: =Parent.DisplayName
+                    Width: =HourValue3.Width
+                    X: =HourValue3.X + HourValue3.Width + Separator9.Width
+                    Y: =HourValue3.Y
+                    ZIndex: =5
+
+                ErrorMessage23 As label:
                     AutoHeight: =true
                     Color: =RGBA(168, 0, 0, 1)
                     DisabledColor: =RGBA(166, 166, 166, 1)
@@ -925,208 +1670,1061 @@ DebuggingScreen As screen:
                     Visible: =Parent.DisplayMode=DisplayMode.Edit
                     Width: =Parent.Width - 60
                     X: =30
+                    Y: =HourValue3.Y + HourValue3.Height
+                    ZIndex: =6
+
+                StarVisible23 As label:
+                    Align: =Align.Center
+                    Color: =App.Theme.Colors.Darker30
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    Height: =DataCardKey19.Height
+                    Size: =21
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Wrap: =false
+                    Y: =DataCardKey19.Y
+                    ZIndex: =7
+
+            AccessStop_dateTime_DataCard1 As typedDataCard.dateTimeEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="AccessStop_dateTime"
+                Default: =ThisItem.AccessStop_dateTime
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,AccessStop_dateTime)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =50
+                Required: =false
+                Update: =If(Not IsBlank(DateValue4.SelectedDate), DateTime(Year(DateValue4.SelectedDate), Month(DateValue4.SelectedDate), Day(DateValue4.SelectedDate), Value(HourValue4.Selected.Value), Value(MinuteValue4.Selected.Value), 0))
+                Width: =377
+                X: =0
+                Y: =3
+                ZIndex: =4
+
+                DataCardKey23 As label:
+                    AutoHeight: =true
+                    Color: =App.Theme.Colors.Darker30
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    Height: =48
+                    Size: =21
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 60
+                    Wrap: =false
+                    X: =30
+                    Y: =10
+                    ZIndex: =1
+
+                DateValue4 As datepicker:
+                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                    CalendarHeaderFill: =App.Theme.Colors.Primary
+                    Color: =RGBA(0, 0, 0, 1)
+                    DefaultDate: =Parent.Default
+                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    DisabledFill: =RGBA(244, 244, 244, 1)
+                    DisplayMode: =Parent.DisplayMode
+                    EndYear: =Year(Today())+100
+                    Font: =App.Theme.Font
+                    Height: =70
+                    HoverDateFill: =App.Theme.Colors.Lighter70
+                    IconBackground: =App.Theme.Colors.Primary
+                    IconFill: =App.Theme.Colors.PrimaryForeground
+                    IsEditable: =true
+                    PaddingBottom: =0
+                    PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                    SelectedDateFill: =App.Theme.Colors.Primary
+                    Size: =24
+                    StartYear: =1899
+                    Tooltip: =Parent.DisplayName
+                    Width: =(Parent.Width - 60) / 2
+                    X: =30
+                    Y: =DataCardKey23.Y + DataCardKey23.Height + 5
+                    ZIndex: =2
+
+                HourValue4 As dropdown:
+                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                    ChevronBackground: =App.Theme.Colors.Primary
+                    ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                    ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                    ChevronFill: =App.Theme.Colors.PrimaryForeground
+                    ChevronHoverBackground: =App.Theme.Colors.Darker10
+                    ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                    Default: =Text(Hour(Parent.Default),"00")
+                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    DisabledFill: =RGBA(244, 244, 244, 1)
+                    DisplayMode: =Parent.DisplayMode
+                    Font: =App.Theme.Font
+                    Height: =DateValue4.Height
+                    HoverColor: =RGBA(0, 0, 0, 1)
+                    HoverFill: =App.Theme.Colors.Lighter70
+                    Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"]
+                    PaddingBottom: =5
+                    PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                    PaddingRight: =5
+                    PaddingTop: =5
+                    PressedColor: =App.Theme.Colors.PrimaryForeground
+                    PressedFill: =App.Theme.Colors.Darker30
+                    SelectionColor: =App.Theme.Colors.PrimaryForeground
+                    SelectionFill: =App.Theme.Colors.Primary
+                    Size: =21
+                    Tooltip: =Parent.DisplayName
+                    Width: =DateValue4.Width / 2 - 10
+                    X: =DateValue4.X + DateValue4.Width + 10
+                    Y: =DateValue4.Y
+                    ZIndex: =3
+
+                Separator10 As label:
+                    Align: =Align.Center
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(0, 0, 0, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Bold
+                    Height: =HourValue4.Height
+                    PaddingBottom: =0
+                    PaddingLeft: =0
+                    PaddingRight: =0
+                    PaddingTop: =0
+                    Size: =21
+                    Text: |-
+                        =":"
+                    Width: =10
+                    Wrap: =false
+                    X: =HourValue4.X + HourValue4.Width
+                    Y: =HourValue4.Y
+                    ZIndex: =4
+
+                MinuteValue4 As dropdown:
+                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                    ChevronBackground: =App.Theme.Colors.Primary
+                    ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                    ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                    ChevronFill: =App.Theme.Colors.PrimaryForeground
+                    ChevronHoverBackground: =App.Theme.Colors.Darker10
+                    ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                    Default: =Text(Minute(Parent.Default),"00")
+                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    DisabledFill: =RGBA(244, 244, 244, 1)
+                    DisplayMode: =Parent.DisplayMode
+                    Font: =App.Theme.Font
+                    Height: =HourValue4.Height
+                    HoverColor: =RGBA(0, 0, 0, 1)
+                    HoverFill: =App.Theme.Colors.Lighter70
+                    Items: =["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59"]
+                    PaddingBottom: =5
+                    PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                    PaddingRight: =5
+                    PaddingTop: =5
+                    PressedColor: =App.Theme.Colors.PrimaryForeground
+                    PressedFill: =App.Theme.Colors.Darker30
+                    SelectionColor: =App.Theme.Colors.PrimaryForeground
+                    SelectionFill: =App.Theme.Colors.Primary
+                    Size: =21
+                    Tooltip: =Parent.DisplayName
+                    Width: =HourValue4.Width
+                    X: =HourValue4.X + HourValue4.Width + Separator10.Width
+                    Y: =HourValue4.Y
+                    ZIndex: =5
+
+                ErrorMessage25 As label:
+                    AutoHeight: =true
+                    Color: =RGBA(168, 0, 0, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    Height: =10
+                    Live: =Live.Assertive
+                    PaddingBottom: =0
+                    PaddingLeft: =0
+                    PaddingRight: =0
+                    PaddingTop: =0
+                    Size: =24
+                    Text: =Parent.Error
+                    Visible: =Parent.DisplayMode=DisplayMode.Edit
+                    Width: =Parent.Width - 60
+                    X: =30
+                    Y: =HourValue4.Y + HourValue4.Height
+                    ZIndex: =6
+
+                StarVisible25 As label:
+                    Align: =Align.Center
+                    Color: =App.Theme.Colors.Darker30
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    Height: =DataCardKey23.Height
+                    Size: =21
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Wrap: =false
+                    Y: =DataCardKey23.Y
+                    ZIndex: =7
+
+            Approver_Email_Person_DataCard1 As typedDataCard.modernComboBoxEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="Approver_Email_Person"
+                Default: =ThisItem.Approver_Email_Person
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,Approver_Email_Person)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =70
+                Required: =false
+                Update: =DataCardValue18.Selected
+                Width: =377
+                X: =0
+                Y: =4
+                ZIndex: =4
+
+                DataCardKey25 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 48
+                    Wrap: =false
+                    X: =24
+                    Y: =10
+                    ZIndex: =1
+
+                DataCardValue18 As modernCombobox:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
+                    DefaultSelectedItems: =[Parent.Default]
+                    DisplayMode: =Parent.DisplayMode
+                    ItemDisplayText: =ThisItem.Claims
+                    Items: =Choices([@DeskAccessControl].Approver_Email_Person)
+                    SelectMultiple: =false
+                    ValidationState: =ValidationState.None
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey25.Y + DataCardKey25.Height + 4
+                    ZIndex: =2
+
+                ErrorMessage26 As modernText:
+                    Height: =30
+                    Size: =14
+                    Text: =Parent.Error
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue18.Y + DataCardValue18.Height
+                    ZIndex: =3
+
+                StarVisible26 As modernText:
+                    Align: =Align.Center
+                    Color: =Color.Red
+                    Height: =DataCardKey25.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Y: =DataCardKey25.Y
+                    ZIndex: =4
+
+            AboutMe_Text_DataCard1 As typedDataCard.modernTextualEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="AboutMe_Text"
+                Default: =ThisItem.AboutMe_Text
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,AboutMe_Text)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =70
+                MaxLength: =DataSourceInfo([@DeskAccessControl], DataSourceInfo.MaxLength, AboutMe_Text)
+                Required: =false
+                Update: =DataCardValue20.Text
+                Width: =377
+                X: =0
+                Y: =5
+                ZIndex: =4
+
+                DataCardKey27 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 48
+                    Wrap: =false
+                    X: =24
+                    Y: =10
+                    ZIndex: =1
+
+                DataCardValue20 As modernTextInput:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
+                    Default: =Parent.Default
+                    DisplayMode: =Parent.DisplayMode
+                    MaxLength: =Parent.MaxLength
+                    Placeholder: ="Enter text"
+                    Required: =Parent.Required
+                    TriggerOutput: =TriggerOutput.Keypress
+                    ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey27.Y + DataCardKey27.Height + 4
+                    ZIndex: =2
+
+                ErrorMessage27 As modernText:
+                    Height: =30
+                    Size: =14
+                    Text: =Parent.Error
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue20.Y + DataCardValue20.Height
+                    ZIndex: =3
+
+                StarVisible27 As modernText:
+                    Align: =Align.Center
+                    Color: =Color.Red
+                    Height: =DataCardKey27.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Y: =DataCardKey27.Y
+                    ZIndex: =4
+
+            Department_Text_DataCard1 As typedDataCard.modernTextualEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="Department_Text"
+                Default: =ThisItem.Department_Text
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,Department_Text)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =70
+                MaxLength: =DataSourceInfo([@DeskAccessControl], DataSourceInfo.MaxLength, Department_Text)
+                Required: =false
+                Update: =DataCardValue22.Text
+                Width: =377
+                X: =0
+                Y: =6
+                ZIndex: =4
+
+                DataCardKey28 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 48
+                    Wrap: =false
+                    X: =24
+                    Y: =10
+                    ZIndex: =1
+
+                DataCardValue22 As modernTextInput:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
+                    Default: =Parent.Default
+                    DisplayMode: =Parent.DisplayMode
+                    MaxLength: =Parent.MaxLength
+                    Placeholder: ="Enter text"
+                    Required: =Parent.Required
+                    TriggerOutput: =TriggerOutput.Keypress
+                    ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey28.Y + DataCardKey28.Height + 4
+                    ZIndex: =2
+
+                ErrorMessage28 As modernText:
+                    Height: =30
+                    Size: =14
+                    Text: =Parent.Error
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue22.Y + DataCardValue22.Height
+                    ZIndex: =3
+
+                StarVisible28 As modernText:
+                    Align: =Align.Center
+                    Color: =Color.Red
+                    Height: =DataCardKey28.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Y: =DataCardKey28.Y
+                    ZIndex: =4
+
+            JobTitle_Text_DataCard1 As typedDataCard.modernTextualEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="JobTitle_Text"
+                Default: =ThisItem.JobTitle_Text
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,JobTitle_Text)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =70
+                MaxLength: =DataSourceInfo([@DeskAccessControl], DataSourceInfo.MaxLength, JobTitle_Text)
+                Required: =false
+                Update: =DataCardValue24.Text
+                Width: =377
+                X: =0
+                Y: =7
+                ZIndex: =4
+
+                DataCardKey29 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 48
+                    Wrap: =false
+                    X: =24
+                    Y: =10
+                    ZIndex: =1
+
+                DataCardValue24 As modernTextInput:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
+                    Default: =Parent.Default
+                    DisplayMode: =Parent.DisplayMode
+                    MaxLength: =Parent.MaxLength
+                    Placeholder: ="Enter text"
+                    Required: =Parent.Required
+                    TriggerOutput: =TriggerOutput.Keypress
+                    ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey29.Y + DataCardKey29.Height + 4
+                    ZIndex: =2
+
+                ErrorMessage29 As modernText:
+                    Height: =30
+                    Size: =14
+                    Text: =Parent.Error
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue24.Y + DataCardValue24.Height
+                    ZIndex: =3
+
+                StarVisible29 As modernText:
+                    Align: =Align.Center
+                    Color: =Color.Red
+                    Height: =DataCardKey29.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Y: =DataCardKey29.Y
+                    ZIndex: =4
+
+        form_EditDesks As form.ModernForm:
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderThickness: =1
+            DataSource: =Desks
+            Height: =Parent.Height - Self.Y
+            Visible: |
+                =If(
+                    var_DebuggingScreen = true,
+                    true,
+                    IsBlankOrError(var_DebuggingScreen),
+                    true,
+                    false
+                )
+            Width: =Parent.Width / 3
+            Y: =25
+            ZIndex: =4
+
+            DeskName_text_DataCard1 As typedDataCard.modernTextualEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="DeskName_text"
+                Default: =ThisItem.DeskName_text
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,DeskName_text)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =70
+                MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, DeskName_text)
+                Required: =false
+                Update: =DataCardValue2.Text
+                Width: =377
+                X: =0
+                Y: =0
+                ZIndex: =4
+
+                DataCardKey2 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 48
+                    Wrap: =false
+                    X: =24
+                    Y: =10
+                    ZIndex: =1
+
+                DataCardValue2 As modernTextInput:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
+                    Default: =Parent.Default
+                    DisplayMode: =Parent.DisplayMode
+                    MaxLength: =Parent.MaxLength
+                    Placeholder: ="Enter text"
+                    Required: =Parent.Required
+                    TriggerOutput: =TriggerOutput.Keypress
+                    ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey2.Y + DataCardKey2.Height + 4
+                    ZIndex: =2
+
+                ErrorMessage2 As modernText:
+                    Height: =30
+                    Size: =14
+                    Text: =Parent.Error
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue2.Y + DataCardValue2.Height
+                    ZIndex: =3
+
+                StarVisible2 As modernText:
+                    Align: =Align.Center
+                    Color: =Color.Red
+                    Height: =DataCardKey2.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Y: =DataCardKey2.Y
+                    ZIndex: =4
+
+            DeskNumber_number_DataCard1 As typedDataCard.modernNumberEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="DeskNumber_number"
+                Default: =ThisItem.DeskNumber_number
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,DeskNumber_number)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =70
+                Max: =DataSourceInfo([@Desks], DataSourceInfo.MaxValue, DeskNumber_number)
+                Min: =DataSourceInfo([@Desks], DataSourceInfo.MinValue, DeskNumber_number)
+                Required: =false
+                Update: =DataCardValue4.Value
+                Width: =377
+                X: =0
+                Y: =1
+                ZIndex: =4
+
+                DataCardKey4 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 48
+                    Wrap: =false
+                    X: =24
+                    Y: =10
+                    ZIndex: =1
+
+                DataCardValue4 As modernNumberInput:
+                    AccessibleLabel: =Parent.DisplayName
+                    Default: =Parent.Default
+                    DisplayMode: =Parent.DisplayMode
+                    Max: =Parent.Max
+                    Min: =Parent.Min
+                    Size: =24
+                    ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey4.Y + DataCardKey4.Height + 4
+                    ZIndex: =2
+
+                ErrorMessage4 As modernText:
+                    Height: =30
+                    Size: =14
+                    Text: =Parent.Error
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue4.Y + DataCardValue4.Height
+                    ZIndex: =3
+
+                StarVisible4 As modernText:
+                    Align: =Align.Center
+                    Color: =Color.Red
+                    Height: =DataCardKey4.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Y: =DataCardKey4.Y
+                    ZIndex: =4
+
+            Description_multilinePlainText_DataCard1 As typedDataCard.modernTextualEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="Description_multilineText"
+                Default: =ThisItem.Description_multilinePlainText
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Description_multilineText)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =70
+                MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Description_multilineText)
+                Required: =false
+                Update: =DataCardValue5.Text
+                Width: =377
+                X: =0
+                Y: =2
+                ZIndex: =4
+
+                DataCardKey5 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 48
+                    Wrap: =false
+                    X: =24
+                    Y: =10
+                    ZIndex: =1
+
+                DataCardValue5 As modernTextInput:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
+                    Default: =Parent.Default
+                    DisplayMode: =Parent.DisplayMode
+                    MaxLength: =Parent.MaxLength
+                    Placeholder: ="Enter text"
+                    Required: =Parent.Required
+                    TriggerOutput: =TriggerOutput.Keypress
+                    ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey5.Y + DataCardKey5.Height + 4
+                    ZIndex: =2
+
+                ErrorMessage5 As modernText:
+                    Height: =30
+                    Size: =14
+                    Text: =Parent.Error
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue5.Y + DataCardValue5.Height
+                    ZIndex: =3
+
+                StarVisible5 As modernText:
+                    Align: =Align.Center
+                    Color: =Color.Red
+                    Height: =DataCardKey5.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Y: =DataCardKey5.Y
+                    ZIndex: =4
+
+            RoomName_choice_DataCard1 As typedDataCard.modernComboBoxEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="RoomName_choice"
+                Default: =ThisItem.RoomName_choice
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,RoomName_choice)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =70
+                Required: =false
+                Update: =DataCardValue6.Selected
+                Width: =377
+                X: =0
+                Y: =3
+                ZIndex: =4
+
+                DataCardKey6 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 48
+                    Wrap: =false
+                    X: =24
+                    Y: =10
+                    ZIndex: =1
+
+                DataCardValue6 As modernCombobox:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
+                    DefaultSelectedItems: =[Parent.Default]
+                    DisplayMode: =Parent.DisplayMode
+                    ItemDisplayText: =ThisItem.Value
+                    Items: =Choices([@Desks].RoomName_choice)
+                    SelectMultiple: =false
+                    ValidationState: =ValidationState.None
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey6.Y + DataCardKey6.Height + 4
+                    ZIndex: =2
+
+                ErrorMessage6 As modernText:
+                    Height: =30
+                    Size: =14
+                    Text: =Parent.Error
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue6.Y + DataCardValue6.Height
+                    ZIndex: =3
+
+                StarVisible6 As modernText:
+                    Align: =Align.Center
+                    Color: =Color.Red
+                    Height: =DataCardKey6.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Y: =DataCardKey6.Y
+                    ZIndex: =4
+
+            FloorName_text_DataCard1 As typedDataCard.modernTextualEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="FloorName_text"
+                Default: =ThisItem.FloorName_text
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,FloorName_text)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =70
+                MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, FloorName_text)
+                Required: =false
+                Update: =DataCardValue9.Text
+                Width: =377
+                X: =0
+                Y: =4
+                ZIndex: =4
+
+                DataCardKey7 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 48
+                    Wrap: =false
+                    X: =24
+                    Y: =10
+                    ZIndex: =1
+
+                DataCardValue9 As modernTextInput:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
+                    Default: =Parent.Default
+                    DisplayMode: =Parent.DisplayMode
+                    MaxLength: =Parent.MaxLength
+                    Placeholder: ="Enter text"
+                    Required: =Parent.Required
+                    TriggerOutput: =TriggerOutput.Keypress
+                    ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey7.Y + DataCardKey7.Height + 4
+                    ZIndex: =2
+
+                ErrorMessage7 As modernText:
+                    Height: =30
+                    Size: =14
+                    Text: =Parent.Error
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardValue9.Y + DataCardValue9.Height
+                    ZIndex: =3
+
+                StarVisible7 As modernText:
+                    Align: =Align.Center
+                    Color: =Color.Red
+                    Height: =DataCardKey7.Height
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Text: ="*"
+                    Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =30
+                    Y: =DataCardKey7.Y
+                    ZIndex: =4
+
+            BuildingName_text_DataCard1 As typedDataCard.modernTextualEditCard:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.Solid
+                DataField: ="BuildingName_text"
+                Default: =ThisItem.BuildingName_text
+                DisplayMode: =Parent.DisplayMode
+                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,BuildingName_text)
+                Fill: =RGBA(0, 0, 0, 0)
+                Height: =70
+                MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, BuildingName_text)
+                Required: =false
+                Update: =DataCardValue10.Text
+                Width: =377
+                X: =0
+                Y: =5
+                ZIndex: =4
+
+                DataCardKey8 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
+                    Text: =Parent.DisplayName
+                    Width: =Parent.Width - 48
+                    Wrap: =false
+                    X: =24
+                    Y: =10
+                    ZIndex: =1
+
+                DataCardValue10 As modernTextInput:
+                    AccessibleLabel: =Parent.DisplayName
+                    Appearance: =Appearance.FilledDarker
+                    Default: =Parent.Default
+                    DisplayMode: =Parent.DisplayMode
+                    MaxLength: =Parent.MaxLength
+                    Placeholder: ="Enter text"
+                    Required: =Parent.Required
+                    TriggerOutput: =TriggerOutput.Keypress
+                    ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey8.Y + DataCardKey8.Height + 4
+                    ZIndex: =2
+
+                ErrorMessage8 As modernText:
+                    Height: =30
+                    Size: =14
+                    Text: =Parent.Error
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
                     Y: =DataCardValue10.Y + DataCardValue10.Height
                     ZIndex: =3
 
-                StarVisible8 As label:
+                StarVisible8 As modernText:
                     Align: =Align.Center
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
+                    Color: =Color.Red
                     Height: =DataCardKey8.Height
-                    Size: =21
+                    PaddingBottom: =0
+                    PaddingTop: =0
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
-                    Wrap: =false
                     Y: =DataCardKey8.Y
                     ZIndex: =4
 
-            DeskLocation_DataCard1 As typedDataCard.urlEditCard:
+            Capacity_number_DataCard1 As typedDataCard.modernNumberEditCard:
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
-                DataField: ="DeskLocation"
-                Default: =ThisItem.DeskLocation
+                DataField: ="Capacity_number"
+                Default: =ThisItem.Capacity_number
                 DisplayMode: =Parent.DisplayMode
-                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,DeskLocation)
+                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Capacity_number)
                 Fill: =RGBA(0, 0, 0, 0)
-                Height: =Title_DataCard1.Height
+                Height: =70
+                Max: =DataSourceInfo([@Desks], DataSourceInfo.MaxValue, Capacity_number)
+                Min: =DataSourceInfo([@Desks], DataSourceInfo.MinValue, Capacity_number)
                 Required: =false
-                Update: =DataCardValue11.Text
-                Width: =Parent.Width
+                Update: =DataCardValue11.Value
+                Width: =377
                 X: =0
                 Y: =6
-                ZIndex: =3
+                ZIndex: =4
 
-                DataCardKey11 As label:
-                    AutoHeight: =true
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =48
-                    Size: =21
+                DataCardKey11 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
                     Text: =Parent.DisplayName
-                    Width: =Parent.Width - 60
+                    Width: =Parent.Width - 48
                     Wrap: =false
-                    X: =30
+                    X: =24
                     Y: =10
                     ZIndex: =1
 
-                DataCardValue11 As text:
-                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                    BorderThickness: =2
-                    Color: =RGBA(0, 0, 0, 1)
+                DataCardValue11 As modernNumberInput:
+                    AccessibleLabel: =Parent.DisplayName
                     Default: =Parent.Default
-                    DelayOutput: =true
-                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    DisabledFill: =RGBA(244, 244, 244, 1)
                     DisplayMode: =Parent.DisplayMode
-                    FocusedBorderThickness: =4
-                    Font: =App.Theme.Font
-                    Height: =70
-                    HoverBorderColor: =App.Theme.Colors.Darker40
-                    HoverColor: =RGBA(0, 0, 0, 1)
-                    HoverFill: =App.Theme.Colors.Lighter70
-                    PaddingLeft: =5
-                    RadiusBottomLeft: =0
-                    RadiusBottomRight: =0
-                    RadiusTopLeft: =0
-                    RadiusTopRight: =0
-                    Size: =21
-                    Tooltip: =Parent.DisplayName
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardKey11.Y + DataCardKey11.Height + 5
+                    Max: =Parent.Max
+                    Min: =Parent.Min
+                    Size: =24
+                    ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
+                    Width: =Parent.Width - 48
+                    X: =24
+                    Y: =DataCardKey11.Y + DataCardKey11.Height + 4
                     ZIndex: =2
 
-                ErrorMessage11 As label:
-                    AutoHeight: =true
-                    Color: =RGBA(168, 0, 0, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    FontWeight: =FontWeight.Semibold
-                    Height: =10
-                    Live: =Live.Assertive
-                    PaddingBottom: =0
-                    PaddingLeft: =0
-                    PaddingRight: =0
-                    PaddingTop: =0
-                    Size: =24
+                ErrorMessage11 As modernText:
+                    Height: =30
+                    Size: =14
                     Text: =Parent.Error
-                    Visible: =Parent.DisplayMode=DisplayMode.Edit
-                    Width: =Parent.Width - 60
-                    X: =30
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
                     Y: =DataCardValue11.Y + DataCardValue11.Height
                     ZIndex: =3
 
-                StarVisible11 As label:
+                StarVisible11 As modernText:
                     Align: =Align.Center
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
+                    Color: =Color.Red
                     Height: =DataCardKey11.Height
-                    Size: =21
+                    PaddingBottom: =0
+                    PaddingTop: =0
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
-                    Wrap: =false
                     Y: =DataCardKey11.Y
                     ZIndex: =4
 
-            Capacity_DataCard1 As typedDataCard.textualEditCard:
+            Active_boolean_DataCard1 As typedDataCard.modernToggleEditCard:
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
-                DataField: ="Capacity"
-                Default: =ThisItem.Capacity
+                DataField: ="Active_boolean"
+                Default: =ThisItem.Active_boolean
                 DisplayMode: =Parent.DisplayMode
-                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Capacity)
+                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Active_boolean)
                 Fill: =RGBA(0, 0, 0, 0)
-                Height: =Title_DataCard1.Height
-                MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Capacity)
+                Height: =80
                 Required: =false
-                Update: =DataCardValue12.Text
-                Width: =Parent.Width
+                Update: =DataCardValue12.Checked
+                Width: =377
                 X: =0
                 Y: =7
-                ZIndex: =3
+                ZIndex: =4
 
-                DataCardKey12 As label:
-                    AutoHeight: =true
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    Height: =48
-                    Size: =21
+                DataCardKey12 As modernText:
+                    FontWeight: =FontWeight.Semibold
+                    Height: =22
+                    PaddingBottom: =0
+                    PaddingTop: =0
+                    Size: =14
                     Text: =Parent.DisplayName
-                    Width: =Parent.Width - 60
+                    Width: =Parent.Width - 48
                     Wrap: =false
-                    X: =30
+                    X: =24
                     Y: =10
                     ZIndex: =1
 
-                DataCardValue12 As text:
-                    BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
-                    BorderThickness: =2
-                    Color: =RGBA(0, 0, 0, 1)
-                    Default: =Parent.Default
-                    DelayOutput: =true
-                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    DisabledFill: =RGBA(244, 244, 244, 1)
+                DataCardValue12 As Toggle:
+                    AccessibleLabel: =If(Parent.Required, Substitute("{0}. Required.", "{0}", Parent.DisplayName), Parent.DisplayName)
+                    BasePaletteColor: =
+                    Checked: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
-                    FocusedBorderThickness: =4
-                    Font: =App.Theme.Font
-                    Height: =70
-                    HoverBorderColor: =App.Theme.Colors.Darker40
-                    HoverColor: =RGBA(0, 0, 0, 1)
-                    HoverFill: =App.Theme.Colors.Lighter70
-                    MaxLength: =Parent.MaxLength
-                    PaddingLeft: =5
-                    RadiusBottomLeft: =0
-                    RadiusBottomRight: =0
-                    RadiusTopLeft: =0
-                    RadiusTopRight: =0
-                    Size: =21
+                    FontColor: =
+                    Height: =32
+                    Label: =""
+                    OnCheck: =false
+                    OnUncheck: =false
                     Tooltip: =Parent.DisplayName
-                    Width: =Parent.Width - 60
-                    X: =30
-                    Y: =DataCardKey12.Y + DataCardKey12.Height + 5
+                    Width: =113
+                    X: =24
+                    Y: =DataCardKey12.Y + DataCardKey12.Height + 4
                     ZIndex: =2
 
-                ErrorMessage12 As label:
-                    AutoHeight: =true
-                    Color: =RGBA(168, 0, 0, 1)
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
-                    FontWeight: =FontWeight.Semibold
-                    Height: =10
-                    Live: =Live.Assertive
-                    PaddingBottom: =0
-                    PaddingLeft: =0
-                    PaddingRight: =0
-                    PaddingTop: =0
-                    Size: =24
+                ErrorMessage12 As modernText:
+                    Height: =30
+                    Size: =14
                     Text: =Parent.Error
-                    Visible: =Parent.DisplayMode=DisplayMode.Edit
-                    Width: =Parent.Width - 60
-                    X: =30
+                    Visible: =And(!IsBlank(Parent.Error), Parent.DisplayMode=DisplayMode.Edit)
+                    Width: =Parent.Width - 48
+                    X: =24
                     Y: =DataCardValue12.Y + DataCardValue12.Height
                     ZIndex: =3
 
-                StarVisible12 As label:
+                StarVisible12 As modernText:
                     Align: =Align.Center
-                    Color: =App.Theme.Colors.Darker30
-                    DisabledColor: =RGBA(166, 166, 166, 1)
-                    Font: =App.Theme.Font
+                    Color: =Color.Red
                     Height: =DataCardKey12.Height
-                    Size: =21
+                    PaddingBottom: =0
+                    PaddingTop: =0
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
-                    Wrap: =false
                     Y: =DataCardKey12.Y
                     ZIndex: =4
+
+        btnSubmitForms As modernButton:
+            BorderStyle: =""
+            Font: =""
+            Height: =btnSwitchForms.Height
+            OnSelect: |-
+                =If(
+                    form_EditDesks.Visible = true || form_EditUsers.Visible = false,
+                    SubmitForm(form_EditUsers),
+                    form_EditUsers.Visible = true || form_EditDesks.Visible = false,
+                    SubmitForm(form_EditDesks)
+                )
+            Size: =14
+            Text: |-
+                =If(
+                    form_EditDesks.Visible = true || form_EditUsers.Visible = false,
+                    "Submit EditUsers",
+                    form_EditUsers.Visible = true || form_EditDesks.Visible = false,
+                    "Submit EditDesks"
+                )
+            Width: =btnSwitchForms.Width
+            X: =btnSwitchForms.X + btnSwitchForms.Width + 10
+            Y: =btnSwitchForms.Y
+            ZIndex: =5
+
+        btnSwitchForms As modernButton:
+            Height: =21
+            OnSelect: |-
+                =If(
+                    form_EditDesks.Visible = true || form_EditUsers.Visible = false,
+                    Set(var_DebuggingScreen, false),
+                    form_EditUsers.Visible = true || form_EditDesks.Visible = false,
+                    Set(var_DebuggingScreen, true)
+                )
+            Size: =14
+            Text: |-
+                =If(
+                    form_EditDesks.Visible = true || form_EditUsers.Visible = false,
+                    "Switch to EditUsers",
+                    form_EditUsers.Visible = true || form_EditDesks.Visible = false,
+                    "Switch To EditDesks"
+                )
+            Width: =(form_EditDesks.Width / 2) - 10
+            X: =2
+            Y: =2
+            ZIndex: =6
 
     ctnDebugScreen_header As groupContainer.manualLayoutContainer:
         DropShadow: =DropShadow.Light

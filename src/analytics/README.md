@@ -1,31 +1,41 @@
-# Analytics (Power BI & SQL)
+# Analytics (Power BI, SQL & TMS data)
 
-This folder holds reporting and data-analysis components for the EHRM Training & Booking App: Power BI reports/dashboards and supporting SQL scripts.
+This folder holds the reporting and data-analysis components for the EHRM Training & Booking App: Power BI
+reports/dashboards, supporting SQL, and staged VA **TMS** (Talent Management System) completion data.
 
-**Status**: New component, introduced v0.3.8. Early-stage/scaffolded — see per-subfolder status below.
+**Status @ v1.0.12:** actively developed. Two Power BI reports now exist (one still work-in-progress) and a
+new `tms/` data-staging folder was added. See
+[`v1.0.12_differenceAnalysis.md`](v1.0.12_differenceAnalysis.md).
 
 ## Structure
 
 ```
 src/analytics/
 ├── powerBI/
-│   ├── .pbit/       — Power BI template files (tracked)
-│   ├── .pbix/       — Power BI report binaries (git-ignored — large binary; use .pbit for source control)
-│   └── local/       — local-only staging/scratch files (git-ignored)
+│   ├── .pbit/       — Power BI template(s) (tracked source-of-truth: "Signup Tool.pbit")
+│   ├── .pbix/       — Power BI report binaries (git-ignored): "Signup Tool.pbix", "SuperUserDashboard-Final.pbix"
+│   └── local/       — local-only templates/scratch (git-ignored)
+├── tms/
+│   ├── lists/       — staged VA TMS completion exports (.xlsx) + Power BI links (.url) (git-ignored data)
+│   └── powerBI/     — placeholder for TMS-specific reports
 └── sql/
-    ├── procedures/  — stored procedures (currently empty — scaffold only)
-    ├── queries/     — ad hoc / reporting queries (currently empty — scaffold only)
-    └── local/       — local-only staging/scratch files (git-ignored)
+    ├── procedures/  — stored procedures (scaffold)
+    ├── queries/     — reporting queries
+    └── local/       — local-only staging/scratch (git-ignored)
 ```
 
-## Power BI
+See [`powerBI/README.md`](powerBI/README.md) and [`tms/README.md`](tms/README.md) for details.
 
-- `Signup Tool.pbit` — early-stage Power BI report template covering sign-up/attendance data for the app. The `.pbit` template is tracked so the report definition is source-controlled; the corresponding `.pbix` (bound to live data) stays local-only and git-ignored (see [`.gitignore`](../../.gitignore) §9).
+## Power BI (summary)
 
-## SQL
-
-No stored procedures or queries have been added yet — `procedures/` and `queries/` are placeholders for upcoming database scripting and data-integrity checks referenced in [`.github/copilot-instructions.md`](../../.github/copilot-instructions.md).
+- **`Signup Tool`** — the sign-up/attendance report; `.pbit` template is tracked (source-controlled),
+  `.pbix` stays local. Uses row-level, identity-aware DAX so a signed-in user sees their own eligible
+  scenarios.
+- **`SuperUserDashboard-Final`** — a leadership dashboard (thin report on a published dataset); **WIP**.
 
 ## Note on environment-specific values
 
-Review Power BI reports and any future SQL scripts for connection strings, server names, or other environment-specific values before committing. See [.github/SECURITY.md](../../.github/SECURITY.md).
+Power BI reports embed data-source URLs (SharePoint sites, Excel workbooks), a published dataset ID, and
+row-level-security DAX keyed on `USERPRINCIPALNAME()`. TMS exports contain real VA completion data (kept in
+git-ignored `local/`). Review before committing/publishing per
+[`.github/SECURITY.md`](../../.github/SECURITY.md).

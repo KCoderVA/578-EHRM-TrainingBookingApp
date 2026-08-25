@@ -339,6 +339,34 @@
     "OverridableProperties": {},
     "Version": "1.0.2"
   },
+  "modernIcon": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/modernIcon",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "modernIcon",
+    "OverridableProperties": {},
+    "Version": "1.1.1"
+  },
+  "modernNumberInput": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/modernNumberInput",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "modernNumberInput",
+    "OverridableProperties": {},
+    "Version": "1.1.1"
+  },
   "modernText": {
     "CustomGroupControlTemplateName": "",
     "FirstParty": true,
@@ -353,6 +381,20 @@
     "OverridableProperties": {},
     "Version": "1.0.0"
   },
+  "modernTextInput": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/modernTextInput",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "modernTextInput",
+    "OverridableProperties": {},
+    "Version": "1.1.1"
+  },
   "pdfViewer": {
     "CustomGroupControlTemplateName": "",
     "FirstParty": true,
@@ -366,6 +408,20 @@
     "Name": "pdfViewer",
     "OverridableProperties": {},
     "Version": "2.5.0"
+  },
+  "powerbi": {
+    "CustomGroupControlTemplateName": "",
+    "FirstParty": true,
+    "Id": "http://microsoft.com/appmagic/powerBI",
+    "IsComponentTemplate": false,
+    "IsCustomGroupControlTemplate": false,
+    "IsPcfControl": false,
+    "IsPremiumPcfControl": false,
+    "IsWidgetTemplate": true,
+    "LastModifiedTimestamp": "0",
+    "Name": "powerbi",
+    "OverridableProperties": {},
+    "Version": "2.4.0"
   },
   "radio": {
     "CustomGroupControlTemplateName": "",

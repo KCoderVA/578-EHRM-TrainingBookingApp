@@ -65,798 +65,11 @@ scrn_DailyCal As screen:
             ShowColumns(
                 Filter(
                     Desks,
-                    Asset.Value = "Room"
+                    ItemType_choice.Value = "Room"
                 ),
                 ItemID_title
             )
         );
-
-    Container1_1 As groupContainer.manualLayoutContainer:
-        DropShadow: =DropShadow.Light
-        Height: =617
-        LayoutGridColumnMinWidth: =0
-        LayoutGridColumns: =6
-        LayoutGridRowMinHeight: =0
-        LayoutGridRows: =6
-        RadiusBottomLeft: =4
-        RadiusBottomRight: =4
-        RadiusTopLeft: =4
-        RadiusTopRight: =4
-        Width: =1061
-        X: =75
-        ZIndex: =1
-
-        Label11_2 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Bold
-            Height: =25
-            Size: =20
-            Text: ="Daily Calendar List"
-            Width: =1045
-            Y: =1
-            ZIndex: =1
-
-        Rectangle8_2 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(102, 182, 227, 1)
-            Height: =63
-            Width: =1061
-            Y: =26
-            ZIndex: =2
-
-        Label12_2 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(255, 255, 255, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Bold
-            Height: =64
-            Size: =21
-            Text: ="Daily Training Room List"//Text(_firstDayofWeek2, "mmmm yyyy")
-            Width: =769
-            X: =138
-            Y: =16
-            ZIndex: =3
-
-        Icon5_2 As icon.ChevronRight:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =App.Theme.Colors.Darker30
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(244, 244, 244, 1)
-            Height: =67
-            Icon: =Icon.ChevronRight
-            OnSelect: =Set(_firstDayofWeek2, DateAdd(_firstDayofWeek2, 7, TimeUnit.Days))
-            Visible: =false
-            Width: =61
-            X: =990
-            Y: =23
-            ZIndex: =4
-
-        Icon7_2 As icon.ChevronLeft:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =App.Theme.Colors.Darker30
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(244, 244, 244, 1)
-            Icon: =Icon.ChevronLeft
-            OnSelect: =Set(_firstDayofWeek2, DateAdd(_firstDayofWeek2, -7, TimeUnit.Days));
-            Visible: =false
-            X: =7
-            Y: =22
-            ZIndex: =5
-
-        Button4_1 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =App.Theme.Colors.Primary
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =33
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =App.Theme.Colors.Darker10
-            OnSelect: =Navigate(scrn_MoCalendar)
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            Size: =14
-            Text: ="Monthly"
-            Visible: =!hideForPDF
-            Width: =111
-            X: =692
-            Y: =53
-            ZIndex: =6
-
-        Icon4_1 As icon.Print:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =App.Theme.Colors.Darker30
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(244, 244, 244, 1)
-            Icon: =Icon.Print
-            OnSelect: |-
-                =UpdateContext({hideForPDF: true});
-                Set(
-                    PDFPrint,
-                    PDF(
-                        Container1_1,
-                        {
-                            PaperSize: PaperSize.A4,
-                            PaperOrientation: PaperOrientation.Landscape
-                        }
-                    )
-                );
-                UpdateContext({hideForPDF: false});
-                Print();
-                Navigate(PDFScreen);
-            Visible: =!hideForPDF
-            X: =926
-            Y: =26
-            ZIndex: =7
-
-        Dropdown2_1 As dropdown:
-            BorderColor: =App.Theme.Colors.Darker40
-            ChevronBackground: =App.Theme.Colors.Primary
-            ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
-            ChevronDisabledFill: =RGBA(244, 244, 244, 1)
-            ChevronFill: =App.Theme.Colors.PrimaryForeground
-            ChevronHoverBackground: =App.Theme.Colors.Darker10
-            ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Font: =App.Theme.Font
-            Height: =50
-            HoverColor: =RGBA(0, 0, 0, 1)
-            HoverFill: =App.Theme.Colors.Lighter70
-            Items: |-
-                =colRoomFilter
-                //'Desk Reservations'.TitlecolRoomFilter
-            PressedColor: =App.Theme.Colors.PrimaryForeground
-            PressedFill: =App.Theme.Colors.Darker30
-            SelectionColor: =App.Theme.Colors.PrimaryForeground
-            SelectionFill: =App.Theme.Colors.Primary
-            Size: =21
-            Visible: =!hideForPDF
-            Width: =229
-            X: =95
-            Y: =30
-            ZIndex: =8
-
-        "Gallery14 As gallery.'BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0'":
-            BorderColor: =App.Theme.Colors.Darker40
-            DelayItemLoading: =true
-            DisplayMode: |-
-                =If(
-                    (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
-                        DisplayMode.Edit,
-                    (userAccessLevel_text = "View-only" || "View-only"),
-                        DisplayMode.View,
-                    (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
-                        DisplayMode.Disabled
-                )
-            Height: =468
-            Items: |-
-                =/*
-                Filter(
-                    'Desk Reservations',
-                    DateValue(RecurrenceEndDate) = Today() && 
-                    (Dropdown2_1.Selected.Title = "All" || DeskFloor = Dropdown2_1.Selected.Title)
-                )
-                */
-                If(
-                    (userAccessLevel_text = "AppAdmin"),
-                            Filter(
-                                'Desk Reservations',
-                                DateValue(RecurrenceEndDate) = Today()
-                                && (Dropdown2_1.Selected.Title = "All" || DeskFloor = Dropdown2_1.Selected.Title)
-                            ),
-                    (userAccessLevel_text = "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief"),
-                        SortByColumns(
-                            Filter(
-                                'Desk Reservations',
-                                (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
-                                (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
-                                (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
-                            ),
-                            "Title",
-                            SortOrder.Ascending
-                        ),
-                    (userAccessLevel_text = "User"),
-                        SortByColumns(
-                            Filter(
-                                'Desk Reservations',
-                                (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
-                                && (Lower('Created By'.Email) = Lower(varTargetEmail) || Lower('Reserved By'.Email) = Lower(varTargetEmail))
-                            ),
-                            "Title",
-                            SortOrder.Ascending
-                        ),
-                    (userAccessLevel_text = "View-only" || "View-only"),
-                        SortByColumns(
-                            Filter(
-                                'Desk Reservations',
-                                (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
-                                && (Lower('Created By'.Email) = Lower(varTargetEmail) || Lower('Reserved By'.Email) = Lower(varTargetEmail))
-                            ),
-                            "Title",
-                            SortOrder.Ascending
-                        ),
-                    (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
-                                SortByColumns(
-                            Filter(
-                                'Desk Reservations',
-                                (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
-                            ),
-                            "Title",
-                            SortOrder.Ascending
-                        )
-                )
-            Layout: =Layout.Vertical
-            LoadingSpinner: =LoadingSpinner.Data
-            TemplatePadding: =0
-            TemplateSize: =35
-            Width: =1061
-            Y: =130
-            ZIndex: =9
-
-            NextArrow2 As icon.ChevronRight:
-                AccessibleLabel: =Self.Tooltip
-                Color: =RGBA(9, 33, 98, 1)
-                DisplayMode: |
-                    =DisplayMode.Edit
-                    //Admin.Email = varUser_details.Email
-                Height: =50
-                Icon: =Icon.View
-                OnSelect: |
-                    =Set(varDaily, ThisItem.ID);
-                    Set(varSelectedReservation, ThisItem);
-                    Navigate(Reservation, ScreenTransition.Fade)
-                PaddingBottom: =16
-                PaddingLeft: =16
-                PaddingRight: =16
-                PaddingTop: =16
-                Tooltip: ="View item details"
-                Width: =65
-                X: =966
-                ZIndex: =2
-
-            Rectangle14 As rectangle:
-                BorderColor: =App.Theme.Colors.Darker40
-                Fill: =App.Theme.Colors.Darker30
-                Height: =//Parent.TemplateHeight - Separator8.Height
-                OnSelect: =Select(Parent)
-                Visible: =ThisItem.IsSelected
-                Width: =4
-                ZIndex: =4
-
-            Subtitle4_1 As label:
-                Color: =RGBA(0, 0, 0, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Semibold
-                Height: =20
-                OnSelect: =Select(Parent)
-                PaddingBottom: =0
-                PaddingLeft: =0
-                PaddingRight: =0
-                PaddingTop: =0
-                Size: =12
-                Text: =ThisItem.Description
-                VerticalAlign: =VerticalAlign.Top
-                Width: =151
-                X: =711
-                Y: =15
-                ZIndex: =5
-
-            Title8 As label:
-                Color: =RGBA(50, 49, 48, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Semibold
-                Height: =20
-                OnSelect: =Select(Parent)
-                PaddingBottom: =0
-                PaddingLeft: =0
-                PaddingRight: =0
-                PaddingTop: =0
-                Size: =12
-                Text: =ThisItem.Title
-                VerticalAlign: =VerticalAlign.Top
-                Width: =589
-                X: =104
-                Y: =15
-                ZIndex: =6
-
-            Subtitle4 As label:
-                Color: =RGBA(0, 0, 0, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Semibold
-                Height: =20
-                OnSelect: =Select(Parent)
-                PaddingBottom: =0
-                PaddingLeft: =0
-                PaddingRight: =0
-                PaddingTop: =0
-                Size: =12
-                Text: =ThisItem.ID
-                VerticalAlign: =VerticalAlign.Top
-                Width: =58
-                X: =25
-                Y: =15
-                ZIndex: =7
-
-        Button1_1 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =App.Theme.Colors.Primary
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =32
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =App.Theme.Colors.Darker10
-            OnSelect: =Navigate(scrn_WeeklyCal)
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            Size: =16
-            Text: ="Weekly"
-            Width: =97
-            X: =814
-            Y: =54
-            ZIndex: =10
-
-        TextCanvas2 As Text:
-            BorderColor: =
-            DisplayMode: =DisplayMode.Edit
-            Fill: =
-            FontColor: =
-            Height: =46
-            Size: =18
-            Text: |-
-                ="ID#"
-            Weight: ='TextCanvas.Weight'.Semibold
-            Width: =73
-            X: =22
-            Y: =107
-            ZIndex: =11
-
-        TextCanvas5_1 As Text:
-            Align: ="Start"
-            AutoHeight: =false
-            BorderColor: =
-            BorderStyle: =""
-            ContentLanguage: =""
-            DisplayMode: =DisplayMode.Edit
-            Fill: =
-            Font: =""
-            FontColor: =
-            FontItalic: =false
-            FontStrikethrough: =false
-            FontUnderline: =false
-            Height: =46
-            Size: =18
-            TabIndex: =0
-            Text: =" POC Comments"
-            Tooltip: =""
-            VerticalAlign: =""
-            Visible: =true
-            Weight: ='TextCanvas.Weight'.Semibold
-            Width: =207
-            Wrap: =true
-            X: =704
-            Y: =107
-            ZIndex: =12
-
-        TextCanvas2_1 As Text:
-            Align: ="Start"
-            AutoHeight: =false
-            BorderColor: =
-            BorderStyle: =""
-            ContentLanguage: =""
-            DisplayMode: =DisplayMode.Edit
-            Fill: =
-            Font: =""
-            FontColor: =
-            FontItalic: =false
-            FontStrikethrough: =false
-            FontUnderline: =false
-            Height: =46
-            Size: =18
-            TabIndex: =0
-            Text: =" Desk Reservation Info"
-            Tooltip: =""
-            VerticalAlign: =""
-            Visible: =true
-            Weight: ='TextCanvas.Weight'.Semibold
-            Width: =307
-            Wrap: =true
-            X: =95
-            Y: =107
-            ZIndex: =13
-
-    Rectangle7_2 As rectangle:
-        BorderColor: =App.Theme.Colors.Darker40
-        Fill: =App.Theme.Colors.Primary
-        Height: =595
-        Width: =62
-        Y: =22
-        ZIndex: =2
-
-    Icon3_2 As icon.Home:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =App.Theme.Colors.Darker30
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(244, 244, 244, 1)
-        Height: =58
-        Icon: =Icon.Home
-        OnSelect: =Navigate(Dashboard)
-        Width: =62
-        Y: =22
-        ZIndex: =3
-
-    TextCanvas1_2 As Text:
-        AutoHeight: =false
-        BorderColor: =
-        DisplayMode: =DisplayMode.Edit
-        Fill: =
-        FontColor: =RGBA(255, 255, 255, 1)
-        Height: =38
-        Size: =16
-        Text: ="Select Calendar View"
-        VerticalAlign: =VerticalAlign.Middle
-        Weight: ='TextCanvas.Weight'.Semibold
-        Width: =154
-        X: =838
-        Y: =22
-        ZIndex: =4
-
-    Container3_1 As groupContainer.manualLayoutContainer:
-        DropShadow: =DropShadow.Light
-        Fill: =RGBA(255, 255, 255, 1)
-        Height: =415
-        LayoutGridColumnMinWidth: =0
-        LayoutGridColumns: =6
-        LayoutGridRowMinHeight: =0
-        LayoutGridRows: =6
-        RadiusBottomLeft: =4
-        RadiusBottomRight: =4
-        RadiusTopLeft: =4
-        RadiusTopRight: =4
-        Visible: =varCancelContainer
-        Width: =1022
-        X: =75
-        Y: =186
-        ZIndex: =7
-
-        bgRounded_18 As htmlViewer:
-            Height: =322
-            HtmlText: |-
-                ="<div style='border:1px gray;border-radius:10%;height:870px;width:100%;background-color:#FCFCFC'></div>"
-            Width: =1010
-            ZIndex: =18
-
-        grpMap_9 As group:
-            Height: =5
-            Width: =5
-            X: =60
-            Y: =-66
-            ZIndex: =20
-
-            Rectangle3_16 As rectangle:
-                BorderColor: =App.Theme.Colors.Darker40
-                Fill: =RGBA(116, 116, 116, 0.85)
-                Height: =415
-                Visible: =showMap
-                Width: =1022
-                ZIndex: =19
-
-            Image5_11 As image:
-                BorderColor: =App.Theme.Colors.Darker40
-                DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                DisabledFill: =RGBA(244, 244, 244, 1)
-                Height: =415
-                Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation0
-                ImagePosition: =ImagePosition.Stretch
-                Visible: =showMap
-                Width: =1022
-                ZIndex: =20
-
-            Icon1_11 As icon.Cancel:
-                AccessibleLabel: ="Close Map"
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =RGBA(255, 255, 255, 1)
-                DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                DisabledColor: =RGBA(244, 244, 244, 1)
-                Height: =84
-                Icon: =Icon.Cancel
-                OnSelect: |-
-                    =UpdateContext({showMap:!showMap})
-                TabIndex: =11
-                Visible: =showMap
-                Width: =60
-                X: =962
-                ZIndex: =25
-
-        lblMapDesk_7 As label:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Semibold
-            Height: =70
-            Size: =21
-            Text: ="From"
-            Width: =250
-            X: =61
-            ZIndex: =21
-
-        tbMapDesk_4 As text:
-            AccessibleLabel: ="Map Link Input"
-            BorderColor: =RGBA(179, 179, 179, 1)
-            Color: =RGBA(0, 0, 0, 1)
-            Default: =varSelectedReservation.'Check Out From'
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            DisplayMode: =DisplayMode.View
-            FocusedBorderThickness: =4
-            Font: =Font.'Segoe UI'
-            Height: =70
-            HoverBorderColor: =App.Theme.Colors.Darker40
-            HoverColor: =RGBA(0, 0, 0, 1)
-            HoverFill: =App.Theme.Colors.Lighter70
-            Size: =18
-            Width: =250
-            X: =130
-            ZIndex: =22
-
-        lblToRes_2 As label:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Semibold
-            Height: =70
-            Size: =21
-            Text: ="To"
-            Width: =250
-            X: =400
-            ZIndex: =23
-
-        tbTo_2 As text:
-            AccessibleLabel: ="Map Link Input"
-            BorderColor: =RGBA(179, 179, 179, 1)
-            Color: =RGBA(0, 0, 0, 1)
-            Default: =varSelectedReservation.'Check Out To'
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            DisplayMode: =DisplayMode.View
-            FocusedBorderThickness: =4
-            Font: =Font.'Segoe UI'
-            Height: =70
-            HoverBorderColor: =App.Theme.Colors.Darker40
-            HoverColor: =RGBA(0, 0, 0, 1)
-            HoverFill: =App.Theme.Colors.Lighter70
-            Size: =18
-            Width: =250
-            X: =452
-            ZIndex: =24
-
-        lblReservedOn_2 As label:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Semibold
-            Height: =39
-            Size: =21
-            Text: ="Reserved On"
-            Width: =254
-            Y: =70
-            ZIndex: =26
-
-        tbReservedOn_2 As text:
-            AccessibleLabel: ="Map Link Input"
-            BorderColor: =RGBA(179, 179, 179, 1)
-            Color: =RGBA(0, 0, 0, 1)
-            Default: =varSelectedReservation.Created
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            DisplayMode: =DisplayMode.View
-            Fill: =RGBA(0, 0, 0, 0)
-            FocusedBorderThickness: =4
-            Font: =Font.'Segoe UI'
-            Height: =38
-            HoverBorderColor: =App.Theme.Colors.Darker40
-            HoverColor: =RGBA(0, 0, 0, 1)
-            HoverFill: =App.Theme.Colors.Lighter70
-            Size: =18
-            Width: =250
-            X: =179
-            Y: =70
-            ZIndex: =27
-
-        tbFloorDesk_5 As text:
-            AccessibleLabel: ="Floor Input"
-            BorderColor: =RGBA(179, 179, 179, 1)
-            Color: =RGBA(0, 0, 0, 1)
-            Default: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            DisplayMode: =DisplayMode.View
-            Fill: =RGBA(0, 0, 0, 0)
-            FocusedBorderThickness: =4
-            Font: =Font.'Segoe UI'
-            Height: =73
-            HoverBorderColor: =App.Theme.Colors.Darker40
-            HoverColor: =RGBA(0, 0, 0, 1)
-            HoverFill: =App.Theme.Colors.Lighter70
-            Size: =18
-            Width: =150
-            X: =229
-            Y: =95
-            ZIndex: =28
-
-        lblNameDesk_4 As label:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Semibold
-            Height: =70
-            Size: =21
-            Text: ="Conference Room"
-            Width: =560
-            Y: =98
-            ZIndex: =29
-
-        lblFloorDesk_5 As label:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Semibold
-            Height: =70
-            Size: =21
-            Text: ="Floor/Room"
-            Width: =290
-            Y: =156
-            ZIndex: =30
-
-        tbNameDesk_4 As text:
-            AccessibleLabel: ="Desk Name Input"
-            BorderColor: =RGBA(179, 179, 179, 1)
-            Color: =RGBA(0, 0, 0, 1)
-            Default: =varSelectedReservation.DeskText
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            DisplayMode: =DisplayMode.View
-            FocusedBorderThickness: =4
-            Font: =Font.'Segoe UI'
-            Height: =70
-            HoverBorderColor: =App.Theme.Colors.Darker40
-            HoverColor: =RGBA(0, 0, 0, 1)
-            HoverFill: =App.Theme.Colors.Lighter70
-            Size: =18
-            Width: =331
-            X: =181
-            Y: =156
-            ZIndex: =31
-
-        lblDescrDesk_4 As label:
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =Font.'Segoe UI'
-            FontWeight: =FontWeight.Semibold
-            Height: =55
-            Size: =21
-            Text: ="Description"
-            Width: =290
-            Y: =223
-            ZIndex: =32
-
-        tbDescrDesk_4 As text:
-            AccessibleLabel: ="Desk Description Input"
-            BorderColor: =RGBA(179, 179, 179, 1)
-            Color: =RGBA(0, 0, 0, 1)
-            Default: |-
-                =
-                
-                varSelectedReservation.Reasonfordeskreservation
-                //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            DisplayMode: =DisplayMode.View
-            FocusedBorderThickness: =4
-            Font: =Font.'Segoe UI'
-            Height: =111
-            HoverBorderColor: =App.Theme.Colors.Darker40
-            HoverColor: =RGBA(0, 0, 0, 1)
-            HoverFill: =App.Theme.Colors.Lighter70
-            Mode: =TextMode.MultiLine
-            Size: =18
-            Width: =493
-            X: =181
-            Y: =234
-            ZIndex: =33
-
-        btnBackDeskEdit_4 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(128, 128, 128, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =70
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =Reset(tbDescrDesk_4);
-                Reset(tbFloorDesk_5);
-                Reset(tbMapDesk_4);
-                Reset(tbNameDesk_4);
-                Set(varCancelContainer, false)
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            Size: =24
-            Text: ="Back"
-            Width: =200
-            X: =130
-            Y: =345
-            ZIndex: =34
-
-        btnUpdate_3 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(184, 0, 0, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =70
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =UpdateContext({varConfirmCancel:true});Set(varCancelContainer, false)
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            Size: =24
-            Text: ="CANCEL"
-            Width: =260
-            X: =512
-            Y: =345
-            ZIndex: =35
 
     RadioGroupCanvas1_1 As Radio.pcfdataset:
         DisplayMode: =DisplayMode.Edit
@@ -866,14 +79,34 @@ scrn_DailyCal As screen:
         Width: =320
         X: =436
         Y: =343
-        ZIndex: =9
+        ZIndex: =4
+
+    Rectangle18 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =App.Theme.Colors.Primary
+        Height: =0
+        Visible: =false
+        Width: =982
+        X: =95
+        Y: =137
+        ZIndex: =7
+
+    Rectangle19 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =App.Theme.Colors.Primary
+        Height: =0
+        Visible: =false
+        Width: =982
+        X: =95
+        Y: =137
+        ZIndex: =8
 
     grpConfirmCancel_3 As group:
         Height: =5
         Width: =5
         X: =40
         Y: =40
-        ZIndex: =10
+        ZIndex: =8
 
         Rectangle3_15 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
@@ -882,7 +115,7 @@ scrn_DailyCal As screen:
             Visible: =varConfirmCancel
             Width: =804
             Y: =118
-            ZIndex: =5
+            ZIndex: =1
 
         bgRounded_17 As htmlViewer:
             Height: =490
@@ -892,7 +125,7 @@ scrn_DailyCal As screen:
             Width: =720
             X: =236
             Y: =150
-            ZIndex: =6
+            ZIndex: =2
 
         Label1_4 As label:
             Align: =Align.Center
@@ -908,7 +141,7 @@ scrn_DailyCal As screen:
             Width: =688
             X: =242
             Y: =262
-            ZIndex: =8
+            ZIndex: =3
 
         btnConfirmCancel_4 As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -938,7 +171,7 @@ scrn_DailyCal As screen:
             Width: =234
             X: =305
             Y: =505
-            ZIndex: =10
+            ZIndex: =5
 
         btnConfirmDelete_4 As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -982,44 +215,1182 @@ scrn_DailyCal As screen:
             Width: =258
             X: =672
             Y: =505
-            ZIndex: =11
-
-    Icon8 As icon.HorizontalLine:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =App.Theme.Colors.Darker30
-        DisabledBorderColor: =RGBA(166, 166, 166, 1)
-        DisabledColor: =RGBA(244, 244, 244, 1)
-        Height: =0
-        Icon: =Icon.HorizontalLine
-        Width: =995
-        X: =82
-        Y: =137
-        ZIndex: =12
-
-    Rectangle18 As rectangle:
-        BorderColor: =App.Theme.Colors.Darker40
-        Fill: =App.Theme.Colors.Primary
-        Height: =0
-        Width: =982
-        X: =95
-        Y: =137
-        ZIndex: =13
-
-    Rectangle19 As rectangle:
-        BorderColor: =App.Theme.Colors.Darker40
-        Fill: =App.Theme.Colors.Primary
-        Height: =0
-        Width: =982
-        X: =95
-        Y: =137
-        ZIndex: =14
+            ZIndex: =6
 
     Rectangle20 As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
         Fill: =App.Theme.Colors.Primary
         Height: =2
+        Visible: =false
         Width: =982
         X: =95
         Y: =132
-        ZIndex: =15
+        ZIndex: =9
+
+    ctn_DailyCal_body As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Height: =Parent.Height - Self.Y
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Width: =Parent.Width - Self.X
+        X: =ctn_DailyCal_toolbar.X + ctn_DailyCal_toolbar.Width
+        Y: =ctn_DailyCal_header.Y + ctn_DailyCal_header.Height
+        ZIndex: =10
+
+        "gal_DailyCal_body As gallery.'BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0'":
+            BorderColor: =App.Theme.Colors.Darker40
+            DelayItemLoading: =true
+            DisplayMode: |-
+                =If(
+                    (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
+                        DisplayMode.Edit,
+                    (userAccessLevel_text = "View-only" || "View-only"),
+                        DisplayMode.View,
+                    (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                        DisplayMode.Disabled
+                )
+            Height: =Parent.Height - Self.Y
+            Items: |
+                =If(
+                    (userAccessLevel_text = "AppAdmin"),
+                        If(
+                            dropdown_DailyCal_header_filters.Selected.Value = "All",
+                                Sort(
+                                    Filter(
+                                        'Desk Reservations',
+                                        (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                    ),
+                                    SortOrder.Ascending
+                                ),
+                            dropdown_DailyCal_header_filters.Selected.Value <> "All",
+                                Sort(
+                                    Filter(
+                                        'Desk Reservations',
+                                        (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                        && dropdown_DailyCal_header_filters.Selected.Value = Text(
+                                                                            Date(
+                                                                                Year(ThisRecord.reservationStart_datetime),
+                                                                                Month(ThisRecord.reservationStart_datetime),
+                                                                                Day(ThisRecord.reservationStart_datetime)
+                                                                            )
+                                                                        )
+                                    ),
+                                    reservationStart_datetime,
+                                    SortOrder.Ascending
+                                )
+                        ),
+                    (userAccessLevel_text = "ProjectLeader" || "Manager" || "ServiceChief"),
+                        If(
+                            dropdown_DailyCal_header_filters.Selected.Value = "All",
+                                Sort(
+                                    Filter(
+                                        'Desk Reservations',
+                                        (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                    ),
+                                    SortOrder.Ascending
+                                ),
+                            dropdown_DailyCal_header_filters.Selected.Value <> "All",
+                                Sort(
+                                    Filter(
+                                        'Desk Reservations',
+                                        (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                        && dropdown_DailyCal_header_filters.Selected.Value = Text(
+                                                                            Date(
+                                                                                Year(ThisRecord.reservationStart_datetime),
+                                                                                Month(ThisRecord.reservationStart_datetime),
+                                                                                Day(ThisRecord.reservationStart_datetime)
+                                                                            )
+                                                                        )
+                                    ),
+                                    reservationStart_datetime,
+                                    SortOrder.Ascending
+                                )
+                        ),
+                    (userAccessLevel_text = "SuperUser" || "User" || "View-Only" || "View-only" || "ViewOnly" || "Viewonly"),
+                        If(
+                            dropdown_DailyCal_header_filters.Selected.Value = "All",
+                                Sort(
+                                    Filter(
+                                        'Desk Reservations',
+                                        (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                        && (Lower(ThisRecord.'Created By'.Email) = Lower(varTargetEmail) || Lower(ThisRecord.'Reserved By'.Email) = Lower(varTargetEmail))
+                                    ),
+                                    SortOrder.Ascending
+                                ),
+                            dropdown_DailyCal_header_filters.Selected.Value <> "All",
+                                Sort(
+                                    Filter(
+                                        'Desk Reservations',
+                                        (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                        && dropdown_DailyCal_header_filters.Selected.Value = Text(
+                                                                            Date(
+                                                                                Year(ThisRecord.reservationStart_datetime),
+                                                                                Month(ThisRecord.reservationStart_datetime),
+                                                                                Day(ThisRecord.reservationStart_datetime)
+                                                                            )
+                                                                        )
+                                    ),
+                                    reservationStart_datetime,
+                                    SortOrder.Ascending
+                                )
+                        ),
+                    (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                        Blank()
+                )
+            Layout: =Layout.Vertical
+            LoadingSpinner: =LoadingSpinner.Data
+            TemplatePadding: =0
+            TemplateSize: =50
+            Width: =ctn_DailyCal_body_header.Width
+            X: =ctn_DailyCal_body_header.X
+            Y: =ctn_DailyCal_body_header.Y + ctn_DailyCal_body_header.Height
+            ZIndex: =2
+
+            lbl_reservationDateTime As label:
+                Align: =Align.Center
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =Parent.TemplateHeight
+                OnSelect: =Select(Parent)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =12
+                Text: =ThisItem.reservationStart_datetime //ThisItem.Description
+                Width: =lbl_DailyCal_body_header_datetime.Width
+                X: =lbl_DailyCal_body_header_datetime.X
+                ZIndex: =1
+
+            lbl_reservationLocation As label:
+                Color: =RGBA(50, 49, 48, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =Parent.TemplateHeight / 2
+                OnSelect: =Select(Parent)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =12
+                Text: =ThisItem.reservationRoom_text & ", " & ThisItem.reservationFloor_text & ", " & ThisItem.reservationBuilding_text & " - " & ThisItem.reservationComments_multilinetext
+                Width: =lbl_DailyCal_body_header_title.Width
+                X: |
+                    =lbl_DailyCal_body_header_title.X
+                Y: =20
+                ZIndex: =2
+
+            lbl_reservationSubject As label:
+                Color: =RGBA(50, 49, 48, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =Parent.TemplateHeight / 2
+                OnSelect: =Select(Parent)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =12
+                Text: =ThisItem.studentName_text & " (" & ThisItem.studentEmail_text & ") - " & ThisItem.DeskText
+                Width: =lbl_DailyCal_body_header_title.Width
+                X: |
+                    =lbl_DailyCal_body_header_title.X
+                ZIndex: =3
+
+            lbl_reservationID As label:
+                Align: =Align.Center
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =Parent.TemplateHeight
+                OnSelect: =Select(Parent)
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =12
+                Text: =ThisItem.ID
+                Width: =lbl_DailyCal_body_header_ID.Width
+                ZIndex: =4
+
+            rect_SelectThis As rectangle:
+                BorderColor: =App.Theme.Colors.Darker40
+                Fill: =RGBA(255, 255, 255, 0)
+                Height: =Parent.TemplateHeight
+                OnSelect: =Select(icon_inspectItem)
+                Visible: =ThisItem.IsSelected
+                Width: =Parent.Width
+                ZIndex: =5
+
+            icon_inspectItem As icon.ChevronRight:
+                AccessibleLabel: =Self.Tooltip
+                BorderColor: =RGBA(0, 0, 0, 0)
+                BorderThickness: =5
+                Color: =RGBA(9, 33, 98, 1)
+                DisplayMode: |
+                    =DisplayMode.Edit
+                    //Admin.Email = varUser_details.Email
+                Fill: =RGBA(255, 255, 255, 1)
+                Height: =Parent.TemplateHeight - 4
+                HoverBorderColor: =Self.Color
+                HoverColor: =Color.White
+                HoverFill: =ColorFade(Self.Color, 30%)
+                Icon: =Icon.ZoomIn
+                OnSelect: |-
+                    =Set(varDaily, ThisItem.ID);
+                    Set(varSelectedReservation, ThisItem);
+                    Select(Parent);
+                    Set(varCancelContainer, true);
+                PaddingBottom: =5
+                PaddingLeft: =5
+                PaddingRight: =5
+                PaddingTop: =5
+                Tooltip: ="View item details"
+                Width: =Self.Height
+                X: =Parent.Width - Self.Width - 5
+                Y: =2
+                ZIndex: =6
+
+        ctn_DailyCal_body_header As groupContainer.manualLayoutContainer:
+            DropShadow: =DropShadow.Light
+            Height: =Parent.Height / 15
+            LayoutGridColumnMinWidth: =0
+            LayoutGridColumns: =6
+            LayoutGridRowMinHeight: =0
+            LayoutGridRows: =6
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            Width: =Parent.Width
+            ZIndex: =3
+
+            Icon8 As icon.HorizontalLine:
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderThickness: =2
+                Color: =App.Theme.Colors.Darker30
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(244, 244, 244, 1)
+                Height: =2
+                Icon: =Icon.HorizontalLine
+                Width: =Parent.Width
+                Y: =Parent.Height - Self.Height
+                ZIndex: =1
+
+            lbl_DailyCal_body_header_datetime As Text:
+                Align: ='TextCanvas.Align'.Center
+                AutoHeight: =false
+                BorderColor: =
+                BorderStyle: =""
+                ContentLanguage: =""
+                DisplayMode: =DisplayMode.Edit
+                Fill: =
+                Font: =""
+                FontColor: =
+                FontItalic: =false
+                FontStrikethrough: =false
+                FontUnderline: =false
+                Height: =lbl_DailyCal_body_header_ID.Height
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =lbl_DailyCal_body_header_ID.Size
+                TabIndex: =0
+                Text: ="Start Date/Time"
+                Tooltip: =""
+                VerticalAlign: =VerticalAlign.Middle
+                Visible: =lbl_DailyCal_body_header_ID.Visible
+                Weight: ='TextCanvas.Weight'.Bold
+                Width: =167
+                Wrap: =true
+                X: =lbl_DailyCal_body_header_title.X + lbl_DailyCal_body_header_title.Width
+                Y: =lbl_DailyCal_body_header_ID.Y
+                ZIndex: =3
+
+            lbl_DailyCal_body_header_title As Text:
+                Align: ='TextCanvas.Align'.Center
+                AutoHeight: =false
+                BorderColor: =
+                BorderStyle: =""
+                ContentLanguage: =""
+                DisplayMode: =DisplayMode.Edit
+                Fill: =
+                Font: =""
+                FontColor: =
+                FontItalic: =false
+                FontStrikethrough: =false
+                FontUnderline: =false
+                Height: =lbl_DailyCal_body_header_ID.Height
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =lbl_DailyCal_body_header_ID.Size
+                TabIndex: =0
+                Text: =" Desk Reservation Info"
+                Tooltip: =""
+                VerticalAlign: =VerticalAlign.Middle
+                Visible: =lbl_DailyCal_body_header_ID.Visible
+                Weight: ='TextCanvas.Weight'.Bold
+                Width: =782
+                Wrap: =true
+                X: =lbl_DailyCal_body_header_ID.X + lbl_DailyCal_body_header_ID.Width
+                Y: =lbl_DailyCal_body_header_ID.Y
+                ZIndex: =4
+
+            lbl_DailyCal_body_header_ID As Text:
+                Align: ='TextCanvas.Align'.Center
+                BorderColor: =
+                DisplayMode: =DisplayMode.Edit
+                Fill: =
+                FontColor: =
+                Height: |
+                    =Parent.Height
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =18
+                Text: |-
+                    ="ID#"
+                VerticalAlign: =VerticalAlign.Middle
+                Weight: ='TextCanvas.Weight'.Bold
+                Width: =60
+                X: =0
+                Y: =Parent.Height - Self.Height
+                ZIndex: =5
+
+    ctn_DailyCal_header As groupContainer.manualLayoutContainer:
+        Fill: =RGBA(39, 113, 194, 1)
+        Height: =ctn_DailyCal_toolbar.Width
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        Width: =Parent.Width - Self.X
+        X: =ctn_DailyCal_toolbar.X + ctn_DailyCal_toolbar.Width
+        Y: =ctn_DailyCal_toolbar.Y
+        ZIndex: =11
+
+        lbl_DailyCal_header_title As label:
+            Align: =Align.Center
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Bold
+            Height: =Parent.Height
+            Size: =28
+            Text: ="Daily Schedule List"
+            Width: =Parent.Width - Self.X
+            X: =-10
+            ZIndex: =1
+
+        lbl_DailyCal_header_ctnView As groupContainer.manualLayoutContainer:
+            Height: =Parent.Height
+            LayoutGridColumnMinWidth: =0
+            LayoutGridColumns: =6
+            LayoutGridRowMinHeight: =0
+            LayoutGridRows: =6
+            Width: =255
+            X: =808
+            ZIndex: =2
+
+            lbl_DailyCal_header_ctnView_title As modernText:
+                Align: =Align.Center
+                BorderStyle: =""
+                Color: =RGBA(255, 255, 255, 1)
+                Font: =""
+                FontWeight: =FontWeight.Semibold
+                Height: =Parent.Height / 2.5
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                RadiusBottomLeft: =0
+                RadiusBottomRight: =0
+                RadiusTopLeft: =0
+                RadiusTopRight: =0
+                Size: =16
+                Text: ="Select a calendar view"
+                Width: =Parent.Width
+                Y: =(Parent.Height - (Self.Height + btn_DailyCal_header_ctnView_weekly.Height)) / 2
+                ZIndex: =1
+
+            btn_DailyCal_header_ctnView_monthly As button:
+                BorderColor: =btn_DailyCal_header_ctnView_weekly.BorderColor
+                BorderStyle: =btn_DailyCal_header_ctnView_weekly.BorderStyle
+                BorderThickness: =btn_DailyCal_header_ctnView_weekly.BorderThickness
+                Color: =btn_DailyCal_header_ctnView_weekly.Color
+                DisabledBorderColor: =RGBA(244, 244, 244, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                Fill: =btn_DailyCal_header_ctnView_weekly.Fill
+                Font: =btn_DailyCal_header_ctnView_weekly.Font
+                FontWeight: =btn_DailyCal_header_ctnView_weekly.FontWeight
+                Height: =btn_DailyCal_header_ctnView_weekly.Height
+                HoverBorderColor: =btn_DailyCal_header_ctnView_weekly.HoverBorderColor
+                HoverColor: =btn_DailyCal_header_ctnView_weekly.HoverColor
+                HoverFill: =btn_DailyCal_header_ctnView_weekly.HoverFill
+                Italic: =btn_DailyCal_header_ctnView_weekly.Italic
+                OnSelect: =Navigate(scrn_MoCalendar)
+                PaddingBottom: =btn_DailyCal_header_ctnView_weekly.PaddingBottom
+                PaddingLeft: =btn_DailyCal_header_ctnView_weekly.PaddingLeft
+                PaddingRight: =btn_DailyCal_header_ctnView_weekly.PaddingRight
+                PaddingTop: =btn_DailyCal_header_ctnView_weekly.PaddingTop
+                PressedBorderColor: =App.Theme.Colors.Darker40
+                PressedColor: =Self.Color
+                PressedFill: =App.Theme.Colors.Darker40
+                Size: =btn_DailyCal_header_ctnView_weekly.Size
+                Text: ="Monthly"
+                Visible: =btn_DailyCal_header_ctnView_weekly.Visible
+                Width: =btn_DailyCal_header_ctnView_weekly.Width
+                X: =(Parent.Width / 2) - (Self.Width / 2) + (Self.Width / 2) + 10
+                Y: =btn_DailyCal_header_ctnView_weekly.Y
+                ZIndex: =2
+
+            btn_DailyCal_header_ctnView_weekly As button:
+                BorderColor: =RGBA(214, 221, 224, 1)
+                BorderThickness: =5
+                DisabledBorderColor: =RGBA(244, 244, 244, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                Fill: =RGBA(9, 33, 98, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =Parent.Height / 2.5
+                HoverBorderColor: =ColorFade(Self.Fill, -50%)
+                HoverColor: =Color.White
+                HoverFill: =ColorFade(Self.BorderColor, -50%)
+                OnSelect: =Navigate(scrn_WeeklyCal)
+                PressedBorderColor: =App.Theme.Colors.Darker40
+                PressedColor: =Self.Color
+                PressedFill: =App.Theme.Colors.Darker40
+                Size: =16
+                Text: ="Weekly"
+                Width: =100
+                X: =(Parent.Width / 2) - (Self.Width / 2) - (Self.Width / 2) - 10
+                Y: =lbl_DailyCal_header_ctnView_title.Y + lbl_DailyCal_header_ctnView_title.Height
+                ZIndex: =3
+
+        icon_DailyCal_body_header_next As icon.ChevronRight:
+            BorderColor: =icon_DailyCal_body_header_previous.BorderColor
+            BorderStyle: =icon_DailyCal_body_header_previous.BorderStyle
+            BorderThickness: =icon_DailyCal_body_header_previous.BorderThickness
+            Color: =icon_DailyCal_body_header_previous.Color
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Fill: =icon_DailyCal_body_header_previous.Fill
+            FocusedBorderColor: =icon_DailyCal_body_header_previous.BorderColor
+            Height: =icon_DailyCal_body_header_previous.Height
+            HoverBorderColor: =icon_DailyCal_body_header_previous.HoverBorderColor
+            HoverColor: =icon_DailyCal_body_header_previous.HoverColor
+            HoverFill: =icon_DailyCal_body_header_previous.HoverFill
+            Icon: =Icon.ArrowRight
+            OnSelect: =Set(_firstDayofWeek2, DateAdd(_firstDayofWeek2, 7, TimeUnit.Days))
+            PaddingBottom: =icon_DailyCal_body_header_previous.PaddingBottom
+            PaddingLeft: =5
+            PaddingRight: =20
+            PaddingTop: =icon_DailyCal_body_header_previous.PaddingTop
+            Visible: =icon_DailyCal_body_header_previous.Visible
+            Width: =icon_DailyCal_body_header_previous.Width
+            X: =dropdown_DailyCal_header_filters.X + dropdown_DailyCal_header_filters.Width
+            Y: =icon_DailyCal_body_header_previous.Y
+            ZIndex: =3
+
+        dropdown_DailyCal_header_filters As dropdown:
+            BorderColor: =App.Theme.Colors.Darker40
+            ChevronBackground: =App.Theme.Colors.Primary
+            ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+            ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+            ChevronFill: =App.Theme.Colors.PrimaryForeground
+            ChevronHoverBackground: =App.Theme.Colors.Darker10
+            ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+            Default: ="All"
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Font: =App.Theme.Font
+            Height: =Parent.Height / 2
+            HoverColor: =RGBA(0, 0, 0, 1)
+            HoverFill: =App.Theme.Colors.Lighter70
+            Items: |-
+                =Sort(
+                    Distinct(
+                        'Desk Reservations',
+                        Text(
+                            Date(
+                                Year(reservationStart_datetime),
+                                Month(reservationStart_datetime),
+                                Day(reservationStart_datetime)
+                            )
+                        )
+                    ),
+                    SortOrder.Ascending
+                )
+            PressedColor: =App.Theme.Colors.PrimaryForeground
+            PressedFill: =App.Theme.Colors.Darker30
+            SelectionColor: =App.Theme.Colors.PrimaryForeground
+            SelectionFill: =App.Theme.Colors.Primary
+            Size: =18
+            Visible: =!hideForPDF
+            Width: |
+                =200
+            X: =icon_DailyCal_body_header_previous.X + icon_DailyCal_body_header_previous.Width
+            Y: =Parent.Height - Self.Height - 10 //(Parent.Height / 2) - (Self.Height / 2)
+            ZIndex: =4
+
+        icon_DailyCal_body_header_previous As icon.ChevronLeft:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =Color.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =Parent.Height / 1.1
+            Icon: =Icon.ArrowLeft
+            OnSelect: =Set(_firstDayofWeek2, DateAdd(_firstDayofWeek2, -7, TimeUnit.Days));
+            PaddingLeft: =20
+            PaddingRight: =5
+            PaddingTop: =20
+            Width: =Self.Height
+            X: =-15
+            ZIndex: =5
+
+        lbl_DailyCal_header_ctnView_title_1 As modernText:
+            Align: =Align.Center
+            BorderStyle: =""
+            Color: =RGBA(255, 255, 255, 1)
+            Font: =""
+            FontWeight: =FontWeight.Semibold
+            Height: =Parent.Height / 3
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Size: =16
+            Text: ="Filter by dates"
+            VerticalAlign: =VerticalAlign.Bottom
+            Width: =dropdown_DailyCal_header_filters.Width
+            X: =dropdown_DailyCal_header_filters.X
+            Y: =dropdown_DailyCal_header_filters.Y - Self.Height
+            ZIndex: =36
+
+    ctn_DailyCal_toolbar As groupContainer.manualLayoutContainer:
+        BorderColor: =RGBA(255, 255, 255, 1)
+        DropShadow: =DropShadow.Semilight
+        Fill: =RGBA(9, 33, 98, 1)
+        Height: =Parent.Height
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        Width: =70
+        ZIndex: =12
+
+        Icon4_1 As icon.Print:
+            BorderColor: =icon_Home.BorderColor
+            BorderStyle: =icon_Home.BorderStyle
+            BorderThickness: =icon_Home.BorderThickness
+            Color: =icon_Home.Color
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Fill: =icon_Home.Fill
+            Height: =icon_Home.Height
+            HoverBorderColor: =icon_Home.HoverBorderColor
+            HoverColor: =icon_Home.HoverColor
+            HoverFill: =icon_Home.HoverFill
+            Icon: =Icon.Print
+            OnSelect: |-
+                =UpdateContext({hideForPDF: true});
+                Set(
+                    PDFPrint,
+                    PDF(
+                        ctn_DailyCal_body,
+                        {
+                            PaperSize: PaperSize.Letter,
+                            PaperOrientation: PaperOrientation.Landscape
+                        }
+                    )
+                );
+                UpdateContext({hideForPDF: false});
+                Print();
+                Navigate(PDFScreen);
+            PaddingBottom: =icon_Home.PaddingBottom
+            PaddingLeft: =icon_Home.PaddingLeft
+            PaddingRight: =icon_Home.PaddingRight
+            PaddingTop: =icon_Home.PaddingTop
+            Visible: =!hideForPDF
+            Width: =icon_Home.Width
+            X: =icon_Home.X
+            Y: =icon_Home.Y + icon_Home.Height + (icon_Home.Y * 2)
+            ZIndex: =1
+
+        icon_Home As icon.Home:
+            BorderColor: =RGBA(255, 255, 255, 1)
+            BorderThickness: =5
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            FocusedBorderThickness: =0
+            Height: =60
+            HoverBorderColor: =RGBA(180, 214, 250, 1)
+            HoverColor: =ColorFade(Self.Color, -10%)
+            HoverFill: =ColorFade(Self.BorderColor, -50%)
+            Icon: =Icon.Home
+            OnSelect: |-
+                =Set(
+                    _dateSelected2,
+                    Blank()
+                );
+                Set(
+                    _firstDayofWeek2,
+                    Blank()
+                );
+                ClearCollect(
+                    colRoomFilter,
+                    Blank()
+                );
+                Collect(
+                    colRoomFilter,
+                    Blank()
+                );
+                
+                Navigate(Dashboard)
+            PaddingBottom: =5
+            PaddingLeft: =5
+            PaddingRight: =5
+            PaddingTop: =5
+            Width: =60
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =Self.X * 2
+            ZIndex: =2
+
+    ctn_DailyCal_popUP As groupContainer.manualLayoutContainer:
+        Fill: =RGBA(79, 90, 94, 0.75)
+        Height: =Parent.Height
+        LayoutGridColumnMinWidth: =0
+        LayoutGridColumns: =6
+        LayoutGridRowMinHeight: =0
+        LayoutGridRows: =6
+        Visible: =varCancelContainer
+        Width: =Parent.Width
+        ZIndex: =13
+
+        ctn_DailyCal_popUp_foreground As groupContainer.manualLayoutContainer:
+            BorderColor: =RGBA(180, 214, 250, 1)
+            BorderThickness: =5
+            DropShadow: =DropShadow.Bold
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =Parent.Height / 1.5
+            LayoutGridColumnMinWidth: =0
+            LayoutGridColumns: =6
+            LayoutGridRowMinHeight: =0
+            LayoutGridRows: =6
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Visible: =varCancelContainer
+            Width: =Parent.Width / 1.5
+            X: =(Parent.Width / 2) - (Self.Width / 2)
+            Y: =(Parent.Height / 2) - (Self.Height / 2)
+            ZIndex: =2
+
+            input_DailyCal_popUp_foreground_Description As text:
+                AccessibleLabel: ="Desk Description Input"
+                BorderColor: =RGBA(179, 179, 179, 1)
+                Color: =RGBA(0, 0, 0, 1)
+                Default: |-
+                    =varSelectedReservation.reservationDescription_multilinetext
+                    //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =DisplayMode.View
+                FocusedBorderThickness: =4
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Height: =lbl_DailyCal_popUp_foreground_Description.Height
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                Mode: =TextMode.MultiLine
+                PaddingBottom: =3
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =3
+                Size: |
+                    =20
+                Width: =Parent.Width - Self.X
+                X: =lbl_DailyCal_popUp_foreground_Description.X + lbl_DailyCal_popUp_foreground_Description.Width
+                Y: =lbl_DailyCal_popUp_foreground_Description.Y
+                ZIndex: =1
+
+            lbl_DailyCal_popUp_foreground_Description As label:
+                Align: =Align.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =Font.'Segoe UI'
+                Height: =lbl_DailyCal_popUp_foreground_Location.Height
+                Italic: =true
+                Size: =21
+                Text: |-
+                    ="Description:"
+                Width: =lbl_DailyCal_popUp_foreground_EndDatetime.Width
+                X: =lbl_DailyCal_popUp_foreground_EndDatetime.X
+                Y: =lbl_DailyCal_popUp_foreground_Location.Y + lbl_DailyCal_popUp_foreground_Location.Height
+                ZIndex: =2
+
+            input_DailyCal_popUp_foreground_Location As text:
+                AccessibleLabel: ="Map Link Input"
+                BorderColor: =RGBA(179, 179, 179, 1)
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =varSelectedReservation.reservationRoom_text & ", " & varSelectedReservation.reservationFloor_text & ", " & varSelectedReservation.reservationBuilding_text & ", " & varSelectedReservation.reservationDivision_text
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =DisplayMode.View
+                FocusedBorderThickness: =4
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Height: =lbl_DailyCal_popUp_foreground_Location.Height
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                Mode: =TextMode.MultiLine
+                PaddingBottom: =3
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =3
+                Size: |
+                    =20
+                Width: =Parent.Width - Self.X
+                X: =lbl_DailyCal_popUp_foreground_Location.X + lbl_DailyCal_popUp_foreground_Location.Width
+                Y: =lbl_DailyCal_popUp_foreground_Location.Y
+                ZIndex: =3
+
+            lbl_DailyCal_popUp_foreground_Location As label:
+                Align: =Align.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =Font.'Segoe UI'
+                Height: =lbl_DailyCal_popUp_foreground_EndDatetime.Height * 2.5
+                Italic: =true
+                Size: =21
+                Text: |-
+                    ="Location:"
+                Width: =lbl_DailyCal_popUp_foreground_Description.Width
+                X: =lbl_DailyCal_popUp_foreground_Description.X
+                Y: =input_DailyCal_popUp_foreground_EndDatetime.Y + input_DailyCal_popUp_foreground_EndDatetime.Height
+                ZIndex: =4
+
+            input_DailyCal_popUp_foreground_EndDatetime As text:
+                AccessibleLabel: ="Map Link Input"
+                BorderColor: =RGBA(179, 179, 179, 1)
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =varSelectedReservation.'Check Out To'
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =DisplayMode.View
+                FocusedBorderThickness: =4
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Height: =lbl_DailyCal_popUp_foreground_EndDatetime.Height
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                PaddingBottom: =3
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =3
+                Size: |
+                    =20
+                Width: =Parent.Width - Self.X
+                X: =lbl_DailyCal_popUp_foreground_EndDatetime.X + lbl_DailyCal_popUp_foreground_EndDatetime.Width
+                Y: =lbl_DailyCal_popUp_foreground_EndDatetime.Y
+                ZIndex: =5
+
+            lbl_DailyCal_popUp_foreground_EndDatetime As label:
+                Align: =Align.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =Font.'Segoe UI'
+                Height: =lbl_DailyCal_popUp_foreground_startDatetime.Height
+                Italic: =true
+                Size: =21
+                Text: |-
+                    ="Event End:"
+                Width: =lbl_DailyCal_popUp_foreground_startDatetime.Width
+                X: =lbl_DailyCal_popUp_foreground_startDatetime.X
+                Y: =lbl_DailyCal_popUp_foreground_startDatetime.Y + lbl_DailyCal_popUp_foreground_startDatetime.Height
+                ZIndex: =6
+
+            input_DailyCal_popUp_foreground_startDatetime As text:
+                AccessibleLabel: ="Map Link Input"
+                BorderColor: =RGBA(179, 179, 179, 1)
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =varSelectedReservation.reservationStart_datetime
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =DisplayMode.View
+                Fill: =RGBA(0, 0, 0, 0)
+                FocusedBorderThickness: =4
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Height: =lbl_DailyCal_popUp_foreground_startDatetime.Height
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                PaddingBottom: =3
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =3
+                Size: |
+                    =20
+                Width: =Parent.Width - Self.X
+                X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
+                Y: =lbl_DailyCal_popUp_foreground_startDatetime.Y
+                ZIndex: =7
+
+            lbl_DailyCal_popUp_foreground_startDatetime As label:
+                Align: =Align.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =Font.'Segoe UI'
+                Height: =lbl_DailyCal_popUp_foreground_scenario.Height
+                Italic: =true
+                Size: =21
+                Text: |-
+                    ="Event Start:"
+                Width: =lbl_DailyCal_popUp_foreground_scenario.Width
+                X: =lbl_DailyCal_popUp_foreground_scenario.X
+                Y: =lbl_DailyCal_popUp_foreground_scenario.Y + lbl_DailyCal_popUp_foreground_scenario.Height
+                ZIndex: =8
+
+            input_DailyCal_popUp_foreground_title As text:
+                AccessibleLabel: ="Map Link Input"
+                BorderColor: =RGBA(179, 179, 179, 1)
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =varSelectedReservation.reservationScenario_text
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =DisplayMode.View
+                Fill: =RGBA(0, 0, 0, 0)
+                FocusedBorderThickness: =4
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Height: =lbl_DailyCal_popUp_foreground_startDatetime.Height
+                HintText: =""
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                PaddingBottom: =3
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =3
+                Size: |
+                    =20
+                Width: =Parent.Width - Self.X
+                X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
+                Y: =lbl_DailyCal_popUp_foreground_scenario.Y
+                ZIndex: =9
+
+            lbl_DailyCal_popUp_foreground_scenario As label:
+                Align: =Align.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =Font.'Segoe UI'
+                Height: =lbl_DailyCal_popUp_foreground_ID.Height
+                Italic: =true
+                Size: =21
+                Text: |-
+                    ="Scenario:"
+                Width: =lbl_DailyCal_popUp_foreground_role.Width
+                X: =lbl_DailyCal_popUp_foreground_ID.X
+                Y: =lbl_DailyCal_popUp_foreground_role.Y + lbl_DailyCal_popUp_foreground_role.Height
+                ZIndex: =10
+
+            input_DailyCal_popUp_foreground_role As text:
+                AccessibleLabel: ="Map Link Input"
+                BorderColor: =RGBA(179, 179, 179, 1)
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =varSelectedReservation.reservationRole_text
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =DisplayMode.View
+                Fill: =RGBA(0, 0, 0, 0)
+                FocusedBorderThickness: =4
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Height: =lbl_DailyCal_popUp_foreground_startDatetime.Height
+                HintText: =""
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                PaddingBottom: =3
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =3
+                Size: |
+                    =20
+                Width: =Parent.Width - Self.X
+                X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
+                Y: =lbl_DailyCal_popUp_foreground_role.Y
+                ZIndex: =11
+
+            lbl_DailyCal_popUp_foreground_role As label:
+                Align: =Align.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =Font.'Segoe UI'
+                Height: =lbl_DailyCal_popUp_foreground_ID.Height
+                Italic: =true
+                Size: =21
+                Text: |-
+                    ="Role:"
+                Width: =lbl_DailyCal_popUp_foreground_ID.Width * 3.1
+                X: =lbl_DailyCal_popUp_foreground_ID.X
+                Y: =lbl_DailyCal_popUp_foreground_student.Y + lbl_DailyCal_popUp_foreground_student.Height
+                ZIndex: =12
+
+            input_DailyCal_popUp_foreground_student As text:
+                AccessibleLabel: ="Map Link Input"
+                BorderColor: =RGBA(179, 179, 179, 1)
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =varSelectedReservation.studentName_text & " (" & varSelectedReservation.studentEmail_text & ")"
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =DisplayMode.View
+                Fill: =RGBA(0, 0, 0, 0)
+                FocusedBorderThickness: =4
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Height: =lbl_DailyCal_popUp_foreground_student.Height
+                HintText: =""
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                PaddingBottom: =3
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =3
+                Size: |
+                    =20
+                Width: =Parent.Width - Self.X
+                X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
+                Y: =lbl_DailyCal_popUp_foreground_student.Y
+                ZIndex: =13
+
+            lbl_DailyCal_popUp_foreground_student As label:
+                Align: =Align.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =Font.'Segoe UI'
+                Height: =50
+                Italic: =true
+                Size: =21
+                Text: |-
+                    ="Student:"
+                Width: =lbl_DailyCal_popUp_foreground_ID.Width * 3.1
+                X: =lbl_DailyCal_popUp_foreground_ID.X
+                Y: =lbl_DailyCal_popUp_foreground_ID.Y + lbl_DailyCal_popUp_foreground_ID.Height
+                ZIndex: =14
+
+            input_DailyCal_popUp_foreground_Submitted As text:
+                AccessibleLabel: ="Desk Name Input"
+                BorderColor: =RGBA(179, 179, 179, 1)
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =varSelectedReservation.Created
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =DisplayMode.View
+                FocusedBorderThickness: =4
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Height: =lbl_DailyCal_popUp_foreground_Submitted.Height
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: |
+                    =20
+                Width: =Parent.Width - Self.X - icon_DailyCal_popUp_foreground_close.Width - (Parent.BorderThickness * 2)
+                X: =lbl_DailyCal_popUp_foreground_Submitted.X + lbl_DailyCal_popUp_foreground_Submitted.Width
+                Y: =lbl_DailyCal_popUp_foreground_Submitted.Y
+                ZIndex: =15
+
+            lbl_DailyCal_popUp_foreground_Submitted As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =Font.'Segoe UI'
+                Height: =input_DailyCal_popUp_foreground_ID.Height
+                Italic: =true
+                Text: |-
+                    ="Submitted:"
+                Width: =input_DailyCal_popUp_foreground_ID.Width
+                X: =input_DailyCal_popUp_foreground_ID.X + input_DailyCal_popUp_foreground_ID.Width + 50
+                Y: =input_DailyCal_popUp_foreground_ID.Y
+                ZIndex: =16
+
+            input_DailyCal_popUp_foreground_ID As text:
+                AccessibleLabel: ="Floor Input"
+                BorderColor: =RGBA(179, 179, 179, 1)
+                Color: =RGBA(0, 0, 0, 1)
+                Default: =varSelectedReservation.ID
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayMode: =DisplayMode.View
+                Fill: =RGBA(0, 0, 0, 0)
+                FocusedBorderThickness: =4
+                Font: =Font.'Segoe UI'
+                FontWeight: =FontWeight.Bold
+                Height: =lbl_DailyCal_popUp_foreground_ID.Height
+                HoverBorderColor: =App.Theme.Colors.Darker40
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: |
+                    =20
+                Width: =lbl_DailyCal_popUp_foreground_ID.Width + 50
+                X: =lbl_DailyCal_popUp_foreground_ID.X + lbl_DailyCal_popUp_foreground_ID.Width - 15
+                Y: =lbl_DailyCal_popUp_foreground_ID.Y
+                ZIndex: =17
+
+            lbl_DailyCal_popUp_foreground_ID As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =Font.'Segoe UI'
+                Height: =30
+                Italic: =true
+                Text: |-
+                    ="ID:"
+                Width: =50
+                X: =5
+                Y: =5
+                ZIndex: =18
+
+            btn_DailyCal_popUp_foreground_cancelThis As button:
+                BorderColor: =App.Theme.Colors.Primary
+                Color: =App.Theme.Colors.PrimaryForeground
+                DisabledBorderColor: =RGBA(244, 244, 244, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                Fill: =RGBA(184, 0, 0, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =50
+                HoverBorderColor: =App.Theme.Colors.Darker10
+                HoverColor: =App.Theme.Colors.PrimaryForeground
+                HoverFill: =ColorFade(Self.Fill, -20%)
+                OnSelect: |-
+                    =Patch(
+                        'Desk Reservations',
+                        varSelectedReservation,
+                        {
+                            Active_choice: {Value: false},
+                            reservationComments_multilinetext: "Canceled by " & varRealEmail & " @ " & Now()
+                        }
+                    );
+                    Refresh('Desk Reservations');
+                    UpdateContext({varConfirmCancel: false});
+                    Set(varSelectedReservation, Blank());
+                    
+                    UpdateContext({varConfirmCancel:true});
+                    Set(varCancelContainer, false)
+                PressedBorderColor: =App.Theme.Colors.Darker40
+                PressedColor: =Self.Color
+                PressedFill: =App.Theme.Colors.Darker40
+                Size: =24
+                Text: ="Cancel This"
+                Width: =200
+                X: =((Parent.Width / 2) - (Self.Width / 2)) + (Self.Width / 2) + 20
+                Y: =Parent.Height - Self.Height - 10
+                ZIndex: =19
+
+            btn_DailyCal_popUp_foreground_nevermind As button:
+                BorderColor: =App.Theme.Colors.Primary
+                Color: =App.Theme.Colors.PrimaryForeground
+                DisabledBorderColor: =RGBA(244, 244, 244, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                Fill: =RGBA(128, 128, 128, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =btn_DailyCal_popUp_foreground_cancelThis.Height
+                HoverBorderColor: =App.Theme.Colors.Darker10
+                HoverColor: =App.Theme.Colors.PrimaryForeground
+                HoverFill: =ColorFade(Self.Fill, -20%)
+                OnSelect: |-
+                    =Reset(input_DailyCal_popUp_foreground_Description);
+                    Reset(input_DailyCal_popUp_foreground_ID);
+                    Reset(input_DailyCal_popUp_foreground_Location);
+                    Reset(input_DailyCal_popUp_foreground_Submitted);
+                    Set(varDaily, Blank());
+                    Set(varSelectedReservation, Blank());
+                    Set(varCancelContainer, false);
+                PressedBorderColor: =App.Theme.Colors.Darker40
+                PressedColor: =Self.Color
+                PressedFill: =App.Theme.Colors.Darker40
+                Size: =24
+                Text: ="Nevermind"
+                Width: =btn_DailyCal_popUp_foreground_cancelThis.Width
+                X: =((Parent.Width / 2) - (Self.Width / 2)) - (Self.Width / 2) - 20
+                Y: =btn_DailyCal_popUp_foreground_cancelThis.Y
+                ZIndex: =20
+
+        icon_DailyCal_popUp_foreground_close As modernIcon:
+            BorderColor: =RGBA(9, 33, 98, 1)
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0.5
+            Fill: =RGBA(9, 33, 98, 1)
+            Height: =50
+            Icon: ="DismissCircle"
+            IconColor: =RGBA(255, 255, 255, 1)
+            IconStyle: =IconStyle.Filled
+            OnSelect: =Select(btn_DailyCal_popUp_foreground_nevermind)
+            RadiusBottomLeft: =25
+            RadiusBottomRight: =25
+            RadiusTopLeft: =25
+            RadiusTopRight: =25
+            Width: =Self.Height
+            X: =ctn_DailyCal_popUp_foreground.X + ctn_DailyCal_popUp_foreground.Width - ctn_DailyCal_popUp_foreground.BorderThickness - Self.Width
+            Y: =ctn_DailyCal_popUp_foreground.Y + ctn_DailyCal_popUp_foreground.BorderThickness
+            ZIndex: =3
 

@@ -52,7 +52,22 @@ NewDesk As screen:
         AccessibleLabel: ="Desk Name Input"
         BorderColor: =RGBA(179, 179, 179, 1)
         Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.ItemID_title,Blank())
+        Default: |-
+            =If(
+                varDeskMode = "Edit",
+                If(
+                    varManageSelectedDesk.ItemType_text = "Desk",
+                        Concatenate("EHRM Training ", ddAsset.SelectedText.Value, " #", varManageSelectedDesk.DeskNumber_number, "-", varManageSelectedDesk.RoomNumber_number),
+                    varManageSelectedDesk.ItemType_text = "Room",
+                        Concatenate("EHRM Training Room #", varManageSelectedDesk.RoomNumber_number),
+                    varManageSelectedDesk.ItemType_text = "Floor",
+                        Concatenate("EHRM Training ", ddAsset.SelectedText.Value, " #", varManageSelectedDesk.FloorNumber_number),
+                    varManageSelectedDesk.ItemType_text = "Building",
+                        Concatenate("EHRM Training ", ddAsset.SelectedText.Value, " #", varManageSelectedDesk.BuldingNumber_number),
+                    Concatenate("EHRM Training ", "[ASSET_TYPE] #[ASSET_NUMBER]")
+                ),
+                Blank()
+            )
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
@@ -87,7 +102,12 @@ NewDesk As screen:
         AccessibleLabel: ="Floor Input"
         BorderColor: =RGBA(179, 179, 179, 1)
         Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomLocation,Blank())
+        Default: |-
+            =If(
+                varDeskMode = "Edit",
+                varManageSelectedDesk.RoomNumber_number,
+                Blank()
+                )
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
@@ -121,7 +141,12 @@ NewDesk As screen:
         AccessibleLabel: ="Map Link Input"
         BorderColor: =RGBA(179, 179, 179, 1)
         Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.MapLink,Blank())
+        Default: |-
+            =If(
+                varDeskMode = "Edit",
+                varManageSelectedDesk.LocationMap_image.Full,
+                Blank()
+            )
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
@@ -155,7 +180,12 @@ NewDesk As screen:
         AccessibleLabel: ="Desk Description Input"
         BorderColor: =RGBA(179, 179, 179, 1)
         Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.Description,Blank())
+        Default: |-
+            =If(
+                varDeskMode = "Edit",
+                varManageSelectedDesk.CombinedLocationDetails_multilinePlainText,
+                Blank()
+                )
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
@@ -197,18 +227,26 @@ NewDesk As screen:
                     Desks,
                     Defaults(Desks),
                     {
+                        ID: If(IsBlankOrError(Value(tbFloorDesk.Text)), ((First(Sort(Desks, ID, SortOrder.Descending)).ID) + 1), Value(tbFloorDesk.Text)),
                         ItemID_title: tbNameDesk.Text,
-                        Asset: ddAsset.SelectedText,
-                        'Room Location': tbFloorDesk.Text,
-                        //DeskLocation: tbDeskLocation.Text,
-                        RoomPicture: tbRoomPhoto.Text,
-                        Active: toggleActive.Value,
+                        ItemType_choice: { Value: ddAsset.Selected.Value },
+                        ItemType_text: Text(ddAsset.Selected.Value),
+                        DeskNumber_number: If(ddAsset.Selected.Value = "Desk", 1, Blank()),
+                        DeskName_text: If(ddAsset.Selected.Value = "Desk", Concatenate("Desk ", "1"), Blank()),
+                        RoomName_choice: If(ddAsset.Selected.Value = "Room", { Value: Concatenate("Room ", tbFloorDesk.Text)}, Blank()),
+                        FloorNumber_number: If(ddAsset.Selected.Value = "Floor", Value(tbFloorDesk.Text), Blank()),
+                        //RoomPhoto_image: tbRoomPhoto.Text,
+                        Active_boolean: toggleActive.Value,
+                        Active_text: toggleActive.Value,
                         //'Map Link': tbMapDesk.Text,
-                        Description: tbDescrDesk.Text,
-                        //SmartBoard: If(SmarBoardckb.Value = true, smartboard, Blank()),
-                        //Projector_x002f_TV: If(Ptvckb.Value = true, projector, Blank()),
-                        //VTel: If(Vtelckb.Value = true, vtel, Blank()),
-                        Capacity: Int(ddCapacity.Selected.Value)
+                        Description_multilinePlainText: tbDescrDesk.Text,
+                        SmartboardEquipped_boolean: If(SmarBoardckb.Value = true,  true, false),
+                        SmartboardEquipped_text: If(SmarBoardckb.Value = true,  "Yes", "No"),
+                        ProjectorEquipped_boolean: If(Ptvckb.Value = true, true, false),
+                        ProjectorEquipped_text: If(Ptvckb.Value = true,  "Yes", "No"),
+                        VtelEquipped_boolean: If(Vtelckb.Value = true, true, false),
+                        VtelEquipped_text: If(Vtelckb.Value = true,  "Yes", "No"),
+                        Capacity_number: Int(ddCapacity.Selected.Value)
                         }
                 )
             );
@@ -234,7 +272,6 @@ NewDesk As screen:
             Reset(toggleActive);
             Reset(tbDescrDesk);
             Reset(tbMapDesk);
-            Reset(tbDeskLocation_2);
             Reset(tbRoomPhoto);
             Reset(ddAsset);
             Reset(SmarBoardckb);
@@ -271,7 +308,7 @@ NewDesk As screen:
         AccessibleLabel: ="Active or Inactive Toggle"
         BorderColor: =App.Theme.Colors.Darker40
         Color: =RGBA(0, 0, 0, 1)
-        Default: =varManageSelectedDesk.Active
+        Default: =varManageSelectedDesk.Active_boolean
         FalseFill: =RGBA(184, 0, 0, 1)
         FalseText: ="INACTIVE"
         Font: =App.Theme.Font
@@ -301,7 +338,7 @@ NewDesk As screen:
         Height: =32
         HoverColor: =RGBA(0, 0, 0, 1)
         HoverFill: =App.Theme.Colors.Lighter70
-        Items: =Choices([@Desks].Asset)
+        Items: =Choices([@Desks].ItemType_choice)
         PressedColor: =App.Theme.Colors.PrimaryForeground
         PressedFill: =App.Theme.Colors.Darker30
         SelectionColor: =App.Theme.Colors.PrimaryForeground
@@ -365,7 +402,12 @@ NewDesk As screen:
         AccessibleLabel: ="Map Link Input"
         BorderColor: =RGBA(179, 179, 179, 1)
         Color: =RGBA(0, 0, 0, 1)
-        Default: =If(varDeskMode = "Edit",varManageSelectedDesk.RoomLocation0,Blank())
+        Default: |-
+            =If(
+                varDeskMode = "Edit",
+                varManageSelectedDesk.RoomPhoto_image.Full,
+                Blank()
+                )
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
@@ -416,7 +458,7 @@ NewDesk As screen:
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
             Height: =546
-            Image: =varManageSelectedDesk.MapLink
+            Image: =varManageSelectedDesk.LocationMap_picture
             ImagePosition: =ImagePosition.Fill
             Visible: =showMap
             Width: =609
@@ -462,7 +504,7 @@ NewDesk As screen:
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
             Height: =546
-            Image: =varManageSelectedDesk.DeskLocation
+            Image: =//varManageSelectedDesk.DeskPhoto_image.Full
             Visible: =showDesk
             Width: =609
             X: =41
@@ -544,7 +586,7 @@ NewDesk As screen:
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
             Height: =546
-            Image: =varManageSelectedDesk.RoomLocation0
+            Image: =//varManageSelectedDesk.RoomPhoto_image.Full
             Visible: =showRoom
             Width: =609
             X: =61
@@ -574,7 +616,7 @@ NewDesk As screen:
         Color: =RGBA(0, 0, 0, 1)
         Default: |+
             =If(
-                varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.VTel),
+                varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.VtelEquipped_boolean),
                 true,
                 false
             )
@@ -599,7 +641,7 @@ NewDesk As screen:
         Color: =RGBA(0, 0, 0, 1)
         Default: |
             =If(
-                varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.Projector_x002f_TV),
+                varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.ProjectorEquipped_boolean),
                 true,
                 false
             )

@@ -740,7 +740,7 @@ Screens:
             Repeat: =true
             Visible: |-
               =If(
-                  Lower(User().Email) = "kyle.coder@va.gov",
+                  Lower(varRealEmail) = "kyle.coder@va.gov" && user_isAdmin = true,
                   true,
                   false
               )
