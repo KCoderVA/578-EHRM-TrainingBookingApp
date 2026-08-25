@@ -3,11 +3,6 @@
     "appActions": [
       "CalendarGetTables",
       "V4CalendarPostItem",
-      "V2CalendarPostItem",
-      "FindMeetingTimes",
-      "GetRoomLists",
-      "GetRooms",
-      "GetRoomsInRoomList",
       "SendEmailV2"
     ],
     "connectionRef": {
@@ -28,12 +23,11 @@
   },
   "64852b16-4509-4d34-be4c-adfa1f496b3a": {
     "appActions": [
-      "UserProfileV2",
-      "Manager",
       "SearchUserV2",
+      "UserProfileV2",
       "MyProfileV2",
       "ManagerV2",
-      "SearchUser",
+      "Manager",
       "UserPhotoV2"
     ],
     "connectionRef": {
@@ -93,6 +87,13 @@
           }
         }
       },
+      "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox": {
+        "dataSources": {
+          "Learning Labs Library": {
+            "tableName": "de84b5ea-e330-4cc4-bbb3-ca5e987a69b2"
+          }
+        }
+      },
       "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/": {
         "dataSources": {
           "Learning Lab Sessions": {
@@ -108,7 +109,8 @@
       "MasterScheduleList",
       "SuperUserList",
       "backupList_DeskReservations",
-      "Learning Lab Sessions"
+      "Learning Lab Sessions",
+      "Learning Labs Library"
     ],
     "dependencies": {},
     "dependents": [],

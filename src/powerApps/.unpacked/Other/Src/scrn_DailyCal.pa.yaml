@@ -73,341 +73,12 @@ Screens:
             ShowColumns(
                 Filter(
                     Desks,
-                    Asset.Value = "Room"
+                    ItemType_choice.Value = "Room"
                 ),
                 ItemID_title
             )
         );
     Children:
-      - Container1_1:
-          Control: GroupContainer@1.5.0
-          Variant: ManualLayout
-          Properties:
-            Height: =617
-            Width: =1061
-            X: =75
-          Children:
-            - Label11_2:
-                Control: Label@2.5.1
-                Properties:
-                  Align: =Align.Center
-                  FontWeight: =FontWeight.Bold
-                  Height: =25
-                  Size: =20
-                  Text: ="Daily Calendar List"
-                  Width: =1045
-                  Y: =1
-            - Rectangle8_2:
-                Control: Rectangle@2.3.0
-                Properties:
-                  Fill: =RGBA(102, 182, 227, 1)
-                  Height: =63
-                  Width: =1061
-                  Y: =26
-            - Label12_2:
-                Control: Label@2.5.1
-                Properties:
-                  Align: =Align.Center
-                  Color: =RGBA(255, 255, 255, 1)
-                  FontWeight: =FontWeight.Bold
-                  Height: =64
-                  Text: ="Daily Training Room List"//Text(_firstDayofWeek2, "mmmm yyyy")
-                  Width: =769
-                  X: =138
-                  Y: =16
-            - Icon5_2:
-                Control: Classic/Icon@2.5.0
-                Properties:
-                  Height: =67
-                  Icon: =Icon.ChevronRight
-                  OnSelect: =Set(_firstDayofWeek2, DateAdd(_firstDayofWeek2, 7, TimeUnit.Days))
-                  Visible: =false
-                  Width: =61
-                  X: =990
-                  Y: =23
-            - Icon7_2:
-                Control: Classic/Icon@2.5.0
-                Properties:
-                  Icon: =Icon.ChevronLeft
-                  OnSelect: =Set(_firstDayofWeek2, DateAdd(_firstDayofWeek2, -7, TimeUnit.Days));
-                  Visible: =false
-                  X: =7
-                  Y: =22
-            - Button4_1:
-                Control: Classic/Button@2.2.0
-                Properties:
-                  Height: =33
-                  OnSelect: =Navigate(scrn_MoCalendar)
-                  Size: =14
-                  Text: ="Monthly"
-                  Visible: =!hideForPDF
-                  Width: =111
-                  X: =692
-                  Y: =53
-            - Icon4_1:
-                Control: Classic/Icon@2.5.0
-                Properties:
-                  Icon: =Icon.Print
-                  OnSelect: |-
-                    =UpdateContext({hideForPDF: true});
-                    Set(
-                        PDFPrint,
-                        PDF(
-                            Container1_1,
-                            {
-                                PaperSize: PaperSize.A4,
-                                PaperOrientation: PaperOrientation.Landscape
-                            }
-                        )
-                    );
-                    UpdateContext({hideForPDF: false});
-                    Print();
-                    Navigate(PDFScreen);
-                  Visible: =!hideForPDF
-                  X: =926
-                  Y: =26
-            - Dropdown2_1:
-                Control: Classic/DropDown@2.3.1
-                Properties:
-                  Height: =50
-                  Items: |-
-                    =colRoomFilter
-                    //'Desk Reservations'.TitlecolRoomFilter
-                  Items.Value: =Title
-                  Visible: =!hideForPDF
-                  Width: =229
-                  X: =95
-                  Y: =30
-            - Gallery14:
-                Control: Gallery@2.15.0
-                Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
-                Properties:
-                  DisplayMode: |-
-                    =If(
-                        (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
-                            DisplayMode.Edit,
-                        (userAccessLevel_text = "View-only" || "View-only"),
-                            DisplayMode.View,
-                        (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
-                            DisplayMode.Disabled
-                    )
-                  Height: =468
-                  Items: |-
-                    =/*
-                    Filter(
-                        'Desk Reservations',
-                        DateValue(RecurrenceEndDate) = Today() && 
-                        (Dropdown2_1.Selected.Title = "All" || DeskFloor = Dropdown2_1.Selected.Title)
-                    )
-                    */
-                    If(
-                        (userAccessLevel_text = "AppAdmin"),
-                                Filter(
-                                    'Desk Reservations',
-                                    DateValue(RecurrenceEndDate) = Today()
-                                    && (Dropdown2_1.Selected.Title = "All" || DeskFloor = Dropdown2_1.Selected.Title)
-                                ),
-                        (userAccessLevel_text = "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief"),
-                            SortByColumns(
-                                Filter(
-                                    'Desk Reservations',
-                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
-                                    (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&
-                                    (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
-                                ),
-                                "Title",
-                                SortOrder.Ascending
-                            ),
-                        (userAccessLevel_text = "User"),
-                            SortByColumns(
-                                Filter(
-                                    'Desk Reservations',
-                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                    && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                    && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
-                                    && (Lower('Created By'.Email) = Lower(varTargetEmail) || Lower('Reserved By'.Email) = Lower(varTargetEmail))
-                                ),
-                                "Title",
-                                SortOrder.Ascending
-                            ),
-                        (userAccessLevel_text = "View-only" || "View-only"),
-                            SortByColumns(
-                                Filter(
-                                    'Desk Reservations',
-                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                    && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                    && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
-                                    && (Lower('Created By'.Email) = Lower(varTargetEmail) || Lower('Reserved By'.Email) = Lower(varTargetEmail))
-                                ),
-                                "Title",
-                                SortOrder.Ascending
-                            ),
-                        (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
-                                    SortByColumns(
-                                Filter(
-                                    'Desk Reservations',
-                                    (DateValue(Text('Check Out From')) <= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                    && (DateValue(Text('Check Out To')) >= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))
-                                    && (Dropdown2_2.Selected.Title = "All" || DeskFloor = Dropdown2_2.Selected.Title)
-                                ),
-                                "Title",
-                                SortOrder.Ascending
-                            )
-                    )
-                  TemplateSize: =35
-                  Width: =1061
-                  Y: =130
-                Children:
-                  - NextArrow2:
-                      Control: Classic/Icon@2.5.0
-                      Properties:
-                        AccessibleLabel: =Self.Tooltip
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(9, 33, 98, 1)
-                        DisabledBorderColor: =RGBA(56, 56, 56, 1)
-                        DisabledColor: =RGBA(119, 119, 119, 1)
-                        DisplayMode: |+
-                          =DisplayMode.Edit
-                          //Admin.Email = varUser_details.Email
-                        Height: =50
-                        Icon: =Icon.View
-                        OnSelect: |+
-                          =Set(varDaily, ThisItem.ID);
-                          Set(varSelectedReservation, ThisItem);
-                          Navigate(Reservation, ScreenTransition.Fade)
-                        PaddingBottom: =16
-                        PaddingLeft: =16
-                        PaddingRight: =16
-                        PaddingTop: =16
-                        Tooltip: ="View item details"
-                        Width: =65
-                        X: =966
-                  - Rectangle14:
-                      Control: Rectangle@2.3.0
-                      Properties:
-                        Fill: =App.Theme.Colors.Darker30
-                        Height: =//Parent.TemplateHeight - Separator8.Height
-                        OnSelect: =Select(Parent)
-                        Visible: =ThisItem.IsSelected
-                        Width: =4
-                  - Subtitle4_1:
-                      Control: Label@2.5.1
-                      Properties:
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =20
-                        OnSelect: =Select(Parent)
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =12
-                        Text: =ThisItem.Description
-                        VerticalAlign: =VerticalAlign.Top
-                        Width: =151
-                        X: =711
-                        Y: =15
-                  - Title8:
-                      Control: Label@2.5.1
-                      Properties:
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        Color: =RGBA(50, 49, 48, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =20
-                        OnSelect: =Select(Parent)
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =12
-                        Text: =ThisItem.Title
-                        VerticalAlign: =VerticalAlign.Top
-                        Width: =589
-                        X: =104
-                        Y: =15
-                  - Subtitle4:
-                      Control: Label@2.5.1
-                      Properties:
-                        BorderColor: =RGBA(0, 0, 0, 1)
-                        FontWeight: =FontWeight.Semibold
-                        Height: =20
-                        OnSelect: =Select(Parent)
-                        PaddingBottom: =0
-                        PaddingLeft: =0
-                        PaddingRight: =0
-                        PaddingTop: =0
-                        Size: =12
-                        Text: =ThisItem.ID
-                        VerticalAlign: =VerticalAlign.Top
-                        Width: =58
-                        X: =25
-                        Y: =15
-            - Button1_1:
-                Control: Classic/Button@2.2.0
-                Properties:
-                  Height: =32
-                  OnSelect: =Navigate(scrn_WeeklyCal)
-                  Size: =16
-                  Text: ="Weekly"
-                  Width: =97
-                  X: =814
-                  Y: =54
-            - TextCanvas2:
-                Control: Text@0.0.51
-                Properties:
-                  Height: =46
-                  Size: =18
-                  Text: ="ID#"
-                  Weight: ='TextCanvas.Weight'.Semibold
-                  Width: =73
-                  X: =22
-                  Y: =107
-            - TextCanvas5_1:
-                Control: Text@0.0.51
-                Properties:
-                  Height: =46
-                  Size: =18
-                  Text: =" POC Comments"
-                  Weight: ='TextCanvas.Weight'.Semibold
-                  Width: =207
-                  X: =704
-                  Y: =107
-            - TextCanvas2_1:
-                Control: Text@0.0.51
-                Properties:
-                  Height: =46
-                  Size: =18
-                  Text: =" Desk Reservation Info"
-                  Weight: ='TextCanvas.Weight'.Semibold
-                  Width: =307
-                  X: =95
-                  Y: =107
-      - Rectangle7_2:
-          Control: Rectangle@2.3.0
-          Properties:
-            Height: =595
-            Width: =62
-            Y: =22
-      - Icon3_2:
-          Control: Classic/Icon@2.5.0
-          Properties:
-            Height: =58
-            Icon: =Icon.Home
-            OnSelect: =Navigate(Dashboard)
-            Width: =62
-            Y: =22
-      - TextCanvas1_2:
-          Control: Text@0.0.51
-          Properties:
-            FontColor: =RGBA(255, 255, 255, 1)
-            Height: =38
-            Size: =16
-            Text: ="Select Calendar View"
-            VerticalAlign: =VerticalAlign.Middle
-            Weight: ='TextCanvas.Weight'.Semibold
-            Width: =154
-            X: =838
-            Y: =22
       - Rectangle3_15:
           Control: Rectangle@2.3.0
           Group: grpConfirmCancel_3
@@ -430,216 +101,6 @@ Screens:
             Width: =720
             X: =236
             Y: =150
-      - Container3_1:
-          Control: GroupContainer@1.5.0
-          Variant: ManualLayout
-          Properties:
-            Fill: =RGBA(255, 255, 255, 1)
-            Height: =415
-            Visible: =varCancelContainer
-            Width: =1022
-            X: =75
-            Y: =186
-          Children:
-            - bgRounded_18:
-                Control: HtmlViewer@2.1.0
-                Properties:
-                  DisabledBorderColor: =RGBA(56, 56, 56, 1)
-                  Font: =Font.'Open Sans'
-                  Height: =322
-                  HtmlText: ="<div style='border:1px gray;border-radius:10%;height:870px;width:100%;background-color:#FCFCFC'></div>"
-                  Size: =24
-                  Width: =1010
-            - Rectangle3_16:
-                Control: Rectangle@2.3.0
-                Group: grpMap_9
-                Properties:
-                  Fill: =RGBA(116, 116, 116, 0.85)
-                  Height: =415
-                  Visible: =showMap
-                  Width: =1022
-            - Image5_11:
-                Control: Image@2.2.3
-                Group: grpMap_9
-                Properties:
-                  Height: =415
-                  Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation0
-                  ImagePosition: =ImagePosition.Stretch
-                  Visible: =showMap
-                  Width: =1022
-            - lblMapDesk_7:
-                Control: Label@2.5.1
-                Properties:
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Semibold
-                  Text: ="From"
-                  Width: =250
-                  X: =61
-            - tbMapDesk_4:
-                Control: Classic/TextInput@2.3.2
-                Properties:
-                  AccessibleLabel: ="Map Link Input"
-                  BorderColor: =RGBA(179, 179, 179, 1)
-                  BorderThickness: =1
-                  Default: =varSelectedReservation.'Check Out From'
-                  DisplayMode: =DisplayMode.View
-                  Font: =Font.'Segoe UI'
-                  Size: =18
-                  Width: =250
-                  X: =130
-            - lblToRes_2:
-                Control: Label@2.5.1
-                Properties:
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Semibold
-                  Text: ="To"
-                  Width: =250
-                  X: =400
-            - tbTo_2:
-                Control: Classic/TextInput@2.3.2
-                Properties:
-                  AccessibleLabel: ="Map Link Input"
-                  BorderColor: =RGBA(179, 179, 179, 1)
-                  BorderThickness: =1
-                  Default: =varSelectedReservation.'Check Out To'
-                  DisplayMode: =DisplayMode.View
-                  Font: =Font.'Segoe UI'
-                  Size: =18
-                  Width: =250
-                  X: =452
-            - Icon1_11:
-                Control: Classic/Icon@2.5.0
-                Group: grpMap_9
-                Properties:
-                  AccessibleLabel: ="Close Map"
-                  Color: =RGBA(255, 255, 255, 1)
-                  Height: =84
-                  Icon: =Icon.Cancel
-                  OnSelect: =UpdateContext({showMap:!showMap})
-                  TabIndex: =11
-                  Visible: =showMap
-                  Width: =60
-                  X: =962
-            - lblReservedOn_2:
-                Control: Label@2.5.1
-                Properties:
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Semibold
-                  Height: =39
-                  Text: ="Reserved On"
-                  Width: =254
-                  Y: =70
-            - tbReservedOn_2:
-                Control: Classic/TextInput@2.3.2
-                Properties:
-                  AccessibleLabel: ="Map Link Input"
-                  BorderColor: =RGBA(179, 179, 179, 1)
-                  BorderThickness: =1
-                  Default: =varSelectedReservation.Created
-                  DisplayMode: =DisplayMode.View
-                  Fill: =RGBA(0, 0, 0, 0)
-                  Font: =Font.'Segoe UI'
-                  Height: =38
-                  Size: =18
-                  Width: =250
-                  X: =179
-                  Y: =70
-            - tbFloorDesk_5:
-                Control: Classic/TextInput@2.3.2
-                Properties:
-                  AccessibleLabel: ="Floor Input"
-                  BorderColor: =RGBA(179, 179, 179, 1)
-                  BorderThickness: =1
-                  Default: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomLocation
-                  DisplayMode: =DisplayMode.View
-                  Fill: =RGBA(0, 0, 0, 0)
-                  Font: =Font.'Segoe UI'
-                  Height: =73
-                  Size: =18
-                  Width: =150
-                  X: =229
-                  Y: =95
-            - lblNameDesk_4:
-                Control: Label@2.5.1
-                Properties:
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Semibold
-                  Text: ="Conference Room"
-                  Y: =98
-            - lblFloorDesk_5:
-                Control: Label@2.5.1
-                Properties:
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Semibold
-                  Text: ="Floor/Room"
-                  Width: =290
-                  Y: =156
-            - tbNameDesk_4:
-                Control: Classic/TextInput@2.3.2
-                Properties:
-                  AccessibleLabel: ="Desk Name Input"
-                  BorderColor: =RGBA(179, 179, 179, 1)
-                  BorderThickness: =1
-                  Default: =varSelectedReservation.DeskText
-                  DisplayMode: =DisplayMode.View
-                  Font: =Font.'Segoe UI'
-                  Size: =18
-                  Width: =331
-                  X: =181
-                  Y: =156
-            - lblDescrDesk_4:
-                Control: Label@2.5.1
-                Properties:
-                  Font: =Font.'Segoe UI'
-                  FontWeight: =FontWeight.Semibold
-                  Height: =55
-                  Text: ="Description"
-                  Width: =290
-                  Y: =223
-            - tbDescrDesk_4:
-                Control: Classic/TextInput@2.3.2
-                Properties:
-                  AccessibleLabel: ="Desk Description Input"
-                  BorderColor: =RGBA(179, 179, 179, 1)
-                  BorderThickness: =1
-                  Default: |-
-                    =
-
-                    varSelectedReservation.Reasonfordeskreservation
-                    //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
-                  DisplayMode: =DisplayMode.View
-                  Font: =Font.'Segoe UI'
-                  Height: =111
-                  Mode: =TextMode.MultiLine
-                  Size: =18
-                  Width: =493
-                  X: =181
-                  Y: =234
-            - btnBackDeskEdit_4:
-                Control: Classic/Button@2.2.0
-                Properties:
-                  Fill: =RGBA(128, 128, 128, 1)
-                  HoverFill: =ColorFade(Self.Fill, -20%)
-                  OnSelect: |-
-                    =Reset(tbDescrDesk_4);
-                    Reset(tbFloorDesk_5);
-                    Reset(tbMapDesk_4);
-                    Reset(tbNameDesk_4);
-                    Set(varCancelContainer, false)
-                  Text: ="Back"
-                  Width: =200
-                  X: =130
-                  Y: =345
-            - btnUpdate_3:
-                Control: Classic/Button@2.2.0
-                Properties:
-                  Fill: =RGBA(184, 0, 0, 1)
-                  HoverFill: =ColorFade(Self.Fill, -20%)
-                  OnSelect: =UpdateContext({varConfirmCancel:true});Set(varCancelContainer, false)
-                  Text: ="CANCEL"
-                  Width: =260
-                  X: =512
-                  Y: =345
       - Label1_4:
           Control: Label@2.5.1
           Group: grpConfirmCancel_3
@@ -714,18 +175,11 @@ Screens:
             Width: =258
             X: =672
             Y: =505
-      - Icon8:
-          Control: Classic/Icon@2.5.0
-          Properties:
-            Height: =0
-            Icon: =Icon.HorizontalLine
-            Width: =995
-            X: =82
-            Y: =137
       - Rectangle18:
           Control: Rectangle@2.3.0
           Properties:
             Height: =0
+            Visible: =false
             Width: =982
             X: =95
             Y: =137
@@ -733,6 +187,7 @@ Screens:
           Control: Rectangle@2.3.0
           Properties:
             Height: =0
+            Visible: =false
             Width: =982
             X: =95
             Y: =137
@@ -740,6 +195,945 @@ Screens:
           Control: Rectangle@2.3.0
           Properties:
             Height: =2
+            Visible: =false
             Width: =982
             X: =95
             Y: =132
+      - ctn_DailyCal_body:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =Parent.Height - Self.Y
+            Width: =Parent.Width - Self.X
+            X: =ctn_DailyCal_toolbar.X + ctn_DailyCal_toolbar.Width
+            Y: =ctn_DailyCal_header.Y + ctn_DailyCal_header.Height
+          Children:
+            - gal_DailyCal_body:
+                Control: Gallery@2.15.0
+                Variant: BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0
+                Properties:
+                  DisplayMode: |-
+                    =If(
+                        (userAccessLevel_text = "User" || "SuperUser" || "ProjectLeader" || "Manager" || "ServiceChief" || "AppAdmin"),
+                            DisplayMode.Edit,
+                        (userAccessLevel_text = "View-only" || "View-only"),
+                            DisplayMode.View,
+                        (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                            DisplayMode.Disabled
+                    )
+                  Height: =Parent.Height - Self.Y
+                  Items: |+
+                    =If(
+                        (userAccessLevel_text = "AppAdmin"),
+                            If(
+                                dropdown_DailyCal_header_filters.Selected.Value = "All",
+                                    Sort(
+                                        Filter(
+                                            'Desk Reservations',
+                                            (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                        ),
+                                        SortOrder.Ascending
+                                    ),
+                                dropdown_DailyCal_header_filters.Selected.Value <> "All",
+                                    Sort(
+                                        Filter(
+                                            'Desk Reservations',
+                                            (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                            && dropdown_DailyCal_header_filters.Selected.Value = Text(
+                                                                                Date(
+                                                                                    Year(ThisRecord.reservationStart_datetime),
+                                                                                    Month(ThisRecord.reservationStart_datetime),
+                                                                                    Day(ThisRecord.reservationStart_datetime)
+                                                                                )
+                                                                            )
+                                        ),
+                                        reservationStart_datetime,
+                                        SortOrder.Ascending
+                                    )
+                            ),
+                        (userAccessLevel_text = "ProjectLeader" || "Manager" || "ServiceChief"),
+                            If(
+                                dropdown_DailyCal_header_filters.Selected.Value = "All",
+                                    Sort(
+                                        Filter(
+                                            'Desk Reservations',
+                                            (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                        ),
+                                        SortOrder.Ascending
+                                    ),
+                                dropdown_DailyCal_header_filters.Selected.Value <> "All",
+                                    Sort(
+                                        Filter(
+                                            'Desk Reservations',
+                                            (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                            && dropdown_DailyCal_header_filters.Selected.Value = Text(
+                                                                                Date(
+                                                                                    Year(ThisRecord.reservationStart_datetime),
+                                                                                    Month(ThisRecord.reservationStart_datetime),
+                                                                                    Day(ThisRecord.reservationStart_datetime)
+                                                                                )
+                                                                            )
+                                        ),
+                                        reservationStart_datetime,
+                                        SortOrder.Ascending
+                                    )
+                            ),
+                        (userAccessLevel_text = "SuperUser" || "User" || "View-Only" || "View-only" || "ViewOnly" || "Viewonly"),
+                            If(
+                                dropdown_DailyCal_header_filters.Selected.Value = "All",
+                                    Sort(
+                                        Filter(
+                                            'Desk Reservations',
+                                            (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                            && (Lower(ThisRecord.'Created By'.Email) = Lower(varTargetEmail) || Lower(ThisRecord.'Reserved By'.Email) = Lower(varTargetEmail))
+                                        ),
+                                        SortOrder.Ascending
+                                    ),
+                                dropdown_DailyCal_header_filters.Selected.Value <> "All",
+                                    Sort(
+                                        Filter(
+                                            'Desk Reservations',
+                                            (ThisRecord.Active_choice.Value = "true" || ThisRecord.Active_choice.Value <> "false")
+                                            && dropdown_DailyCal_header_filters.Selected.Value = Text(
+                                                                                Date(
+                                                                                    Year(ThisRecord.reservationStart_datetime),
+                                                                                    Month(ThisRecord.reservationStart_datetime),
+                                                                                    Day(ThisRecord.reservationStart_datetime)
+                                                                                )
+                                                                            )
+                                        ),
+                                        reservationStart_datetime,
+                                        SortOrder.Ascending
+                                    )
+                            ),
+                        (userAccessLevel_text = "AccessDenied") || IsBlank(userAccessLevel_text),
+                            Blank()
+                    )
+                  TemplateSize: =50
+                  Width: =ctn_DailyCal_body_header.Width
+                  X: =ctn_DailyCal_body_header.X
+                  Y: =ctn_DailyCal_body_header.Y + ctn_DailyCal_body_header.Height
+                Children:
+                  - lbl_reservationDateTime:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =Parent.TemplateHeight
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =ThisItem.reservationStart_datetime //ThisItem.Description
+                        Width: =lbl_DailyCal_body_header_datetime.Width
+                        X: =lbl_DailyCal_body_header_datetime.X
+                  - lbl_reservationLocation:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(50, 49, 48, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =Parent.TemplateHeight / 2
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =ThisItem.reservationRoom_text & ", " & ThisItem.reservationFloor_text & ", " & ThisItem.reservationBuilding_text & " - " & ThisItem.reservationComments_multilinetext
+                        Width: =lbl_DailyCal_body_header_title.Width
+                        X: |
+                          =lbl_DailyCal_body_header_title.X
+                        Y: =20
+                  - lbl_reservationSubject:
+                      Control: Label@2.5.1
+                      Properties:
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(50, 49, 48, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =Parent.TemplateHeight / 2
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =ThisItem.studentName_text & " (" & ThisItem.studentEmail_text & ") - " & ThisItem.DeskText
+                        Width: =lbl_DailyCal_body_header_title.Width
+                        X: |+
+                          =lbl_DailyCal_body_header_title.X
+                  - lbl_reservationID:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =Parent.TemplateHeight
+                        OnSelect: =Select(Parent)
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =ThisItem.ID
+                        Width: =lbl_DailyCal_body_header_ID.Width
+                  - rect_SelectThis:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        Fill: =RGBA(255, 255, 255, 0)
+                        Height: =Parent.TemplateHeight
+                        OnSelect: =Select(icon_inspectItem)
+                        Visible: =ThisItem.IsSelected
+                        Width: =Parent.Width
+                  - icon_inspectItem:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        AccessibleLabel: =Self.Tooltip
+                        BorderColor: =RGBA(0, 0, 0, 0)
+                        BorderThickness: =5
+                        Color: =RGBA(9, 33, 98, 1)
+                        DisabledBorderColor: =RGBA(56, 56, 56, 1)
+                        DisabledColor: =RGBA(119, 119, 119, 1)
+                        DisplayMode: |+
+                          =DisplayMode.Edit
+                          //Admin.Email = varUser_details.Email
+                        Fill: =RGBA(255, 255, 255, 1)
+                        Height: =Parent.TemplateHeight - 4
+                        HoverBorderColor: =Self.Color
+                        HoverColor: =Color.White
+                        HoverFill: =ColorFade(Self.Color, 30%)
+                        Icon: =Icon.ZoomIn
+                        OnSelect: |-
+                          =Set(varDaily, ThisItem.ID);
+                          Set(varSelectedReservation, ThisItem);
+                          Select(Parent);
+                          Set(varCancelContainer, true);
+                        PaddingBottom: =5
+                        PaddingLeft: =5
+                        PaddingRight: =5
+                        PaddingTop: =5
+                        Tooltip: ="View item details"
+                        Width: =Self.Height
+                        X: =Parent.Width - Self.Width - 5
+                        Y: =2
+            - ctn_DailyCal_body_header:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  Height: =Parent.Height / 15
+                  Width: =Parent.Width
+                Children:
+                  - Icon8:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        BorderThickness: =2
+                        Height: =2
+                        Icon: =Icon.HorizontalLine
+                        Width: =Parent.Width
+                        Y: =Parent.Height - Self.Height
+                  - lbl_DailyCal_body_header_datetime:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        Height: =lbl_DailyCal_body_header_ID.Height
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =lbl_DailyCal_body_header_ID.Size
+                        Text: ="Start Date/Time"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Visible: =lbl_DailyCal_body_header_ID.Visible
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =167
+                        X: =lbl_DailyCal_body_header_title.X + lbl_DailyCal_body_header_title.Width
+                        Y: =lbl_DailyCal_body_header_ID.Y
+                  - lbl_DailyCal_body_header_title:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        Height: =lbl_DailyCal_body_header_ID.Height
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =lbl_DailyCal_body_header_ID.Size
+                        Text: =" Desk Reservation Info"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Visible: =lbl_DailyCal_body_header_ID.Visible
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =782
+                        X: =lbl_DailyCal_body_header_ID.X + lbl_DailyCal_body_header_ID.Width
+                        Y: =lbl_DailyCal_body_header_ID.Y
+                  - lbl_DailyCal_body_header_ID:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Center
+                        Height: |+
+                          =Parent.Height
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =18
+                        Text: ="ID#"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Weight: ='TextCanvas.Weight'.Bold
+                        Width: =60
+                        Y: =Parent.Height - Self.Height
+      - ctn_DailyCal_header:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Fill: =RGBA(39, 113, 194, 1)
+            Height: =ctn_DailyCal_toolbar.Width
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =Parent.Width - Self.X
+            X: =ctn_DailyCal_toolbar.X + ctn_DailyCal_toolbar.Width
+            Y: =ctn_DailyCal_toolbar.Y
+          Children:
+            - lbl_DailyCal_header_title:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  Color: =RGBA(255, 255, 255, 1)
+                  FontWeight: =FontWeight.Bold
+                  Height: =Parent.Height
+                  Size: =28
+                  Text: ="Daily Schedule List"
+                  Width: =Parent.Width - Self.X
+                  X: =-10
+            - lbl_DailyCal_header_ctnView:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  DropShadow: =DropShadow.None
+                  Height: =Parent.Height
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Width: =255
+                  X: =808
+                Children:
+                  - lbl_DailyCal_header_ctnView_title:
+                      Control: ModernText@1.0.0
+                      Properties:
+                        Align: =Align.Center
+                        Color: =RGBA(255, 255, 255, 1)
+                        FontWeight: =FontWeight.Semibold
+                        Height: =Parent.Height / 2.5
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =16
+                        Text: ="Select a calendar view"
+                        Width: =Parent.Width
+                        Y: =(Parent.Height - (Self.Height + btn_DailyCal_header_ctnView_weekly.Height)) / 2
+                  - btn_DailyCal_header_ctnView_monthly:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =btn_DailyCal_header_ctnView_weekly.BorderColor
+                        BorderStyle: =btn_DailyCal_header_ctnView_weekly.BorderStyle
+                        BorderThickness: =btn_DailyCal_header_ctnView_weekly.BorderThickness
+                        Color: =btn_DailyCal_header_ctnView_weekly.Color
+                        Fill: =btn_DailyCal_header_ctnView_weekly.Fill
+                        Font: =btn_DailyCal_header_ctnView_weekly.Font
+                        FontWeight: =btn_DailyCal_header_ctnView_weekly.FontWeight
+                        Height: =btn_DailyCal_header_ctnView_weekly.Height
+                        HoverBorderColor: =btn_DailyCal_header_ctnView_weekly.HoverBorderColor
+                        HoverColor: =btn_DailyCal_header_ctnView_weekly.HoverColor
+                        HoverFill: =btn_DailyCal_header_ctnView_weekly.HoverFill
+                        Italic: =btn_DailyCal_header_ctnView_weekly.Italic
+                        OnSelect: =Navigate(scrn_MoCalendar)
+                        PaddingBottom: =btn_DailyCal_header_ctnView_weekly.PaddingBottom
+                        PaddingLeft: =btn_DailyCal_header_ctnView_weekly.PaddingLeft
+                        PaddingRight: =btn_DailyCal_header_ctnView_weekly.PaddingRight
+                        PaddingTop: =btn_DailyCal_header_ctnView_weekly.PaddingTop
+                        Size: =btn_DailyCal_header_ctnView_weekly.Size
+                        Text: ="Monthly"
+                        Visible: =btn_DailyCal_header_ctnView_weekly.Visible
+                        Width: =btn_DailyCal_header_ctnView_weekly.Width
+                        X: =(Parent.Width / 2) - (Self.Width / 2) + (Self.Width / 2) + 10
+                        Y: =btn_DailyCal_header_ctnView_weekly.Y
+                  - btn_DailyCal_header_ctnView_weekly:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        BorderColor: =RGBA(214, 221, 224, 1)
+                        BorderThickness: =5
+                        Color: =RGBA(255, 255, 255, 1)
+                        Fill: =RGBA(9, 33, 98, 1)
+                        Height: =Parent.Height / 2.5
+                        HoverBorderColor: =ColorFade(Self.Fill, -50%)
+                        HoverColor: =Color.White
+                        HoverFill: =ColorFade(Self.BorderColor, -50%)
+                        OnSelect: =Navigate(scrn_WeeklyCal)
+                        Size: =16
+                        Text: ="Weekly"
+                        Width: =100
+                        X: =(Parent.Width / 2) - (Self.Width / 2) - (Self.Width / 2) - 10
+                        Y: =lbl_DailyCal_header_ctnView_title.Y + lbl_DailyCal_header_ctnView_title.Height
+            - icon_DailyCal_body_header_next:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =icon_DailyCal_body_header_previous.BorderColor
+                  BorderStyle: =icon_DailyCal_body_header_previous.BorderStyle
+                  BorderThickness: =icon_DailyCal_body_header_previous.BorderThickness
+                  Color: =icon_DailyCal_body_header_previous.Color
+                  Fill: =icon_DailyCal_body_header_previous.Fill
+                  FocusedBorderColor: =icon_DailyCal_body_header_previous.BorderColor
+                  Height: =icon_DailyCal_body_header_previous.Height
+                  HoverBorderColor: =icon_DailyCal_body_header_previous.HoverBorderColor
+                  HoverColor: =icon_DailyCal_body_header_previous.HoverColor
+                  HoverFill: =icon_DailyCal_body_header_previous.HoverFill
+                  Icon: =Icon.ArrowRight
+                  OnSelect: =Set(_firstDayofWeek2, DateAdd(_firstDayofWeek2, 7, TimeUnit.Days))
+                  PaddingBottom: =icon_DailyCal_body_header_previous.PaddingBottom
+                  PaddingLeft: =5
+                  PaddingRight: =20
+                  PaddingTop: =icon_DailyCal_body_header_previous.PaddingTop
+                  Visible: =icon_DailyCal_body_header_previous.Visible
+                  Width: =icon_DailyCal_body_header_previous.Width
+                  X: =dropdown_DailyCal_header_filters.X + dropdown_DailyCal_header_filters.Width
+                  Y: =icon_DailyCal_body_header_previous.Y
+            - dropdown_DailyCal_header_filters:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  Default: ="All"
+                  Height: =Parent.Height / 2
+                  Items: |-
+                    =Sort(
+                        Distinct(
+                            'Desk Reservations',
+                            Text(
+                                Date(
+                                    Year(reservationStart_datetime),
+                                    Month(reservationStart_datetime),
+                                    Day(reservationStart_datetime)
+                                )
+                            )
+                        ),
+                        SortOrder.Ascending
+                    )
+                  Items.Value: =Value
+                  Size: =18
+                  Visible: =!hideForPDF
+                  Width: |+
+                    =200
+                  X: =icon_DailyCal_body_header_previous.X + icon_DailyCal_body_header_previous.Width
+                  Y: =Parent.Height - Self.Height - 10 //(Parent.Height / 2) - (Self.Height / 2)
+            - icon_DailyCal_body_header_previous:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Color: =Color.White
+                  Height: =Parent.Height / 1.1
+                  Icon: =Icon.ArrowLeft
+                  OnSelect: =Set(_firstDayofWeek2, DateAdd(_firstDayofWeek2, -7, TimeUnit.Days));
+                  PaddingLeft: =20
+                  PaddingRight: =5
+                  PaddingTop: =20
+                  Width: =Self.Height
+                  X: =-15
+            - lbl_DailyCal_header_ctnView_title_1:
+                Control: ModernText@1.0.0
+                Properties:
+                  Align: =Align.Center
+                  Color: =RGBA(255, 255, 255, 1)
+                  FontWeight: =FontWeight.Semibold
+                  Height: =Parent.Height / 3
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Size: =16
+                  Text: ="Filter by dates"
+                  VerticalAlign: =VerticalAlign.Bottom
+                  Width: =dropdown_DailyCal_header_filters.Width
+                  X: =dropdown_DailyCal_header_filters.X
+                  Y: =dropdown_DailyCal_header_filters.Y - Self.Height
+      - ctn_DailyCal_toolbar:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            BorderColor: =RGBA(255, 255, 255, 1)
+            DropShadow: =DropShadow.Semilight
+            Fill: =RGBA(9, 33, 98, 1)
+            Height: =Parent.Height
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =70
+          Children:
+            - Icon4_1:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =icon_Home.BorderColor
+                  BorderStyle: =icon_Home.BorderStyle
+                  BorderThickness: =icon_Home.BorderThickness
+                  Color: =icon_Home.Color
+                  Fill: =icon_Home.Fill
+                  Height: =icon_Home.Height
+                  HoverBorderColor: =icon_Home.HoverBorderColor
+                  HoverColor: =icon_Home.HoverColor
+                  HoverFill: =icon_Home.HoverFill
+                  Icon: =Icon.Print
+                  OnSelect: |-
+                    =UpdateContext({hideForPDF: true});
+                    Set(
+                        PDFPrint,
+                        PDF(
+                            ctn_DailyCal_body,
+                            {
+                                PaperSize: PaperSize.Letter,
+                                PaperOrientation: PaperOrientation.Landscape
+                            }
+                        )
+                    );
+                    UpdateContext({hideForPDF: false});
+                    Print();
+                    Navigate(PDFScreen);
+                  PaddingBottom: =icon_Home.PaddingBottom
+                  PaddingLeft: =icon_Home.PaddingLeft
+                  PaddingRight: =icon_Home.PaddingRight
+                  PaddingTop: =icon_Home.PaddingTop
+                  Visible: =!hideForPDF
+                  Width: =icon_Home.Width
+                  X: =icon_Home.X
+                  Y: =icon_Home.Y + icon_Home.Height + (icon_Home.Y * 2)
+            - icon_Home:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(255, 255, 255, 1)
+                  BorderThickness: =5
+                  Color: =RGBA(255, 255, 255, 1)
+                  FocusedBorderThickness: =0
+                  Height: =60
+                  HoverBorderColor: =RGBA(180, 214, 250, 1)
+                  HoverColor: =ColorFade(Self.Color, -10%)
+                  HoverFill: =ColorFade(Self.BorderColor, -50%)
+                  Icon: =Icon.Home
+                  OnSelect: |-
+                    =Set(
+                        _dateSelected2,
+                        Blank()
+                    );
+                    Set(
+                        _firstDayofWeek2,
+                        Blank()
+                    );
+                    ClearCollect(
+                        colRoomFilter,
+                        Blank()
+                    );
+                    Collect(
+                        colRoomFilter,
+                        Blank()
+                    );
+
+                    Navigate(Dashboard)
+                  PaddingBottom: =5
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  PaddingTop: =5
+                  Width: =60
+                  X: =(Parent.Width / 2) - (Self.Width / 2)
+                  Y: =Self.X * 2
+      - ctn_DailyCal_popUP:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Fill: =RGBA(79, 90, 94, 0.75)
+            Height: =Parent.Height
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Visible: =varCancelContainer
+            Width: =Parent.Width
+          Children:
+            - ctn_DailyCal_popUp_foreground:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =RGBA(180, 214, 250, 1)
+                  BorderThickness: =5
+                  DropShadow: =DropShadow.Bold
+                  Fill: =RGBA(255, 255, 255, 1)
+                  Height: =Parent.Height / 1.5
+                  RadiusBottomLeft: =25
+                  RadiusBottomRight: =25
+                  RadiusTopLeft: =25
+                  RadiusTopRight: =25
+                  Visible: =varCancelContainer
+                  Width: =Parent.Width / 1.5
+                  X: =(Parent.Width / 2) - (Self.Width / 2)
+                  Y: =(Parent.Height / 2) - (Self.Height / 2)
+                Children:
+                  - input_DailyCal_popUp_foreground_Description:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        AccessibleLabel: ="Desk Description Input"
+                        BorderColor: =RGBA(179, 179, 179, 1)
+                        BorderThickness: =1
+                        Default: |-
+                          =varSelectedReservation.reservationDescription_multilinetext
+                          //LookUp(Desks,Title = varSelectedReservation.DeskText).Description
+                        DisplayMode: =DisplayMode.View
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =lbl_DailyCal_popUp_foreground_Description.Height
+                        Mode: =TextMode.MultiLine
+                        PaddingBottom: =3
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =3
+                        Size: |+
+                          =20
+                        Width: =Parent.Width - Self.X
+                        X: =lbl_DailyCal_popUp_foreground_Description.X + lbl_DailyCal_popUp_foreground_Description.Width
+                        Y: =lbl_DailyCal_popUp_foreground_Description.Y
+                  - lbl_DailyCal_popUp_foreground_Description:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        Font: =Font.'Segoe UI'
+                        Height: =lbl_DailyCal_popUp_foreground_Location.Height
+                        Italic: =true
+                        Text: ="Description:"
+                        Width: =lbl_DailyCal_popUp_foreground_EndDatetime.Width
+                        X: =lbl_DailyCal_popUp_foreground_EndDatetime.X
+                        Y: =lbl_DailyCal_popUp_foreground_Location.Y + lbl_DailyCal_popUp_foreground_Location.Height
+                  - input_DailyCal_popUp_foreground_Location:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        AccessibleLabel: ="Map Link Input"
+                        BorderColor: =RGBA(179, 179, 179, 1)
+                        BorderThickness: =1
+                        Default: =varSelectedReservation.reservationRoom_text & ", " & varSelectedReservation.reservationFloor_text & ", " & varSelectedReservation.reservationBuilding_text & ", " & varSelectedReservation.reservationDivision_text
+                        DisplayMode: =DisplayMode.View
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =lbl_DailyCal_popUp_foreground_Location.Height
+                        Mode: =TextMode.MultiLine
+                        PaddingBottom: =3
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =3
+                        Size: |+
+                          =20
+                        Width: =Parent.Width - Self.X
+                        X: =lbl_DailyCal_popUp_foreground_Location.X + lbl_DailyCal_popUp_foreground_Location.Width
+                        Y: =lbl_DailyCal_popUp_foreground_Location.Y
+                  - lbl_DailyCal_popUp_foreground_Location:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        Font: =Font.'Segoe UI'
+                        Height: =lbl_DailyCal_popUp_foreground_EndDatetime.Height * 2.5
+                        Italic: =true
+                        Text: ="Location:"
+                        Width: =lbl_DailyCal_popUp_foreground_Description.Width
+                        X: =lbl_DailyCal_popUp_foreground_Description.X
+                        Y: =input_DailyCal_popUp_foreground_EndDatetime.Y + input_DailyCal_popUp_foreground_EndDatetime.Height
+                  - input_DailyCal_popUp_foreground_EndDatetime:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        AccessibleLabel: ="Map Link Input"
+                        BorderColor: =RGBA(179, 179, 179, 1)
+                        BorderThickness: =1
+                        Default: =varSelectedReservation.'Check Out To'
+                        DisplayMode: =DisplayMode.View
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =lbl_DailyCal_popUp_foreground_EndDatetime.Height
+                        PaddingBottom: =3
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =3
+                        Size: |+
+                          =20
+                        Width: =Parent.Width - Self.X
+                        X: =lbl_DailyCal_popUp_foreground_EndDatetime.X + lbl_DailyCal_popUp_foreground_EndDatetime.Width
+                        Y: =lbl_DailyCal_popUp_foreground_EndDatetime.Y
+                  - lbl_DailyCal_popUp_foreground_EndDatetime:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        Font: =Font.'Segoe UI'
+                        Height: =lbl_DailyCal_popUp_foreground_startDatetime.Height
+                        Italic: =true
+                        Text: ="Event End:"
+                        Width: =lbl_DailyCal_popUp_foreground_startDatetime.Width
+                        X: =lbl_DailyCal_popUp_foreground_startDatetime.X
+                        Y: =lbl_DailyCal_popUp_foreground_startDatetime.Y + lbl_DailyCal_popUp_foreground_startDatetime.Height
+                  - input_DailyCal_popUp_foreground_startDatetime:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        AccessibleLabel: ="Map Link Input"
+                        BorderColor: =RGBA(179, 179, 179, 1)
+                        BorderThickness: =1
+                        Default: =varSelectedReservation.reservationStart_datetime
+                        DisplayMode: =DisplayMode.View
+                        Fill: =RGBA(0, 0, 0, 0)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =lbl_DailyCal_popUp_foreground_startDatetime.Height
+                        PaddingBottom: =3
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =3
+                        Size: |+
+                          =20
+                        Width: =Parent.Width - Self.X
+                        X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
+                        Y: =lbl_DailyCal_popUp_foreground_startDatetime.Y
+                  - lbl_DailyCal_popUp_foreground_startDatetime:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        Font: =Font.'Segoe UI'
+                        Height: =lbl_DailyCal_popUp_foreground_scenario.Height
+                        Italic: =true
+                        Text: ="Event Start:"
+                        Width: =lbl_DailyCal_popUp_foreground_scenario.Width
+                        X: =lbl_DailyCal_popUp_foreground_scenario.X
+                        Y: =lbl_DailyCal_popUp_foreground_scenario.Y + lbl_DailyCal_popUp_foreground_scenario.Height
+                  - input_DailyCal_popUp_foreground_title:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        AccessibleLabel: ="Map Link Input"
+                        BorderColor: =RGBA(179, 179, 179, 1)
+                        BorderThickness: =1
+                        Default: =varSelectedReservation.reservationScenario_text
+                        DisplayMode: =DisplayMode.View
+                        Fill: =RGBA(0, 0, 0, 0)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =lbl_DailyCal_popUp_foreground_startDatetime.Height
+                        PaddingBottom: =3
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =3
+                        Size: |+
+                          =20
+                        Width: =Parent.Width - Self.X
+                        X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
+                        Y: =lbl_DailyCal_popUp_foreground_scenario.Y
+                  - lbl_DailyCal_popUp_foreground_scenario:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        Font: =Font.'Segoe UI'
+                        Height: =lbl_DailyCal_popUp_foreground_ID.Height
+                        Italic: =true
+                        Text: ="Scenario:"
+                        Width: =lbl_DailyCal_popUp_foreground_role.Width
+                        X: =lbl_DailyCal_popUp_foreground_ID.X
+                        Y: =lbl_DailyCal_popUp_foreground_role.Y + lbl_DailyCal_popUp_foreground_role.Height
+                  - input_DailyCal_popUp_foreground_role:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        AccessibleLabel: ="Map Link Input"
+                        BorderColor: =RGBA(179, 179, 179, 1)
+                        BorderThickness: =1
+                        Default: =varSelectedReservation.reservationRole_text
+                        DisplayMode: =DisplayMode.View
+                        Fill: =RGBA(0, 0, 0, 0)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =lbl_DailyCal_popUp_foreground_startDatetime.Height
+                        PaddingBottom: =3
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =3
+                        Size: |+
+                          =20
+                        Width: =Parent.Width - Self.X
+                        X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
+                        Y: =lbl_DailyCal_popUp_foreground_role.Y
+                  - lbl_DailyCal_popUp_foreground_role:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        Font: =Font.'Segoe UI'
+                        Height: =lbl_DailyCal_popUp_foreground_ID.Height
+                        Italic: =true
+                        Text: ="Role:"
+                        Width: =lbl_DailyCal_popUp_foreground_ID.Width * 3.1
+                        X: =lbl_DailyCal_popUp_foreground_ID.X
+                        Y: =lbl_DailyCal_popUp_foreground_student.Y + lbl_DailyCal_popUp_foreground_student.Height
+                  - input_DailyCal_popUp_foreground_student:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        AccessibleLabel: ="Map Link Input"
+                        BorderColor: =RGBA(179, 179, 179, 1)
+                        BorderThickness: =1
+                        Default: =varSelectedReservation.studentName_text & " (" & varSelectedReservation.studentEmail_text & ")"
+                        DisplayMode: =DisplayMode.View
+                        Fill: =RGBA(0, 0, 0, 0)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =lbl_DailyCal_popUp_foreground_student.Height
+                        PaddingBottom: =3
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =3
+                        Size: |
+                          =20
+                        Width: =Parent.Width - Self.X
+                        X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
+                        Y: =lbl_DailyCal_popUp_foreground_student.Y
+                  - lbl_DailyCal_popUp_foreground_student:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        Font: =Font.'Segoe UI'
+                        Height: =50
+                        Italic: =true
+                        Text: ="Student:"
+                        Width: =lbl_DailyCal_popUp_foreground_ID.Width * 3.1
+                        X: =lbl_DailyCal_popUp_foreground_ID.X
+                        Y: =lbl_DailyCal_popUp_foreground_ID.Y + lbl_DailyCal_popUp_foreground_ID.Height
+                  - input_DailyCal_popUp_foreground_Submitted:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        AccessibleLabel: ="Desk Name Input"
+                        BorderColor: =RGBA(179, 179, 179, 1)
+                        BorderThickness: =1
+                        Default: =varSelectedReservation.Created
+                        DisplayMode: =DisplayMode.View
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =lbl_DailyCal_popUp_foreground_Submitted.Height
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: |+
+                          =20
+                        Width: =Parent.Width - Self.X - icon_DailyCal_popUp_foreground_close.Width - (Parent.BorderThickness * 2)
+                        X: =lbl_DailyCal_popUp_foreground_Submitted.X + lbl_DailyCal_popUp_foreground_Submitted.Width
+                        Y: =lbl_DailyCal_popUp_foreground_Submitted.Y
+                  - lbl_DailyCal_popUp_foreground_Submitted:
+                      Control: Label@2.5.1
+                      Properties:
+                        Font: =Font.'Segoe UI'
+                        Height: =input_DailyCal_popUp_foreground_ID.Height
+                        Italic: =true
+                        Size: =14
+                        Text: ="Submitted:"
+                        Width: =input_DailyCal_popUp_foreground_ID.Width
+                        X: =input_DailyCal_popUp_foreground_ID.X + input_DailyCal_popUp_foreground_ID.Width + 50
+                        Y: =input_DailyCal_popUp_foreground_ID.Y
+                  - input_DailyCal_popUp_foreground_ID:
+                      Control: Classic/TextInput@2.3.2
+                      Properties:
+                        AccessibleLabel: ="Floor Input"
+                        BorderColor: =RGBA(179, 179, 179, 1)
+                        BorderThickness: =1
+                        Default: =varSelectedReservation.ID
+                        DisplayMode: =DisplayMode.View
+                        Fill: =RGBA(0, 0, 0, 0)
+                        Font: =Font.'Segoe UI'
+                        FontWeight: =FontWeight.Bold
+                        Height: =lbl_DailyCal_popUp_foreground_ID.Height
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: |+
+                          =20
+                        Width: =lbl_DailyCal_popUp_foreground_ID.Width + 50
+                        X: =lbl_DailyCal_popUp_foreground_ID.X + lbl_DailyCal_popUp_foreground_ID.Width - 15
+                        Y: =lbl_DailyCal_popUp_foreground_ID.Y
+                  - lbl_DailyCal_popUp_foreground_ID:
+                      Control: Label@2.5.1
+                      Properties:
+                        Font: =Font.'Segoe UI'
+                        Height: =30
+                        Italic: =true
+                        Size: =14
+                        Text: ="ID:"
+                        Width: =50
+                        X: =5
+                        Y: =5
+                  - btn_DailyCal_popUp_foreground_cancelThis:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Fill: =RGBA(184, 0, 0, 1)
+                        Height: =50
+                        HoverFill: =ColorFade(Self.Fill, -20%)
+                        OnSelect: |-
+                          =Patch(
+                              'Desk Reservations',
+                              varSelectedReservation,
+                              {
+                                  Active_choice: {Value: false},
+                                  reservationComments_multilinetext: "Canceled by " & varRealEmail & " @ " & Now()
+                              }
+                          );
+                          Refresh('Desk Reservations');
+                          UpdateContext({varConfirmCancel: false});
+                          Set(varSelectedReservation, Blank());
+
+                          UpdateContext({varConfirmCancel:true});
+                          Set(varCancelContainer, false)
+                        Text: ="Cancel This"
+                        Width: =200
+                        X: =((Parent.Width / 2) - (Self.Width / 2)) + (Self.Width / 2) + 20
+                        Y: =Parent.Height - Self.Height - 10
+                  - btn_DailyCal_popUp_foreground_nevermind:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Fill: =RGBA(128, 128, 128, 1)
+                        Height: =btn_DailyCal_popUp_foreground_cancelThis.Height
+                        HoverFill: =ColorFade(Self.Fill, -20%)
+                        OnSelect: |-
+                          =Reset(input_DailyCal_popUp_foreground_Description);
+                          Reset(input_DailyCal_popUp_foreground_ID);
+                          Reset(input_DailyCal_popUp_foreground_Location);
+                          Reset(input_DailyCal_popUp_foreground_Submitted);
+                          Set(varDaily, Blank());
+                          Set(varSelectedReservation, Blank());
+                          Set(varCancelContainer, false);
+                        Text: ="Nevermind"
+                        Width: =btn_DailyCal_popUp_foreground_cancelThis.Width
+                        X: =((Parent.Width / 2) - (Self.Width / 2)) - (Self.Width / 2) - 20
+                        Y: =btn_DailyCal_popUp_foreground_cancelThis.Y
+            - icon_DailyCal_popUp_foreground_close:
+                Control: ModernIcon@1.1.1
+                Properties:
+                  BorderColor: =RGBA(9, 33, 98, 1)
+                  BorderStyle: =BorderStyle.Solid
+                  BorderThickness: =0.5
+                  Fill: =RGBA(9, 33, 98, 1)
+                  Height: =50
+                  Icon: ="DismissCircle"
+                  IconColor: =RGBA(255, 255, 255, 1)
+                  IconStyle: =IconStyle.Filled
+                  OnSelect: =Select(btn_DailyCal_popUp_foreground_nevermind)
+                  RadiusBottomLeft: =25
+                  RadiusBottomRight: =25
+                  RadiusTopLeft: =25
+                  RadiusTopRight: =25
+                  Width: =Self.Height
+                  X: =ctn_DailyCal_popUp_foreground.X + ctn_DailyCal_popUp_foreground.Width - ctn_DailyCal_popUp_foreground.BorderThickness - Self.Width
+                  Y: =ctn_DailyCal_popUp_foreground.Y + ctn_DailyCal_popUp_foreground.BorderThickness

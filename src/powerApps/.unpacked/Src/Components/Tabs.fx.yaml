@@ -66,7 +66,25 @@ Tabs As CanvasComponent:
         ShowScrollbar: =false
         TabIndex: =1
         TemplatePadding: =1
-        TemplateSize: =Tabs.Width / CountRows(Tabs.Items)
+        TemplateSize: |-
+            =If(
+                !IsBlankOrError(CountRows(Tabs.Items)),
+                    Tabs.Width / CountRows(Tabs.Items),
+                IsBlankOrError(CountRows(Tabs.Items)),
+                    Parent.Width / 6,
+                101
+            )
+            /*
+            If(
+                !IsBlankOrError(CountRows(Tabs.Items)),
+                    Tabs.Width / CountRows(Tabs.Items),
+                IsBlankOrError(CountRows(Tabs.Items)),
+                    Parent.Width / 6,
+                //!IsBlankOrError(CountRows(colMenu),
+                //    Tabs.Width / CountRows(colMenu)),
+                101
+            )
+            */
         Width: =Tabs.Width
         Y: =Rectangle1.Height + Rectangle1.Y
         ZIndex: =1

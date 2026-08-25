@@ -1,14 +1,16 @@
 # EHRM Training & Booking App (Station 578)
 
-[![Release](https://img.shields.io/badge/release-v0.12.3-blue)](CHANGELOG.md)
+[![Release](https://img.shields.io/badge/release-v1.0.12-blue)](CHANGELOG.md)
 
 This repository contains the **unpacked (source-controlled)** Microsoft Power Platform assets, documentation, and ALM helpers for the EHRM Training & Booking App used at Edward Hines Jr. VA Hospital (Station #578), VISN12.
 
 ## Current versions
 
-- **Project release (repo)**: v0.12.3 (2026-08-20) — see [CHANGELOG.md](CHANGELOG.md)
-- **Canvas app (component)**: v0.12.2 *(unchanged in v0.12.3; go-live update: `ManageUsers` + `CreateMeeting` screens, expanded SharePoint list bindings, stronger backup/fallback reservation patching, aligned app/manifest version strings)* — see [src/powerApps/README.md](src/powerApps/README.md)
-- **Power Automate (component)**: `AppUserList` (re-exported) + **`SendReminders`** *(new in v0.12.3 — "Send Email Reminder" flow)* — see [src/powerAutomate/README.md](src/powerAutomate/README.md)
+- **Project release (repo)**: v1.0.12 (2026-08-25) — first production / go-live release line — see [CHANGELOG.md](CHANGELOG.md)
+- **Canvas app (component)**: v1.0.12 *(public)* — v0.12.2 → v1.0.12: removed impersonation backdoor, hardened RBAC (default-to-`User`), single-student proxy registration, Learning Labs Library class picker, binding errors 120 → 0, partial modern-control migration; removed dead `CreateMeeting`/`Screen3` screens — see [src/powerApps/README.md](src/powerApps/README.md) and [src/powerApps/v1.0.12_differenceAnalysis.md](src/powerApps/v1.0.12_differenceAnalysis.md)
+- **Power Automate (component)**: `AppUserList` (unchanged) + `SendReminders` (updated — email **+ Teams card**) + **`CreateBackups`** *(new — email-triggered backup-reservation flow)* — see [src/powerAutomate/README.md](src/powerAutomate/README.md)
+- **SharePoint**: app lists + new national EHRM **Sandbox Resource Center** reference lists/library — see [src/sharePoint/README.md](src/sharePoint/README.md)
+- **Analytics**: Power BI `Signup Tool` + new `SuperUserDashboard-Final` (WIP) + new `tms/` data staging — see [src/analytics/README.md](src/analytics/README.md)
 
 ## Repository layout
 
@@ -16,7 +18,7 @@ This repository contains the **unpacked (source-controlled)** Microsoft Power Pl
   - Canvas app: [src/powerApps/](src/powerApps/) (unpacked source lives under `.unpacked/`)
   - Power Automate: [src/powerAutomate/](src/powerAutomate/)
   - SharePoint lists/search config: [src/sharePoint/](src/sharePoint/)
-  - Analytics (Power BI + SQL): [src/analytics/](src/analytics/)
+  - Analytics (Power BI, SQL & TMS): [src/analytics/](src/analytics/)
   - Scripts/hooks: [src/scripts/](src/scripts/)
 - `config/` — architecture notes, runbooks, environment templates, and tooling helpers *(git-ignored as of v0.3.6; local-only)*
 - [docs/](docs/) — public project docs (status, release notes, security, contributors)

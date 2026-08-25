@@ -11,7 +11,7 @@
   },
   "Properties": {
     "AppCreationSource": "AppFromScratch",
-    "AppDescription": "v0.12.2 (source code @ https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp)",
+    "AppDescription": "v1.0.12 (source code @ https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp)",
     "AppPreviewFlagsMap": {
       "adaptivepaging": false,
       "aibuilderserviceenrollment": true,
@@ -60,7 +60,7 @@
       "fluentv9controls": false,
       "fluentv9controlspreview": true,
       "formuladataprefetch": true,
-      "generatedebugpublishedapp": false,
+      "generatedebugpublishedapp": true,
       "herocontrols": false,
       "improvedtabstopbehavior": false,
       "isemptyrequirestableargument": true,
@@ -72,7 +72,7 @@
       "offlineprofilegenerationemitscolumns": false,
       "onegrid": false,
       "optimizedforteamsmeeting": false,
-      "optimizestartscreenpublishedappload": false,
+      "optimizestartscreenpublishedappload": true,
       "packagemodernruntime": false,
       "pdffunction": true,
       "powerfxdecimal": false,
@@ -100,7 +100,7 @@
       "zeroalltabindexes": false
     },
     "Author": "",
-    "BindingErrorCount": 120,
+    "BindingErrorCount": 0,
     "ConnectionString": "",
     "ContainsThirdPartyPcfControls": false,
     "DefaultConnectedDataSourceMaxGetRowsCount": 2000,
@@ -152,8 +152,7 @@
     "scrn_WeeklyCal",
     "scrn_DailyCal",
     "DebuggingScreen",
-    "CreateMeeting",
     "PDFScreen",
-    "Screen3"
+    "Screen1"
   ]
 }

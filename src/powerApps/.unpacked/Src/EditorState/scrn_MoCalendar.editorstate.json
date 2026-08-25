@@ -1974,7 +1974,7 @@
         {
           "AFDDataSourceName": "",
           "AutoRuleBindingEnabled": false,
-          "AutoRuleBindingString": "SortByColumns(Filter('Desk Reservations',(DateValue(Text('Check Out From'))<= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days)) &&\n(DateValue(Text('Check Out To'))>= DateAdd(_FirstDayinView2, ThisItem.Value, TimeUnit.Days))),\"Title\",SortOrder.Ascending)\n\n\n",
+          "AutoRuleBindingString": "",
           "InvariantPropertyName": "Items",
           "IsLockable": false,
           "NameMapSourceSchema": "?"
@@ -5288,7 +5288,7 @@
         {
           "Category": "Data",
           "PropertyName": "Text",
-          "RuleProviderType": "Unknown"
+          "RuleProviderType": "User"
         },
         {
           "Category": "Data",

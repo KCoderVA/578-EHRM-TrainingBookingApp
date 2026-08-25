@@ -29,70 +29,77 @@
 # --- DOCUMENTATION ---
 # Any markdown file or docs/ content
 documentation:
-    - changed-files:
-          - any-glob-to-any-file:
-                - "docs/**"
-                - "*.md"
-                - "CHANGELOG.md"
-                - "README.md"
+      - changed-files:
+              - any-glob-to-any-file:
+                      - "docs/**"
+                      - "*.md"
+                      - "CHANGELOG.md"
+                      - "README.md"
 
 # --- POWER APPS (Canvas App) ---
 # Unpacked source, .msapp, .zip exports, app README
 power-apps:
-    - changed-files:
-          - any-glob-to-any-file:
-                - "src/powerApps/**"
+      - changed-files:
+              - any-glob-to-any-file:
+                      - "src/powerApps/**"
 
 # --- POWER AUTOMATE (Flows) ---
 # Flow definitions, unpacked JSON, flow READMEs
 power-automate:
-    - changed-files:
-          - any-glob-to-any-file:
-                - "src/powerAutomate/**"
+      - changed-files:
+              - any-glob-to-any-file:
+                      - "src/powerAutomate/**"
 
 # --- SHAREPOINT ---
 # SharePoint list sample CSVs and data model files
 sharepoint:
-    - changed-files:
-          - any-glob-to-any-file:
-                - "src/sharePoint/**"
+      - changed-files:
+              - any-glob-to-any-file:
+                      - "src/sharePoint/**"
+
+# --- ANALYTICS ---
+# Power BI reports/templates, SQL scripts, and TMS data staging
+analytics:
+      - changed-files:
+              - any-glob-to-any-file:
+                      - "src/analytics/**"
 
 # --- CONFIG ---
 # Architecture docs, runbooks, tools, VS Code workspace settings
 config:
-    - changed-files:
-          - any-glob-to-any-file:
-                - "config/**"
-                - ".vscode/**"
+      - changed-files:
+              - any-glob-to-any-file:
+                      - "config/**"
+                      - ".vscode/**"
 
 # --- CI / GITHUB ACTIONS ---
 # Workflow .yml files
 ci:
-    - changed-files:
-          - any-glob-to-any-file:
-                - ".github/workflows/**"
+      - changed-files:
+              - any-glob-to-any-file:
+                      - ".github/workflows/**"
 
 # --- REPO HYGIENE ---
 # .gitignore, GitHub community files, templates
 repo-hygiene:
-    - changed-files:
-          - any-glob-to-any-file:
-                - ".gitignore"
-                - ".github/**"
+      - changed-files:
+              - any-glob-to-any-file:
+                      - ".gitignore"
+                      - ".github/**"
 
 # --- SCRIPTS ---
 # PowerShell scripts, hooks, PAC CLI tools
 scripts:
-    - changed-files:
-          - any-glob-to-any-file:
-                - "src/scripts/**"
-                - "config/tools/**"
+      - changed-files:
+              - any-glob-to-any-file:
+                      - "src/scripts/**"
+                      - "config/tools/**"
 
 # --- RELEASE ---
 # Version bumps, release notes, project status updates
 release:
-    - changed-files:
-          - any-glob-to-any-file:
-                - "VERSION"
-                - "docs/release-notes/**"
-                - "docs/PROJECT_STATUS.md"
+      - changed-files:
+              - any-glob-to-any-file:
+                      - "VERSION"
+                      - "docs/release-notes/**"
+                      - "docs/PROJECT_STATUS.md"

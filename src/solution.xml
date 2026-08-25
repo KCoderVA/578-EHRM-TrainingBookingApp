@@ -23,10 +23,10 @@ limitations under the License.
         </LocalizedNames>
         <Descriptions>
             <Description
-                description="v0.12.2: Complete Power Platform solution for EHRM training scheduling and booking at VA facility 578. Includes expanded Canvas capabilities for go-live readiness: new ManageUsers and CreateMeeting screens, strengthened reservation persistence with main/fallback/backup patch paths, integrated MasterScheduleList/SuperUserList/backupList_DeskReservations/Learning Lab Sessions data sources, and aligned app/package/manifest version identity at 0.12.2. Retains app-wide role-based access control, admin impersonation support, zero-touch onboarding, attendee booking-on-behalf workflows, and Office 365 Outlook/Users plus SharePoint integration. Includes the AppUserList Power Automate flow for dynamic user access population."
+                description="v1.0.12: Production go-live release of the EHRM Training &amp; Booking App for VA facility 578. Canvas app v0.12.2 to v1.0.12: removed the hard-coded impersonation backdoor, hardened role-based access control to default-to-User with self-provisioning, added single-student proxy registration, a Learning Labs Library class/scenario picker (read-only national EHRM Sandbox document library), a printable Power BI screen, series-vs-single cancellation, and bulk SuperUser autosync; removed two dead template screens (CreateMeeting, Screen3); drove binding errors 120 to 0; began classic-to-modern control migration. Power Automate: AppUserList (user provisioning + chatbot cards), SendEmailReminder (email + Teams reminders), and the new CreateBackupReservation flow. Integrates Office 365 Outlook/Users and SharePoint (own lists plus read-only national EHRM Sandbox reference lists)."
                 languagecode="1033" />
         </Descriptions>
-        <Version>0.12.2</Version>
+        <Version>1.0.12</Version>
         <Managed>1</Managed>
         <Publisher>
             <UniqueName>VAHealthcare</UniqueName>
@@ -55,6 +55,8 @@ limitations under the License.
             <RootComponent type="300" schemaName="vah_EHRMTrainingBookingApp" behavior="0" />
             <!-- Power Automate Flows -->
             <RootComponent type="29" schemaName="vah_AppUserList" behavior="0" />
+            <RootComponent type="29" schemaName="vah_SendEmailReminder" behavior="0" />
+            <RootComponent type="29" schemaName="vah_CreateBackupReservation" behavior="0" />
             <!-- Connection References -->
             <RootComponent type="35" schemaName="vah_SharePointConnection" behavior="0" />
             <RootComponent type="35" schemaName="vah_OutlookConnection" behavior="0" />

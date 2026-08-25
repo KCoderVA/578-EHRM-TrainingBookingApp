@@ -16,15 +16,19 @@ MyAppts As screen:
                 SortByColumns(
                     Filter(
                         'Desk Reservations',
-                            (Lower(submitterEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
-                            || Lower(studentEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
-                            || Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text))
+                            (
+                                submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                            )
                         && (
                                ((IsBlankOrError(Active_choice.Value) || Active_choice.Value <> Text(true)) && ('Check Out From' >= Today() || reservationStart_datetime >= Today()))
                             || (Active_choice.Value = Text(false) && !IsBlankOrError(Active_choice.Value) && ('Check Out From' <= Today() || reservationStart_datetime <= Today()))
                             || (Active_choice.Value <> Text(true) && !IsBlankOrError(Active_choice.Value) && ('Check Out From' <= Today() || reservationStart_datetime <= Today()))
                             )
                         && (!IsBlankOrError(RoomReservation))
+                        && !IsBlankOrError(DeskText)
                     ),
                     "reservationStart_datetime",
                     SortOrder.Descending
@@ -32,14 +36,20 @@ MyAppts As screen:
                 500
             )
             
+            
+            
+            
+            
+            
+            
             /*
             FirstN(
                 SortByColumns(
                     Filter(
                         'Desk Reservations',
                         (
-                            Lower(submitterEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
-                            || Lower(studentEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
+                            submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                            || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
                         )
                         && //'Check Out From' <= Today(),DeskFloor,
                         Or(
@@ -65,7 +75,7 @@ MyAppts As screen:
                         'Desk Reservations',
                         (
                             'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
-                            // || Lower('Created By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
+                            // || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
                         )
                         && //'Check Out From' <= Today(),DeskFloor,
                         Or(
@@ -272,13 +282,38 @@ MyAppts As screen:
         BorderColor: =App.Theme.Colors.Darker40
         Height: =Parent.Height - (rectSeperator.Y + rectSeperator.Height) - Self.X
         Items: |-
-            =FirstN(
+            =    FirstN(
+                    SortByColumns(
+                        Filter(
+                            'Desk Reservations',
+                            (
+                                   submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                            )
+                            && (Active_choice.Value = Text(true))
+                            && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                            && (!IsBlankOrError(RoomReservation))
+                            && !IsBlankOrError(DeskText)
+                        ),
+                        "reservationStart_datetime",
+                        SortOrder.Descending
+                    ),
+                    500
+                )
+            
+            
+            /*
+            ////  Content prior to v0.14.12:
+            FirstN(
                 SortByColumns(
                     Filter(
                         'Desk Reservations',
-                            (  Lower(submitterEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
-                            || Lower(studentEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
-                            || Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text))
+                            (  submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                            || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                            || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text))
                             && (Active_choice.Value = Text(true))
                             && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
                             && (!IsBlankOrError(RoomReservation))
@@ -288,6 +323,8 @@ MyAppts As screen:
                 ),
                 500
             )
+            */
+            
             
             /*
             FirstN(
@@ -295,8 +332,8 @@ MyAppts As screen:
                     Filter(
                         'Desk Reservations',
                         (
-                            Lower(submitterEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
-                            || Lower(studentEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
+                            submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                            || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
                         )
                         && //'Check Out From' <= Today(),DeskFloor,
                         Or(
@@ -364,6 +401,14 @@ MyAppts As screen:
             DisabledBorderColor: =RGBA(244, 244, 244, 1)
             DisabledColor: =RGBA(166, 166, 166, 1)
             DisabledFill: =RGBA(244, 244, 244, 1)
+            DisplayMode: |-
+                =If(
+                    (userAccessLevel_text = "View-Only" || userAccessLevel_text = "AccessDenied"),
+                        DisplayMode.View,
+                    IsBlankOrError(userAccessLevel_text),
+                        DisplayMode.View,
+                    DisplayMode.Edit
+                )
             Fill: =RGBA(184, 0, 0, 1)
             Font: =App.Theme.Font
             FontWeight: =FontWeight.Semibold
@@ -381,6 +426,12 @@ MyAppts As screen:
             RadiusTopRight: =20
             Size: =16
             Text: ="Cancel This"
+            Visible: |-
+                =If(
+                    Self.DisplayMode = DisplayMode.View,
+                        false,
+                    true
+                )
             Width: =142
             X: =Parent.Width - Self.Width - 10
             Y: =Parent.TemplateHeight - Self.Height - 10
@@ -572,8 +623,8 @@ MyAppts As screen:
         Text: ="No upcoming reservations"
         Visible: =If(CountRows(gallUpcoming.AllItems) >=1, false, true)
         Width: =640
-        X: =240
-        Y: =169
+        X: =238
+        Y: =388
         ZIndex: =3
 
     Image2_5 As image:

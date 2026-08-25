@@ -211,6 +211,7 @@ Reservation As screen:
         DisabledBorderColor: =RGBA(244, 244, 244, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
+        DisplayMode: =Toggle1.DisplayMode
         Fill: =RGBA(184, 0, 0, 1)
         Font: =App.Theme.Font
         FontWeight: =FontWeight.Semibold
@@ -225,7 +226,12 @@ Reservation As screen:
         PressedFill: =App.Theme.Colors.Darker40
         Size: =18
         Text: ="Cancel This Reservation"
-        Visible: =Toggle1.Checked
+        Visible: |-
+            =If(
+                Toggle1.DisplayMode = DisplayMode.Edit,
+                true,
+                false
+            )
         Width: =btnBack.Width
         X: =btnBack.X - Self.Width - 20
         Y: =btnBack.Y
@@ -618,7 +624,7 @@ Reservation As screen:
             =Launch(
                 "mailto:VHAHINInformaticsTrainingAndSupport@va.gov?"
                 & "cc="
-                    & User().Email
+                    & varRealEmail
                     & ",Kyle.Coder@va.gov"
                 & "&subject="
                     & "Assistance%20requested%20regarding%20reservation%20%23"
@@ -709,7 +715,14 @@ Reservation As screen:
                 false,
                 Blank()
             )
-        DisplayMode: =DisplayMode.Edit
+        DisplayMode: |-
+            =If(
+                (userAccessLevel_text = "View-Only" || userAccessLevel_text = "AccessDenied"),
+                    DisplayMode.View,
+                IsBlankOrError(userAccessLevel_text),
+                    DisplayMode.View,
+                DisplayMode.Edit
+            )
         FontColor: =
         Height: =tbTo_5.Height
         Label: =
@@ -983,7 +996,7 @@ Reservation As screen:
                     varSelectedReservation,
                     {
                         Active_choice: {Value: false},
-                        reservationComments_multilinetext: "Canceled by " & User().Email & " @ " & Now()
+                        reservationComments_multilinetext: "Canceled by " & varRealEmail & " @ " & Now()
                     }
                 );
                 Refresh('Desk Reservations');
@@ -1016,6 +1029,7 @@ Reservation As screen:
         DisabledBorderColor: =RGBA(244, 244, 244, 1)
         DisabledColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
+        DisplayMode: =Toggle1.DisplayMode
         Fill: =RGBA(255, 255, 255, 0)
         Font: =App.Theme.Font
         FontWeight: =FontWeight.Semibold

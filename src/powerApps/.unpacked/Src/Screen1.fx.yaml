@@ -1,0 +1,32 @@
+"Screen1 As screen.'printableLayout_A4Landscape_ver1.0'":
+    Fill: =Color.White
+    Height: =794
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    Width: =1123
+
+    PowerBI2 As powerbi:
+        BorderColor: =App.Theme.Colors.Darker40
+        DashboardId: ="e948a0b5-96a3-43a5-a1b3-500c4fe926fa"
+        Height: =794
+        TileUrl: |-
+            ="https://app.powerbigov.us/embed?dashboardId=e948a0b5-96a3-43a5-a1b3-500c4fe926fa&tileId=550f8ee5-4d01-4a9e-906b-e10833e8d4d7&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly9XQUJJLVVTLUdPVi1WSVJHSU5JQS1yZWRpcmVjdC5hbmFseXNpcy51c2dvdmNsb3VkYXBpLm5ldCIsImVtYmVkRmVhdHVyZXMiOnt9fQ%3d%3d"
+        Width: =1123
+        WorkspaceId: ="f9a21156-7cbd-49e0-8cec-3b7b6e47b9e9"
+        ZIndex: =1
+
+    PrintButton1 As label:
+        Align: =Align.Center
+        Color: =App.Theme.Colors.Lighter10
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        Height: =32
+        OnSelect: =Print()
+        Size: =13
+        TabIndex: =0
+        Text: ="Print"
+        Visible: =Not(Parent.Printing)
+        Width: =96
+        X: =Parent.Width - Self.Width - 25
+        Y: =25
+        ZIndex: =2
+

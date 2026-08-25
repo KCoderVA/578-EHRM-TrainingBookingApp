@@ -2,118 +2,122 @@ Dashboard As screen:
     Fill: =RGBA(0, 63, 114, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnHidden: =Set(varTimer, true);
     OnVisible: =Set(varTimer, true);
     Width: =Max(App.Width, App.DesignWidth)
 
-    Button6 As modernButton:
-        Align: =Align.Left
-        Height: =Combobox1.Height
-        OnSelect: =Navigate(DebuggingScreen)
-        Size: =12
-        Text: =varTargetEmail & " (" & userAccessLevel_text & ")"
-        Visible: =User().Email = "Kyle.Coder@va.gov"
-        Width: =223
-        X: =Combobox1.X + Combobox1.Width
-        Y: =Combobox1.Y
+    bgRounded_3 As htmlViewer:
+        BorderColor: =RGBA(9, 33, 98, 1)
+        BorderThickness: =5
+        Height: |-
+            =//623
+            Parent.Height - Self.Y
+        HtmlText: |-
+            =//"<div style='border:1px gray;border-radius:10%;height:600px;width:100%;background-color:#FCFCFC'></div>"
+            "<div style='border:5px solid #b4d6fa;border-radius:8px;height:" & (Parent.Height - Self.Y - 20) & "px;width:100%;background-color:#fcfcfc;'></div>"
+        Visible: =false //gallMyReservationsPreview.Visible
+        Width: =528
+        X: =608
+        Y: =17
         ZIndex: =1
 
-    Combobox1 As modernCombobox:
-        Appearance: =Appearance.FilledDarker
-        DefaultSelectedItems: |-
-            =Filter(
-                Distinct(colDeskAccess, Lower(Email_Text)),
-                Value = varRealEmail
+    bgRounded_4 As htmlViewer:
+        BorderColor: =RGBA(9, 33, 98, 1)
+        BorderThickness: =5
+        Height: =bgRounded_3.Height
+        HtmlText: |-
+            =If(
+                (ctnDashboard_Denied_3.Visible = true || gallMyReservationsPreview.Visible = false),
+                "<div style='border:5px solid #b4d6fa;border-radius:8px;height:" & (Parent.Height - Self.Y - 20) & "px;width:100%;background-color:#fcfcfc;'>
+                    <span>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <center>
+                    Data Access Denied. . . .
+                    </center>
+                    </span>
+                    </div>",
+                (ctnDashboard_Denied_3.Visible = false || gallMyReservationsPreview.Visible = true),
+                "<div style='border:5px solid #b4d6fa;border-radius:8px;height:" & (Parent.Height - Self.Y - 20) & "px;width:100%;background-color:#fcfcfc;'>
+                    <span>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <center>
+                    Loading Data. . . .
+                    </center>
+                    </span>
+                    </div>"
             )
-        Height: =Label8.Height / 1.5
-        ItemDisplayText: =ThisItem.Value
-        Items: |-
-            =Distinct(DeskAccessControl, Email_Person.Email)
-            //Distinct(colDeskAccess, Email_Person.Email)
-            /*Distinct(
-                AddColumns(
-                    Filter(
-                        DeskAccessControl,
-                        !IsBlankOrError(Email_Text) && !IsBlankOrError(AccessLevel_Text)
-                    ),
-                    Display,
-                    Email_Text & " (" & AccessLevel_Text & ")"
-                ),
-                Display
-            )*/
-        OnChange: |-
-            =// Resolve the impersonated user's record
-            Set(varTargetEmail, Self.Selected.Value);
-            Set(varTargetEntraID, 
-                LookUp(
-                    DeskAccessControl, 
-                    Lower(Self.Selected.Value) = Lower(Email_Text),
-                    Id_Text
-                )        
-            );
-            Set(varIsImpersonating, varTargetEmail <> varRealEmail);
-            
-            Set(
-                varDeskAccessControl_record,
-                LookUp(colDeskAccess, Lower(Email_Text) = varTargetEmail)
-            );
-            
-            // Access level (same fallback as OnStart)
-            Set(
-                userAccessLevel_text,
-                Coalesce(varDeskAccessControl_record.AccessLevel_Text, "AccessDenied")
-            );
-            
-            // Admin flag — mirror OnStart exactly
-            Set(user_isAdmin, userAccessLevel_text = "AppAdmin");
-            
-            // Optional: mirror the O365 profile of the impersonated user so
-            // forms that read varUser_details also follow the switch
-            Set(
-                varUser_details,
-                Office365Users.UserProfileV2(varTargetEmail)
-            );
-            
-                Refresh(DeskAccessControl);
-                ClearCollect(colDeskAccess, DeskAccessControl);
-                ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
-                //Set(_selectedUser, Office365Users.UserProfileV2(varTargetEntraID));
-                Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Value}).value));
-                ClearCollect(colMenu, []);
-                ClearCollect(CollectionRecurrence, []);
-            
-            // Rebuild the menu with the same Switch you use in OnStart
-            Switch(
+        Size: =24
+        Visible: |-
+            =false
+            /*If(
+                (varTimer = true),
                 true,
-                userAccessLevel_text in ["SuperUser","Manager","ServiceChief","ProjectLeader","AppAdmin"],
-                ClearCollect(colMenu,
-                    { Name: "Home",    Icon: Icon.DetailList,      Page: Dashboard,     Visible: true },
-                    { Name: "My Bookings",  Icon: Icon.Person,          Page: MyAppts,       Visible: true },
-                    { Name: "Create New",         Icon: Icon.Add,             Page: POCSUPERVISOR, Visible: true },
-                    { Name: "Manage Rooms", Icon: Icon.ComputerDesktop, Page: ManageDesks,   Visible: true }
-                ),
-                userAccessLevel_text = "User",
-                ClearCollect(colMenu,
-                    { Name: "Home",   Icon: Icon.DetailList, Page: Dashboard,     Visible: true },
-                    { Name: "My Bookings", Icon: Icon.Person,     Page: MyAppts,       Visible: true },
-                    { Name: "Create New",        Icon: Icon.Add,        Page: POCSUPERVISOR, Visible: true }
-                ),
-                userAccessLevel_text = "View-only",
-                ClearCollect(colMenu,
-                    { Name: "Home",   Icon: Icon.DetailList, Page: Dashboard,     Visible: true },
-                    { Name: "My Bookings",  Icon: Icon.Person,          Page: MyAppts,       Visible: true }
-                ),
-                ClearCollect(colMenu, [])
-            );
-            
-            //Select(Button6);
-        SelectMultiple: =false
-        Size: =12
-        ValidationState: =ValidationState.None
-        Visible: =User().Email = "Kyle.Coder@va.gov"
-        Width: =300
-        X: =Label8.X + Label8.Width
-        Y: =(Label8.Height / 2) - (Self.Height / 2) - 40
+                (gallMyReservationsPreview.Visible = false && IsBlankOrError(varTimer)),
+                true,
+                (ctnDashboard_Denied_3.Visible = true || gallMyReservationsPreview.Visible = false),
+                true,
+                false
+            )
+            */
+        Width: =bgRounded_3.Width
+        X: =bgRounded_3.X
+        Y: =bgRounded_3.Y
         ZIndex: =2
+
+    lblNoResDashboard As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: |-
+            =If(
+                userAccessLevel_text = "AccessDenied",
+                FontWeight.Bold,
+                FontWeight.Lighter
+            )
+        Height: =88
+        Size: |-
+            =If(
+                userAccessLevel_text = "AccessDenied",
+                40,
+                25
+            )
+        Text: |-
+            =If(
+                userAccessLevel_text = "AccessDenied" || IsBlankOrError(userAccessLevel_text),
+                "ACCESS DENIED!",
+                "No upcoming reservations!"
+            )
+        Visible: |-
+            =false
+            /*
+            If(
+                ((CountRows(gallMyReservationsPreview.AllItems) >= 1) && (gallMyReservationsPreview.Visible = true)),
+                    false,
+                ((CountRows(gallMyReservationsPreview.AllItems) < 1) && (gallMyReservationsPreview.Visible = true)),
+                    true,
+                (gallMyReservationsPreview.Visible = false),
+                    false,
+                true
+            )
+            */
+        Width: =bgRounded_3.Width
+        X: =bgRounded_3.X
+        Y: |-
+            =//353
+            ((bgRounded_3.Y / 2) + (bgRounded_3.Height / 2)) - (Self.Height / 2)
+        ZIndex: =3
 
     Timer3 As timer:
         Align: =Align.Left
@@ -142,36 +146,162 @@ Dashboard As screen:
         HoverFill: =App.Theme.Colors.Darker10
         OnTimerEnd: |-
             =ResetForm(Form1);
+            ResetForm(form_EditDesks);
+            
+            
+            Set(_dateSelected2, Blank());
+            Set(_FirstDayinView2, Blank());
+            Set(_firstDayOfMonth2, Blank());
+            Set(_firstDayofWeek2, Blank());
+            Set(_LastDayOfMonth2, Blank());
+            Set(_MaxDate, Blank());
+            Set(_MaxDate2, Blank());
+            Set(_MinDate, Blank());
+            Set(_MinDate2, Blank());
+            
+            
+            
+            
+            
+            
+            
+            Set(_selectedUser, Blank());
+            
+            
+            Set(currentItem, Blank());
+            Set(endByDate, Blank());
+            Set(gv_item, Blank());
+            Set(maxOccurrence, Blank());
+            Set(NthWeekdayRecord, Blank());
+            Set(numWorkDays, Blank());
+            Set(PDFPrint, Blank());
+            Set(startWeekday, Blank());
+            Set(submitItem, Blank());
+            Set(var_Attendees, Blank());
+            Set(var_Date, Blank());
+            Set(var_Date_central, Blank());
+            Set(var_DayOfWeek, Blank());
+            Set(var_Duration, Blank());
+            Set(var_Duration_central, Blank());
+            Set(var_EmailBody, Blank());
+            Set(var_EndDateTime_central, Blank());
+            Set(var_EndTime, Blank());
+            Set(var_EndTime_central, Blank());
+            Set(var_firstHalfDuration, Blank());
+            Set(var_firstHalfDuration_central, Blank());
+            Set(var_ManagerEmail, Blank());
+            Set(var_MeetingCategory, Blank());
+            Set(var_OptionalAttendees, Blank());
+            Set(var_reservationAgreementBody, Blank());
+            Set(var_reservationBuildingNumber, Blank());
+            Set(var_reservationDivision, Blank());
+            Set(var_reservationFloorNumber, Blank());
+            Set(var_reservationFullDateTime, Blank());
+            Set(var_reservationFullLocation, Blank());
+            Set(var_reservationRole, Blank());
+            Set(var_reservationRoomNumber, Blank());
+            Set(var_reservationScenario, Blank());
+            Set(var_scenarioTrainingMaterialsURL, Blank());
+            Set(var_secondHalfTime, Blank());
+            Set(var_secondHalfTime_central, Blank());
+            Set(var_Service, Blank());
+            Set(var_StartDateTime_central, Blank());
+            Set(var_StartTime, Blank());
+            Set(var_StartTime_central, Blank());
+            Set(varAccept, Blank());
+            Set(varAccept3, Blank());
+            Set(varAccept4, Blank());
+            Set(varAttendees, Blank());
+            Set(varCancelContainer, Blank());
+            Set(varDaily, Blank());
+            Set(varDefaultEndTime, Blank());
+            Set(varDescription, Blank());
+            Set(varDeskMode, Blank());
+            Set(var_EmailBody, Blank());
+            Set(varEndDate, Blank());
+            Set(varEventEndTime, Blank());
+            Set(varEventStartTime, Blank());
+            Set(varImportance, Blank());
+            Set(varIsImpersonating, Blank());
+            Set(varManageSelectedDesk, Blank());
+            Set(varMeetCat, Blank());
+            Set(varMyProfile, Blank());
+            Set(varOptionalAttendees, Blank());
+            Set(varPopUp_ClassPicker, Blank());
+            Set(varPopUp_ClassPicker_scenario, Blank());
+            Set(varPopUp_ClassPicker_scenarioDate, Blank());
+            Set(varPopUp_ClassPicker_scenarioDateTime, Blank());
+            Set(varPopUp_ClassPicker_scenarioDayOfWeek, Blank());
+            Set(varPopUp_ClassPicker_scenarioEnd24, Blank());
+            Set(varPopUp_ClassPicker_scenarioEndTime, Blank());
+            Set(varPopUp_ClassPicker_scenarioLocation, Blank());
+            Set(varPopUp_ClassPicker_scenarioName, Blank());
+            Set(varPopUp_ClassPicker_scenarioRole, Blank());
+            Set(varPopUp_ClassPicker_scenarioSplit, Blank());
+            Set(varPopUp_ClassPicker_scenarioStart24, Blank());
+            Set(varPopUp_ClassPicker_scenarioStartTime, Blank());
+            Set(varRecurrence, Blank());
+            Set(varRecurrenceID, Blank());
+            Set(varReminder, Blank());
+            Set(varReservePOC, Blank());
+            Set(varSelectedDesk, Blank());
+            Set(varSelectedReservation, Blank());
+            Set(varSelectedStartDate, Blank());
+            Set(varsmartboardck, Blank());
+            Set(varStudentMgrMail, Blank());
+            Set(varStudentProfile, Blank());
+            Set(varTitle, Blank());
+            Set(varURL, Blank());
+            Set(varURLName, Blank());
+            Set(varUserExists, Blank());
+            Set(varWeekday, Blank());
+            
+            Refresh('Desk Reservations');
+            Refresh(DeskAccessControl);
+            Refresh(Desks);
+            Refresh(MasterScheduleList);
+            Refresh(SuperUserList);
+            Refresh(backupList_DeskReservations);
+            Refresh('Learning Lab Sessions');
+            
+            ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+            
+            Set(varTimer, false);
+            
+            
+            
+            /////////////////////
+            //ORIGINAL CONTENT://
+            /////////////////////
+            /*
+            ResetForm(Form1);
             ResetForm(Form2);
             
             
-            Set(_allRoomsConcat, Blank());
-            Set(_calendarVisible, Blank());
-            Set(_dateSelected, Blank());
+            
+            
+            
             Set(_dateSelected2, Blank());
-            Set(_firstDayInView, Blank());
+            
             Set(_FirstDayinView2, Blank());
-            Set(_firstDayOfMonth, Blank());
+            
             Set(_firstDayOfMonth2, Blank());
             Set(_firstDayofWeek2, Blank());
-            Set(_lastDayOfMonth, Blank());
+            
             Set(_LastDayOfMonth2, Blank());
-            Set(_maxDate, Blank());
             Set(_MaxDate, Blank());
             Set(_MaxDate2, Blank());
-            Set(_minDate, Blank());
-            Set(_MinDate, Blank());
             Set(_MinDate2, Blank());
-            Set(_myCalendarName, Blank());
-            Set(_myScheduledMeeting, Blank());
-            Set(_noRoomLists, Blank());
-            Set(_roomListSelected, Blank());
-            Set(_selectedMeetingTime, Blank());
-            Set(_selectedRoom, Blank());
-            Set(_selectedRoomList, Blank());
+            
+            
+            
+            
+            
+            
+            
             Set(_selectedUser, Blank());
-            Set(_showDetails, Blank());
-            Set(_showMeetingTimes, Blank());
+            
+            
             Set(currentItem, Blank());
             Set(endByDate, Blank());
             Set(gv_item, Blank());
@@ -304,9 +434,233 @@ Dashboard As screen:
             Refresh(backupList_DeskReservations);
             Refresh('Learning Lab Sessions');
             
+            
             Set(varTimer, false);
+            */
         OnTimerStart: |-
-            =If(
+            =// ============================================================
+            // 2. Find the target user's existing record (if any)
+            // ============================================================
+                Set(
+                    varDeskAccessControl_record,
+                    LookUp(
+                        DeskAccessControl,
+                        (Email_Text = Lower(varTargetEmail))
+                    )
+                );
+            
+            // ============================================================
+            // 4. Resolve access level (fallback to AccessDenied if blank)
+            // ============================================================
+                Set(
+                    userAccessLevel_text,
+                    If(
+                        IsBlankOrError(varDeskAccessControl_record),
+                            LookUp(
+                                DeskAccessControl,
+                                (Email_Text = Lower(varTargetEmail)),
+                                AccessLevel_Choice.Value
+                            ),
+                        !IsBlankOrError(varDeskAccessControl_record),
+                            Coalesce(varDeskAccessControl_record.AccessLevel_Text, "User")
+                    )
+                );
+            
+            // ============================================================
+            // 5. Elevated / admin flag
+            // ============================================================
+                Set(
+                    user_isAdmin,
+                    userAccessLevel_text = "AppAdmin"
+                );
+            
+            // ============================================================
+            // 6. Build the navigation menu based on level
+            // ============================================================
+                Switch(
+                    true,
+            
+                    // Top Elevated Roles: full menu
+                    userAccessLevel_text in ["Manager", "ServiceChief", "AppAdmin"],
+                    ClearCollect(
+                        colMenu,
+                        {
+                            Name: "Home",
+                            Icon: Icon.Home,
+                            Page: Dashboard,
+                            Visible: true
+                        },
+                        {
+                            Name: "Items",
+                            Icon: Icon.Bookmark,
+                            Page: MyAppts,
+                            Visible: true
+                        },
+                        {
+                            Name: "Desks",
+                            Icon: Icon.ComputerDesktop,
+                            Page: ManageDesks,
+                            Visible: true
+                        },
+                        {
+                            Name: "Users",
+                            Icon: Icon.People,
+                            Page: ManageUsers,
+                            Visible: true
+                        },
+                        {
+                            Name:"Help",
+                            Icon: Icon.Help,
+                            Page: ReleaseNotes,
+                            Visible: true
+                        },
+                        {
+                            Name: "New",
+                            Icon: Icon.Add,
+                            Page: POCSUPERVISOR,
+                            Visible: true
+                        }
+                    ),
+            
+                    // Advanced 'Project Leader' Role: full menu without UserManagement
+                    userAccessLevel_text in ["ProjectLeader"],
+                    ClearCollect(
+                        colMenu,
+                        {
+                            Name: "Home",
+                            Icon: Icon.Home,
+                            Page: Dashboard,
+                            Visible: true
+                        },
+                        {
+                            Name: "Items",
+                            Icon: Icon.Bookmark,
+                            Page: MyAppts,
+                            Visible: true
+                        },
+                        {
+                            Name: "Desks",
+                            Icon: Icon.ComputerDesktop,
+                            Page: ManageDesks,
+                            Visible: true
+                        },
+                        {
+                            Name:"Help",
+                            Icon: Icon.Help,
+                            Page: ReleaseNotes,
+                            Visible: true
+                        },
+                        {
+                            Name: "New",
+                            Icon: Icon.Add,
+                            Page: POCSUPERVISOR,
+                            Visible: true
+                        }
+                    ),
+            
+                    // Standard user
+                    userAccessLevel_text in ["User", "SuperUser"],
+                    ClearCollect(
+                        colMenu,
+                        {
+                            Name: "Home",
+                            Icon: Icon.Home,
+                            Page: Dashboard,
+                            Visible: true
+                        },
+                        {
+                            Name: "Items",
+                            Icon: Icon.Bookmark,
+                            Page: MyAppts,
+                            Visible: true
+                        },
+                        {
+                            Name: "Help",
+                            Icon: Icon.Help,
+                            Page: ReleaseNotes,
+                            Visible: true
+                        },
+                        {
+                            Name: "New",
+                            Icon: Icon.Add,
+                            Page: POCSUPERVISOR,
+                            Visible: true
+                        }
+                    ),
+            
+                    // View-only
+                    userAccessLevel_text in ["View-Only"],
+                    ClearCollect(
+                        colMenu,
+                        {
+                            Name: "Home",
+                            Icon: Icon.Home,
+                            Page: Dashboard,
+                            Visible: true
+                        },
+                        {
+                            Name: "Items",
+                            Icon: Icon.Bookmark,
+                            Page: MyAppts,
+                            Visible: true
+                        },
+                        {
+                            Name:"Help",
+                            Icon: Icon.Help,
+                            Page: ReleaseNotes,
+                            Visible: true
+                        }
+                    ),
+            
+                    // View-only
+                    userAccessLevel_text in ["AccessDenied"],
+                    ClearCollect(
+                        colMenu,
+                        {
+                            Name: "Home",
+                            Icon: Icon.Home,
+                            Page: Dashboard,
+                            Visible: true
+                        },
+                        {
+                            Name:"Help",
+                            Icon: Icon.Help,
+                            Page: ReleaseNotes,
+                            Visible: true
+                        }
+                    ),
+            
+                    // AccessDenied or anything else: empty menu
+                    IsBlankOrError(userAccessLevel_text),
+                    ClearCollect(
+                        colMenu,
+                        {
+                            Name: "Home",
+                            Icon: Icon.Home,
+                            Page: Dashboard,
+                            Visible: true
+                        },
+                        {
+                            Name:"Help",
+                            Icon: Icon.Help,
+                            Page: ReleaseNotes,
+                            Visible: true
+                        }
+                    )
+                );
+            
+            If(
+                IsBlankOrError(varTimer),
+                Set(varTimer, true),
+                false
+            );
+            
+            
+            /////////////////////
+            //ORIGINAL CONTENT://
+            /////////////////////
+            /*
+            If(
                 IsBlankOrError(varTimer),
                 Set(varTimer, true),
                 false
@@ -315,33 +669,31 @@ Dashboard As screen:
             ResetForm(Form2);
             
             
-            Set(_allRoomsConcat, Blank());
-            Set(_calendarVisible, Blank());
-            Set(_dateSelected, Blank());
+            
+            
+            
             Set(_dateSelected2, Blank());
-            Set(_firstDayInView, Blank());
+            
             Set(_FirstDayinView2, Blank());
-            Set(_firstDayOfMonth, Blank());
+            
             Set(_firstDayOfMonth2, Blank());
             Set(_firstDayofWeek2, Blank());
-            Set(_lastDayOfMonth, Blank());
+            
             Set(_LastDayOfMonth2, Blank());
-            Set(_maxDate, Blank());
             Set(_MaxDate, Blank());
             Set(_MaxDate2, Blank());
-            Set(_minDate, Blank());
             Set(_MinDate, Blank());
             Set(_MinDate2, Blank());
-            Set(_myCalendarName, Blank());
-            Set(_myScheduledMeeting, Blank());
-            Set(_noRoomLists, Blank());
-            Set(_roomListSelected, Blank());
-            Set(_selectedMeetingTime, Blank());
-            Set(_selectedRoom, Blank());
-            Set(_selectedRoomList, Blank());
+            
+            
+            
+            
+            
+            
+            
             Set(_selectedUser, Blank());
-            Set(_showDetails, Blank());
-            Set(_showMeetingTimes, Blank());
+            
+            
             Set(currentItem, Blank());
             Set(endByDate, Blank());
             Set(gv_item, Blank());
@@ -461,9 +813,10 @@ Dashboard As screen:
             Refresh('Learning Lab Sessions');
             
             
-            ClearCollect(colDeskAccess, DeskAccessControl);
-            ClearCollect(col_MasterSchedule, MasterScheduleList);
-            ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+            //ClearCollect(colDeskAccess, DeskAccessControl);
+            //ClearCollect(col_MasterSchedule, MasterScheduleList);
+            //ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+            */
         PaddingBottom: =0
         PaddingLeft: =0
         PaddingRight: =0
@@ -487,7 +840,7 @@ Dashboard As screen:
         Width: =666
         X: =470
         Y: =628
-        ZIndex: =3
+        ZIndex: =4
 
     Button5 As button:
         BorderColor: =RGBA(180, 214, 250, 1)
@@ -514,7 +867,7 @@ Dashboard As screen:
         X: =Label4.X + (Label4.Width / 2) - (Self.Width / 2)
         Y: |
             =Parent.Height - Self.Height - 10
-        ZIndex: =4
+        ZIndex: =5
 
     Label4 As label:
         Align: =Align.Center
@@ -531,7 +884,7 @@ Dashboard As screen:
         Width: =HtmlText2.Width
         X: =HtmlText2.X
         Y: =Button5.Y - Self.Height - 10
-        ZIndex: =5
+        ZIndex: =6
 
     HtmlText2 As htmlViewer:
         Color: =RGBA(255, 255, 255, 1)
@@ -578,58 +931,192 @@ Dashboard As screen:
         Width: =(Parent.Width - bgRounded_3.Width) - 30
         X: =15
         Y: =ctnDashboard_message.Y + ctnDashboard_message.Height
-        ZIndex: =6
+        ZIndex: =7
 
     Rectangle7 As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
         Fill: =RGBA(0, 11, 38, 1)
         Height: =211
         Width: =1136
-        ZIndex: =7
-
-    bgRounded_3 As htmlViewer:
-        BorderColor: =RGBA(9, 33, 98, 1)
-        BorderThickness: =5
-        Height: |-
-            =//623
-            Parent.Height - Self.Y
-        HtmlText: |-
-            =//"<div style='border:1px gray;border-radius:10%;height:600px;width:100%;background-color:#FCFCFC'></div>"
-            "<div style='border:5px solid #b4d6fa;border-radius:8px;height:" & (Parent.Height - Self.Y - 20) & "px;width:100%;background-color:#fcfcfc;'></div>"
-        Width: =528
-        X: =608
-        Y: =17
         ZIndex: =8
 
-    bgRounded_4 As htmlViewer:
-        BorderColor: =RGBA(9, 33, 98, 1)
+    btnGalleryBackground As button:
+        BorderColor: =RGBA(180, 214, 250, 1)
         BorderThickness: =5
-        Height: =bgRounded_3.Height
-        HtmlText: |-
-            =//"<div style='border:1px gray;border-radius:10%;height:600px;width:100%;background-color:#FCFCFC'></div>"
-            "<div style='border:5px solid #b4d6fa;border-radius:8px;height:" & (Parent.Height - Self.Y - 20) & "px;width:100%;background-color:#fcfcfc;'>
-            <span>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <center>
-            Loading Data. . . .
-            </center>
-            </span>
-            </div>"
+        Color: =RGBA(9, 33, 98, 1)
+        DisabledBorderColor: =Self.BorderColor
+        DisabledColor: =Self.Color
+        DisabledFill: =Self.Fill
+        DisplayMode: =DisplayMode.Disabled
+        Fill: =RGBA(255, 255, 255, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =lblMyUpcomingRes.Height + gallMyReservationsPreview.Height + 15
+        HoverBorderColor: =
+        HoverColor: =
+        HoverFill: =
+        PressedBorderColor: =
+        PressedColor: =
+        PressedFill: =
+        RadiusBottomLeft: =15
+        RadiusBottomRight: =15
+        RadiusTopLeft: =15
+        RadiusTopRight: =15
         Size: =24
-        Visible: |-
+        Text: |-
             =If(
-                varTimer = true,
-                true,
-                false
+                (varTimer = true), // && (ctnDashboard_Denied_3.Visible = true || gallMyReservationsPreview.Visible = false),
+                    "
+            
+            
+            
+                    PLEASE WAIT,
+                    LOADING DATA. . . .
+            
+            
+            
+            
+                    ",
+                (IsBlankOrError(varTimer) || varTimer = false) && gallMyReservationsPreview.Visible = false,
+                    "
+            
+            
+            
+            
+                    DATA ACCESS DENIED. . . .
+            
+            
+            
+            
+                    ",
+                (IsBlankOrError(varTimer) || varTimer = false) && gallMyReservationsPreview.Visible = true && (CountRows(
+                        SortByColumns(
+                            Filter(
+                                'Desk Reservations',
+                                (
+                                    submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                )
+                                && (Active_choice.Value = Text(true))
+                                && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                                && (!IsBlankOrError(RoomReservation))
+                                && !IsBlankOrError(DeskText)
+                            ),
+                            "reservationStart_datetime",
+                            SortOrder.Ascending
+                        )
+                    ) < 1),
+                    "
+            
+            
+            
+            
+                    NO ACTIVE RESERVATIONS FOUND. . . .
+            
+            
+            
+            
+                    ",
+                (IsBlankOrError(varTimer) || varTimer = false) && gallMyReservationsPreview.Visible = true && (CountRows(
+                        SortByColumns(
+                            Filter(
+                                'Desk Reservations',
+                                (
+                                    submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                )
+                                && (Active_choice.Value = Text(true))
+                                && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                                && (!IsBlankOrError(RoomReservation))
+                                && !IsBlankOrError(DeskText)
+                            ),
+                            "reservationStart_datetime",
+                            SortOrder.Ascending
+                        )
+                    ) >= 1),
+                    "",
+            
+                "
+            
+            
+            
+                PLEASE WAIT,
+                LOADING DATA. . . .
+            
+            
+            
+            
+                "
             )
-        Width: =bgRounded_3.Width
-        X: =bgRounded_3.X
-        Y: =bgRounded_3.Y
+            
+            
+            /*
+            
+            CountRows(
+                        SortByColumns(
+                            Filter(
+                                'Desk Reservations',
+                                (
+                                    submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                )
+                                && (Active_choice.Value = Text(true))
+                                && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                                && (!IsBlankOrError(RoomReservation))
+                                && !IsBlankOrError(DeskText)
+                            ),
+                            "reservationStart_datetime",
+                            SortOrder.Ascending
+                        )
+                    ) <= 4)
+            
+            
+            
+            
+            If(
+                (ctnDashboard_Denied_3.Visible = true || gallMyReservationsPreview.Visible = false),
+                "<div style='border:5px solid #b4d6fa;border-radius:8px;height:" & (Parent.Height - Self.Y - 20) & "px;width:100%;background-color:#fcfcfc;'>
+                    <span>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <center>
+                    Data Access Denied. . . .
+                    </center>
+                    </span>
+                    </div>",
+                (ctnDashboard_Denied_3.Visible = false || gallMyReservationsPreview.Visible = true),
+                "<div style='border:5px solid #b4d6fa;border-radius:8px;height:" & (Parent.Height - Self.Y - 20) & "px;width:100%;background-color:#fcfcfc;'>
+                    <span>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <center>
+                    Loading Data. . . .
+                    </center>
+                    </span>
+                    </div>"
+            )
+            */
+        Width: =gallMyReservationsPreview.Width + 10
+        X: =gallMyReservationsPreview.X - 5
+        Y: |
+            =lblMyUpcomingRes.Y - 5
         ZIndex: =9
 
     "gallMyReservationsPreview As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
@@ -645,18 +1132,21 @@ Dashboard As screen:
                         Filter(
                             'Desk Reservations',
                             (
-                                   Lower(submitterEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
-                                || Lower(studentEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
-                                || Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
+                                   submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
                             )
                             && (Active_choice.Value = Text(true))
                             && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
                             && (!IsBlankOrError(RoomReservation))
+                            && !IsBlankOrError(DeskText)
                         ),
                         "reservationStart_datetime",
                         SortOrder.Ascending
                     ),
-                    10
+                    4
                 ),
                 bgRounded_4.Visible = true,
                 Blank()
@@ -668,9 +1158,9 @@ Dashboard As screen:
                         Filter(
                             'Desk Reservations',
                             (
-                                   Lower(submitterEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
-                                || Lower(studentEmail_text) = Lower(varDeskAccessControl_record.Email_Text)
-                                || Lower('Reserved By'.Email) = Lower(varDeskAccessControl_record.Email_Text)
+                                   submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
                             )
                             && (Active_choice.Value = Text(true))
                             && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
@@ -687,10 +1177,10 @@ Dashboard As screen:
         Layout: =Layout.Vertical
         TabIndex: =5
         TemplatePadding: =0
-        TemplateSize: =lblMonth.Height + (lblYear.Height + lblCheckOutToFrom.Height + shapeSeperator.Height + lblDescription.Height) + 5
+        TemplateSize: =(lblMonth.Height + lblYear.Height + lblCheckOutToFrom.Height + shapeSeperator.Height + lblDescription.Height) + 5
         Visible: |-
             =If(
-                bgRounded_4.Visible = true,
+                (ctnDashboard_Denied_3.Visible = true || userAccessLevel_text = "AccessDenied" || userAccessLevel_text = "Access Denied" || IsBlankOrError(userAccessLevel_text)),
                 false,
                 true
             )
@@ -898,6 +1388,7 @@ Dashboard As screen:
             Text: =Upper(Text(DateTimeValue(ThisItem.reservationStart_datetime),"[$-en-US]mmm"))
             VerticalAlign: =VerticalAlign.Top
             Width: =60
+            X: =3
             Y: =3
             ZIndex: =10
 
@@ -938,6 +1429,82 @@ Dashboard As screen:
             Y: =3
             ZIndex: =11
 
+    btnViewMoreReservations As button:
+        BorderColor: =RGBA(9, 33, 98, 0)
+        BorderThickness: =5
+        Color: =RGBA(9, 33, 98, 1)
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(255, 255, 255, 0)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =((btnGalleryBackground.Height - (gallMyReservationsPreview.TemplateHeight * 4)) / 2) - 5
+        HoverBorderColor: =RGBA(9, 33, 98, 1)
+        HoverColor: =RGBA(9, 33, 98, 1)
+        HoverFill: =RGBA(180, 214, 250, 0.75)
+        Italic: =true
+        OnSelect: =Navigate(MyAppts)
+        PaddingBottom: =0
+        PaddingLeft: =0
+        PaddingRight: =0
+        PaddingTop: =0
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        Size: =14
+        Text: |-
+            =If(
+                gallMyReservationsPreview.Visible = true
+                && (CountRows(
+                        SortByColumns(
+                            Filter(
+                                'Desk Reservations',
+                                (
+                                    submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                )
+                                && (Active_choice.Value = Text(true))
+                                && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                                && (!IsBlankOrError(RoomReservation))
+                                && !IsBlankOrError(DeskText)
+                            ),
+                            "reservationStart_datetime",
+                            SortOrder.Ascending
+                        )
+                    ) >= 5),
+                    "View more of my active reservations...",
+                gallMyReservationsPreview.Visible = true
+                && (CountRows(
+                        SortByColumns(
+                            Filter(
+                                'Desk Reservations',
+                                (
+                                    submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                )
+                                && (Active_choice.Value = Text(true))
+                                && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                                && (!IsBlankOrError(RoomReservation))
+                                && !IsBlankOrError(DeskText)
+                            ),
+                            "reservationStart_datetime",
+                            SortOrder.Ascending
+                        )
+                    ) <= 4),
+                ""
+            )
+        Width: =gallMyReservationsPreview.Width
+        X: =gallMyReservationsPreview.X
+        Y: =gallMyReservationsPreview.Y + gallMyReservationsPreview.Height - Self.Height + 5
+        ZIndex: =12
+
     lblMyUpcomingRes As label:
         Align: =Align.Center
         BorderColor: =App.Theme.Colors.Darker40
@@ -946,54 +1513,121 @@ Dashboard As screen:
         Font: =Font.'Segoe UI'
         FontWeight: =FontWeight.Semibold
         Height: =57
+        OnSelect: =Select(btnViewMoreReservations)
         Size: =21
         Text: |-
-            ="Your Upcoming Reservations (" & gallMyReservationsPreview.AllItemsCount & ")" & ":"
+            =If(
+                gallMyReservationsPreview.Visible = true
+                && (CountRows(
+                        SortByColumns(
+                            Filter(
+                                'Desk Reservations',
+                                (
+                                    submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                )
+                                && (Active_choice.Value = Text(true))
+                                && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                                && (!IsBlankOrError(RoomReservation))
+                                && !IsBlankOrError(DeskText)
+                            ),
+                            "reservationStart_datetime",
+                            SortOrder.Ascending
+                        )
+                    ) >= 5),
+                "Your Upcoming Reservations (" & gallMyReservationsPreview.AllItemsCount & " of " & CountRows(
+                        SortByColumns(
+                            Filter(
+                                'Desk Reservations',
+                                (
+                                    submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                )
+                                && (Active_choice.Value = Text(true))
+                                && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                                && (!IsBlankOrError(RoomReservation))
+                                && !IsBlankOrError(DeskText)
+                            ),
+                            "reservationStart_datetime",
+                            SortOrder.Ascending
+                        )
+                    ) & "):",
+            
+                gallMyReservationsPreview.Visible = true
+                && (CountRows(
+                        SortByColumns(
+                            Filter(
+                                'Desk Reservations',
+                                (
+                                    submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                )
+                                && (Active_choice.Value = Text(true))
+                                && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                                && (!IsBlankOrError(RoomReservation))
+                                && !IsBlankOrError(DeskText)
+                            ),
+                            "reservationStart_datetime",
+                            SortOrder.Ascending
+                        )
+                    ) <= 4),
+                "Your Upcoming Reservations (" & gallMyReservationsPreview.AllItemsCount & ")" & ":",
+            
+                gallMyReservationsPreview.Visible = true
+                && (CountRows(
+                        SortByColumns(
+                            Filter(
+                                'Desk Reservations',
+                                (
+                                    submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                    || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                )
+                                && (Active_choice.Value = Text(true))
+                                && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                                && (!IsBlankOrError(RoomReservation))
+                                && !IsBlankOrError(DeskText)
+                            ),
+                            "reservationStart_datetime",
+                            SortOrder.Ascending
+                        )
+                    ) = 0),
+                "Your Upcoming Reservations (0)" & ":",
+            
+                "Your Upcoming Reservations (0)" & ":"
+            )
+            
+            /*
+            If(
+                gallMyReservationsPreview.Visible = true,
+                "Your Upcoming Reservations (" & gallMyReservationsPreview.AllItemsCount & ")" & ":",
+                gallMyReservationsPreview.Visible = false,
+                "Your Upcoming Reservations (0)" & ":"
+            )
+            */
         Visible: |-
             =If(
                 bgRounded_4.Visible = true,
                 false,
                 true
             )
-        Width: =448
-        X: =648
+        Width: =gallMyReservationsPreview.Width
+        X: =gallMyReservationsPreview.X
         Y: =bgRounded_3.Y
-        ZIndex: =11
+        ZIndex: =13
 
-    lblNoResDashboard As label:
-        Align: =Align.Center
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(0, 0, 0, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =App.Theme.Font
-        FontWeight: |-
-            =If(
-                userAccessLevel_text = "AccessDenied",
-                FontWeight.Bold,
-                FontWeight.Lighter
-            )
-        Height: =88
-        Size: |-
-            =If(
-                userAccessLevel_text = "AccessDenied",
-                40,
-                25
-            )
-        Text: |-
-            =If(
-                userAccessLevel_text = "AccessDenied" || IsBlankOrError(userAccessLevel_text),
-                "ACCESS DENIED!",
-                "No upcoming reservations!"
-            )
-        Visible: =If(CountRows(gallMyReservationsPreview.AllItems) >=1, false, true)
-        Width: =bgRounded_3.Width
-        X: =bgRounded_3.X
-        Y: |-
-            =//353
-            ((bgRounded_3.Y / 2) + (bgRounded_3.Height / 2)) - (Self.Height / 2)
-        ZIndex: =12
-
-    Image2_13 As image:
+    imgMascot As image:
         BorderColor: =App.Theme.Colors.Darker40
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
         DisabledFill: =RGBA(244, 244, 244, 1)
@@ -1001,66 +1635,12 @@ Dashboard As screen:
         Image: =mascot_banner_croppedHighRes
         ImagePosition: =ImagePosition.Stretch
         Width: =613
-        ZIndex: =13
-
-    lblWelcome As label:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: =RGBA(255, 255, 255, 1)
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =Font.'Segoe UI'
-        FontWeight: =FontWeight.Bold
-        Height: =80
-        Size: =32
-        Text: |-
-            =Concatenate(
-                "Welcome, ",
-                Coalesce(varDeskAccessControl_record.GivenName_Text, "Hines Team"),
-                "!"
-            )
-        Width: =606
-        X: =15
-        Y: =17
         ZIndex: =14
-
-    Tabs_1 As Tabs:
-        Fill: =RGBA(0, 11, 38, .05)
-        Height: =116
-        Width: =Parent.Width - bgRounded_3.Width + 3
-        Y: =97
-        ZIndex: =15
-
-    Preloader_1 As Preloader:
-        Height: =640
-        Visible: |-
-            =If(
-                varTimer = true,
-                true,
-                false
-            )
-        Width: =Parent.Width
-        ZIndex: =16
-
-    Label8 As label:
-        BorderColor: =App.Theme.Colors.Darker40
-        Color: |-
-            =If(
-                Preloader_1.Visible,
-                RGBA(1, 1, 1, 1),
-                !Preloader_1.Visible,
-                RGBA(255, 255, 255, 1)
-            )
-        DisabledColor: =RGBA(166, 166, 166, 1)
-        Font: =App.Theme.Font
-        FontWeight: =FontWeight.Semibold
-        Height: =30
-        Text: ="v" & varRepoVersion
-        Width: =80
-        ZIndex: =17
 
     ctnDashboard_message As groupContainer.manualLayoutContainer:
         Height: |-
             =If(
-                Self.Visible = true && User().Email = "Kyle.Coder@va.gov",
+                Self.Visible = true, // && User().Email = "Kyle.Coder@va.gov",
                 Parent.Height - Self.Y,
                 0
             )
@@ -1072,11 +1652,10 @@ Dashboard As screen:
         RadiusBottomRight: =4
         RadiusTopLeft: =4
         RadiusTopRight: =4
-        Visible: =false
         Width: =Tabs_1.Width
         X: =Tabs_1.X
         Y: =Tabs_1.Y + Tabs_1.Height
-        ZIndex: =18
+        ZIndex: =15
 
         ctnDashboard_Denied_3 As groupContainer.manualLayoutContainer:
             Height: =Parent.Height
@@ -1092,14 +1671,14 @@ Dashboard As screen:
             RadiusTopRight: =4
             Visible: |-
                 =If(
-                    userAccessLevel_text = "AccessDenied",
+                    (userAccessLevel_text = "AccessDenied" || userAccessLevel_text = "Access Denied"),
                         true,
                     IsBlankOrError(userAccessLevel_text),
                         true,
                     false
                 )
             Width: =Parent.Width
-            ZIndex: =2
+            ZIndex: =1
 
             ctnDashboard_Denied_secondary_3 As groupContainer.manualLayoutContainer:
                 BorderColor: =RGBA(0, 0, 0, 0)
@@ -1115,7 +1694,7 @@ Dashboard As screen:
                 PaddingRight: =5
                 PaddingTop: =5
                 Width: =Parent.Width
-                Y: =lblDashboard_Denied2_3.Y + lblDashboard_Denied2_3.Height
+                Y: =lblDashboard_Denied_body_3b.Y + lblDashboard_Denied_body_3b.Height
                 ZIndex: =1
 
                 lblDashboard_Denied_secondary_3 As modernText:
@@ -1125,34 +1704,14 @@ Dashboard As screen:
                     Font: =""
                     Height: =ctnDashboard_Denied_3.Height - Parent.Y
                     Italic: =true
+                    OnSelect: =Select(lblDashboard_Denied_body_3b)
                     Size: =18
                     Text: ="You will be unable to interact any further with this app or create/view training requests at this time..."
                     VerticalAlign: =VerticalAlign.Bottom
                     Width: =Parent.Width
                     ZIndex: =1
 
-            lblDashboard_Denied1_3 As modernText:
-                Align: =Align.Center
-                BorderStyle: =""
-                BorderThickness: =0
-                Color: =RGBA(255, 255, 255, 1)
-                Font: =""
-                Height: =192
-                PaddingLeft: =20
-                PaddingRight: =20
-                RadiusBottomLeft: =0
-                RadiusBottomRight: =0
-                RadiusTopLeft: =0
-                RadiusTopRight: =0
-                Size: =26
-                Text: |-
-                    ="Your 'USER ACCESS LEVEL' has not been approved or is revoked! If that is unexpected or you continue to see this message in error, please contact the app admins:"
-                VerticalAlign: =VerticalAlign.Bottom
-                Width: =Parent.Width
-                Y: =ctnDashboard_Denied_main_3.Y + ctnDashboard_Denied_main_3.Height
-                ZIndex: =2
-
-            lblDashboard_Denied2_3 As modernText:
+            lblDashboard_Denied_body_3b As modernText:
                 Align: =Align.Center
                 BorderStyle: =""
                 BorderThickness: =0
@@ -1160,9 +1719,10 @@ Dashboard As screen:
                 Font: =""
                 FontWeight: =FontWeight.Bold
                 Height: =50
+                Italic: =true
                 OnSelect: |-
                     =Launch(
-                        "mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED"
+                        "mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20ACCESS%20DENIED..."
                     )
                 RadiusBottomLeft: =0
                 RadiusBottomRight: =0
@@ -1173,12 +1733,34 @@ Dashboard As screen:
                 Underline: =true
                 Width: =Parent.Width
                 Y: |
-                    =lblDashboard_Denied1_3.Y + lblDashboard_Denied1_3.Height - 10
+                    =lblDashboard_Denied_body_3a.Y + lblDashboard_Denied_body_3a.Height - 10
+                ZIndex: =2
+
+            lblDashboard_Denied_body_3a As modernText:
+                Align: =Align.Center
+                BorderStyle: =""
+                BorderThickness: =0
+                Color: =RGBA(255, 255, 255, 1)
+                Font: =""
+                Height: =192
+                OnSelect: =Select(lblDashboard_Denied_body_3b)
+                PaddingLeft: =20
+                PaddingRight: =20
+                RadiusBottomLeft: =0
+                RadiusBottomRight: =0
+                RadiusTopLeft: =0
+                RadiusTopRight: =0
+                Size: =26
+                Text: |-
+                    ="Your access to this app is not yet approved or was revoked! If this message is unexpected OR you continue to see this message in error, please contact the app admins, via:"
+                VerticalAlign: =VerticalAlign.Bottom
+                Width: =Parent.Width
+                Y: =ctnDashboard_Denied_header_3.Y + ctnDashboard_Denied_header_3.Height
                 ZIndex: =3
 
-            ctnDashboard_Denied_main_3 As groupContainer.manualLayoutContainer:
+            ctnDashboard_Denied_header_3 As groupContainer.manualLayoutContainer:
                 BorderColor: =RGBA(0, 0, 0, 0)
-                Height: =lblDashboard_Denied_main2_3.Y + lblDashboard_Denied_main2_3.Height
+                Height: =lblDashboard_Denied_header_3b.Y + lblDashboard_Denied_header_3b.Height
                 LayoutGridColumnMinWidth: =0
                 LayoutGridColumns: =6
                 LayoutGridRowMinHeight: =0
@@ -1192,7 +1774,7 @@ Dashboard As screen:
                 Width: =Parent.Width
                 ZIndex: =4
 
-                lblDashboard_Denied_main2_3 As modernText:
+                lblDashboard_Denied_header_3b As modernText:
                     Align: =Align.Center
                     BorderStyle: =""
                     Color: =RGBA(255, 255, 255, 1)
@@ -1202,10 +1784,10 @@ Dashboard As screen:
                     Size: =30
                     Text: ="EHRM Training Portal"
                     Width: =Parent.Width
-                    Y: =lblDashboard_Denied_main1_3.Y + lblDashboard_Denied_main1_3.Height - 15
+                    Y: =lblDashboard_Denied_header_3a.Y + lblDashboard_Denied_header_3a.Height - 15
                     ZIndex: =1
 
-                lblDashboard_Denied_main1_3 As modernText:
+                lblDashboard_Denied_header_3a As modernText:
                     Align: =Align.Center
                     BorderStyle: =""
                     Color: =RGBA(255, 255, 255, 1)
@@ -1216,7 +1798,7 @@ Dashboard As screen:
                     Width: =Parent.Width
                     ZIndex: =2
 
-        ctnDashboard_User_2 As groupContainer.manualLayoutContainer:
+        ctnDashboard_ViewOnly_2 As groupContainer.manualLayoutContainer:
             Height: =Parent.Height
             LayoutGridColumnMinWidth: =0
             LayoutGridColumns: =6
@@ -1230,154 +1812,16 @@ Dashboard As screen:
             RadiusTopRight: =4
             Visible: |-
                 =If(
-                    userAccessLevel_text = "User" || userAccessLevel_text = "SuperUser",
+                    (userAccessLevel_text = "View-Only" || userAccessLevel_text = "View-only" || userAccessLevel_text = "ViewOnly"),
                         true,
                     IsBlankOrError(userAccessLevel_text),
                         false,
                     false
                 )
             Width: =Parent.Width
-            ZIndex: =3
+            ZIndex: =2
 
-            ctnDashboard_User_secondary_2 As groupContainer.manualLayoutContainer:
-                BorderColor: =RGBA(0, 0, 0, 0)
-                Height: =150
-                LayoutGridColumnMinWidth: =0
-                LayoutGridColumns: =6
-                LayoutGridRowMinHeight: =0
-                LayoutGridRows: =6
-                maximumHeight: =11360
-                maximumWidth: =640
-                PaddingBottom: =5
-                PaddingLeft: =5
-                PaddingRight: =5
-                PaddingTop: =5
-                Width: =Parent.Width
-                Y: =ctnDashboard_User_main_2.Y + ctnDashboard_User_main_2.Height
-                ZIndex: =1
-
-                lblDashboard_User_secondary_2 As modernText:
-                    BorderStyle: =""
-                    Fill: =RGBA(255, 255, 255, 1)
-                    Font: =""
-                    Height: =Parent.Height
-                    Size: =26
-                    Text: |-
-                        =/*If(     userAccessLevel_text = "AccessDenied",      (
-                                "Your application user access has been revoked or was never previously approved. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                            ),      userAccessLevel_text = "View-only",     (
-                        */        "Your user access is set to VIEW ONLY, preventing you from creating/modifying any new items. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                        /*    ),      (
-                                "Welcome to the Edward Hines Jr. VA Hospital's EHRM Training Portal! To get started, click the '+ NEW' button above to begin your request for training, classes, or EHRM education! EHRM training resources & additional information can be found online via: <a href='https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Resources-for-FEHR-Training.aspx'>Federal Electronic Health Record - Team Hines SharePoint</a>. You may contact your local Hines EHRM Training Coordinators for any training questions or issues with this app via: <a href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App'>VHAHINInformaticsTrainingAndSupport@va.gov</a>. For national/facility level EHRM implementation questions/concerns, please also feel free to contact the Hines EHRM Change Leadership Team (CLT) via <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>HinesEHRMCLT@va.gov</a>."
-                            ))
-                        */
-                    Width: =Parent.Width
-                    ZIndex: =1
-
-            lblDashboard_User2_2 As modernText:
-                BorderStyle: =""
-                BorderThickness: =0
-                Fill: =RGBA(255, 255, 255, 1)
-                Font: =""
-                Height: =50
-                RadiusBottomLeft: =0
-                RadiusBottomRight: =0
-                RadiusTopLeft: =0
-                RadiusTopRight: =0
-                Size: =26
-                Text: |-
-                    =/*If(     userAccessLevel_text = "AccessDenied",      (
-                            "Your application user access has been revoked or was never previously approved. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                        ),      userAccessLevel_text = "View-only",     (
-                    */        "Your user access is set to VIEW ONLY, preventing you from creating/modifying any new items. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                    /*    ),      (
-                            "Welcome to the Edward Hines Jr. VA Hospital's EHRM Training Portal! To get started, click the '+ NEW' button above to begin your request for training, classes, or EHRM education! EHRM training resources & additional information can be found online via: <a href='https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Resources-for-FEHR-Training.aspx'>Federal Electronic Health Record - Team Hines SharePoint</a>. You may contact your local Hines EHRM Training Coordinators for any training questions or issues with this app via: <a href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App'>VHAHINInformaticsTrainingAndSupport@va.gov</a>. For national/facility level EHRM implementation questions/concerns, please also feel free to contact the Hines EHRM Change Leadership Team (CLT) via <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>HinesEHRMCLT@va.gov</a>."
-                        ))
-                    */
-                Width: =Parent.Width
-                ZIndex: =2
-
-            lblDashboard_User1_2 As modernText:
-                BorderStyle: =""
-                BorderThickness: =0
-                Fill: =RGBA(255, 255, 255, 1)
-                Font: =""
-                Height: =50
-                RadiusBottomLeft: =0
-                RadiusBottomRight: =0
-                RadiusTopLeft: =0
-                RadiusTopRight: =0
-                Size: =26
-                Text: |-
-                    =/*If(     userAccessLevel_text = "AccessDenied",      (
-                            "Your application user access has been revoked or was never previously approved. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                        ),      userAccessLevel_text = "View-only",     (
-                    */        "Your user access is set to VIEW ONLY, preventing you from creating/modifying any new items. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                    /*    ),      (
-                            "Welcome to the Edward Hines Jr. VA Hospital's EHRM Training Portal! To get started, click the '+ NEW' button above to begin your request for training, classes, or EHRM education! EHRM training resources & additional information can be found online via: <a href='https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Resources-for-FEHR-Training.aspx'>Federal Electronic Health Record - Team Hines SharePoint</a>. You may contact your local Hines EHRM Training Coordinators for any training questions or issues with this app via: <a href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App'>VHAHINInformaticsTrainingAndSupport@va.gov</a>. For national/facility level EHRM implementation questions/concerns, please also feel free to contact the Hines EHRM Change Leadership Team (CLT) via <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>HinesEHRMCLT@va.gov</a>."
-                        ))
-                    */
-                Width: =Parent.Width
-                ZIndex: =3
-
-            ctnDashboard_User_main_2 As groupContainer.manualLayoutContainer:
-                BorderColor: =RGBA(0, 0, 0, 0)
-                Height: =150
-                LayoutGridColumnMinWidth: =0
-                LayoutGridColumns: =6
-                LayoutGridRowMinHeight: =0
-                LayoutGridRows: =6
-                maximumHeight: =11360
-                maximumWidth: =640
-                PaddingBottom: =5
-                PaddingLeft: =5
-                PaddingRight: =5
-                PaddingTop: =5
-                Width: =Parent.Width
-                ZIndex: =4
-
-                lblDashboard_User_main_2 As modernText:
-                    BorderStyle: =""
-                    Fill: =RGBA(255, 255, 255, 1)
-                    Font: =""
-                    Height: =Parent.Height
-                    Size: =26
-                    Text: |-
-                        =/*If(     userAccessLevel_text = "AccessDenied",      (
-                                "Your application user access has been revoked or was never previously approved. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                            ),      userAccessLevel_text = "View-only",     (
-                        */        "Your user access is set to VIEW ONLY, preventing you from creating/modifying any new items. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                        /*    ),      (
-                                "Welcome to the Edward Hines Jr. VA Hospital's EHRM Training Portal! To get started, click the '+ NEW' button above to begin your request for training, classes, or EHRM education! EHRM training resources & additional information can be found online via: <a href='https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Resources-for-FEHR-Training.aspx'>Federal Electronic Health Record - Team Hines SharePoint</a>. You may contact your local Hines EHRM Training Coordinators for any training questions or issues with this app via: <a href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App'>VHAHINInformaticsTrainingAndSupport@va.gov</a>. For national/facility level EHRM implementation questions/concerns, please also feel free to contact the Hines EHRM Change Leadership Team (CLT) via <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>HinesEHRMCLT@va.gov</a>."
-                            ))
-                        */
-                    Width: =Parent.Width
-                    ZIndex: =1
-
-        ctnDashboard_Advanced_1 As groupContainer.manualLayoutContainer:
-            Height: =Parent.Height
-            LayoutGridColumnMinWidth: =0
-            LayoutGridColumns: =6
-            LayoutGridRowMinHeight: =0
-            LayoutGridRows: =6
-            maximumHeight: =11360
-            maximumWidth: =640
-            RadiusBottomLeft: =4
-            RadiusBottomRight: =4
-            RadiusTopLeft: =4
-            RadiusTopRight: =4
-            Visible: |-
-                =If(
-                    (userAccessLevel_text = "Manager" || userAccessLevel_text = "ProjectLeader" || userAccessLevel_text = "ServiceChief" || userAccessLevel_text = "AppAdmin"),
-                        true,
-                    IsBlankOrError(userAccessLevel_text),
-                        false,
-                    false
-                )
-            Width: =Parent.Width
-            ZIndex: =4
-
-            ctnDashboard_Advanced_secondary_1 As groupContainer.manualLayoutContainer:
+            ctnDashboard_ViewOnly_footer_2 As groupContainer.manualLayoutContainer:
                 BorderColor: =RGBA(0, 0, 0, 0)
                 Height: =Parent.Height - Self.Y
                 LayoutGridColumnMinWidth: =0
@@ -1391,83 +1835,180 @@ Dashboard As screen:
                 PaddingRight: =5
                 PaddingTop: =5
                 Width: =Parent.Width
-                Y: =lblDashboard_Advanced_text2_1.Y + lblDashboard_Advanced_text2_1.Height
+                Y: =Parent.Height - lblDashboard_ViewOnly_footer_2a.Height - lblDashboard_ViewOnly_footer_2c.Height
                 ZIndex: =1
 
-                Text1_1 As modernText:
+                lblDashboard_ViewOnly_footer_2d As modernText:
+                    Align: =Align.Right
                     BorderStyle: =""
-                    Fill: =RGBA(255, 255, 255, 1)
+                    Color: =RGBA(180, 214, 250, 1)
                     Font: =""
-                    Height: =Parent.Height
-                    Size: =26
-                    Text: |-
-                        =/*If(     userAccessLevel_text = "AccessDenied",      (
-                                "Your application user access has been revoked or was never previously approved. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                            ),      userAccessLevel_text = "View-only",     (
-                        */        "Your user access is set to VIEW ONLY, preventing you from creating/modifying any new items. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                        /*    ),      (
-                                "Welcome to the Edward Hines Jr. VA Hospital's EHRM Training Portal! To get started, click the '+ NEW' button above to begin your request for training, classes, or EHRM education! EHRM training resources & additional information can be found online via: <a href='https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Resources-for-FEHR-Training.aspx'>Federal Electronic Health Record - Team Hines SharePoint</a>. You may contact your local Hines EHRM Training Coordinators for any training questions or issues with this app via: <a href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App'>VHAHINInformaticsTrainingAndSupport@va.gov</a>. For national/facility level EHRM implementation questions/concerns, please also feel free to contact the Hines EHRM Change Leadership Team (CLT) via <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>HinesEHRMCLT@va.gov</a>."
-                            ))
-                        */
-                    Width: =Parent.Width
+                    Height: =lblDashboard_ViewOnly_footer_2c.Height
+                    Italic: =true
+                    OnSelect: |-
+                        =Launch("mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov&subject=I%20have%20a%20Hines%20EHRM%20Implementation%20Question%20or%20Concern...")
+                    Size: =16
+                    Text: ="HinesEHRMCLT@va.gov"
+                    Underline: =true
+                    VerticalAlign: =VerticalAlign.Bottom
+                    Visible: =lblDashboard_ViewOnly_footer_2c.Visible
+                    Width: =175
+                    X: =432
+                    Y: =lblDashboard_ViewOnly_footer_2c.Y + lblDashboard_ViewOnly_footer_2c.Height - Self.Height
                     ZIndex: =1
 
-                lblDashboard_Advanced_secondary_1 As modernText:
-                    Height: =Parent.Height
-                    Text: ="Text"
+                lblDashboard_ViewOnly_footer_2c As modernText:
+                    BorderStyle: =""
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    Height: |-
+                        =If(
+                            Self.Visible = true,
+                            55,
+                            0
+                        )
+                    Italic: =true
+                    OnSelect: =Select(lblDashboard_ViewOnly_footer_2d)
+                    Size: =16
+                    Text: |-
+                        ="Or, for any facility-level EHRM implementation questions/concerns, please feel free to contact the Hines EHRM Change Leadership Team (CLT), via:"
+                    VerticalAlign: =VerticalAlign.Bottom
                     Width: =Parent.Width
+                    Y: =lblDashboard_ViewOnly_footer_2a.Y + lblDashboard_ViewOnly_footer_2a.Height
+                    ZIndex: =2
+
+                lblDashboard_ViewOnly_footer_2b As modernText:
+                    Align: =Align.Right
+                    BorderStyle: =""
+                    Color: =RGBA(180, 214, 250, 1)
+                    Font: =""
+                    Height: =lblDashboard_ViewOnly_footer_2a.Height
+                    Italic: =true
+                    OnSelect: |-
+                        =Launch("mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App...")
+                    Size: =16
+                    Text: ="VHAHINInformaticsTrainingAndSupport@va.gov"
+                    Underline: =true
+                    VerticalAlign: =VerticalAlign.Bottom
+                    Visible: =lblDashboard_ViewOnly_footer_2a.Visible
+                    Width: =345
+                    X: =262
+                    Y: =lblDashboard_ViewOnly_footer_2a.Y + lblDashboard_ViewOnly_footer_2a.Height - Self.Height
                     ZIndex: =3
 
-            lblDashboard_Advanced_text2_1 As modernText:
-                BorderStyle: =""
-                BorderThickness: =0
-                Fill: =RGBA(255, 255, 255, 1)
-                Font: =""
-                Height: =lblDashboard_Advanced_text1_1.Y + lblDashboard_Advanced_text1_1.Height
-                RadiusBottomLeft: =0
-                RadiusBottomRight: =0
-                RadiusTopLeft: =0
-                RadiusTopRight: =0
-                Size: =26
-                Text: |-
-                    =/*If(     userAccessLevel_text = "AccessDenied",      (
-                            "Your application user access has been revoked or was never previously approved. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                        ),      userAccessLevel_text = "View-only",     (
-                    */        "Your user access is set to VIEW ONLY, preventing you from creating/modifying any new items. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                    /*    ),      (
-                            "Welcome to the Edward Hines Jr. VA Hospital's EHRM Training Portal! To get started, click the '+ NEW' button above to begin your request for training, classes, or EHRM education! EHRM training resources & additional information can be found online via: <a href='https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Resources-for-FEHR-Training.aspx'>Federal Electronic Health Record - Team Hines SharePoint</a>. You may contact your local Hines EHRM Training Coordinators for any training questions or issues with this app via: <a href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App'>VHAHINInformaticsTrainingAndSupport@va.gov</a>. For national/facility level EHRM implementation questions/concerns, please also feel free to contact the Hines EHRM Change Leadership Team (CLT) via <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>HinesEHRMCLT@va.gov</a>."
-                        ))
-                    */
-                Width: =Parent.Width
+                lblDashboard_ViewOnly_footer_2a As modernText:
+                    BorderStyle: =""
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    Height: |-
+                        =If(
+                            Self.Visible = true,
+                            55,
+                            0
+                        )
+                    Italic: =true
+                    OnSelect: =Select(lblDashboard_ViewOnly_footer_2b)
+                    Size: =16
+                    Text: |-
+                        ="You may contact your local Hines EHRM Training Coordinators for any training questions or issues with this app, via:"
+                    VerticalAlign: =VerticalAlign.Bottom
+                    Visible: =false
+                    Width: =Parent.Width
+                    ZIndex: =4
+
+            ctnDashboard_ViewOnly_body_2 As groupContainer.manualLayoutContainer:
+                Height: =lblDashboard_ViewOnly_2a.Height + lblDashboard_ViewOnly_2b.Height + lblDashboard_ViewOnly_2c.Height
+                LayoutGridColumnMinWidth: =0
+                LayoutGridColumns: =6
+                LayoutGridRowMinHeight: =0
+                LayoutGridRows: =6
+                maximumHeight: =11360
+                maximumWidth: =640
+                RadiusBottomLeft: =4
+                RadiusBottomRight: =4
+                RadiusTopLeft: =4
+                RadiusTopRight: =4
+                Width: =ctnDashboard_ViewOnly_header_2.Width
+                X: =ctnDashboard_ViewOnly_header_2.X
+                Y: |+
+                    =(ctnDashboard_ViewOnly_header_2.Y + ctnDashboard_ViewOnly_header_2.Height) + lblDashboard_ViewOnly_2a.Y
+                    
                 ZIndex: =2
 
-            lblDashboard_Advanced_text1_1 As modernText:
-                BorderStyle: =""
-                BorderThickness: =0
-                Fill: =RGBA(255, 255, 255, 1)
-                Font: =""
-                Height: =50
-                RadiusBottomLeft: =0
-                RadiusBottomRight: =0
-                RadiusTopLeft: =0
-                RadiusTopRight: =0
-                Size: =26
-                Text: |-
-                    =/*If(     userAccessLevel_text = "AccessDenied",      (
-                            "Your application user access has been revoked or was never previously approved. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                        ),      userAccessLevel_text = "View-only",     (
-                    */        "Your user access is set to VIEW ONLY, preventing you from creating/modifying any new items. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                    /*    ),      (
-                            "Welcome to the Edward Hines Jr. VA Hospital's EHRM Training Portal! To get started, click the '+ NEW' button above to begin your request for training, classes, or EHRM education! EHRM training resources & additional information can be found online via: <a href='https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Resources-for-FEHR-Training.aspx'>Federal Electronic Health Record - Team Hines SharePoint</a>. You may contact your local Hines EHRM Training Coordinators for any training questions or issues with this app via: <a href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App'>VHAHINInformaticsTrainingAndSupport@va.gov</a>. For national/facility level EHRM implementation questions/concerns, please also feel free to contact the Hines EHRM Change Leadership Team (CLT) via <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>HinesEHRMCLT@va.gov</a>."
-                        ))
-                    */
-                Width: =Parent.Width
-                Y: =ctnDashboard_Advanced_main_1.Y + ctnDashboard_Advanced_main_1.Height
-                ZIndex: =3
+                lblDashboard_ViewOnly_2c As modernText:
+                    Align: =Align.Center
+                    AutoHeight: =true
+                    BorderStyle: =""
+                    BorderThickness: =0
+                    Color: =RGBA(180, 214, 250, 1)
+                    Font: =""
+                    FontWeight: =FontWeight.Bold
+                    Height: =50
+                    Italic: =true
+                    OnSelect: |-
+                        =Launch(
+                            "mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20VIEW%20ONLY...",
+                            
+                            LaunchTarget.New,
+                            ""
+                        )
+                    RadiusBottomLeft: =0
+                    RadiusBottomRight: =0
+                    RadiusTopLeft: =0
+                    RadiusTopRight: =0
+                    Size: =20
+                    Text: ="VHAHINInformaticsTrainingAndSupport@va.gov"
+                    Underline: =true
+                    Width: =Parent.Width
+                    Y: |
+                        =lblDashboard_ViewOnly_2b.Y + lblDashboard_ViewOnly_2b.Height - 20
+                    ZIndex: =1
 
-            ctnDashboard_Advanced_main_1 As groupContainer.manualLayoutContainer:
+                lblDashboard_ViewOnly_2b As modernText:
+                    Align: =Align.Center
+                    AutoHeight: =true
+                    BorderStyle: =""
+                    BorderThickness: =0
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    Height: =81
+                    OnSelect: =Select(lblDashboard_ViewOnly_2c)
+                    PaddingLeft: =10
+                    PaddingRight: =10
+                    RadiusBottomLeft: =0
+                    RadiusBottomRight: =0
+                    RadiusTopLeft: =0
+                    RadiusTopRight: =0
+                    Size: =22
+                    Text: |-
+                        ="If your access level needs to change OR you continue to see this message in error, please contact the app admins, via:"
+                    Width: =Parent.Width
+                    Y: =lblDashboard_ViewOnly_2a.Y + lblDashboard_ViewOnly_2a.Height + 20
+                    ZIndex: =2
+
+                lblDashboard_ViewOnly_2a As modernText:
+                    Align: =Align.Center
+                    AutoHeight: =true
+                    BorderStyle: =""
+                    BorderThickness: =0
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    Height: =107
+                    PaddingLeft: =10
+                    PaddingRight: =10
+                    RadiusBottomLeft: =0
+                    RadiusBottomRight: =0
+                    RadiusTopLeft: =0
+                    RadiusTopRight: =0
+                    Size: =26
+                    Text: ="Your user access is set to 'VIEW ONLY', preventing you from creating/modifying any new items. If this message is unexpected, please try closing your web browser & launching this app again."
+                    Width: =Parent.Width
+                    Y: =5
+                    ZIndex: =3
+
+            ctnDashboard_ViewOnly_header_2 As groupContainer.manualLayoutContainer:
                 BorderColor: =RGBA(0, 0, 0, 0)
-                Height: =Parent.Height / 2
+                Height: =lblDashboard_ViewOnly_main_1b.Y + lblDashboard_ViewOnly_main_1b.Height
                 LayoutGridColumnMinWidth: =0
                 LayoutGridColumns: =6
                 LayoutGridRowMinHeight: =0
@@ -1479,23 +2020,456 @@ Dashboard As screen:
                 PaddingRight: =5
                 PaddingTop: =5
                 Width: =Parent.Width
-                ZIndex: =4
+                ZIndex: =3
 
-                lblDashboard_advanced_main_1 As modernText:
+                lblDashboard_ViewOnly_main_1b As modernText:
+                    Align: =Align.Center
+                    AutoHeight: =true
                     BorderStyle: =""
-                    Fill: =RGBA(255, 255, 255, 1)
+                    Color: =RGBA(255, 255, 255, 1)
                     Font: =""
-                    Height: =Parent.Height
-                    Size: =26
-                    Text: |-
-                        =/*If(     userAccessLevel_text = "AccessDenied",      (
-                                "Your application user access has been revoked or was never previously approved. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                            ),      userAccessLevel_text = "View-only",     (
-                        */        "Your user access is set to VIEW ONLY, preventing you from creating/modifying any new items. If this was unexpected, please contact the app admins regarding this message:    <a  href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov?cc=Kyle.Coder@va.gov&subject=My%20access%20to%20the%20578%20EHRM%20Training%20App%20says%20DENIED'>VHAHINInformaticsTrainingAndSupport@va.gov</a>"
-                        /*    ),      (
-                                "Welcome to the Edward Hines Jr. VA Hospital's EHRM Training Portal! To get started, click the '+ NEW' button above to begin your request for training, classes, or EHRM education! EHRM training resources & additional information can be found online via: <a href='https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Resources-for-FEHR-Training.aspx'>Federal Electronic Health Record - Team Hines SharePoint</a>. You may contact your local Hines EHRM Training Coordinators for any training questions or issues with this app via: <a href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App'>VHAHINInformaticsTrainingAndSupport@va.gov</a>. For national/facility level EHRM implementation questions/concerns, please also feel free to contact the Hines EHRM Change Leadership Team (CLT) via <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov?subject=Training%20Reservation%20or%20Booking%20App'>HinesEHRMCLT@va.gov</a>."
-                            ))
-                        */
+                    FontWeight: =FontWeight.Bold
+                    Height: =52
+                    Size: =36
+                    Text: ="EHRM Training Portal!"
                     Width: =Parent.Width
+                    Y: =lblDashboard_ViewOnly_main_1a.Y + lblDashboard_ViewOnly_main_1a.Height - 15
                     ZIndex: =1
+
+                lblDashboard_ViewOnly_main_1a As modernText:
+                    Align: =Align.Center
+                    AutoHeight: =true
+                    BorderStyle: =""
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    Height: =40
+                    Size: =20
+                    Text: ="Welcome to the Edward Hines Jr. VA Hospital's"
+                    Width: =Parent.Width
+                    ZIndex: =2
+
+        ctnDashboard_Admin_1 As groupContainer.manualLayoutContainer:
+            Height: =Parent.Height
+            LayoutGridColumnMinWidth: =0
+            LayoutGridColumns: =6
+            LayoutGridRowMinHeight: =0
+            LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            Visible: |-
+                =If(
+                    (userAccessLevel_text = "View-Only" || userAccessLevel_text = "ViewOnly" || userAccessLevel_text = "View Only" || userAccessLevel_text = "View-only" || userAccessLevel_text = "AccessDenied" || userAccessLevel_text = "Access Denied" || userAccessLevel_text = "Access-Denied"),
+                        false,
+                    IsBlankOrError(userAccessLevel_text),
+                        false,
+                    true
+                )
+            Width: =Parent.Width
+            ZIndex: =3
+
+            ctnDashboard_Admin_footer_1 As groupContainer.manualLayoutContainer:
+                BorderColor: =RGBA(0, 0, 0, 0)
+                Height: |-
+                    =//Parent.Height - Self.Y
+                    htmlDashboard_Admin_footer_1a.Height // + htmlDashboard_Admin_footer_1b.Height
+                LayoutGridColumnMinWidth: =0
+                LayoutGridColumns: =6
+                LayoutGridRowMinHeight: =0
+                LayoutGridRows: =6
+                maximumHeight: =11360
+                maximumWidth: =640
+                PaddingBottom: =5
+                PaddingLeft: =5
+                PaddingRight: =5
+                PaddingTop: =5
+                Width: =Parent.Width
+                Y: |-
+                    =If(
+                        (lblDashboard_Admin_secondary_1.Visible = false && htmlDashboard_Admin_footer_1a.Visible = true),
+                            (Parent.Height - htmlDashboard_Admin_footer_1a.Height),
+                        (lblDashboard_Admin_secondary_1.Visible = true && htmlDashboard_Admin_footer_1a.Visible = false),
+                            (Parent.Height - lblDashboard_Admin_secondary_1.Height - lblDashboard_Admin_secondary_3.Height),
+                        Parent.Height - Self.Height
+                    )
+                ZIndex: =1
+
+                lblDashboard_Admin_secondary_4 As modernText:
+                    Align: =Align.Right
+                    BorderStyle: =""
+                    Color: =RGBA(180, 214, 250, 1)
+                    Font: =""
+                    Height: =lblDashboard_Admin_secondary_3.Height
+                    Italic: =true
+                    OnSelect: |-
+                        =Launch("mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov&subject=I%20have%20a%20Hines%20EHRM%20Implementation%20Question%20or%20Concern...")
+                    Size: =16
+                    Text: ="HinesEHRMCLT@va.gov"
+                    Underline: =true
+                    VerticalAlign: =VerticalAlign.Bottom
+                    Visible: =lblDashboard_Admin_secondary_3.Visible
+                    Width: =175
+                    X: =432
+                    Y: =lblDashboard_Admin_secondary_3.Y + lblDashboard_Admin_secondary_3.Height - Self.Height
+                    ZIndex: =1
+
+                lblDashboard_Admin_secondary_3 As modernText:
+                    BorderStyle: =""
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    Height: |-
+                        =If(
+                            Self.Visible = true,
+                            55,
+                            0
+                        )
+                    Italic: =true
+                    OnSelect: =Select(lblDashboard_Admin_secondary_4)
+                    Size: =16
+                    Text: |-
+                        ="Or, for any facility-level EHRM implementation questions/concerns, please feel free to contact the Hines EHRM Change Leadership Team (CLT), via:"
+                    VerticalAlign: =VerticalAlign.Bottom
+                    Width: =Parent.Width
+                    Y: =lblDashboard_Admin_secondary_1.Y + lblDashboard_Admin_secondary_1.Height
+                    ZIndex: =2
+
+                lblDashboard_Admin_secondary_2 As modernText:
+                    Align: =Align.Right
+                    BorderStyle: =""
+                    Color: =RGBA(180, 214, 250, 1)
+                    Font: =""
+                    Height: =lblDashboard_Admin_secondary_1.Height
+                    Italic: =true
+                    OnSelect: |-
+                        =Launch("mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App...")
+                    Size: =16
+                    Text: ="VHAHINInformaticsTrainingAndSupport@va.gov"
+                    Underline: =true
+                    VerticalAlign: =VerticalAlign.Bottom
+                    Visible: =lblDashboard_Admin_secondary_1.Visible
+                    Width: =345
+                    X: =262
+                    Y: =lblDashboard_Admin_secondary_1.Y + lblDashboard_Admin_secondary_1.Height - Self.Height
+                    ZIndex: =3
+
+                lblDashboard_Admin_secondary_1 As modernText:
+                    BorderStyle: =""
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    Height: |-
+                        =If(
+                            Self.Visible = true,
+                            55,
+                            0
+                        )
+                    Italic: =true
+                    OnSelect: =Select(lblDashboard_Admin_secondary_2)
+                    Size: =16
+                    Text: |-
+                        ="You may contact your local Hines EHRM Training Coordinators for any training questions or issues with this app, via:"
+                    VerticalAlign: =VerticalAlign.Bottom
+                    Visible: =false
+                    Width: =Parent.Width
+                    Y: =Parent.Height - (Self.Height * 2)
+                    ZIndex: =4
+
+                htmlDashboard_Admin_footer_1b As htmlViewer:
+                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    Height: =htmlDashboard_Admin_footer_1a.Height
+                    HtmlText: |-
+                        ="<div style='
+                            font-family: Segoe UI;
+                            font-weight: normal;
+                            font-style: italic;
+                            font-size: 15px;
+                            color: #FFFFFF;
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: flex-start;'>
+                        <p style='margin: 0;'>
+                        Or, for any facility-level/national EHRM implementation questions & concerns, please reach out to the Hines EHRM Change Leadership Team, via:
+                        &nbsp;
+                        <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov&subject=I%20have%20a%20Hines%20EHRM%20Implementation%20Question%20or%20Concern...' target='_blank' style='
+                                            color: #00BFFF;  
+                                            font-weight: bold;
+                                            text-decoration: underline;
+                                            letter-spacing: 0.5px
+                                            '>                    
+                        HinesEHRMCLT@va.gov</a>
+                        </p>
+                        </div>"
+                    OnSelect: |-
+                        =Launch("mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov&subject=I%20have%20a%20Hines%20EHRM%20Implementation%20Question%20or%20Concern...")
+                    Size: =21
+                    Visible: =false
+                    Width: =htmlDashboard_Admin_footer_1a.Width
+                    X: =htmlDashboard_Admin_footer_1a.X
+                    Y: =htmlDashboard_Admin_footer_1a.Y + htmlDashboard_Admin_footer_1a.Height - 10
+                    ZIndex: =5
+
+                htmlDashboard_Admin_footer_1a As htmlViewer:
+                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    Height: |-
+                        =If(
+                            Self.Visible = true,
+                            95,
+                            0
+                        )
+                    HtmlText: |-
+                        ="<div style='
+                            font-family: Segoe UI;
+                            font-weight: normal;
+                            font-style: italic;
+                            font-size: 15px;
+                            color: #FFFFFF;
+                            text-align: center;
+                            height: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: flex-start;'>
+                        <p style='margin: 0;'>
+                        <a href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App...' target='_blank' style='text-decoration: none;'>
+                            For any training questions or issues with this app, please contact your local Hines EHRM Training Coordinators, via:
+                        </a> &nbsp;
+                        <a href='mailto:VHAHINInformaticsTrainingAndSupport@va.gov@va.gov?cc=Kyle.Coder@va.gov&subject=I%20am%20having%20an%20issue%20with%20the%20578%20EHRM%20Training%20App...' target='_blank' style='
+                                            color: #00BFFF;  
+                                            font-weight: bold;
+                                            text-decoration: underline;
+                                            letter-spacing: 0.5px
+                                            '>
+                        VHAHINInformaticsTrainingAndSupport@va.gov</a>.&nbsp;
+                        <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov&subject=I%20have%20a%20Hines%20EHRM%20Implementation%20Question%20or%20Concern...' target='_blank' style='text-decoration: none;'>
+                            Or, for any concerns or guidance about facility/national EHRM implementation, please reach out to the Hines EHRM Change Leadership Team, via:
+                        </a> &nbsp;
+                        <a href='mailto:hinesehrmclt@va.gov?cc=VHAHINInformaticsTrainingAndSupport@va.gov&subject=I%20have%20a%20Hines%20EHRM%20Implementation%20Question%20or%20Concern...' target='_blank' style='
+                                            color: #00BFFF;  
+                                            font-weight: bold;
+                                            text-decoration: underline;
+                                            letter-spacing: 0.5px
+                                            '>                    
+                        HinesEHRMCLT@va.gov</a>.
+                        </p>
+                        </div>"
+                    Size: =21
+                    Width: =Parent.Width
+                    X: =lblDashboard_Admin_secondary_1.X
+                    Y: =Parent.Height - Self.Height
+                    ZIndex: =6
+
+            ctnDashboard_Admin_body_1 As groupContainer.manualLayoutContainer:
+                Height: =lblDashboard_Admin_1a.Height + lblDashboard_Admin_1b.Height + lblDashboard_Admin_1c.Height
+                LayoutGridColumnMinWidth: =0
+                LayoutGridColumns: =6
+                LayoutGridRowMinHeight: =0
+                LayoutGridRows: =6
+                RadiusBottomLeft: =4
+                RadiusBottomRight: =4
+                RadiusTopLeft: =4
+                RadiusTopRight: =4
+                Width: =ctnDashboard_Admin_header_1.Width
+                X: =ctnDashboard_Admin_header_1.X
+                Y: |+
+                    =(ctnDashboard_Admin_header_1.Y + ctnDashboard_Admin_header_1.Height) + lblDashboard_Admin_1a.Y
+                    
+                ZIndex: =5
+
+                lblDashboard_Admin_1c As modernText:
+                    Align: =Align.Center
+                    AutoHeight: =true
+                    BorderStyle: =""
+                    BorderThickness: =0
+                    Color: =RGBA(180, 214, 250, 1)
+                    Font: =""
+                    FontWeight: =FontWeight.Bold
+                    Height: =50
+                    OnSelect: |-
+                        =Launch(
+                            "https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Resources-for-FEHR-Training.aspx",LaunchTarget.New,""
+                        )
+                    RadiusBottomLeft: =0
+                    RadiusBottomRight: =0
+                    RadiusTopLeft: =0
+                    RadiusTopRight: =0
+                    Size: =26
+                    Text: ="Team Hines EHRM SharePoint"
+                    Underline: =true
+                    Width: =Parent.Width
+                    Y: |
+                        =lblDashboard_Admin_1b.Y + lblDashboard_Admin_1b.Height - 20
+                    ZIndex: =1
+
+                lblDashboard_Admin_1b As modernText:
+                    Align: =Align.Center
+                    AutoHeight: =true
+                    BorderStyle: =""
+                    BorderThickness: =0
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    Height: =81
+                    OnSelect: =Select(lblDashboard_Admin_1c)
+                    PaddingLeft: =20
+                    PaddingRight: =20
+                    RadiusBottomLeft: =0
+                    RadiusBottomRight: =0
+                    RadiusTopLeft: =0
+                    RadiusTopRight: =0
+                    Size: =24
+                    Text: |-
+                        ="Hines EHRM training, resources, & additional information are available online, via:"
+                    Width: =Parent.Width
+                    Y: =lblDashboard_Admin_1a.Y + lblDashboard_Admin_1a.Height + 10
+                    ZIndex: =2
+
+                btnDashboard_Admin_1 As modernButton:
+                    Appearance: =ButtonAppearance.Transparent
+                    Height: =lblDashboard_Admin_1b.Height + lblDashboard_Admin_1c.Height
+                    OnSelect: =Select(lblDashboard_Admin_1c)
+                    Text: =
+                    Tooltip: ="Open the Hines EHRM SharePoint site..."
+                    Width: =lblDashboard_Admin_1b.Width
+                    X: =lblDashboard_Admin_1b.X
+                    Y: =lblDashboard_Admin_1b.Y
+                    ZIndex: =3
+
+                lblDashboard_Admin_1a As modernText:
+                    Align: =Align.Center
+                    AutoHeight: =true
+                    BorderStyle: =""
+                    BorderThickness: =0
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    Height: =107
+                    PaddingLeft: =10
+                    PaddingRight: =10
+                    RadiusBottomLeft: =0
+                    RadiusBottomRight: =0
+                    RadiusTopLeft: =0
+                    RadiusTopRight: =0
+                    Size: =24
+                    Text: ="To get started, click the '+ NEW' button above to begin your request for training, classes, or EHRM education!"
+                    Width: =Parent.Width
+                    Y: =5
+                    ZIndex: =4
+
+            ctnDashboard_Admin_header_1 As groupContainer.manualLayoutContainer:
+                BorderColor: =RGBA(0, 0, 0, 0)
+                Height: =lblDashboard_Admin_main_1b.Y + lblDashboard_Admin_main_1b.Height
+                LayoutGridColumnMinWidth: =0
+                LayoutGridColumns: =6
+                LayoutGridRowMinHeight: =0
+                LayoutGridRows: =6
+                maximumHeight: =11360
+                maximumWidth: =640
+                PaddingBottom: =5
+                PaddingLeft: =5
+                PaddingRight: =5
+                PaddingTop: =5
+                Width: =Parent.Width
+                ZIndex: =6
+
+                lblDashboard_Admin_main_1b As modernText:
+                    Align: =Align.Center
+                    AutoHeight: =true
+                    BorderStyle: =""
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    FontWeight: =FontWeight.Bold
+                    Height: =52
+                    Size: =36
+                    Text: ="EHRM Training Portal!"
+                    Width: =Parent.Width
+                    Y: =lblDashboard_Admin_main_1a.Y + lblDashboard_Admin_main_1a.Height - 15
+                    ZIndex: =1
+
+                lblDashboard_Admin_main_1a As modernText:
+                    Align: =Align.Center
+                    AutoHeight: =true
+                    BorderStyle: =""
+                    Color: =RGBA(255, 255, 255, 1)
+                    Font: =""
+                    Height: =40
+                    Size: =20
+                    Text: ="Welcome to the Edward Hines Jr. VA Hospital's"
+                    Width: =Parent.Width
+                    ZIndex: =2
+
+    Tabs_1 As Tabs:
+        Fill: =RGBA(0, 11, 38, .05)
+        Height: =116
+        Width: =Parent.Width - bgRounded_3.Width + 3
+        Y: =97
+        ZIndex: =16
+
+    loadingSpinner1 As Preloader:
+        Height: =640
+        Visible: |-
+            =If(
+                varTimer = true,
+                true,
+                false
+            )
+        Width: =Parent.Width
+        ZIndex: =17
+
+    lblWelcome As label:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =Font.'Segoe UI'
+        FontWeight: =FontWeight.Bold
+        Height: =80
+        Size: =32
+        Text: |-
+            =If(
+                varUserExists,
+                Concatenate(
+                    "Welcome back, ",
+                    Coalesce(
+                        varDeskAccessControl_record.GivenName_Text,
+                        First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).GivenName
+                    ),
+                    "!"
+                ),
+                !varUserExists,
+                Concatenate(
+                    "Welcome, ",
+                    Coalesce(
+                        varDeskAccessControl_record.GivenName_Text,
+                        "Team Hines"
+                    ),
+                    "!"
+                )
+            )
+        Width: =606
+        X: =15
+        Y: =17
+        ZIndex: =18
+
+    lblVersionNumber1 As label:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: |-
+            =If(
+                loadingSpinner1.Visible,
+                RGBA(1, 1, 1, 1),
+                !loadingSpinner1.Visible,
+                RGBA(255, 255, 255, 1)
+            )
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =30
+        OnSelect: |-
+            =If(
+                user_isAdmin,
+                Navigate(DebuggingScreen)
+            )
+        Text: ="v" & varRepoVersion
+        Width: =80
+        ZIndex: =19
 
