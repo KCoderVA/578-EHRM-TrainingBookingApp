@@ -19,6 +19,30 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [1.2.6] - 2026-09-11
+
+> **Canvas coauthoring automation proof-of-concept release.** The live `DebuggingScreen` height formula was updated through the connected Canvas Authoring session, the active app version advanced from v1.2.4 to v1.2.6 to align with the latest concurrent project version, and the repository's autonomous Canvas release prompt was revised to use verified coauthoring propagation rather than requiring separate save/publish tools.
+
+### Added
+
+- **`.github/prompts/autonomousCanvasAppChangeRelease.prompt.md`** — added an end-to-end Copilot workflow for interpreting a plain-language Canvas change, synchronizing and updating the connected app, incrementing semantic versions, preparing release documentation, running `enterpriseCommitGuide.ps1`, and verifying the VA GitHub Enterprise release.
+
+### Changed
+
+- **Canvas app `DebuggingScreen.Height`** — changed the screen formula from `App.Height` to `App.Height + 1` as a controlled live-coauthoring proof of concept.
+- **Canvas app `App.OnStart`** — advanced the active `varRepoVersion` assignment from `"1.2.4"` to `"1.2.6"` to match the latest project version selected during the release.
+- **`VERSION`** — advanced the project release version from `1.1.20` to `1.2.6` to align repository release documentation with the connected Canvas app.
+- **`README.md`** — updated the release badge and current-version summary to v1.2.6.
+- **Autonomous Canvas release protocol** — now verifies a live change through `sync_canvas` → YAML edit → `compile_canvas` → fresh `sync_canvas`, then delegates branch, commit, PR, merge, tag, release, archival, and mirror operations to the existing enterprise release script.
+
+### Notes
+
+- A fresh coauthoring sync confirmed both `DebuggingScreen.Height = App.Height + 1` and `varRepoVersion = "1.2.6"` after compilation.
+- Canvas validation remained at the unchanged baseline of 15 errors and 119 warnings; none referenced `DebuggingScreen.Height` or `varRepoVersion`.
+- Existing app-checker and accessibility findings remain outside this focused proof-of-concept release.
+
+---
+
 ## [1.1.20] - 2026-09-11
 
 > **Significant Canvas-app reliability & usability release.** Canvas app v1.0.12 → v1.1.20 (internally consistent: `varRepoVersion`, `AppDescription`, and the `.zip` all read `1.1.20`). Project `VERSION` advances `1.0.13 → 1.1.20` to match the Canvas app (the interim 1.0.13 release-note stubs were never shipped). Full technical detail in the `src/powerApps/v1.1.20_*.md` analysis set.
@@ -724,7 +748,8 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 - Unpacked artifacts may include environment-specific IDs/URLs/emails; sanitize before broad sharing.
 
 <!-- Version compare links (Keep a Changelog). Resolve once the matching vX.Y.Z tags exist on origin. -->
-[Unreleased]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v1.1.20...HEAD
+[Unreleased]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v1.2.6...HEAD
+[1.2.6]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v1.1.20...v1.2.6
 [1.1.20]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v1.0.12...v1.1.20
 [1.0.12]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.12.3...v1.0.12
 [0.12.3]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.12.2...v0.12.3
