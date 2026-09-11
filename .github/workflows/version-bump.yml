@@ -176,8 +176,7 @@ jobs:
           ### Notes\\
           \\
           - Release type: ${REL_TYPE}\\
-          - Canvas app baseline remains v0.0.2\\
-          - AppUserList flow baseline remains v0.1.0\\
+          - Component baselines: see component READMEs under src/ (fill in per release)\\
           \\
           ---" CHANGELOG.md
 
@@ -198,7 +197,7 @@ jobs:
 
           ## Context
 
-          This change set prepares the **EHRM Training & Booking App** repository for the **v${{ inputs.new_version }}** release.
+          This change set prepares the **578 EHRM Training App** repository for the **v${{ inputs.new_version }}** release.
 
           ## What changed
 
@@ -206,8 +205,7 @@ jobs:
 
           ### Notes
 
-          - Canvas app baseline remains v0.0.2
-          - `AppUserList` flow baseline remains v0.1.0
+          - Component baselines: see component READMEs under src/ (fill in per release)
           COMMIT_EOF
 
           cat > "$DIR/${{ steps.vars.outputs.tag }}_pullRequest.md" << 'PR_EOF'
@@ -215,7 +213,7 @@ jobs:
 
           ## Summary
 
-          This PR prepares the **EHRM Training & Booking App** repo for the **v${{ inputs.new_version }}** release.
+          This PR prepares the **578 EHRM Training App** repo for the **v${{ inputs.new_version }}** release.
 
           ## Changes at a glance
 
@@ -233,7 +231,7 @@ jobs:
           PR_EOF
 
           cat > "$DIR/${{ steps.vars.outputs.tag }}_releaseNotes.md" << 'NOTES_EOF'
-          # EHRM Training & Booking App — Release Notes (v${{ inputs.new_version }})
+          # 578 EHRM Training App — Release Notes (v${{ inputs.new_version }})
 
           - **Release date**: ${{ steps.vars.outputs.date }}
           - **Release type**: ${{ inputs.release_type }}
@@ -253,10 +251,9 @@ jobs:
 
           - <!-- change 1 -->
 
-          ## Component baselines (unchanged)
+          ## Component baselines
 
-          - Canvas app: v0.0.2
-          - `AppUserList` flow: v0.1.0
+          - <Component>: <version> (see component READMEs under src/)
           NOTES_EOF
 
       # ---- STEP 9: Create branch and commit ----

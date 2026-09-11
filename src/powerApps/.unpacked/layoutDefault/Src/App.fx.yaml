@@ -1,0 +1,540 @@
+App As appinfo:
+    BackEnabled: =false
+    MinScreenHeight: =320
+    MinScreenWidth: =320
+    OnStart: |-
+        =// ============================================================
+        // 1. Initialization & Setup
+        // ============================================================
+        Set(varRepoVersion, "1.1.20");
+        Set(varTimer, true);
+        
+        // Real signed-in identity — never changes, cannot be spoofed
+        Set(varRealEmail, Lower(User().Email));
+        Set(varRealEntraID, First(Office365Users.SearchUserV2({searchTerm: varRealEmail, top: 1}).value).Id);
+        
+        // Pseudonym identity (defaults to real user until changed)
+        Set(varTargetEmail, varRealEmail);
+        Set(varTargetEntraID, varRealEntraID);
+        Set(
+            varIsImpersonating,
+            varTargetEmail = "kyle.coder@va.gov" && varRealEmail <> varTargetEmail
+        );
+        
+        // Refresh data sources, then ClearCollect newest info
+        Refresh('Desk Reservations');
+        Refresh(DeskAccessControl);
+        Refresh(Desks);
+        Refresh(MasterScheduleList);
+        Refresh(SuperUserList);
+        Refresh(backupList_DeskReservations);
+        Refresh('Learning Lab Sessions');
+        ClearCollect(colDeskAccess, DeskAccessControl);
+        ClearCollect(col_MasterSchedule, MasterScheduleList);
+        ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+        ClearCollect(col_SuperUserList, SuperUserList);
+        ClearCollect(col_backupDeskReservations, backupList_DeskReservations);
+        ClearCollect(
+            col_nationalEHRMLearningLabSessions,
+            Filter(
+                'Learning Lab Sessions',
+                Facility.Value = "Hines"
+            )
+        );
+        Clear(colMenu);
+        Clear(CollectionRecurrence);
+        
+        // ============================================================
+        // 2. DEFAULT EVERYONE TO "User" FIRST (no dependency on SharePoint)
+        //    This is the key change: the menu is always buildable, even for
+        //    a brand-new user whose row doesn't exist yet.
+        // ============================================================
+        Set(user_isAdmin, false);
+        Set(user_IsSuperUser, false);
+        Set(userAccessLevel_text, "User");   // baseline for anyone with network access
+        
+        // ============================================================
+        // 3. Find the target user's existing record (if any)
+        // ============================================================
+        Set(
+            varDeskAccessControl_record,
+            LookUp(
+                DeskAccessControl,
+                Email_Text = Lower(varTargetEmail)
+            )
+        );
+        Set(varUserExists, !IsBlankOrError(varDeskAccessControl_record));
+        
+        
+        // ============================================================
+        // 4. IF the record exists -> UPGRADE in-app memory to their real level.
+        //    IF it does not exist -> fire-and-forget Patch to add the row.
+        //    Either way we NEVER read the patch back to build the menu.
+        // ============================================================
+        If(
+            varUserExists,
+        
+            // --- Existing user: upgrade access level from their record ---
+            Set(
+                userAccessLevel_text,
+                Coalesce(
+                    varDeskAccessControl_record.AccessLevel_Text,
+                    varDeskAccessControl_record.AccessLevel_Choice.Value,
+                    "User"
+                )
+            ),
+        
+            // --- New user (and only ever the REAL user, never while impersonating) ---
+            If(
+                Lower(varTargetEmail) = Lower(varRealEmail),
+                Patch(
+                    DeskAccessControl,
+                    Defaults(DeskAccessControl),
+                    {
+                        Email_Text: varRealEmail,
+                        AccessLevel_Text: "User",
+                        AccessLevel_Choice: { Value: "User" },
+                        'utcNow()_value': Now(),
+                        Id_Text: varRealEntraID,
+                        AccessStart_dateTime: Now(),
+                        AccessStop_dateTime: DateAdd(Now(), 6, TimeUnit.Months),
+                        Approver_Email_Text: varRealEmail,
+                        Title: varRealEntraID,
+                        //'addMinutes(utcNow(),10)': DateAdd(Now(), 10, TimeUnit.Minutes),
+                        AboutMe_Text: "New 'User' access granted to 578 EHRM Training App at " & Now()
+                    }
+                )
+                // Note: userAccessLevel_text already = "User" from step 2,
+                // so we do NOT re-lookup. Menu builds correctly regardless of
+                // when SharePoint finishes committing the new row.
+            )
+        );
+        
+        // ============================================================
+        // 5. Elevated / admin flags (derived from in-memory level)
+        // ============================================================
+        Set(user_isAdmin, userAccessLevel_text = "AppAdmin");
+        Set(user_IsSuperUser, userAccessLevel_text = "SuperUser");
+        
+        // ============================================================
+        // 6. Build the navigation menu based on level
+        // ============================================================
+        Switch(
+            true,
+        
+            // Top Elevated Roles: full menu
+            userAccessLevel_text in ["Manager", "ServiceChief", "AppAdmin"],
+            ClearCollect(
+                colMenu,
+                { Name: "Home",  Icon: Icon.Home,            Page: Dashboard,     Visible: true },
+                { Name: "Items", Icon: Icon.Bookmark,        Page: MyAppts,       Visible: true },
+                { Name: "Desks", Icon: Icon.ComputerDesktop, Page: ManageDesks,   Visible: true },
+                { Name: "Users", Icon: Icon.People,          Page: ManageUsers,   Visible: true },
+                { Name: "Help",  Icon: Icon.Help,            Page: ReleaseNotes,  Visible: true },
+                { Name: "New",   Icon: Icon.Add,             Page: POCSUPERVISOR, Visible: true }
+            ),
+        
+            // Advanced 'Project Leader' Role: full menu without UserManagement
+            userAccessLevel_text in ["ProjectLeader"],
+            ClearCollect(
+                colMenu,
+                { Name: "Home",  Icon: Icon.Home,            Page: Dashboard,     Visible: true },
+                { Name: "Items", Icon: Icon.Bookmark,        Page: MyAppts,       Visible: true },
+                { Name: "Desks", Icon: Icon.ComputerDesktop, Page: ManageDesks,   Visible: true },
+                { Name: "Help",  Icon: Icon.Help,            Page: ReleaseNotes,  Visible: true },
+                { Name: "New",   Icon: Icon.Add,             Page: POCSUPERVISOR, Visible: true }
+            ),
+        
+            // Standard user
+            userAccessLevel_text in ["User", "SuperUser"],
+            ClearCollect(
+                colMenu,
+                { Name: "Home",  Icon: Icon.Home,     Page: Dashboard,     Visible: true },
+                { Name: "Items", Icon: Icon.Bookmark, Page: MyAppts,       Visible: true },
+                { Name: "Help",  Icon: Icon.Help,     Page: ReleaseNotes,  Visible: true },
+                { Name: "New",   Icon: Icon.Add,      Page: POCSUPERVISOR, Visible: true }
+            ),
+        
+            // View-only
+            userAccessLevel_text in ["View-Only"],
+            ClearCollect(
+                colMenu,
+                { Name: "Home",  Icon: Icon.Home,     Page: Dashboard,    Visible: true },
+                { Name: "Items", Icon: Icon.Bookmark, Page: MyAppts,      Visible: true },
+                { Name: "Help",  Icon: Icon.Help,     Page: ReleaseNotes, Visible: true }
+            ),
+        
+            // AccessDenied
+            userAccessLevel_text in ["AccessDenied"],
+            ClearCollect(
+                colMenu,
+                { Name: "Home", Icon: Icon.Home, Page: Dashboard,    Visible: true },
+                { Name: "Help", Icon: Icon.Help, Page: ReleaseNotes, Visible: true }
+            ),
+        
+            // Fallback: baseline standard menu (should rarely hit, since default is "User")
+            ClearCollect(
+                colMenu,
+                { Name: "Home",  Icon: Icon.Home,     Page: Dashboard,    Visible: true },
+                { Name: "Items", Icon: Icon.Bookmark, Page: MyAppts,      Visible: true },
+                { Name: "Help",  Icon: Icon.Help,     Page: ReleaseNotes, Visible: true },
+                { Name: "New",   Icon: Icon.Add,      Page: POCSUPERVISOR, Visible: true }
+            )
+        );
+        
+        
+        Set(varTimer, true);
+        
+        ClearCollect(colDeskAccess, DeskAccessControl);
+        ClearCollect(col_MasterSchedule, MasterScheduleList);
+        ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+        
+        
+        
+        /*
+        /////////////////////////
+        PREVIOUS CONTENT, prior to update v0.14.25:
+        /////////////////////////
+        
+                // ============================================================
+                // 1. Initialization & Setup
+                // ============================================================
+                // Set initialization loading screen
+                    Set(varTimer, true);
+                // Real signed-in identity — never changes, cannot be spoofed
+                    If(
+                        Lower(User().Email) = "kyle.coder@va.gov",
+                            Set(varRealEmail, Lower("Matthew.Olson@va.gov")), //Lower(User().Email)), //Lower("Amy.Garner2@va.gov")),
+                        Lower(User().Email) <> "kyle.coder@va.gov",
+                            Set(varRealEmail, Lower(User().Email))
+                    );
+                    Set(varRealEntraID, First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).Id);
+                // The pseudonym identity of the user the app is currently 'acting as' (defaults to the real user until changed).
+                    Set(varTargetEmail, varRealEmail);
+                    Set(varTargetEntraID, varRealEntraID);
+                    Set(varIsImpersonating,
+                        If(
+                            varTargetEmail = "kyle.coder@va.gov" && varRealEmail = "kyle.coder@va.gov",
+                                false,
+                            varTargetEmail = "kyle.coder@va.gov" && varRealEmail <> varTargetEmail,
+                                true,
+                            false
+                        )
+                    );
+                // Refresh SharePoint list/data sources, then ClearCollect newest info
+                    Refresh('Desk Reservations');
+                    Refresh(DeskAccessControl);
+                    Refresh(Desks);
+                    Refresh(MasterScheduleList);
+                    Refresh(SuperUserList);
+                    Refresh(backupList_DeskReservations);
+                    Refresh('Learning Lab Sessions');
+                    ClearCollect(colDeskAccess, DeskAccessControl);
+                    ClearCollect(col_MasterSchedule, MasterScheduleList);
+                    ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+                    ClearCollect(col_SuperUserList, SuperUserList);
+                    ClearCollect(col_backupDeskReservations, backupList_DeskReservations);
+                    ClearCollect(col_nationalEHRMLearningLabSessions, 'Learning Lab Sessions');
+                    Clear(colMenu);
+                    Clear(CollectionRecurrence);
+                // Declare global app rules
+                    Set(user_isAdmin, false);
+        
+        
+          
+                // ============================================================
+                // 2. Find the target user's existing record (if any)
+                // ============================================================
+                    Set(
+                        varDeskAccessControl_record,
+                        LookUp(
+                            DeskAccessControl,
+                            Email_Text = Lower(varTargetEmail)
+                        )
+                    );
+                    Set(varUserExists, !IsBlankOrError(varDeskAccessControl_record));
+        
+                // ============================================================
+                // 4. Resolve access level (fallback to AccessDenied if blank)
+                // ============================================================
+                    Set(
+                        userAccessLevel_text,
+                        If(
+                            IsBlankOrError(varDeskAccessControl_record),
+                                LookUp(
+                                    DeskAccessControl,
+                                    (Email_Text = Lower(varTargetEmail)),
+                                    AccessLevel_Choice.Value
+                                ),
+                            !IsBlankOrError(varDeskAccessControl_record),
+                                Coalesce(varDeskAccessControl_record.AccessLevel_Text, "User"), // "AccessDenied"),
+                            LookUp(
+                                colDeskAccess,
+                                Email_Text = Lower(varTargetEmail),
+                                AccessLevel_text.Value
+                            )
+                        )
+                    );
+        
+        
+                // ============================================================
+                // 3. If user is missing, add them as default "User", then re-lookup.
+                //    Only ever writes for the REAL user (never while impersonating,
+                //    which at OnStart is always the case, but guarded for safety).
+                // ============================================================
+                    If(
+                        ((IsBlankOrError(varUserExists) || !varUserExists) && (Lower(varTargetEmail) = Lower(varRealEmail))),
+                        Patch(
+                            DeskAccessControl,
+                            Defaults(DeskAccessControl),
+                            {
+                                Email_Text: varRealEmail,
+                                AccessLevel_Text: "User",
+                                AccessLevel_Choice: { Value: "User" },
+                                'utcNow()_value': Now()
+                                //Id_Text: varRealEntraID,
+                                //AccessStart_dateTime: Now(),
+                                //AccessStop_dateTime: DateAdd(Now(), 6, TimeUnit.Months),
+                                //Approver_Email_Text: varRealEmail,
+                                //Title: varRealEntraID,
+                                //'addMinutes(utcNow(),10)': DateAdd(Now(), 10, TimeUnit.Minutes),
+                                //'Created Via': Text("New User to 578 EHRM Training App")
+                            }
+                        );
+                        Refresh(DeskAccessControl);
+                        ClearCollect(colDeskAccess, DeskAccessControl);
+                        Set(
+                            varDeskAccessControl_record,
+                            LookUp(
+                                DeskAccessControl,
+                                Email_Text = Lower(varTargetEmail)
+                            )
+                        );
+                        Set(
+                            userAccessLevel_text,
+                            If(
+                                IsBlankOrError(varDeskAccessControl_record),
+                                    LookUp(
+                                        DeskAccessControl,
+                                        (Email_Text = Lower(varTargetEmail)),
+                                        AccessLevel_Choice.Value
+                                    ),
+                                !IsBlankOrError(varDeskAccessControl_record),
+                                    Coalesce(varDeskAccessControl_record.AccessLevel_Text, "User"), // "AccessDenied"),
+                                LookUp(
+                                    colDeskAccess,
+                                    Email_Text = Lower(varTargetEmail),
+                                    AccessLevel_text.Value
+                                )
+                            )
+                        )
+                    );
+        //Set(appOnStart_userElevatedAccess,
+        //    " 
+                // ============================================================
+                // 5. Elevated / admin flag
+                // ============================================================
+                    Set(
+                        user_isAdmin,
+                        userAccessLevel_text = "AppAdmin"
+                    );
+                    Set(
+                        user_IsSuperUser,
+                        userAccessLevel_text = "SuperUser"
+                    );
+        
+        
+                // ============================================================
+                // 6. Build the navigation menu based on level
+                // ============================================================
+                    Switch(
+                        true,
+        
+                        // Top Elevated Roles: full menu
+                        userAccessLevel_text in ["Manager", "ServiceChief", "AppAdmin"],
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name: "Items",
+                                Icon: Icon.Bookmark,
+                                Page: MyAppts,
+                                Visible: true
+                            },
+                            {
+                                Name: "Desks",
+                                Icon: Icon.ComputerDesktop,
+                                Page: ManageDesks,
+                                Visible: true
+                            },
+                            {
+                                Name: "Users",
+                                Icon: Icon.People,
+                                Page: ManageUsers,
+                                Visible: true
+                            },
+                            {
+                                Name:"Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            },
+                            {
+                                Name: "New",
+                                Icon: Icon.Add,
+                                Page: POCSUPERVISOR,
+                                Visible: true
+                            }
+                        ),
+        
+                        // Advanced 'Project Leader' Role: full menu without UserManagement
+                        userAccessLevel_text in ["ProjectLeader"],
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name: "Items",
+                                Icon: Icon.Bookmark,
+                                Page: MyAppts,
+                                Visible: true
+                            },
+                            {
+                                Name: "Desks",
+                                Icon: Icon.ComputerDesktop,
+                                Page: ManageDesks,
+                                Visible: true
+                            },
+                            {
+                                Name:"Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            },
+                            {
+                                Name: "New",
+                                Icon: Icon.Add,
+                                Page: POCSUPERVISOR,
+                                Visible: true
+                            }
+                        ),
+        
+                        // Standard user
+                        userAccessLevel_text in ["User", "SuperUser"],
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name: "Items",
+                                Icon: Icon.Bookmark,
+                                Page: MyAppts,
+                                Visible: true
+                            },
+                            {
+                                Name: "Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            },
+                            {
+                                Name: "New",
+                                Icon: Icon.Add,
+                                Page: POCSUPERVISOR,
+                                Visible: true
+                            }
+                        ),
+        
+                        // View-only
+                        userAccessLevel_text in ["View-Only"],
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name: "Items",
+                                Icon: Icon.Bookmark,
+                                Page: MyAppts,
+                                Visible: true
+                            },
+                            {
+                                Name:"Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            }
+                        ),
+        
+                        // View-only
+                        userAccessLevel_text in ["AccessDenied"],
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name:"Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            }
+                        ),
+        
+                        // AccessDenied or anything else: empty menu
+                        IsBlankOrError(userAccessLevel_text),
+                        ClearCollect(
+                            colMenu,
+                            {
+                                Name: "Home",
+                                Icon: Icon.Home,
+                                Page: Dashboard,
+                                Visible: true
+                            },
+                            {
+                                Name:"Help",
+                                Icon: Icon.Help,
+                                Page: ReleaseNotes,
+                                Visible: true
+                            }
+                        )
+                );
+        
+        
+        
+        Set(varTimer, true);
+        
+        ClearCollect(colDeskAccess, DeskAccessControl);
+        ClearCollect(col_MasterSchedule, MasterScheduleList);
+        ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+        
+        */
+    StartScreen: =Dashboard
+    Theme: =PowerAppsTheme
+
+    Host As hostControl.DefaultHostControlVariant:
+        OnCancel: =false
+        OnEdit: =false
+        OnNew: =false
+        OnSave: =false
+        OnView: =false
+

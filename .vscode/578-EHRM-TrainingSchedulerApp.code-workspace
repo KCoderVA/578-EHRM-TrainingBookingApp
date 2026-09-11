@@ -27,7 +27,8 @@
 			"ms-vscode.powershell",
 			"ms-powerplatform.powerplatform-vscode",
 			"ms-vscode.vscode-chat-customizations-evaluations",
-			"vscode-icons-team.vscode-icons"
+			"vscode-icons-team.vscode-icons",
+			"ms-python.python"
 		]
 	},
 	"tasks": {
@@ -36,13 +37,13 @@
 			{
 				"label": "Canvas: Unpack .msapp to src",
 				"type": "shell",
-				"command": "pac canvas unpack --msapp \"${workspaceFolder}/dist/release/EHRMTrainingBookingApp.msapp\" --source \"${workspaceFolder}/src/powerApps/.unpacked\" --force",
+				"command": "pac canvas unpack --msapp \"${workspaceFolder}/dist/release/578EHRMTrainingApp.msapp\" --source \"${workspaceFolder}/src/powerApps/.unpacked\" --force",
 				"problemMatcher": []
 			},
 			{
 				"label": "Canvas: Pack src to .msapp",
 				"type": "shell",
-				"command": "pac canvas pack --msapp \"${workspaceFolder}/dist/release/EHRMTrainingBookingApp.msapp\" --sources \"${workspaceFolder}/src/powerApps/.unpacked\"",
+				"command": "pac canvas pack --msapp \"${workspaceFolder}/dist/release/578EHRMTrainingApp.msapp\" --sources \"${workspaceFolder}/src/powerApps/.unpacked/layoutDefault\"",
 				"problemMatcher": []
 			},
 			{

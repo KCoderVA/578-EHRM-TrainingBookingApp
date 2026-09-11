@@ -1,5 +1,5 @@
-﻿<!--
-   Copyright 2025 Coder, Kyle J. (github.com/KCoderVA)
+<!--
+   Copyright 2025-2026 Coder, Kyle J. (github.com/KCoderVA)
 
    Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
@@ -15,10 +15,10 @@
 ## Purpose
 
   - This is a **Power Platform** project with multiple components (Canvas App, Power Automate Flows, SharePoint Lists, Power BI, SQL scripts, etc.).
-  -  **Project Name:** `578 EHRM Training & Booking App`
+  -  **Project Name:** `578 EHRM Training App`
   -  **Local Workspace Path:** `S:\Informatics\Data Team\Coder - Informatics\App Programing\578-EHRM-TrainingSchedulerApp\`
   -  **Generated:** December 31, 2025
-  -  **Project Migration to `https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp` enterprise repo:** July 7, 2026
+  -  **Project Migration to `https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp` enterprise repo:** Completed July 7, 2026 (repo now hosted on VA GHES; a public mirror is maintained at `https://github.com/KCoderVA/578-EHRM-TrainingBookingApp`)
 
 ## Developer/Programmer Preferences
 
@@ -39,9 +39,9 @@
 
   - **Versioning Control**: Check and update SemVer for project-wide releases and component-level versions in file names.
   - **CHANGELOG.md Requirements**: Update `CHANGELOG.md` so that the most recent changes are always at the top of the file and move all previous text down, so that `CHANGELOG.md` artifact continues to grow in size and serves as a chronological historical reference for all project changes to date.
-  - **Commit Message Requirements**: Use the `commit_message-TEMPLATE.md` template for all commits, including a brief summary of the changes and any relevant context or references.
-  - **Pull Request Requirements**: Use the `pull_request-TEMPLATE.md` template for all PRs, including a summary of the changes, a list of affected areas, and any relevant context or references.
-  - **Release Notes Requirements**: Use the `release_notes-TEMPLATE.md` template for all releases, including a summary of the changes, a list of affected areas, and any relevant context or references.
+  - **Commit Message Requirements**: Use the `.github/commit_message-TEMPLATE.md` template for all commits, including a brief summary of the changes and any relevant context or references.
+  - **Pull Request Requirements**: Use the `.github/PULL_REQUEST_TEMPLATE.md` template for all PRs, including a summary of the changes, a list of affected areas, and any relevant context or references.
+  - **Release Notes Requirements**: Use the `.github/release_notes-TEMPLATE.md` template for all releases, including a summary of the changes, a list of affected areas, and any relevant context or references.
   - **Tagging Requirements**: Tag each release with the corresponding SemVer (e.g., `v0.3.2`) and include a brief description of the changes in the tag message.
   - **Branching Strategy**: Use a consistent branching strategy (e.g., `main` for production, `develop` for development, feature branches for new features, hotfix branches for urgent fixes) and ensure that all branches are properly named and documented.
 
@@ -97,6 +97,47 @@
     - Put your customizations in your normal PowerShell profile (`$PROFILE`) and/or a dedicated dev bootstrap script you control.
   - If a session ever starts without your expected profile behavior, run `src/scripts/pwsh/Ensure-DevProfile.ps1` once per terminal session before running `pac`.
   - Treat anything under `docs/local/`, `tmp/`, `dist/`, and `archive/` as local-only unless explicitly stated otherwise.
+
+## Local Python / Jupyter / Data Wrangler Setup (Required for opening data files)
+
+> Purpose: reproducible steps to make the **Python**, **Jupyter**, and **Data Wrangler** VS Code extensions work when opening data files (`.xlsx`, `.csv`, etc.). Reusable on any new machine or unrelated workspace.
+
+### GOLDEN RULE (do not skip)
+  - **NEVER create or place a Python virtual environment (venv) on a network drive** (e.g. `S:\` = `\\v12.med.va.gov\...`) **or a OneDrive-synced folder.** Jupyter/Data Wrangler kernels load native modules (`zmq`, `numpy`, `debugpy`, `pywin32`) at startup; over SMB/OneDrive this hangs and fails with *"Unable to start Kernel ... timeout waiting for the ports to get used"*.
+  - **Always put venvs on LOCAL disk** under `$env:USERPROFILE\.venvs\` (i.e. `C:\Users\<user>\.venvs\`). The workspace itself can stay on `S:\`; only the venv must be local.
+  - A venv is a disposable build artifact: never commit it (keep `.venv/` git-ignored) and never "Add Folder to Workspace" for it.
+
+### One-time setup (per project, or one shared "data tools" env reused everywhere)
+  1. Install the VS Code extensions: **Python** (`ms-python.python`), **Jupyter** (`ms-toolsai.jupyter`), **Data Wrangler** (`ms-toolsai.datawrangler`).
+  2. Confirm a **local** base Python exists (NOT on OneDrive/network). On this machine, uv-managed Pythons live under `$env:APPDATA\uv\python\cpython-3.13.*\python.exe`. If none exist, install one (`uv python install 3.13` or the python.org installer).
+  3. Create a local venv (replace `<name>`, e.g. the project short-name). Standard way:
+     ```powershell
+     & "$env:APPDATA\uv\python\cpython-3.13.14-windows-x86_64-none\python.exe" -m venv "$env:USERPROFILE\.venvs\<name>"
+     ```
+     (Faster alternative if uv is installed: `uv venv "$env:USERPROFILE\.venvs\<name>" --python 3.13`)
+  4. Install the data packages into it:
+     ```powershell
+     & "$env:USERPROFILE\.venvs\<name>\Scripts\python.exe" -m pip install --upgrade pip pandas openpyxl ipykernel
+     ```
+  5. Register a **user-level** Jupyter kernel so Data Wrangler lists it in EVERY workspace on the machine:
+     ```powershell
+     & "$env:USERPROFILE\.venvs\<name>\Scripts\python.exe" -m ipykernel install --user --name <name> --display-name "<Friendly Name> (Python 3.13)"
+     ```
+  6. Point VS Code at it: `Ctrl+Shift+P` -> **Python: Select Interpreter** -> pick `$env:USERPROFILE\.venvs\<name>\Scripts\python.exe` (use "Enter interpreter path" if not listed). Optionally add to `.vscode/settings.json`:
+     `"python.defaultInterpreterPath": "C:\\Users\\<user>\\.venvs\\<name>\\Scripts\\python.exe"`
+  7. Ensure `.gitignore` contains `.venv/`, `venv/`, `.env/`.
+
+### Every time you open a data file (no re-setup needed)
+  - Open the `.xlsx`/`.csv` (it opens in Data Wrangler) -> **Connect to runtime** -> select your kernel (e.g. **"<Friendly Name> (Python 3.13)"**). VS Code usually remembers the last choice.
+
+### Troubleshooting
+  - Error *"timeout waiting for the ports to get used"* = the selected venv is on a network/OneDrive path. Recreate it on local disk (`$env:USERPROFILE\.venvs\`) and re-register the kernel.
+  - After registering a new kernel, run `Developer: Reload Window` so it appears in the runtime list.
+  - Verify a kernel truly starts (binds ports) without the UI: launch `...\Scripts\python.exe -m ipykernel_launcher -f <conn.json>` and confirm ports listen via `Get-NetTCPConnection -State Listen`. A local venv binds instantly; a network-drive venv binds nothing.
+  - Add packages later: `& "$env:USERPROFILE\.venvs\<name>\Scripts\python.exe" -m pip install <package>`.
+
+### This project's current environment (578 EHRM)
+  - Venv: `C:\Users\VHAHINCoderK1\.venvs\578-ehrm-tms` (Python 3.13). Kernel display name: **"EHRM TMS (Python 3.13)"**.
 
 ## Versioning Policy (Hybrid)
 

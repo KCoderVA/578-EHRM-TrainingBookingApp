@@ -107,10 +107,15 @@ jobs:
         id: canvascheck
         shell: pwsh
         run: |
-          $manifest = Join-Path "${{ github.workspace }}" "src/powerApps/.unpacked/CanvasManifest.json"
-          if (Test-Path $manifest) {
+          # Newer `pac canvas unpack` emits a dual layout (layoutDefault/ +
+          # layoutSourceCode/), so discover the manifest recursively instead of
+          # assuming a fixed flat path. Works for both old and new layouts.
+          $root = Join-Path "${{ github.workspace }}" "src/powerApps/.unpacked"
+          $manifest = Get-ChildItem -Path $root -Recurse -Filter "CanvasManifest.json" -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($manifest) {
             echo "found=true" >> $env:GITHUB_OUTPUT
-            Write-Host "Canvas app unpacked source found at src/powerApps/.unpacked/"
+            echo "manifest=$($manifest.FullName)" >> $env:GITHUB_OUTPUT
+            Write-Host "Canvas app manifest found at $($manifest.FullName)"
           } else {
             echo "found=false" >> $env:GITHUB_OUTPUT
             Write-Host "No Canvas app unpacked source found. Skipping canvas validation."
@@ -121,7 +126,7 @@ jobs:
         if: steps.canvascheck.outputs.found == 'true'
         shell: pwsh
         run: |
-          $manifest = Join-Path "${{ github.workspace }}" "src/powerApps/.unpacked/CanvasManifest.json"
+          $manifest = "${{ steps.canvascheck.outputs.manifest }}"
           try {
             Get-Content $manifest -Raw | ConvertFrom-Json | Out-Null
             Write-Host "CanvasManifest.json is valid JSON."

@@ -1,49 +1,54 @@
 ﻿# ============================================================
 # .gitignore — 578-EHRM-TrainingSchedulerApp
-# Last updated: 2026-07-28
+# Last updated: 2026-09-11
+#
+# This repository is PUBLIC-mirrored, so the default stance is to
+# ignore anything that is local-only, machine-generated, a binary
+# or data export, or potentially sensitive (PII / secrets / VA
+# internal data). Public-facing source lives under src/, docs/,
+# assets/, .github/ and .vscode/ and is tracked normally.
+#
+# To force-track a file that a rule below ignores: add a negation
+# ( ! ) AFTER the rule that ignores it, then run `git add -f <file>`.
+# A negation cannot re-include a file when a PARENT DIRECTORY is
+# ignored — un-ignore the directory first, then the file.
 # ============================================================
 
-# ============================================================
-# CONFIRMED LOCAL-ONLY / SENSITIVE DIRECTORIES
-# Everything listed below is intentionally NEVER committed.
-# ============================================================
 
 # ------------------------------------------------------------
-# 1. Temporary / scratch / export directories (local-only)
+# 1. Temporary / build / export output (regenerated, local-only)
+#    dist/ = pac canvas/solution exports; tmp/ = scratch space.
 # ------------------------------------------------------------
 /tmp/
+/temp/
+/.temp/
 /dist/
-/archive/
 
 # ------------------------------------------------------------
-# 2. Developer-only / local docs & logs
+# 2. Local-only retention & config (never mirrored)
+#    archive/ = pre-change snapshots mirroring the src/ layout.
+#    config/  = runbooks / env templates / tooling helpers
+#               (recreated on demand by the solution-unpack task).
 # ------------------------------------------------------------
-/docs/local/
-/docs/logs/
-/docs/release-notes/releaseTemplates/
-!/assets/screenshots/
+/archive/
+/config/
 /optionalGUI/
 
 # ------------------------------------------------------------
-# 3. Config folder (local-only; contains runbooks, environment
-#    templates, tooling helpers, and sensitive config values).
-#    RESOLVED (v0.3.8): the 3 files formerly tracked under
-#    config/ (ARCHITECTURE.md, ALM-RUNBOOK.md, alm.ps1) have
-#    been untracked via `git rm --cached -r config/` and the
-#    local folder relocated to archive/src/config/.
+# 3. Local-only working folders (matched by NAME at any depth)
+#    Any folder literally named `local` or `.local` is scratch
+#    space and is never committed — e.g. docs/local/, assets/local/,
+#    src/analytics/{sql,powerBI}/local/, src/sharePoint/list/*/local/
+#    (raw list exports). This single rule supersedes the old
+#    per-path entries (docs/local/, src/config/local/, etc.).
 # ------------------------------------------------------------
-/config/
-/src/config/local/
+local/
+.local/
+/docs/logs/
+/docs/release-notes/releaseTemplates/
 
 # ------------------------------------------------------------
-# 4. Git internals
-#    .git/ is always protected by Git itself — this entry is
-#    explicit for documentation/clarity purposes only.
-# ------------------------------------------------------------
-/.git/
-
-# ------------------------------------------------------------
-# 5. Secrets and environment-specific values
+# 4. Secrets & environment-specific values
 # ------------------------------------------------------------
 *.env
 *.env.*
@@ -52,7 +57,10 @@ secrets.*
 credentials.*
 
 # ------------------------------------------------------------
-# 6. OS / editor generated files
+# 5. OS / editor generated files
+#    NOTE: .vscode/ is intentionally TRACKED (shared workspace,
+#    tasks, settings, extensions) — do NOT ignore it. .vs/ is
+#    Visual Studio's local cache and IS ignored.
 # ------------------------------------------------------------
 .vs/
 .DS_Store
@@ -61,94 +69,81 @@ desktop.ini
 ~$*
 
 # ------------------------------------------------------------
-# 7. Dependencies & build artifacts
+# 6. Dependencies, caches & language build artifacts
+#    Python venvs MUST live on local disk, never in-repo: a venv
+#    on this S:\ SMB share breaks Jupyter/Data Wrangler kernels.
 # ------------------------------------------------------------
 node_modules/
 coverage/
 __pycache__/
 *.pyc
 *.pyo
+.venv/
+venv/
+.env/
+.ipynb_checkpoints/
 
 # ------------------------------------------------------------
-# 8. Backup, log, and swap files
+# 7. Backup, log & swap files
+#    (Exported *.log files can contain MSAL auth tokens — the
+#    extension rule keeps them out of the mirror.)
 # ------------------------------------------------------------
-**/*.bak
-**/*.log
+*.bak
+*.log
 *.tmp
 *.swp
 *.swo
 
 # ------------------------------------------------------------
-# 9. Power Platform — binary exports & compressed archives
-#
-#    .zip / compressed formats are always ignored to prevent
-#    large binary exports from entering the repo accidentally.
-#    .msapp is excluded from the zip rule (pac canvas output
-#    that lives under dist/, which is already ignored anyway).
-#    .pbit (Power BI template) is excluded from the pbix rule.
-#
-#    To expose a specific public-facing file, add a negation
-#    directly below this block, e.g.:
-#      !docs/some-sanitized-file.zip
+# 8. Binary packages & compressed archives
+#    Large/binary exports are blocked by default. The deliberate
+#    EXCEPTIONS that stay tracked are Canvas .msapp packages and
+#    Power BI .pbit templates; each negation must follow the rule
+#    it overrides. src/**/.zip/** ignores everything inside any
+#    `.zip` export folder under src/.
 # ------------------------------------------------------------
-
-# Canvas app packages and solution exports
+# Canvas app packages & solution exports
 *.zip
 !*.msapp
 src/**/.zip/**
 
 # Compressed archive formats
-**/*.7z
-**/*.gz
-**/*.bz2
-**/*.tar
-**/*.tgz
-**/*.tar.gz
-**/*.tar.bz2
-**/*.rar
+*.7z
+*.gz
+*.bz2
+*.tar
+*.tgz
+*.tar.gz
+*.tar.bz2
+*.rar
 
-# Power BI binary (ignore large binary; allow templates)
+# Power BI (ignore large binary .pbix; keep .pbit templates)
 *.pbix
 !*.pbit
 
 # ------------------------------------------------------------
-# 10. Spreadsheet / data list files
-#
-#     Ignored broadly to prevent PII or sensitive VA data from
-#     being committed accidentally.
-#
-#     RESOLVED (v0.3.8): the sanitized CSVs formerly tracked
-#     under src/sharePoint/ have been untracked via
-#     `git rm --cached -r src/sharePoint/`. Raw list exports now
-#     live under src/sharePoint/list/<listName>/local/ (fully
-#     covered by both this extension rule and §11 below). To
-#     un-ignore a specific public-facing file, add a line, e.g.:
-#       !src/sharePoint/list/desks/local/Desks.csv
-#     ...then `git add -f` that file.
+# 9. Data / spreadsheet files (PII & VA-internal data guard)
+#    Ignored by extension anywhere in the tree, so raw exports
+#    cannot be committed by accident. To publish one sanitized
+#    file, negate it below and run `git add -f`, e.g.:
+#      !src/sharePoint/list/desks/local/Desks.csv
 # ------------------------------------------------------------
-**/*.csv
-**/*.tsv
-**/*.xlsx
-**/*.xls
-**/*.xlsm
-**/*.xlsb
-**/*.ods
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.xlsm
+*.xlsb
+*.ods
 
 # ------------------------------------------------------------
-# 11. Local-only working directories (any folder literally named
-#     "local" anywhere in the repo).
-#
-#     Generalizes the folder-based rule already used for
-#     /docs/local/ and /src/config/local/ to also cover newer
-#     local-only locations introduced in v0.3.8, e.g.:
-#       assets/local/                    (raw screen recordings)
-#       src/analytics/sql/local/
-#       src/analytics/powerBI/local/
-#       src/sharePoint/list/*/local/     (raw list export CSV/XLSX)
-#
-#     The extension-based rules above (§9, §10) already ignore
-#     most data/archive formats regardless of folder; this rule
-#     adds folder-level protection for any other file type (e.g.,
-#     .webm screen recordings) dropped into a "local" folder.
+# 10. Raw TMS extracts — deny-all, publish only docs & shortcuts
+#     src/analytics/tms/ holds raw TMS data exports (PII), so the
+#     entire subtree is ignored by default. The only PUBLISHED
+#     files are the component README and the Power BI / SharePoint
+#     .url shortcuts. The parent dir is re-included first because
+#     Git cannot re-include a file beneath an excluded directory.
 # ------------------------------------------------------------
-**/local/
+/src/analytics/tms/**
+!/src/analytics/tms/README.md
+!/src/analytics/tms/lists/*.url

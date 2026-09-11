@@ -1,6 +1,6 @@
 # SharePoint — Lists, Libraries & Reference Data
 
-This folder documents the SharePoint back-end for the EHRM Training & Booking App. The solution spans
+This folder documents the SharePoint back-end for the 578 EHRM Training App. The solution spans
 **two SharePoint environments**:
 
 1. **The app's own lists** (read/write) on
@@ -10,7 +10,12 @@ This folder documents the SharePoint back-end for the EHRM Training & Booking Ap
    "Sandbox Resource Center" lists and the **Learning Labs Library**, which supply the scenario / role /
    session / service-line reference data surfaced in the app's pickers and the Power BI reports.
 
-> **Current release:** `v1.0.12`. See [`v1.0.12_differenceAnalysis.md`](v1.0.12_differenceAnalysis.md).
+> **Current release:** `v1.0.12` (SharePoint schema unchanged this cycle; project is now v1.1.20). See [`v1.0.12_differenceAnalysis.md`](v1.0.12_differenceAnalysis.md).
+>
+> **Deferred follow-up (v1.1.20 → next patch):** the v1.1.20 Canvas app references a new
+> `MasterScheduleList.sessionActive_text` column (its class-picker active-session filter). That column is
+> **not yet added to this SharePoint extraction** — the updated list schema will be downloaded and committed
+> in a future patch. See `src/powerApps/v1.1.20_knownIssues.md` (KI-04).
 
 ## Structure (current — reorganized at v1.0.12)
 
@@ -47,7 +52,7 @@ per-list `*.url` view shortcuts, and (when present) `searchConfig/SearchConfigur
 | `DeskAccessControl` | `list/deskAccessControl/` | Drives canvas-app RBAC (`AccessLevel_Text` / `AccessLevel_Choice`); enriched by the `AppUserList` flow. |
 | `Desk Reservations` | `list/deskReservations/` | Primary booking/registration records (submitter/student/reservation/trainer/reminder families). |
 | `Desks` | `list/desks/` | Bookable asset inventory (Desk/Room/Floor/Building; typed columns). |
-| `MasterScheduleList` | `list/masterScheduleList/` | Master training schedule (replaces the former `schedule/` folder). |
+| `MasterScheduleList` | `list/masterScheduleList/` | Master training schedule (replaces the former `schedule/` folder). *Note: the v1.1.20 app also references a `sessionActive_text` column not yet in this extraction — deferred, see KI-04.* |
 | `SuperUserList` | `list/superUserList/` | Super User roster; bulk-synced into `DeskAccessControl` by the app. |
 | `backupList_DeskReservations` | `list/backupList_DeskReservations/` | Redundant reservation records written by the `CreateBackups` flow from confirmation emails. |
 

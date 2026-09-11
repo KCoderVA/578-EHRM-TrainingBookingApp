@@ -1,6 +1,6 @@
 # Power Automate — Cloud Flows
 
-This folder contains the three Power Automate cloud flows that support the EHRM Training & Booking App.
+This folder contains the three Power Automate cloud flows that support the 578 EHRM Training App.
 The canvas app does **not** call these flows directly; they run independently on SharePoint/Outlook
 triggers and are linked to the app by **data and email** (see the trigger table below).
 

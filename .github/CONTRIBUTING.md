@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in contributing to the **EHRM Training & Booking App**.
+Thanks for your interest in contributing to the **578 EHRM Training App**.
 
 This repository contains **unpacked (source-controlled)** Microsoft Power Platform artifacts (Canvas app + Power Automate), along with documentation and ALM runbooks.
 

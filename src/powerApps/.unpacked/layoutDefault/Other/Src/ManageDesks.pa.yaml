@@ -1,0 +1,603 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  ManageDesks:
+    Properties:
+      Fill: =RGBA(236, 236, 236, 1)
+      Height: =Max(App.Height, App.DesignHeight)
+      OnVisible: =UpdateContext({prevSelected:false});UpdateContext({upSelected:true});
+      Width: =Max(App.Width, App.DesignWidth)
+    Children:
+      - Rectangle5:
+          Control: Rectangle@2.3.0
+          Group: grpConfirmDelete
+          Properties:
+            Height: =263
+            Visible: =varShowConfirmDelete
+            Width: =973
+            X: =101
+            Y: =63
+      - Image2_6:
+          Control: Image@2.2.3
+          Properties:
+            Height: =167
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+      - lblTitle_ManageDesks:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(255, 255, 255, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =49
+            Size: =32
+            Text: ="Manage Desks"
+            Width: =501
+            X: =301
+      - lblNoRes_1:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =galActive.Height
+            Size: =40
+            Text: |-
+              =If(
+                  upSelected && !prevSelected,
+                  "No upcoming reservations",
+                  !upSelected && prevSelected,
+                  "No previous reservations",
+                  "No reservations"
+              )
+            Visible: |-
+              =If(
+                  galActive.Visible && CountRows(galActive.AllItems) >=1,
+                  false,
+                  galNonActive.Visible && CountRows(galNonActive.AllItems) >=1,
+                  false,
+                  galActive.Visible && CountRows(galActive.AllItems) <=1,
+                  true,
+                  galNonActive.Visible && CountRows(galNonActive.AllItems) <=1,
+                  true,
+                  !galActive.Visible && !galNonActive.Visible,
+                  true,
+                  false
+              )
+            Width: =galActive.Width
+            X: =galActive.X
+            Y: =galActive.Y
+      - rectSeperator_1:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(204, 204, 204, 1)
+            Height: =2
+            Width: =Parent.Width / 1.9
+            X: =5
+            Y: =rectUpSel_1.Y + rectUpSel_1.Height + 3
+      - iconAddDesk:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            AccessibleLabel: ="Add Desk"
+            BorderColor: =RGBA(255, 255, 255, 0)
+            BorderThickness: =5
+            Color: =App.Theme.Colors.Darker40
+            Height: =50
+            HoverBorderColor: =App.Theme.Colors.Lighter50
+            HoverColor: =ColorFade(Self.HoverFill, 95%)
+            HoverFill: =App.Theme.Colors.Darker40
+            Icon: =Icon.AddLibrary
+            OnSelect: =Set(varDeskMode,"New");Navigate(NewDesk);
+            PaddingBottom: =5
+            PaddingLeft: =5
+            PaddingRight: =5
+            PaddingTop: =5
+            TabIndex: =3
+            Visible: =user_isAdmin
+            Width: =50
+            X: =Image2_6.Width - Self.Width - 5
+            Y: =Image2_6.Y + Image2_6.Height + 5
+      - rectPrevSel_1:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =rectUpSel_1.Fill
+            Height: =rectUpSel_1.Height
+            Visible: =prevSelected
+            Width: =rectUpSel_1.Width
+            X: =rectUpSel_1.X + rectUpSel_1.Width
+            Y: =rectUpSel_1.Y
+      - lblTabInactive:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            FocusedBorderThickness: =.5
+            FontWeight: =FontWeight.Lighter
+            Height: =55
+            HoverFill: =ColorFade(Self.Fill, 50%)
+            OnSelect: =UpdateContext({prevSelected:!prevSelected});UpdateContext({upSelected:!upSelected});
+            PressedFill: =
+            Size: =18
+            TabIndex: =2
+            Text: ="INACTIVE (" & CountRows(galNonActive.AllItems) &")"
+            Width: =220
+            X: =367
+            Y: =167
+      - rectUpSel_1:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(39, 113, 194, 1)
+            Height: =5
+            Visible: =upSelected
+            Width: =rectSeperator_1.Width / 2
+            X: =rectSeperator_1.X
+            Y: =lblTabActive.Y + lblTabActive.Height
+      - lblTabActive:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            FocusedBorderThickness: =.5
+            FontWeight: =FontWeight.Lighter
+            Height: =55
+            OnSelect: =UpdateContext({upSelected:!upSelected});UpdateContext({prevSelected:!prevSelected})
+            Size: =18
+            TabIndex: =1
+            Text: ="ACTIVE (" & CountRows(galActive.AllItems) & ")"
+            Width: =220
+            Y: =Image2_6.Y + Image2_6.Height
+      - Tabs_7:
+          Control: CanvasComponent
+          ComponentName: Tabs
+          Properties:
+            Height: =112
+            HomePage: =App.ActiveScreen
+            Items: |-
+              =colMenu
+              /*Table(
+                  {
+                      Name: "Home",
+                      Icon: Icon.DetailList,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  },
+                  {
+                      Name: "Items",
+                      Icon: Icon.Bookmark,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  },
+                  {
+                      Name: "Desks",
+                      Icon: Icon.ComputerDesktop,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  },
+                  {
+                      Name: "Users",
+                      Icon: Icon.People,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  },
+                  {
+                      Name: "New",
+                      Icon: Icon.Add,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  }
+              )*/
+            Width: =608
+            X: =252
+            Y: =52
+      - galNonActive:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_OneTextVariant_ver4.0
+          Properties:
+            AccessibleLabel: ="Active Desks"
+            Height: =Parent.Height - Self.Y
+            Items: |
+              =SortByColumns(
+                  Filter(
+                      Desks,
+                     (Active_boolean = false || Active_text = "false") && (Dropdown3.SelectedText.Value = ThisRecord.ItemType_choice.Value)
+                     || (Active_boolean = false || Active_text = "false") && (Dropdown3.SelectedText.Value = "All")
+                  ),
+                  "Title",
+                  SortOrder.Ascending
+              )
+            ShowNavigation: =true
+            TabIndex: =5
+            TemplateSize: =60
+            Visible: =prevSelected
+            Width: =Parent.Width - (Self.X * 2)
+            X: =galActive.X
+            Y: =rectSeperator_1.Y + rectSeperator_1.Height + 2
+          Children:
+            - Separator2_5:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(39, 113, 194, 1)
+                  Height: =1
+                  OnSelect: =Select(Parent)
+                  Width: =Parent.TemplateWidth
+                  Y: =Parent.TemplateHeight - 1
+            - btnActivate_1:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Color: =App.Theme.Colors.Darker40
+                  Fill: =Color.LightGreen
+                  Height: =Parent.TemplateHeight / 1.8
+                  HoverBorderColor: =ColorFade(Self.BorderColor, 90%)
+                  HoverColor: =ColorFade(Self.Color, 100%)
+                  HoverFill: =ColorFade(Self.BorderColor, -50%)
+                  OnSelect: |-
+                    =Select(Parent);
+                    Patch(
+                        Desks,
+                        ThisItem,
+                        {
+                            Active_boolean: true,
+                            Active_text: "true"
+                        }
+                        )
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =14
+                  Text: ="⏻  ACTIVATE"
+                  Width: |+
+                    =130
+                  X: =Parent.TemplateWidth - Self.Width - 15
+                  Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
+            - btnEdit_1:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(39, 113, 194, 1)
+                  Height: =btnActivate_1.Height
+                  HoverBorderColor: =ColorFade(Self.Fill, -50%)
+                  HoverColor: =App.Theme.Colors.Darker40
+                  HoverFill: =ColorFade(Self.Fill, 50%)
+                  OnSelect: =Set(varDeskMode,"Edit");Set(varManageSelectedDesk,ThisItem);Navigate(NewEditDesk)
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =14
+                  Text: ="✏️  EDIT"
+                  Width: =btnActivate_1.Width
+                  X: =btnActivate_1.X - Self.Width - 5
+                  Y: =btnActivate_1.Y
+            - btnDelete_1:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  Fill: =RGBA(184, 0, 0, 1)
+                  Height: =btnEdit_1.Height
+                  HoverBorderColor: =ColorFade(Self.BorderColor, 50%)
+                  HoverColor: =ColorFade(Self.Color, 50%)
+                  HoverFill: =ColorFade(Self.Fill, 50%)
+                  OnSelect: =UpdateContext({varDeskToDelete:ThisItem});UpdateContext({varShowConfirmDelete:true})
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =14
+                  Text: |-
+                    =" 🗑️  DELETE"
+                  Visible: =user_isAdmin
+                  Width: =btnEdit_1.Width
+                  X: =btnEdit_1.X - btnEdit_1.Width - 5
+                  Y: =btnEdit_1.Y
+            - lblName_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =Parent.TemplateHeight - Self.Y
+                  LineHeight: =1
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =20
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =ThisItem.ItemType_choice.Value
+                  Width: =btnDelete_1.X - 5
+                  X: =lblType_1.X
+                  Y: =lblType_1.Y + lblType_1.Height
+            - lblLastModified_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =lblType_1.Height
+                  Italic: =true
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =20
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =10
+                  Text: |-
+                    ="Last Modified:   " & ThisItem.Modified
+                  Width: =btnDelete_1.X - Self.X - 5
+                  X: =lblType_1.X + lblType_1.Width
+                  Y: =lblType_1.Y
+            - lblType_1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =(Parent.TemplateHeight / 3) - 1
+                  Italic: =true
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =20
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =10
+                  Text: |-
+                    ="Type:   " & ThisItem.ItemType_choice.Value
+                  Width: =250
+                  X: =2
+      - galActive:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_OneTextVariant_ver4.0
+          Properties:
+            AccessibleLabel: ="Active Desks"
+            Height: =Parent.Height - Self.Y
+            Items: |
+              =SortByColumns(
+                  Filter(
+                      Desks,
+                     (Active_boolean = true || Active_text = "true") && (Dropdown3.SelectedText.Value = ThisRecord.ItemType_choice.Value)
+                     || (Active_boolean = true || Active_text = "true") && (Dropdown3.SelectedText.Value = "All")
+                  ),
+                  "Title",
+                  SortOrder.Ascending
+              )
+            ShowNavigation: =true
+            TabIndex: =5
+            TemplateSize: =60
+            Visible: =upSelected
+            Width: =Parent.Width - (Self.X * 2)
+            X: =10
+            Y: =rectSeperator_1.Y + rectSeperator_1.Height + 2
+          Children:
+            - Separator2_3:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(39, 113, 194, 1)
+                  Height: =1
+                  OnSelect: =Select(Parent)
+                  Width: =Parent.TemplateWidth
+                  Y: =Parent.TemplateHeight - 1
+            - btnDeactivate:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderThickness: =0
+                  Fill: =RGBA(128, 128, 128, 1)
+                  Height: =Parent.TemplateHeight / 1.8
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: |-
+                    =Select(Parent);
+                    Patch(
+                        Desks,
+                        ThisItem,
+                        {
+                            Active_boolean: false,
+                            Active_text: "false"
+                        }
+                        )
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =14
+                  Text: ="⛔  DEACTIVATE"
+                  Width: =160
+                  X: =Parent.TemplateWidth - Self.Width - 15
+                  Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
+            - btnEdit:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderThickness: =0
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(39, 113, 194, 1)
+                  Height: =btnDeactivate.Height
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: |-
+                    =Set(varDeskMode,"Edit");
+                    Set(varManageSelectedDesk,ThisItem);
+                    Navigate(NewEditDesk)
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =14
+                  Text: ="✏️  EDIT"
+                  Width: =btnDeactivate.Width
+                  X: =btnDeactivate.X - Self.Width - 5
+                  Y: =btnDeactivate.Y
+            - btnDelete:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderThickness: =0
+                  Fill: =RGBA(184, 0, 0, 1)
+                  Height: =btnEdit.Height
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =UpdateContext({varDeskToDelete:ThisItem});UpdateContext({varShowConfirmDelete:true})
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =14
+                  Text: |-
+                    =" 🗑️  DELETE"
+                  Width: =btnEdit.Width
+                  X: =btnEdit.X - btnEdit.Width - 5
+                  Y: =btnEdit.Y
+            - lblName:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =Parent.TemplateHeight - Self.Y
+                  LineHeight: =1
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =20
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =ThisItem.Description_multilinePlainText
+                  Width: =btnDelete.X - 5
+                  X: =lblType.X
+                  Y: =lblType.Y + lblType.Height
+            - lblLastModified:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =lblType.Height
+                  Italic: =true
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =20
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =10
+                  Text: |-
+                    ="Last Modified:   " & ThisItem.Modified
+                  Width: =btnDelete.X - Self.X - 5
+                  X: =lblType.X + lblType.Width
+                  Y: =lblType.Y
+            - lblType:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Semibold
+                  Height: =(Parent.TemplateHeight / 3) - 1
+                  Italic: =true
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =20
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =10
+                  Text: |-
+                    ="Type:   " & ThisItem.ItemType_choice.Value
+                  Width: =250
+                  X: =2
+      - Rectangle3_2:
+          Control: Rectangle@2.3.0
+          Group: grpConfirmDelete
+          Properties:
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =640
+            Visible: =varShowConfirmDelete
+            Width: =1136
+      - bgRounded_9:
+          Control: HtmlViewer@2.1.0
+          Group: grpConfirmDelete
+          Properties:
+            DisabledBorderColor: =RGBA(56, 56, 56, 1)
+            Font: =Font.'Open Sans'
+            Height: =293
+            HtmlText: |-
+              =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+              "<div style='border:1px gray;border-radius:10%;height:275px;width:100%;background-color:#FCFCFC'></div>"
+            Size: =24
+            Visible: =varShowConfirmDelete
+            Width: =722
+            X: =207
+            Y: =84
+      - Label1:
+          Control: Label@2.5.1
+          Group: grpConfirmDelete
+          Properties:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Semibold
+            Height: =121
+            Size: =24
+            Text: ="Confirm Deletion?"
+            Visible: =varShowConfirmDelete
+            Width: =695
+            X: =220
+            Y: =113
+      - btnConfirmCancel:
+          Control: Classic/Button@2.2.0
+          Group: grpConfirmDelete
+          Properties:
+            BorderThickness: =0
+            Color: =RGBA(255, 255, 255, 1)
+            Fill: =RGBA(128, 128, 128, 1)
+            Height: =60
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: =UpdateContext({varShowConfirmDelete:false})
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: ="CANCEL"
+            Visible: =varShowConfirmDelete
+            Width: =293
+            X: =239
+            Y: =257
+      - btnConfirmDelete:
+          Control: Classic/Button@2.2.0
+          Group: grpConfirmDelete
+          Properties:
+            BorderThickness: =0
+            Fill: =RGBA(184, 0, 0, 1)
+            Height: =60
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: =Remove(Desks,varDeskToDelete);UpdateContext({varShowConfirmDelete:false})
+            RadiusBottomLeft: =20
+            RadiusBottomRight: =20
+            RadiusTopLeft: =20
+            RadiusTopRight: =20
+            Size: =14
+            Text: |-
+              =" 🗑️   DELETE"
+            Visible: =varShowConfirmDelete
+            Width: =293
+            X: =604
+            Y: =257
+      - Dropdown3:
+          Control: Classic/DropDown@2.3.1
+          Properties:
+            Default: =""
+            FontWeight: |-
+              =If(
+                  Self.Selected.Value = "All",
+                  FontWeight.Bold,
+                  FontWeight.Normal
+              )
+            Height: =iconAddDesk.Height / 1.5
+            Italic: |-
+              =If(
+                  Self.Selected.Value = "All",
+                  true,
+                  false
+              )
+            Items: |-
+              =Ungroup(Table({Value: "All"}, Distinct(Desks, ItemType_choice.Value)), Value)
+            Items.Value: =Value
+            Size: =16
+            Width: =150
+            X: =iconAddDesk.X - Self.Width - 25
+            Y: =iconAddDesk.Y + (iconAddDesk.Height / 8)

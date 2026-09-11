@@ -1,11 +1,18 @@
-# CODEOWNERS
-# DISABLED (2026-05-28): temporarily disable automatic reviewer/owner assignment.
-# Default owner for all files
-# * @KCoderVA
+# CODEOWNERS — automatic reviewer assignment for pull requests.
+# Docs: https://docs.github.com/repositories/managing-your-repos-settings-and-features/customizing-your-repository/about-code-owners
+# Syntax: <path pattern>  <@owner ...>  (last matching pattern wins)
+#
+# Re-enabled v1.1.20 (2026-09-11). To enforce on merges, turn on
+# "Require review from Code Owners" in branch protection for `main`.
 
-# Path-specific ownership (adjust as teams grow)
-# /src/powerApps/ @KCoderVA
-# /src/powerAutomate/ @KCoderVA
-# /src/sharePoint/ @KCoderVA
-# /src/config/ @KCoderVA
-# /docs/ @KCoderVA
+# Default owner for everything in the repo
+*                       @KCoderVA
+
+# Path-specific ownership (extend as the team grows)
+/src/powerApps/         @KCoderVA
+/src/powerAutomate/     @KCoderVA
+/src/sharePoint/        @KCoderVA
+/src/analytics/         @KCoderVA
+/src/scripts/           @KCoderVA
+/docs/                  @KCoderVA
+/.github/               @KCoderVA

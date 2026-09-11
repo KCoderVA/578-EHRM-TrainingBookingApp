@@ -1,6 +1,6 @@
 # Contributors
 
-Recognition of individuals and teams who contributed to the EHRM Training & Booking App.
+Recognition of individuals and teams who contributed to the 578 EHRM Training App.
 
 ## Individuals
 - Hiram A. Zayas — Health Informatics Service, Battle Creek VA Medical Center
@@ -15,4 +15,4 @@ Recognition of individuals and teams who contributed to the EHRM Training & Book
 
 ## Notes
 - This list reflects provenance and major contributions used to establish the v0.0.1 baseline.
-- For ongoing contributions, please see [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md) and reference the root [CHANGELOG.md](CHANGELOG.md) for release-level credits.
+- For ongoing contributions, please see [../.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md) and reference the root [../CHANGELOG.md](../CHANGELOG.md) for release-level credits.
