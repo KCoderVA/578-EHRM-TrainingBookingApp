@@ -8,5 +8,6 @@
     "**/tmp": false,
     "**/.git": false
   },
-  "editor.codeActionsOnSave": {}
+  "editor.codeActionsOnSave": {},
+  "python.defaultInterpreterPath": "C:\\Users\\VHAHINCoderK1\\.venvs\\578-ehrm-tms\\Scripts\\python.exe"
 }

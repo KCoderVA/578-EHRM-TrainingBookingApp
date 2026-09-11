@@ -1,0 +1,18 @@
+# Dependabot configuration — keeps pinned GitHub Actions up to date.
+# Docs: https://docs.github.com/code-security/dependabot/dependabot-version-updates
+# Scope: this repo pins actions (actions/checkout, microsoft/powerplatform-actions,
+# actions/labeler, actions/stale, etc.) in .github/workflows/*. Dependabot opens
+# weekly PRs to bump them so the CI/release automation stays patched.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "dependencies"
+      - "github-actions"

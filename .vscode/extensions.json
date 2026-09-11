@@ -3,6 +3,7 @@
     "ms-powerplatform.powerplatform-vscode",
     "github.copilot",
     "github.copilot-chat",
-    "ms-vscode.powershell"
+    "ms-vscode.powershell",
+    "ms-python.python"
   ]
 }

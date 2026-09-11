@@ -2,7 +2,7 @@
 # Power Apps Web Development Workflow Helper
 # =============================================================================
 #
-#    Copyright 2025 Kyle J. Coder
+#    Copyright 2025-2026 Kyle J. Coder
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ function Show-PowerAppsStatus {
     Write-Host ""
 
     # Check if source folder exists
-    $sourcePath = "./src/powerApps/.unpacked/"
+    $sourcePath = "./src/powerApps/.unpacked/layoutDefault/"
     if (Test-Path $sourcePath) {
         Write-Host "✅ Source code available: $sourcePath" -ForegroundColor $Green
         $sourceFiles = Get-ChildItem -Path $sourcePath -Recurse -Filter "*.fx.yaml" | Measure-Object
@@ -75,8 +75,8 @@ function Invoke-PackageApp {
     Write-Host "📦 Packaging Power App for Web Upload" -ForegroundColor $Green
     Write-Host ""
 
-    $sourcePath = "./src/powerApps/.unpacked"
-    $outputPath = "./dist/release/EHRMTrainingBookingApp.msapp"
+    $sourcePath = "./src/powerApps/.unpacked/layoutDefault"
+    $outputPath = "./dist/release/578EHRMTrainingApp.msapp"
 
     if (-not (Test-Path $sourcePath)) {
         Write-Host "❌ Source path not found: $sourcePath" -ForegroundColor $Red
@@ -138,7 +138,7 @@ function Open-PowerAppsPortal {
 function Open-SourceCode {
     Write-Host "📁 Opening Power App Source Code" -ForegroundColor $Green
 
-    $sourcePath = "./src/powerApps/.unpacked"
+    $sourcePath = "./src/powerApps/.unpacked/layoutDefault"
 
     if (Test-Path $sourcePath) {
         try {
@@ -158,11 +158,11 @@ function Show-Help {
     Write-Host "🎨 Power Apps Web Development Helper" -ForegroundColor $Green
     Write-Host ""
     Write-Host "📋 Available Commands:" -ForegroundColor $Yellow
-    Write-Host "  .\docs\local\powerapps-web.ps1 package      📦 Package source code to .msapp" -ForegroundColor $Cyan
-    Write-Host "  .\docs\local\powerapps-web.ps1 open-portal  🌐 Open Power Apps web portal" -ForegroundColor $Cyan
-    Write-Host "  .\docs\local\powerapps-web.ps1 open-source  📁 Open source code in VS Code" -ForegroundColor $Cyan
-    Write-Host "  .\docs\local\powerapps-web.ps1 status       📊 Show development status" -ForegroundColor $Cyan
-    Write-Host "  .\docs\local\powerapps-web.ps1 help         ❓ Show this help message" -ForegroundColor $Cyan
+    Write-Host "  .\src\scripts\pwsh\powerapps-web.ps1 package      📦 Package source code to .msapp" -ForegroundColor $Cyan
+    Write-Host "  .\src\scripts\pwsh\powerapps-web.ps1 open-portal  🌐 Open Power Apps web portal" -ForegroundColor $Cyan
+    Write-Host "  .\src\scripts\pwsh\powerapps-web.ps1 open-source  📁 Open source code in VS Code" -ForegroundColor $Cyan
+    Write-Host "  .\src\scripts\pwsh\powerapps-web.ps1 status       📊 Show development status" -ForegroundColor $Cyan
+    Write-Host "  .\src\scripts\pwsh\powerapps-web.ps1 help         ❓ Show this help message" -ForegroundColor $Cyan
     Write-Host ""
     Write-Host "🔄 Web Development Workflow:" -ForegroundColor $Yellow
     Write-Host "  1. Edit source (.fx.yaml files) → VS Code" -ForegroundColor $White

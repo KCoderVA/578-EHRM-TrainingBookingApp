@@ -1,5 +1,5 @@
 <!--
-Copyright 2025 Kyle J. Coder
+Copyright 2025-2026 Kyle J. Coder
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ limitations under the License.
     <SolutionManifest>
         <UniqueName>EHRMTrainingBooking</UniqueName>
         <LocalizedNames>
-            <LocalizedName description="578 EHRM Training &amp; Booking App" languagecode="1033" />
+            <LocalizedName description="578 EHRM Training App" languagecode="1033" />
         </LocalizedNames>
         <Descriptions>
             <Description
-                description="v1.0.12: Production go-live release of the EHRM Training &amp; Booking App for VA facility 578. Canvas app v0.12.2 to v1.0.12: removed the hard-coded impersonation backdoor, hardened role-based access control to default-to-User with self-provisioning, added single-student proxy registration, a Learning Labs Library class/scenario picker (read-only national EHRM Sandbox document library), a printable Power BI screen, series-vs-single cancellation, and bulk SuperUser autosync; removed two dead template screens (CreateMeeting, Screen3); drove binding errors 120 to 0; began classic-to-modern control migration. Power Automate: AppUserList (user provisioning + chatbot cards), SendEmailReminder (email + Teams reminders), and the new CreateBackupReservation flow. Integrates Office 365 Outlook/Users and SharePoint (own lists plus read-only national EHRM Sandbox reference lists)."
+                description="v1.1.20: 578 EHRM Training App for VA facility 578. Canvas app v1.0.12 to v1.1.20: re-architected the Confirm booking-commit flow (a thin orchestrator that chains dedicated Outlook-calendar, list-patch, SuperUser-sync, and email buttons, then a verification timer that confirms every step before navigating to Success), a tiered fallback cascade that always writes reservations to both the primary and backup SharePoint lists, a rebuilt in-app Help screen (end-user Quick-Start guide plus an admin full-changelog view), a class/scenario picker re-pointed to Hines-scoped in-memory collections with a new MasterScheduleList sessionActive_text active-session filter, and consistent btnOutlook_/btnPatch_/timer_ control naming. Prior v0.12.2 to v1.0.12 line: removed the hard-coded impersonation backdoor, hardened role-based access control to default-to-User with self-provisioning, added single-student proxy registration, a Learning Labs Library class/scenario picker (read-only national EHRM Sandbox document library), a printable Power BI screen, series-vs-single cancellation, and bulk SuperUser autosync; removed two dead template screens; drove binding errors 120 to 0. Power Automate: AppUserList (user provisioning + chatbot cards), SendEmailReminder (email + Teams reminders), and the CreateBackupReservation flow. Integrates Office 365 Outlook/Users and SharePoint (own lists plus read-only national EHRM Sandbox reference lists). Note: regenerate this manifest via pac solution export whenever root components or connection references change."
                 languagecode="1033" />
         </Descriptions>
-        <Version>1.0.12</Version>
+        <Version>1.1.20</Version>
         <Managed>1</Managed>
         <Publisher>
             <UniqueName>VAHealthcare</UniqueName>

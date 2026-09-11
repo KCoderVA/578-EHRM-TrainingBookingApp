@@ -1,14 +1,14 @@
 # Project Status
 
-This document describes the current public state of the EHRM Training & Booking App repository and what is included/excluded as of the latest release.
+This document describes the current public state of the 578 EHRM Training App repository and what is included/excluded as of the latest release.
 
-## Status summary (v1.0.12)
+## Status summary (v1.1.20)
 
-- **Release type (v1.0.12)**: Major / production go-live — the Canvas app advances **v0.12.2 → v1.0.12** (public). The app is live to ~100–150 hospital staff. Project version jumps `0.12.4 → 1.0.12` (the interim 0.12.4 was never shipped).
-- **Highlights**: removed the hard-coded impersonation backdoor; RBAC hardened to default-to-`User`; single-student **proxy registration**; **Learning Labs Library** class/scenario picker; new **`CreateBackups`** flow + **Teams** reminders; national EHRM **Sandbox** reference lists; new **`SuperUserDashboard-Final`** Power BI report + **`tms/`** staging; binding errors `120 → 0`; two dead screens removed (`CreateMeeting`, `Screen3`).
-- **Project release**: v1.0.12 (2026-08-25)
+- **Release type (v1.1.20)**: Feature / Minor — a significant Canvas-app reliability & usability update; the Canvas app advances **v1.0.12 → v1.1.20** (internally consistent — `varRepoVersion`, `AppDescription`, and the `.zip` all read `1.1.20`). Project `VERSION` advances `1.0.13 → 1.1.20` to match the Canvas app. The app is live to ~100–150 hospital staff.
+- **Highlights**: re-architected `Confirm` booking-commit (thin orchestrator + verification timer + both-lists fallback cascade); rebuilt in-app Help (end-user Quick-Start guide + admin changelog); class picker re-pointed to Hines-scoped collections with a new `MasterScheduleList.sessionActive_text` active-session filter; `btnOutlook_*`/`btnPatch_*`/`timer_*` control renames; confirmation-email `Cc` typo fixed. **Follow-ups**: `BindingErrorCount` regressed `0 → 24` on the `Success` screen (KI-02, next patch); the **Microsoft Teams** connector is an intentional placeholder (KI-03) — see [src/powerApps/v1.1.20_knownIssues.md](../src/powerApps/v1.1.20_knownIssues.md).
+- **Project release**: v1.1.20 (2026-09-11)
 - **Component versions**:
-  - Canvas app: **v1.0.12** (unpacked source under `src/powerApps/.unpacked/`; package at `src/powerApps/.msapp/v1.0.12_578EHRMTrainingApp.msapp`, tracked via `.gitignore` `!*.msapp`). See [src/powerApps/README.md](../src/powerApps/README.md) and [src/powerApps/v1.0.12_differenceAnalysis.md](../src/powerApps/v1.0.12_differenceAnalysis.md).
+  - Canvas app: **v1.1.20** (unpacked source under `src/powerApps/.unpacked/layoutDefault/`; package at `src/powerApps/.msapp/v1.1.20_578EHRMTrainingApp.msapp`, tracked via `.gitignore` `!*.msapp`). See [src/powerApps/README.md](../src/powerApps/README.md) and the `v1.1.20_*` analysis docs ([diff](../src/powerApps/v1.1.20_diffAnalysis.md), [summary](../src/powerApps/v1.1.20_changeSummary.md), [known issues](../src/powerApps/v1.1.20_knownIssues.md), [roadmap](../src/powerApps/v1.1.20_recommendations.md)).
   - Power Automate: `AppUserList` (unchanged) + `SendReminders` (updated — email + Teams card) + **`CreateBackups`** *(new — email-triggered backup-reservation flow)*. See [src/powerAutomate/README.md](../src/powerAutomate/README.md) and [src/powerAutomate/v1.0.12_differenceAnalysis.md](../src/powerAutomate/v1.0.12_differenceAnalysis.md).
   - SharePoint: app lists + national EHRM **Sandbox** reference lists (`.url` shortcuts) + Learning Labs Library; `local/` data git-ignored. See [src/sharePoint/README.md](../src/sharePoint/README.md) and [src/sharePoint/v1.0.12_differenceAnalysis.md](../src/sharePoint/v1.0.12_differenceAnalysis.md).
   - Analytics: Power BI `Signup Tool` (`.pbit` tracked) + `SuperUserDashboard-Final` (WIP) + `tms/` staging. See [src/analytics/README.md](../src/analytics/README.md) and [src/analytics/v1.0.12_differenceAnalysis.md](../src/analytics/v1.0.12_differenceAnalysis.md).
@@ -17,6 +17,7 @@ This document describes the current public state of the EHRM Training & Booking 
 
 | Version | Date | Type |
 |---------|------|------|
+| v1.1.20 | 2026-09-11 | Minor (Canvas app) — v1.0.12 → v1.1.20: re-architected `Confirm` booking-commit (orchestrator + verification timer + both-lists fallback cascade); rebuilt Help screen (Quick-Start guide + admin changelog); class picker re-pointed to Hines-scoped collections with new `MasterScheduleList.sessionActive_text` filter; `btnOutlook_*`/`btnPatch_*`/`timer_*` renames. Follow-ups: BindingErrorCount 0 → 24 on `Success` (KI-02, next patch); Teams connector intentional placeholder (KI-03) |
 | v1.0.12 | 2026-08-25 | Major / production go-live — Canvas app v0.12.2 → v1.0.12: removed impersonation backdoor, hardened RBAC (default-to-`User`), single-student proxy registration, Learning Labs Library class picker, printable Power BI screen, series-vs-single cancellation, bulk SuperUser autosync; removed dead `CreateMeeting`/`Screen3` (21 → 20 screens); binding errors 120 → 0; partial modern-control migration. New `CreateBackups` flow + Teams reminders; national EHRM Sandbox reference lists; new `SuperUserDashboard-Final` PBI report + `tms/` staging |
 | v0.12.3 | 2026-08-20 | Patch (Power Automate) — added `SendReminders` ("Send Email Reminder") flow; re-exported `AppUserList`; no Canvas app changes |
 | v0.12.2 | 2026-08-12 | Feature (go-live readiness) — Canvas app v0.9.26 → v0.12.2: added `ManageUsers` + `CreateMeeting`, removed `alt_ManageDesks`/`Screen1`/`Screen2`, expanded data-source/list bindings, improved `Confirm` fallback/backup patch strategy, aligned app/manifest/package version strings, and reduced binding errors (`329 → 120`) |
@@ -41,7 +42,7 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
 
 ## What is in this repository
 
-- **Unpacked sources** (for code review/diffing) for the Power Apps Canvas app and Power Automate flows; also includes `src/solution.xml` (Power Platform solution manifest, corrected in v0.3.4 to reflect EHRM Training & Booking App identity and components).
+- **Unpacked sources** (for code review/diffing) for the Power Apps Canvas app and Power Automate flows; also includes `src/solution.xml` (Power Platform solution manifest, corrected in v0.3.4 to reflect 578 EHRM Training App identity and components).
 - **Documentation & runbooks**: `config/architecture/ARCHITECTURE.md`, `config/runbooks/ALM-RUNBOOK.md` (local-only; git-ignored; folder relocated to `archive/src/config/` as of v0.3.8), component-level READMEs under `src/`, and release notes under `docs/release-notes/`.
 - **VS Code workspace configuration**: task definitions for common PAC CLI operations (canvas pack/unpack, solution export/unpack), recommended extensions, editor settings.
 - **Scripts & hooks**: PowerShell dev-profile bootstrap (`Ensure-DevProfile.ps1`), Power Apps web helper (`powerapps-web.ps1`), workspace backup (`backupProject.ps1`), pre-commit/pre-push hooks.
@@ -53,7 +54,7 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
 
 - **Export artifacts** such as Solution `.zip` files and Canvas `.msapp` packages.
   - Solution `.zip` exports are stored locally under `dist/` and are git-ignored by design.
-  - **Exception:** Canvas `.msapp` packages are force-tracked via `.gitignore` `!*.msapp`, so the current release package (`src/powerApps/.msapp/v0.12.2_578EHRMTrainingApp.msapp`) *is* committed to the repo alongside its unpacked source.
+  - **Exception:** Canvas `.msapp` packages are force-tracked via `.gitignore` `!*.msapp`, so the current release package (`src/powerApps/.msapp/v1.1.20_578EHRMTrainingApp.msapp`) *is* committed to the repo alongside its unpacked source.
   - For releases, attach exports to a GitHub Release if you need distributable artifacts.
 - **Compressed archive files** (`.zip`, `.7z`, `.gz`, `.rar`, `.tar`, etc.) — broadly git-ignored as of v0.3.6 to prevent large binary exports from entering the repo.
 - **Spreadsheet and data list files** (`.csv`, `.xlsx`, `.xls`, `.ods`, `.tsv`, etc.) — broadly git-ignored as of v0.3.6 to prevent PII or sensitive VA data from being committed accidentally. Use `!path/to/file` negation entries in `.gitignore` to selectively expose sanitized public-facing files.

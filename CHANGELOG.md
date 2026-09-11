@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the **EHRM Training & Booking App** repository are documented in this file.
+All notable changes to the **578 EHRM Training App** repository are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for the **project-wide release version** (`MAJOR.MINOR.PATCH`).
 
@@ -16,6 +16,77 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ### Fixed
 - (Add fixes here before the next release.)
+
+---
+
+## [1.1.20] - 2026-09-11
+
+> **Significant Canvas-app reliability & usability release.** Canvas app v1.0.12 → v1.1.20 (internally consistent: `varRepoVersion`, `AppDescription`, and the `.zip` all read `1.1.20`). Project `VERSION` advances `1.0.13 → 1.1.20` to match the Canvas app (the interim 1.0.13 release-note stubs were never shipped). Full technical detail in the `src/powerApps/v1.1.20_*.md` analysis set.
+
+### Added
+
+- **`src/powerApps/v1.1.20_diffAnalysis.md`, `v1.1.20_changeSummary.md`, `v1.1.20_knownIssues.md`, `v1.1.20_recommendations.md`** — full v1.0.12 → v1.1.20 Canvas-app analysis set.
+- **Canvas app `Confirm`** — new `timer_selectBtnsThenNavigate` timer that verifies calendar/reservation/SuperUser/email success (`varAllOK`) before `Navigate(Success)`; new `btnPatch_debugSimplified` last-resort tier; per-submission `varSubmissionID` (GUID).
+- **Canvas app `ReleaseNotes` (Help)** — new `htmlText_userGuide` (10-step end-user Quick-Start guide) and `htmlText_releaseNotes` (admin full-changelog view), shown mutually exclusively based on `user_isAdmin`.
+- **Canvas app `Screen1`** — experimental (menu-unlinked) `Learning Lab Sessions` vs `MasterScheduleList` browse galleries (the Power BI tile is hidden).
+- **Canvas app data source** — references a new `MasterScheduleList.sessionActive_text` value (active-session flag consumed by the class picker; SharePoint list-schema extraction deferred to a future patch — see Notes).
+- **Connector** — a Microsoft Teams connection was added to the app as an intentional placeholder *(not yet wired to any formula; removed from `src/solution.xml` — see Notes)*.
+- **`src/powerApps/.local/`** — developer-only proposed-updates + future-enhancements roadmap *(git-ignored)*.
+- **`.github/dependabot.yml`** — weekly `github-actions` dependency updates for the pinned workflow actions.
+- **`README.md`** — banner image, a Contents table of contents, and an architecture-at-a-glance note; **`CHANGELOG.md`** — Keep-a-Changelog version compare links.
+
+### Changed
+
+- **`VERSION`** — `1.0.13 → 1.1.20`.
+- **Canvas app `Confirm`** — `btnSubmit` refactored from a monolithic inline submit into a `Select()`-chaining orchestrator; reservation writes reorganized into a tiered fallback cascade that always writes to **both** `'Desk Reservations'` and `backupList_DeskReservations`; controls renamed to `btnOutlook_*` / `btnPatch_*`; legacy `btnOldSubmit` retained but disabled.
+- **Canvas app `POCSUPERVISOR`** — class/scenario picker re-pointed from live `MasterScheduleList` / `'Learning Lab Sessions'` to the Hines-scoped collections `col_nationalEHRMLearningLabSessions` / `col_MasterSchedule`; Date/Time picker adds a `sessionActive_text` active-session filter; cascade `Reset()` on Role/Scenario change (Edit-form data-card churn is reordering only).
+- **Canvas app `Dashboard`** — `Timer3` → `timer_loadGlobalVariables`.
+- **Canvas app `App`** — `varRepoVersion` `"1.0.12" → "1.1.20"`; `Facility.Value = Text("Hines")` simplified to `= "Hines"`.
+- **`src/solution.xml`** — `<Version>` `1.0.12 → 1.1.20`; description refreshed (Microsoft Teams reference removed — not functional yet).
+- **`README.md`** — release badge `v1.0.12 → v1.1.20`; "Current versions" refreshed; `sessionActive_text` note.
+- **`docs/PROJECT_STATUS.md`** — status summary, Canvas component version, release-history row; corrected a stale `.msapp` filename reference.
+- **`src/powerApps/README.md`** — current release v1.1.20; documented the dual `.unpacked` layout (`layoutDefault/` + `layoutSourceCode/`); links to the four new docs; component version-history table.
+- **`src/sharePoint/README.md`** — added a deferred-follow-up note that the v1.1.20 app references a new `MasterScheduleList.sessionActive_text` column not yet in this extraction (KI-04); schema otherwise unchanged this cycle.
+- **`.github/copilot-instructions.md`** — added a "Local Python / Jupyter / Data Wrangler Setup" section (venv-on-local-disk rules, one-time setup steps, troubleshooting) for opening data files.
+- **`.vscode/settings.json`** — added `python.defaultInterpreterPath` pointing to the local venv `C:\Users\…\.venvs\578-ehrm-tms`.
+- **`.gitignore`** — reorganized/hardened: added Python venv & Jupyter ignores (`.venv/`, `venv/`, `.env/`, `.ipynb_checkpoints/`), `/temp/`, `/.temp/`, `/src/analytics/tms/**` (keeping `README.md` + `.url` shortcuts), and normalized local-folder / data-file ignore patterns.
+- **Unpack tooling** — `pac canvas unpack` now emits a dual layout under `src/powerApps/.unpacked/` (`layoutDefault/` classic + `layoutSourceCode/` + a `*.msapr` bundle).
+- **Project naming standardized** — human-facing references modernized to **578 EHRM Training App** across READMEs, `docs/`, `.github/`, `src/solution.xml` display strings, VS Code workspace/task labels, and the `v1.1.20_*` docs. Deliberately unchanged: the va.ghe.com repo name (`578-EHRM-TrainingSchedulerApp`), the local workspace folder name, the public mirror URL (`578-EHRM-TrainingBookingApp`), and the Dataverse solution identity (`EHRMTrainingBooking`, `vah_*` schema names).
+- **`.github/CODEOWNERS`** — re-enabled (`* @KCoderVA` + per-path rules); previously fully commented out.
+- **`src/scripts/hooks/pre-commit.ps1`, `pre-push.ps1`** — re-enabled from disabled stubs; pre-commit hard-blocks true secrets/`dist/` artifacts and warns (non-blocking) on the GUIDs/URLs/VA-emails the repo intentionally publishes; pre-push checks VERSION↔CHANGELOG↔SemVer consistency.
+- **`.github/workflows/version-bump.yml`** — removed hardcoded stale component baselines (Canvas v0.0.2 / AppUserList v0.1.0) from the generated CHANGELOG/commit/release templates so automated notes are no longer wrong.
+- **`.vscode/extensions.json` + workspace** — added `ms-python.python` to recommended extensions.
+- **`.gitattributes`** — `*.py`/`*.sh` → `eol=lf`; `*.msapr`/`*.pdf` → `binary`; `**/.unpacked/** linguist-generated`.
+- **`src/scripts/pwsh/backupProject.ps1`** — anchored the project root to `$PSScriptRoot` (was fragile `$PWD` heuristics); generalized the machine-specific path comment.
+- **License headers** — standardized `Copyright 2025` → `Copyright 2025-2026` across the moved `.github` templates, `src/scripts/pwsh/powerapps-web.ps1`, and `src/solution.xml`.
+- **Build-artifact naming** — the local `dist/release` Canvas package name modernized `EHRMTrainingBookingApp.msapp` → `578EHRMTrainingApp.msapp` in `tasks.json`, the workspace file, and `powerapps-web.ps1`.
+
+### Fixed
+
+- **Canvas app `Confirm`** — confirmation-email `Cc` variable typo `varAttendees` → `var_Attendees` (CC recipients now resolve); `Cc` expanded to include the submitter and optional attendees.
+- **`src/scripts/pwsh/powerapps-web.ps1`** — `pac canvas pack`/open/status now source from `src/powerApps/.unpacked/layoutDefault` (the dual-layout unpack made the old `.unpacked` root ambiguous); corrected the help-text command path from the stale `.\docs\local\` to `.\src\scripts\pwsh\`.
+- **`.vscode/tasks.json` + workspace** — corrected the `pac canvas pack` `--sources` path to `src/powerApps/.unpacked/layoutDefault` (dual-layout).
+- **`.github/workflows/powerplatform-ci.yml`** — the Canvas-app validation steps now discover `CanvasManifest.json` recursively under `src/powerApps/.unpacked/` (was a fixed flat path that broke under the new `layoutDefault/` structure).
+- **`.github/PULL_REQUEST_TEMPLATE.md`** — moved from `.github/ISSUE_TEMPLATE/pull_request-TEMPLATE.md` so GitHub actually applies it as the PR template.
+- **`.github/commit_message-TEMPLATE.md`, `.github/release_notes-TEMPLATE.md`** — moved out of `.github/ISSUE_TEMPLATE/` (they are not issue forms and were being mis-rendered as such).
+- **`.github/ISSUE_TEMPLATE/bug_report-ISSUE_TEMPLATE.md`** — fixed double `.md.md` extension.
+- **`docs/CONTRIBUTORS.md`** — fixed two broken relative links (`.github/CONTRIBUTING.md` → `../.github/CONTRIBUTING.md`; `CHANGELOG.md` → `../CHANGELOG.md`).
+- **`src/analytics/README.md`** — removed a documented `sql/procedures/` folder that does not exist.
+- **`.editorconfig`** — added `end_of_line = lf` overrides for `*.md`, `*.json`, `*.{yaml,yml}` to match `.gitattributes` (prevents editor-vs-git line-ending churn).
+- **`.github/copilot-instructions.md`** — corrected the enterprise-repo migration line to past tense (noting the GitHub mirror), the license header copyright year `2025` → `2025-2026`, and the template references to their new paths (`.github/PULL_REQUEST_TEMPLATE.md`, `.github/commit_message-TEMPLATE.md`, `.github/release_notes-TEMPLATE.md`).
+
+### Removed
+
+- **`docs/release-notes/v1.0.13_{commitMessage,pullRequest,releaseNotes}.md`** — the never-shipped interim v1.0.13 drafts were renamed to `v1.1.20_*` and populated.
+
+### Notes
+
+- Release type: **Feature / Minor** — a significant Canvas-app update (`1.0 → 1.1`); no new/removed screens.
+- Canvas app component: **v1.0.12 → v1.1.20**, internally consistent (`varRepoVersion`, `AppDescription`, `.zip` all `1.1.20`).
+- **Open follow-up (next patch, v1.1.21):** `CanvasManifest.BindingErrorCount` regressed `0 → 24`, all on the `Success` screen (it still references the retired flags `varMainOK` / `varBackupOK` / `varBackupSimpleOK`); to be fixed in a follow-up patch — see `src/powerApps/v1.1.20_knownIssues.md` (KI-02).
+- **Packaging:** the tracked `.msapp` package was renamed to `v1.1.20_578EHRMTrainingApp.msapp` to match the release (KI-01 resolved; the `.msapp` binary content was not modified — only the filename prefix).
+- **By design:** the Microsoft Teams connection is an intentional placeholder (not yet wired up; removed from `src/solution.xml`); the hard-coded PM/admin email addresses are intentional for resilience (KI-03 / KI-05 / KI-06).
+- **Admin prerequisite / deferred:** the app references `MasterScheduleList.sessionActive_text` — ensure the column exists/is populated on the live site (blank = active); the SharePoint list-schema extraction under `src/sharePoint/` will be committed in a future patch (KI-04).
 
 ---
 
@@ -651,3 +722,25 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 ### Notes
 
 - Unpacked artifacts may include environment-specific IDs/URLs/emails; sanitize before broad sharing.
+
+<!-- Version compare links (Keep a Changelog). Resolve once the matching vX.Y.Z tags exist on origin. -->
+[Unreleased]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v1.1.20...HEAD
+[1.1.20]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v1.0.12...v1.1.20
+[1.0.12]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.12.3...v1.0.12
+[0.12.3]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.12.2...v0.12.3
+[0.12.2]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.9.26...v0.12.2
+[0.9.26]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.8.16...v0.9.26
+[0.8.16]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.3.8...v0.8.16
+[0.3.8]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.3.7...v0.3.8
+[0.3.7]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.3.5...v0.3.7
+[0.3.5]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.3.4...v0.3.5
+[0.3.4]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.3.2...v0.3.4
+[0.3.2]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.3.1...v0.3.2
+[0.3.1]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.3.0...v0.3.1
+[0.3.0]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.2.1...v0.3.0
+[0.2.1]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.2.0...v0.2.1
+[0.2.0]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.1.1...v0.2.0
+[0.1.1]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.1.0...v0.1.1
+[0.1.0]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.0.2...v0.1.0
+[0.0.2]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/compare/v0.0.1...v0.0.2
+[0.0.1]: https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp/releases/tag/v0.0.1

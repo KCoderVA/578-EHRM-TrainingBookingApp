@@ -11,5 +11,14 @@ trim_trailing_whitespace = true
 [*.ps1]
 indent_size = 2
 
+# Line-ending overrides to match .gitattributes (which normalizes these to LF).
+# Without these, editors would save CRLF while git stores LF -> spurious churn.
 [*.md]
+end_of_line = lf
 max_line_length = off
+
+[*.json]
+end_of_line = lf
+
+[*.{yaml,yml}]
+end_of_line = lf

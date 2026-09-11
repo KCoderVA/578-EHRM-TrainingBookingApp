@@ -1,0 +1,656 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  NewEditDesk:
+    Properties:
+      Fill: =RGBA(236, 236, 236, 1)
+      Height: =1080 / 1.5
+      OnVisible: |-
+        =UpdateContext({prevSelected:false});
+        UpdateContext({upSelected:true});
+      Width: =1920 / 1.5
+    Children:
+      - htmlBackground:
+          Control: HtmlViewer@2.1.0
+          Properties:
+            DisabledBorderColor: =RGBA(56, 56, 56, 1)
+            Font: =Font.'Open Sans'
+            Height: =Parent.Height - Self.Y
+            HtmlText: ="<div style='border:1px gray;border-radius:10%;height:619px;width:100%;background-color:#FCFCFC'></div>"
+            Size: =24
+            Width: =ctnHeader.Width
+            Y: =ctnHeader.Y + ctnHeader.Height
+      - ctnDetails:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Height: =htmlBackground.Height - 10
+            PaddingBottom: =5
+            PaddingLeft: =5
+            PaddingRight: =5
+            PaddingTop: =5
+            Width: =htmlBackground.Width - (Self.X * 2)
+            X: =htmlBackground.X + 25
+            Y: =htmlBackground.Y + 10
+          Children:
+            - chkbox_SmartBoard:
+                Control: Classic/CheckBox@2.1.0
+                Properties:
+                  Default: |+
+                    =If(
+                        varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.SmartboardEquipped_boolean),
+                        varManageSelectedDesk.SmartboardEquipped_boolean,
+                        varDeskMode <> "Edit",
+                        false
+                    )
+
+                  DisplayMode: =DisplayMode.View
+                  Height: =chkbox_VTel.Height
+                  OnSelect: =
+                  Size: =16
+                  Text: ="Has Smartboard?"
+                  Width: =chkbox_VTel.Width
+                  X: =chkbox_VTel.X + chkbox_VTel.Width
+                  Y: =chkbox_VTel.Y
+            - chkbox_VTel:
+                Control: Classic/CheckBox@2.1.0
+                Properties:
+                  Default: |+
+                    =If(
+                        varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.VtelEquipped_boolean),
+                        varManageSelectedDesk.VtelEquipped_boolean,
+                        varDeskMode <> "Edit",
+                        false
+                    )
+
+                  DisplayMode: =DisplayMode.View
+                  Height: =chkbox_Projector.Height
+                  OnSelect: =
+                  Size: =16
+                  Text: |-
+                    ="Has
+                    VTel?"
+                  Width: =chkbox_Projector.Width
+                  X: =chkbox_Projector.X + chkbox_Projector.Width
+                  Y: =chkbox_Projector.Y
+            - chkbox_Projector:
+                Control: Classic/CheckBox@2.1.0
+                Properties:
+                  Default: |+
+                    =If(
+                        varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.ProjectorEquipped_boolean),
+                        varManageSelectedDesk.ProjectorEquipped_boolean,
+                        varDeskMode <> "Edit",
+                        false
+                    )
+                  DisplayMode: =DisplayMode.View
+                  Height: =59
+                  OnSelect: =
+                  Size: =16
+                  Text: ="Has Projector?"
+                  Width: =196
+                  X: =lbl_ItemType.X
+                  Y: =toggle_ActiveBoolean.Y + toggle_ActiveBoolean.Height + Parent.PaddingTop
+            - toggle_ActiveBoolean:
+                Control: Classic/Toggle@2.1.0
+                Properties:
+                  AccessibleLabel: ="Active or Inactive Toggle"
+                  Default: =varManageSelectedDesk.Active_boolean
+                  FalseFill: =Color.Red //RGBA(184, 0, 0, 1)
+                  FalseText: ="INACTIVE"
+                  FontWeight: =FontWeight.Bold
+                  Height: =lbl_ItemType.Height
+                  OnChange: |-
+                    =//If(
+                        //varManageSelectedDesk.Active_boolean = true && varManageSelectedDesk.Active_text = "true",
+                        Patch(
+                            Desks,
+                            LookUp(Desks, ItemID_title = varManageSelectedDesk.ItemID_title),
+                            {
+                                Active_boolean: Self.Value,
+                                Active_text: Text(Self.Value)
+                            }
+                        )
+                        //varManageSelectedDesk.Active_boolean = false && varManageSelectedDesk.Active_text = "false",
+                        //Patch(
+                        //    Desks,
+                        //    LookUp(Desks, ItemID_title = varManageSelectedDesk.ItemID_title),
+                        //    {
+                        //        Active_boolean: Self.Value,
+                        //        Active_text: Text(Self.Value)
+                        //    }
+                        //),
+                  Size: =26
+                  TrueFill: =Color.LightGreen //RGBA(54, 176, 75, 1)
+                  TrueText: ="ACTIVE"
+                  Width: =(lbl_ItemType.Width + dd_ItemType.Width) / 2.4
+                  X: =((lbl_ItemType.Width + dd_ItemType.Width) / 2) - (Self.Width / 2) + lbl_ItemType.X
+                  Y: =lbl_ItemType.Y + lbl_ItemType.Height + Parent.PaddingTop
+            - dd_ItemType:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  Default: |-
+                    =If(
+                        varDeskMode = "Edit",
+                        varManageSelectedDesk.ItemType_choice.Value,
+                        Blank()
+                    )
+                  Height: =lbl_ItemType.Height
+                  Items: |-
+                    =Distinct(
+                        Desks,
+                        ItemType_choice.Value)
+                  Items.Value: =Value
+                  Width: |+
+                    =Parent.Width - Self.X - 10
+                  X: =lbl_ItemType.X + lbl_ItemType.Width
+                  Y: =lbl_ItemType.Y
+            - lbl_ItemType:
+                Control: Label@2.5.1
+                Properties:
+                  Height: =lbl_ItemTitle.Height
+                  Italic: =true
+                  Size: =18
+                  Text: ="Item Type:"
+                  Width: =lbl_ItemTitle.Width
+                  X: =input_ItemTitle.X + input_ItemTitle.Width
+                  Y: =input_ItemTitle.Y
+            - input_Description:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  AccessibleLabel: ="Desk Description Input"
+                  BorderColor: =RGBA(179, 179, 179, 1)
+                  BorderThickness: =1
+                  Default: =If(varDeskMode = "Edit",varManageSelectedDesk.CombinedLocationDetails_multilinePlainText,Blank())
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =Parent.Height - Self.Y - 10
+                  Mode: =TextMode.MultiLine
+                  Size: =20
+                  Width: =lbl_ItemTitle.Width + input_ItemTitle.Width - Self.X
+                  X: =lbl_Description.X + 10
+                  Y: =lbl_Description.Y + lbl_Description.Height
+            - lbl_Description:
+                Control: Label@2.5.1
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  Height: =lbl_Name_division.Height
+                  Italic: =true
+                  Size: =18
+                  Text: ="Description"
+                  Width: =input_Description.Width
+                  X: =lbl_Name_division.X
+                  Y: =lbl_Name_division.Y + lbl_Name_division.Height + Parent.PaddingTop
+            - input_Name_division:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  AccessibleLabel: ="Floor Input"
+                  BorderColor: =RGBA(179, 179, 179, 1)
+                  BorderThickness: =1
+                  Default: |-
+                    =If(
+                        varDeskMode = "Edit",
+                        varManageSelectedDesk.DivisionName_choice.Value,
+                        Blank()
+                    )
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =lbl_Name_division.Height
+                  Size: =20
+                  Width: =input_ItemTitle.Width
+                  X: =lbl_Name_division.X + lbl_Name_division.Width
+                  Y: =lbl_Name_division.Y
+            - lbl_Name_division:
+                Control: Label@2.5.1
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  Height: =lbl_Number_building.Height
+                  Italic: =true
+                  Size: =18
+                  Text: ="Division:"
+                  Width: =lbl_Number_building.Width
+                  X: =lbl_Number_building.X
+                  Y: =lbl_Number_building.Y + lbl_Number_building.Height + Parent.PaddingTop
+            - iconViewMap_2:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  AccessibleLabel: ="View Map"
+                  Color: =RGBA(128, 128, 128, 1)
+                  Height: =40
+                  Icon: =Icon.View
+                  OnSelect: =UpdateContext({showMap:true})
+                  TabIndex: =7
+                  Width: =40
+                  X: =input_Number_building.X + input_Number_building.Width
+                  Y: =input_Number_building.Y
+            - input_Number_building:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  AccessibleLabel: ="Floor Input"
+                  BorderColor: =RGBA(179, 179, 179, 1)
+                  BorderThickness: =1
+                  Default: |-
+                    =If(
+                        varDeskMode = "Edit",
+                        varManageSelectedDesk.BuldingNumber_number,
+                        Blank()
+                    )
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =lbl_Number_building.Height
+                  Size: =20
+                  Width: =input_ItemTitle.Width - iconViewMap_2.Width
+                  X: =lbl_Number_building.X + lbl_Number_building.Width
+                  Y: =lbl_Number_building.Y
+            - lbl_Number_building:
+                Control: Label@2.5.1
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  Height: =lbl_Number_floor.Height
+                  Italic: =true
+                  Size: =18
+                  Text: |-
+                    ="Building #:"
+                  Width: =lbl_Number_floor.Width
+                  X: =lbl_Number_floor.X
+                  Y: =lbl_Number_floor.Y + lbl_Number_floor.Height + Parent.PaddingTop
+            - input_Number_floor:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  AccessibleLabel: ="Floor Input"
+                  BorderColor: =RGBA(179, 179, 179, 1)
+                  BorderThickness: =1
+                  Default: |-
+                    =If(
+                        varDeskMode = "Edit",
+                        varManageSelectedDesk.FloorNumber_number,
+                        Blank()
+                    )
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =lbl_Number_floor.Height
+                  Size: =20
+                  Width: =input_ItemTitle.Width
+                  X: =lbl_Number_floor.X + lbl_Number_floor.Width
+                  Y: =lbl_Number_floor.Y
+            - lbl_Number_floor:
+                Control: Label@2.5.1
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  Height: =lbl_Number_room.Height
+                  Italic: =true
+                  Size: =18
+                  Text: |-
+                    ="Floor #:"
+                  Width: =lbl_Number_room.Width
+                  X: =lbl_Number_room.X
+                  Y: =lbl_Number_room.Y + lbl_Number_room.Height + Parent.PaddingTop
+            - icon_Number_room:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  AccessibleLabel: ="View Map"
+                  Color: =RGBA(128, 128, 128, 1)
+                  Height: =40
+                  Icon: =Icon.View
+                  OnSelect: =UpdateContext({showRoom:true})
+                  TabIndex: =7
+                  Width: =40
+                  X: =input_Number_room.X + input_Number_room.Width
+                  Y: =input_Number_room.Y
+            - input_Number_room:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  AccessibleLabel: ="Floor Input"
+                  BorderColor: =RGBA(179, 179, 179, 1)
+                  BorderThickness: =1
+                  Default: |-
+                    =If(
+                        varDeskMode = "Edit",
+                        varManageSelectedDesk.RoomNumber_number,
+                        Blank()
+                    )
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =lbl_Number_room.Height
+                  Size: =20
+                  Width: =input_ItemTitle.Width - icon_Number_room.Width
+                  X: =lbl_Number_room.X + lbl_Number_room.Width
+                  Y: =lbl_Number_room.Y
+            - lbl_Number_room:
+                Control: Label@2.5.1
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  Height: =lbl_ItemTitle.Height
+                  Italic: =true
+                  Size: =18
+                  Text: |-
+                    ="Room #:"
+                  Width: =lbl_Number_desk.Width
+                  X: =lbl_Number_desk.X
+                  Y: =lbl_Number_desk.Y + lbl_Number_desk.Height + Parent.PaddingTop
+            - icon_Number_desk:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  AccessibleLabel: ="View Map"
+                  Color: =RGBA(128, 128, 128, 1)
+                  Height: =40
+                  Icon: =Icon.View
+                  OnSelect: =UpdateContext({showLocation:true})
+                  TabIndex: =7
+                  Width: =40
+                  X: =input_Number_desk.X + input_Number_desk.Width
+                  Y: =input_Number_desk.Y
+            - input_Number_desk:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  AccessibleLabel: ="Floor Input"
+                  BorderColor: =RGBA(179, 179, 179, 1)
+                  BorderThickness: =1
+                  Default: |-
+                    =If(
+                        varDeskMode = "Edit",
+                        varManageSelectedDesk.DeskNumber_number,
+                        Blank()
+                    )
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =lbl_Number_desk.Height
+                  Size: =20
+                  Width: =input_ItemTitle.Width - icon_Number_desk.Width
+                  X: =lbl_Number_desk.X + lbl_Number_desk.Width
+                  Y: =lbl_Number_desk.Y
+            - lbl_Number_desk:
+                Control: Label@2.5.1
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  Height: =lbl_ItemTitle.Height
+                  Italic: =true
+                  Size: =18
+                  Text: |-
+                    ="Desk #:"
+                  Width: =lbl_ItemTitle.Width
+                  X: =lbl_ItemTitle.X
+                  Y: =lbl_ItemTitle.Y + lbl_ItemTitle.Height + Parent.PaddingTop
+            - input_ItemTitle:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  AccessibleLabel: ="Desk Name Input"
+                  BorderColor: =RGBA(179, 179, 179, 1)
+                  BorderThickness: =1
+                  Default: |-
+                    =If(
+                        varDeskMode = "Edit",
+                        varManageSelectedDesk.Description_multilinePlainText, //varManageSelectedDesk.ItemID_title,
+                        Blank()
+                    )
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =lbl_ItemTitle.Height
+                  Size: =20
+                  Width: =(Parent.Width / 2) - Self.X
+                  X: =lbl_ItemTitle.X + lbl_ItemTitle.Width
+                  Y: =lbl_ItemTitle.Y
+            - lbl_ItemTitle:
+                Control: Label@2.5.1
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  Height: =40
+                  Italic: =true
+                  Size: =18
+                  Text: ="Name:"
+                  Width: =125
+      - ctnImage_map:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =Parent.Height - Self.Y
+            Visible: =showMap
+            Width: =Parent.Width
+            Y: =ctnHeader.Y + ctnHeader.Height
+          Children:
+            - rectBackground_map:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(116, 116, 116, 0.85)
+                  Height: =Parent.Height
+                  Width: =Parent.Width
+                  X: =Parent.X
+            - imgMap:
+                Control: Image@2.2.3
+                Properties:
+                  Height: =rectBackground_map.Height
+                  Image: |-
+                    =If(
+                        IsBlankOrError(varManageSelectedDesk.LocationMap_image.Full),
+                        Spinner,
+                        varManageSelectedDesk.LocationMap_image
+                    )
+                  Width: =rectBackground_map.Width
+                  X: =rectBackground_map.X
+                  Y: =rectBackground_map.Y
+            - iconClose_map:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  AccessibleLabel: ="Close Room"
+                  BorderColor: =Self.Color
+                  BorderThickness: =5
+                  Color: =App.Theme.Colors.Lighter70
+                  Fill: =App.Theme.Colors.Darker20
+                  Height: =75
+                  HoverBorderColor: =ColorFade(Self.BorderColor, -50%)
+                  HoverColor: =ColorFade(Self.Color, -50%)
+                  HoverFill: =ColorFade(Self.Color, 50%)
+                  Icon: =Icon.CancelBadge
+                  OnSelect: =UpdateContext({showMap:!showMap})
+                  PaddingBottom: =10
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =10
+                  TabIndex: =11
+                  Width: |
+                    =75
+                  X: =Parent.Width - Self.Width - 10
+                  Y: =10
+      - ctnImage_room:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =Parent.Height - Self.Y
+            Visible: =showRoom
+            Width: =Parent.Width
+            Y: =ctnHeader.Y + ctnHeader.Height
+          Children:
+            - rectBackground_room:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(116, 116, 116, 0.85)
+                  Height: =Parent.Height
+                  Width: =Parent.Width
+                  X: =Parent.X
+            - imgRoom:
+                Control: Image@2.2.3
+                Properties:
+                  Height: =rectBackground_room.Height
+                  Image: |+
+                    =If(
+                        IsBlankOrError(varManageSelectedDesk.RoomPhoto_image),
+                        Spinner,
+                        varManageSelectedDesk.RoomPhoto_image.Full
+                    )
+
+                  Width: =rectBackground_room.Width
+                  X: =rectBackground_room.X
+                  Y: =rectBackground_room.Y
+            - iconClose_room:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  AccessibleLabel: ="Close Room"
+                  BorderColor: =Self.Color
+                  BorderThickness: =5
+                  Color: =App.Theme.Colors.Lighter70
+                  Fill: =App.Theme.Colors.Darker20
+                  Height: =75
+                  HoverBorderColor: =ColorFade(Self.BorderColor, -50%)
+                  HoverColor: =ColorFade(Self.Color, -50%)
+                  HoverFill: =ColorFade(Self.Color, 50%)
+                  Icon: =Icon.CancelBadge
+                  OnSelect: =UpdateContext({showRoom:!showRoom})
+                  PaddingBottom: =10
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =10
+                  TabIndex: =11
+                  Width: |
+                    =75
+                  X: =Parent.Width - Self.Width - 10
+                  Y: =10
+      - ctnImage_desk:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =Parent.Height - Self.Y
+            Visible: =showLocation
+            Width: =Parent.Width
+            Y: =ctnHeader.Y + ctnHeader.Height
+          Children:
+            - rectBackground_desk:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(116, 116, 116, 0.85)
+                  Height: =Parent.Height
+                  Visible: =true //showLocation
+                  Width: =Parent.Width
+                  X: =Parent.X
+            - imgDesk:
+                Control: Image@2.2.3
+                Properties:
+                  Height: =rectBackground_desk.Height
+                  Image: |+
+                    =If(
+                        IsBlankOrError(varManageSelectedDesk.DeskPhoto_image),
+                        Spinner,
+                        varManageSelectedDesk.DeskPhoto_image.Full
+                    )
+
+                  Visible: =true //showLocation
+                  Width: =rectBackground_desk.Width
+                  X: =rectBackground_desk.X
+                  Y: =rectBackground_desk.Y
+            - iconClose_desk:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  AccessibleLabel: ="Close Room"
+                  BorderColor: =Self.Color
+                  BorderThickness: =5
+                  Color: =App.Theme.Colors.Lighter70
+                  Fill: =App.Theme.Colors.Darker20
+                  Height: =75
+                  HoverBorderColor: =ColorFade(Self.BorderColor, -50%)
+                  HoverColor: =ColorFade(Self.Color, -50%)
+                  HoverFill: =ColorFade(Self.Color, 50%)
+                  Icon: =Icon.CancelBadge
+                  OnSelect: =UpdateContext({showLocation:!showLocation})
+                  PaddingBottom: =10
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =10
+                  TabIndex: =11
+                  Visible: =true //showLocation
+                  Width: |+
+                    =75
+                  X: =Parent.Width - Self.Width - 10
+                  Y: =10
+      - ctnHeader:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =Parent.Height / 8
+            Width: =Parent.Width
+          Children:
+            - rectBackground_header:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(135, 78, 181, 0.65)
+                  Height: =imgBackground_header.Height
+                  Visible: =!imgBackground_header.Visible
+                  Width: =imgBackground_header.Width
+                  X: =imgBackground_header.X
+                  Y: =imgBackground_header.Y
+            - imgBackground_header:
+                Control: Image@2.2.3
+                Properties:
+                  Height: =Parent.Height
+                  Image: =abstractBackground
+                  ImagePosition: =ImagePosition.Fill
+                  Visible: |-
+                    =If(
+                        IsBlankOrError(imgBackground_header.Image),
+                        false,
+                        true
+                    )
+                  Width: =Parent.Width
+            - lblTitle_header:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  Color: =RGBA(255, 255, 255, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =Parent.Height / 2
+                  Size: =28
+                  Text: ="Editing '" & varManageSelectedDesk.Description_multilinePlainText & "'"
+                  Width: =rectBackground_header.Width
+                  X: |+
+                    =0
+            - ctnHeaderButtons:
+                Control: GroupContainer@1.5.0
+                Variant: ManualLayout
+                Properties:
+                  DropShadow: =DropShadow.None
+                  Height: =btnUpdate_editDesk.Height
+                  Width: =btnBack_editDesk.Width + btnUpdate_editDesk.Width + 50
+                  X: =(Parent.Width / 2) - (Self.Width / 2)
+                  Y: =lblTitle_header.Y + lblTitle_header.Height
+                Children:
+                  - btnBack_editDesk:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Fill: =RGBA(128, 128, 128, 1)
+                        Height: =40
+                        HoverFill: =ColorFade(Self.Fill, -20%)
+                        OnSelect: |-
+                          =Reset(input_ItemTitle);
+                          Reset(input_Number_desk);
+                          Reset(input_Number_room);
+                          Reset(input_Number_floor);
+                          Reset(input_Number_building);
+                          Reset(input_Name_division);
+                          Reset(input_Description);
+                          Reset(dd_ItemType);
+                          Reset(toggle_ActiveBoolean);
+                          Reset(chkbox_Projector);
+                          Reset(chkbox_VTel);
+                          Reset(chkbox_SmartBoard);
+
+
+
+                          Navigate(ManageDesks);
+                        Text: ="Back"
+                        Width: =btnUpdate_editDesk.Width
+                        X: =Parent.Width - Self.Width
+                  - btnUpdate_editDesk:
+                      Control: Classic/Button@2.2.0
+                      Properties:
+                        Fill: =RGBA(135, 78, 181, 1)
+                        Height: =40
+                        HoverFill: =ColorFade(Self.Fill, -20%)
+                        OnSelect: "=Set(\n    submitItem,\n    Patch(\n        Desks,\n        Coalesce(\n            varManageSelectedDesk,\n            Defaults(Desks)\n        ),\n        {\n            ItemID_title: input_ItemTitle.Text,\n            ItemType_choice: dd_ItemType.Selected,\n            Active_boolean: toggle_ActiveBoolean.Value,\n            Active_text: Text(toggle_ActiveBoolean.Value),\n            DeskName_text: \"Desk \" & input_Number_desk.Text,\n            DeskNumber_number: Value(input_Number_desk.Text),\n            RoomNumber_number: Value(input_Number_desk.Text),\n            FloorNumber_number: Value(input_Number_floor.Text),\n            //BuildingNumber_number: Value(input_Number_building.Text),\n            DivisionName_text: input_Name_division.Text,\n            CombinedLocationDetails_multilinePlainText:\n                (\n                    \"Desk \" & Value(input_Number_desk.Text) & \",\"\n                    & \"Room \" & Value(input_Number_desk.Text) & \",\"\n                    & \"Floor \" & Value(input_Number_floor.Text) & \",\"\n                    //& \"Building \" & Value(input_Number_building.Text) & \",\"\n                    & \"Division \" & input_Name_division.Text & \",\"\n                ),\n            Description_multilinePlainText: input_Description.Text,\n            \n            ProjectorEquipped_boolean: chkbox_Projector.Value,\n            ProjectorEquipped_text: chkbox_Projector.Value,\n            VtelEquipped_boolean: chkbox_VTel.Value,\n            VtelEquipped_text: chkbox_VTel.Value,\n            SmartboardEquipped_boolean: chkbox_SmartBoard.Value,\n            SmartboardEquipped_text: chkbox_SmartBoard.Value\n\n\n            //'Projector/TV':If(chkbox_Projector.Value = true,\"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/vtel.png\",Blank()),\n            //VTel: If(chkbox_VTel.Value = true, \"https://dvagov.sharepoint.com/sites/vhaaugroom/SiteAssets/images/projector.png\",Blank()),\n            //'Smart Board': If(chkbox_SmartBoard.Value = true,\"https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/smartboard.png\",Blank())\n        }\n    )\n);\nIf(\n    IsBlankOrError(submitItem),\n    Notify(\n        \"Something went wrong. Your item has not been submitted.\" & Last(Errors(Desks)).Message,\n        NotificationType.Error,\n        10000\n    ),\n    Notify(\n        \"Your item has been submitted. (ID: \" & submitItem.ID & \")\",\n        NotificationType.Success,\n        5000\n    );\n    Set(\n        currentItem,\n        submitItem\n    )\n);\nReset(input_Number_desk);\nReset(input_ItemTitle);\nReset(toggle_ActiveBoolean);\nReset(input_Description);\nNavigate(ManageDesks)\n"
+                        Text: ="Update"
+                        Width: =225

@@ -1,0 +1,212 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+ComponentDefinitions:
+  Tabs:
+    DefinitionType: CanvasComponent
+    CustomProperties:
+      HomePage:
+        PropertyKind: Input
+        DisplayName: HomePage
+        Description: The Home Page URL
+        DataType: Screen
+        Default: =App.ActiveScreen
+      Items:
+        PropertyKind: Input
+        DisplayName: Items
+        Description: Items for the tabs
+        DataType: Table
+        Default: |-
+          =colMenu
+          /*Table(
+              {
+                  Name: "Home",
+                  Icon: Icon.DetailList,
+                  Page: App.ActiveScreen,
+                  Visible:true
+              },
+              {
+                  Name: "Items",
+                  Icon: Icon.Bookmark,
+                  Page: App.ActiveScreen,
+                  Visible:true
+              },
+              {
+                  Name: "Desks",
+                  Icon: Icon.ComputerDesktop,
+                  Page: App.ActiveScreen,
+                  Visible:true
+              },
+              {
+                  Name: "Users",
+                  Icon: Icon.People,
+                  Page: App.ActiveScreen,
+                  Visible:true
+              },
+              {
+                  Name: "New",
+                  Icon: Icon.Add,
+                  Page: App.ActiveScreen,
+                  Visible:true
+              }
+          )*/
+    Properties:
+      Height: =120
+      Width: =608
+    Children:
+      - Gallery4:
+          Control: Gallery@2.15.0
+          Variant: Horizontal
+          Properties:
+            AccessibleLabel: ="Footer tabs"
+            BorderColor: =RGBA(32, 54, 71, 1)
+            DelayItemLoading: =false
+            Fill: |-
+              =If(
+                  App.ActiveScreen.Name = "Dashboard",
+                  RGBA(0, 63, 114, 0.7),
+                  App.ActiveScreen.Name <> "Dashboard",
+                  RGBA(0, 0, 0, 0)
+              )
+            FocusedBorderThickness: =0
+            Height: =Parent.Height - (Self.Y * 2)
+            Items: =Tabs.Items
+            LoadingSpinner: =LoadingSpinner.None
+            LoadingSpinnerColor: =Gallery4.BorderColor
+            OnSelect: =Navigate(ThisItem.Page)
+            ShowScrollbar: =false
+            TabIndex: =1
+            TemplatePadding: =1
+            TemplateSize: |-
+              =If(
+                  !IsBlankOrError(CountRows(Tabs.Items)),
+                      Tabs.Width / CountRows(Tabs.Items),
+                  IsBlankOrError(CountRows(Tabs.Items)),
+                      Parent.Width / 6,
+                  101
+              )
+              /*
+              If(
+                  !IsBlankOrError(CountRows(Tabs.Items)),
+                      Tabs.Width / CountRows(Tabs.Items),
+                  IsBlankOrError(CountRows(Tabs.Items)),
+                      Parent.Width / 6,
+                  //!IsBlankOrError(CountRows(colMenu),
+                  //    Tabs.Width / CountRows(colMenu)),
+                  101
+              )
+              */
+            Width: =Tabs.Width
+            Y: =Rectangle1.Height + Rectangle1.Y
+          Children:
+            - Label10:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =LayoutAlignItems.Center
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Color: |-
+                    =//RGBA(0, 0, 0, 1)
+                    If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        RGBA(255, 255, 255, 1),
+                        RGBA(0, 0, 0, 1)
+                    )
+                  FocusedBorderColor: =Label10.BorderColor
+                  Font: =Font.'Open Sans'
+                  Height: =46
+                  HoverBorderColor: =Label10.BorderColor
+                  HoverColor: =Label10.Color
+                  HoverFill: =Label10.Fill
+                  OnSelect: =Select(Parent);Navigate(ThisItem.Page)
+                  PressedBorderColor: =Label10.BorderColor
+                  PressedColor: =Label10.Color
+                  PressedFill: =Label10.Fill
+                  Size: =16
+                  Text: =ThisItem.Name
+                  Visible: =ThisItem.Visible
+                  Width: =Parent.TemplateWidth
+                  X: =(Parent.TemplateWidth / 2) - (Self.Width / 2)
+                  Y: =Parent.TemplateHeight - Self.Height
+            - Icon10:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  BorderColor: =RGBA(32, 54, 71, 1)
+                  Color: |-
+                    =//RGBA(0, 0, 0, 1)
+                    If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        RGBA(255, 255, 255, 1),
+                        RGBA(0, 0, 0, 1)
+                    )
+                  DisabledFill: =Icon10.Fill
+                  FocusedBorderColor: =Icon10.BorderColor
+                  Height: =60
+                  HoverBorderColor: =ColorFade(Icon10.BorderColor, 20%)
+                  HoverColor: =ColorFade(Icon10.Color, 20%)
+                  HoverFill: =Icon10.Fill
+                  Icon: =ThisItem.Icon
+                  OnSelect: =Select(Parent);Navigate(ThisItem.Page)
+                  PressedBorderColor: =ColorFade(Icon10.BorderColor, -20%)
+                  PressedColor: =ColorFade(Icon10.Color, -20%)
+                  PressedFill: =Icon10.Fill
+                  Visible: =ThisItem.Visible
+                  Width: =60
+                  X: =(Parent.TemplateWidth / 2) - (Self.Width / 2)
+                  Y: =2
+            - Button8:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  AutoDisableOnSelect: =false
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  BorderThickness: =6
+                  Fill: =RGBA(255, 255, 255, 0)
+                  Height: =Parent.TemplateHeight - 10
+                  HoverBorderColor: |-
+                    =If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        Color.White,
+                        App.ActiveScreen.Name <> "Dashboard",
+                        RGBA(9, 33, 98, 1)
+                    )
+                  HoverColor: =RGBA(255, 255, 255, 1)
+                  HoverFill: |-
+                    =If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        ColorFade(RGBA(0, 131, 190, .8),50%),
+                        App.ActiveScreen.Name <> "Dashboard",
+                        RGBA(255, 255, 255, .5)
+                    )
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  RadiusBottomLeft: =15
+                  RadiusBottomRight: =15
+                  RadiusTopLeft: =15
+                  RadiusTopRight: =15
+                  Text: =
+                  Visible: |-
+                    =true
+                    /*
+                    If(
+                        App.ActiveScreen.Name = "Dashboard",
+                        true,
+                        false
+                    )
+                    */
+                  Width: =Parent.TemplateWidth - 10
+                  X: =5
+                  Y: =5
+      - Rectangle1:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =RGBA(128, 128, 128, 1)
+            Fill: =RGBA(128, 128, 128, 1)
+            Height: =2
+            Width: =Tabs.Width

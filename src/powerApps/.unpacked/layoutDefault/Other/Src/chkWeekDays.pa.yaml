@@ -1,0 +1,2063 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  chkWeekDays:
+    Properties:
+      Fill: =RGBA(236, 236, 236, 1)
+      Height: =Max(App.Height, App.DesignHeight)
+      OnVisible: |-
+        =Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: varTargetEmail}).value));
+
+        UpdateContext(
+            {
+                varDefaultTime: 
+                    If(
+                        !IsBlankOrError(var_StartDateTime_central) || var_StartDateTime_central <> Blank(),
+                            var_StartDateTime_central,
+                        !IsBlankOrError(var_StartTime) || var_StartTime <> Blank(),
+                            var_StartTime,
+                        IsBlankOrError(var_StartDateTime_central) && IsBlankOrError(var_StartTime),
+                            Now(),
+                        Blank()
+                    )
+            }
+        );
+        Reset(Calendar_1);
+        Reset(TimeFromdd);
+        Reset(TimeTodd);
+        Select(calClickBtn);
+
+
+        /*
+        UpdateContext(
+            {
+                varDefaultTime: With(
+                    {
+                        CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
+                        CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
+                    },
+                    // Construct a pure Time value from the corrected hour and minute.
+                    Time(CorrectedHour, CorrectedMinute, 0)
+                ),
+                Date: With(
+                    {
+                        CorrectedHour: Hour(DateAdd(varPopUp_ClassPicker_scenarioStartTime, RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime)/15,0)*15 - Minute(varPopUp_ClassPicker_scenarioStartTime), TimeUnit.Minutes)),
+                        CorrectedMinute: Mod(RoundUp(Minute(varPopUp_ClassPicker_scenarioStartTime) / 15, 0) * 15, 60)
+                    },
+                    // Construct a pure Time value from the corrected hour and minute.
+                    Date(
+                        Year(varPopUp_ClassPicker_scenarioDate),
+                        Month(varPopUp_ClassPicker_scenarioDate),
+                        Day(varPopUp_ClassPicker_scenarioDate)
+                    )
+                )
+            }
+        );
+        */
+      Width: =Max(App.Width, App.DesignWidth)
+    Children:
+      - Rectangle2:
+          Control: Rectangle@2.3.0
+          Group: grpHeader
+          Properties:
+            Fill: =RGBA(135, 78, 181, 0.65)
+            Height: =150
+            Width: =Parent.Width
+      - Gallery3:
+          Control: Gallery@2.15.0
+          Variant: Vertical
+          Group: Group3
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =120
+            Items: =CollectionRecurrence
+            TemplateSize: =20
+            Width: =250
+            X: =SelectTimeSlotlb_1.X
+            Y: =TextCanvas8.Y + TextCanvas8.Height
+          Children:
+            - TextCanvas7_2:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ="Center"
+                  FontItalic: =true
+                  Height: =TextCanvas7.Height
+                  Size: =12
+                  Text: |-
+                    ="Duration:  " & var_Duration
+                  Width: =TextCanvas7.Width + TextCanvas7_1.Width
+                  X: =TextCanvas7.X
+                  Y: =TextCanvas7.Y + TextCanvas7.Height
+            - TextCanvas7_1:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =20
+                  Size: =12
+                  Text: =ThisItem.EndDateTime
+                  Width: =120
+                  X: =TextCanvas7.X + TextCanvas7.Width
+            - TextCanvas7:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =20
+                  Size: =12
+                  Text: =ThisItem.StartDateTime
+                  Width: =120
+      - SelectTimeSlotlb_1:
+          Control: Label@2.5.1
+          Group: Group3
+          Properties:
+            Align: =Align.Center
+            Height: =30
+            Size: =20
+            Text: ="Selected Dates"
+            Width: =250
+            X: |-
+              =If(
+                  ddRecurrenceFrequency.Selected.Value = "None",
+                  ctn_SelectTimeSlot.X + ctn_SelectTimeSlot.Width + 10,
+                  ctn_Recurrance.X + ctn_Recurrance.Width + 10
+              )
+            Y: =150
+      - Calendar_1:
+          Control: CanvasComponent
+          ComponentName: Calendar
+          Group: Group3
+          Properties:
+            BorderRadius: =1
+            Color: =RGBA(50,50,50,1)
+            DaysAheadRestriction: =390
+            DefaultEndDate: |-
+              =If(
+                  (!IsBlankOrError(var_Date) || var_Date <> Blank()),
+                      var_Date, //varPopUp_ClassPicker_scenarioDate,
+                      Today()
+              )
+            DefaultStartDate: |-
+              =If(
+                  (!IsBlankOrError(var_Date) || var_Date <> Blank()),
+                      var_Date, //varPopUp_ClassPicker_scenarioDate,
+                      Today()
+              )
+            Height: =445
+            OnChangeCal: |-
+              =// Calculate the default end time (60 mins after start time) and store it in a variable
+              //Set(varDefaultEndTime, DateAdd(TimeFromdd.Selected.Value, 60, TimeUnit.Minutes));
+              Set(varDefaultEndTime, var_EndTime); //varPopUp_ClassPicker_scenarioEndTime);
+
+              // Reset the end time dropdown to apply the new default
+              Reset(TimeTodd);
+
+              Select(calClickBtn);
+            OnSelectCal: =
+            SelectRange: =false
+            SelectedDateColor: =Color.White
+            SelectedDateFill: =RGBA(15, 108, 189, 1)
+            Styles: =Table({Key:"",Value:"",Type:""})
+            Width: =400
+            X: =5
+            Y: =155
+      - Image2_1:
+          Control: Image@2.2.3
+          Group: grpHeader
+          Properties:
+            Height: =150
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+      - ContinueDatebtn:
+          Control: Classic/Button@2.2.0
+          Properties:
+            DisplayMode: =If(Gallery3.AllItemsCount > 0, DisplayMode.Edit, DisplayMode.Disabled)
+            Fill: =RGBA(15, 108, 189, 1)
+            Height: =45
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+              =// Combine Date and Time for the Start and End of the event
+              Set(
+                  varEventStartTime,
+                  DateAdd(
+                      DateTimeValue(DateValue(Calendar_1.DefaultStartDate) + TimeFromdd.Selected.Value),
+                      TimeZoneOffset(),
+                      TimeUnit.Minutes
+                  )
+              );
+              Set(
+                  varEventEndTime,
+                  DateAdd(
+                      DateTimeValue(DateValue(Calendar_1.DefaultEndDate) + TimeTodd.Selected.Value),
+                      TimeZoneOffset(),
+                      TimeUnit.Minutes
+                  )
+              );
+              Set(
+                  varEndDate,
+                  Text(
+                      Max(
+                          CollectionRecurrence,
+                          EndDateTime
+                      ),
+                      "[$-en-US]yyyy-mm-ddTHH:mm:ss"
+                  )
+              );
+              ///Set(startTime, DateTimeValue(Text(varSelectedStartDate, DateTimeFormat.ShortDate) & " " & TimeFromdd.Selected.Value));
+              ///Set(endTime,   DateTimeValue(Text(varEndDate, DateTimeFormat.ShortDate) & " " & TimeTodd.Selected.Value));
+              Set(
+                  varImportance,
+                  Lower(ddImportance.Selected.Value)
+              );
+              Set(
+                  varRecurrence,
+                  If(
+                      Radio2.Selected.Value = "Every weekday",
+                      "weekly",
+                                  //Else
+                      Lower(ddRecurrenceFrequency.Selected.Value)
+                  )
+              );
+              Set(
+                  varReminder,
+                  ddReminder.Selected.Value
+              );
+              Set(
+                  varWeekday,
+                  If(
+                      ddRecurrenceFrequency.Selected.Value = "Daily" And Radio2.Selected.Value = "Every weekday",
+                      Filter(
+                          Gallery6.AllItems,
+                          Value <> "Sunday" And Value <> "Saturday"
+                      ).Value,
+                              //Else
+                      If(
+                          ddRecurrenceFrequency.Selected.Value = "Weekly",
+                          Filter(
+                              Gallery6.AllItems,
+                              Checkbox2.Value
+                          ).Value,
+                                  //Else
+                          Blank()
+                      )
+                  )
+              );
+
+
+
+
+              /////////////////////////////////////////////////////////
+              // --- Central Time Variables ---
+              /////////////////////////////////////////////////////////
+              // Build full Eastern date/times, then shift back 1 hour
+              Set(
+                  var_StartDateTime_central,
+                  DateAdd(DateTimeValue(var_Date & " " & var_StartTime), -1, TimeUnit.Hours)
+              );
+              Set(
+                  var_EndDateTime_central,
+                  DateAdd(DateTimeValue(var_Date & " " & var_EndTime), -1, TimeUnit.Hours)
+              );
+
+              // Extract Central date (in case the -1 hour crossed midnight)
+              Set(
+                  var_Date_central,
+                  DateValue(var_StartDateTime_central)
+              );
+
+              // Extract Central start/end times
+              Set(
+                  var_StartTime_central,
+                  Time(
+                      Hour(var_StartDateTime_central),
+                      Minute(var_StartDateTime_central),
+                      Second(var_StartDateTime_central)
+                  )
+              );
+              Set(
+                  var_EndTime_central,
+                  Time(
+                      Hour(var_EndDateTime_central),
+                      Minute(var_EndDateTime_central),
+                      Second(var_EndDateTime_central)
+                  )
+              );
+
+              // Duration is unchanged by a timezone shift, but recompute for consistency
+              Set(
+                  var_firstHalfDuration_central,
+                  var_EndDateTime_central - var_StartDateTime_central
+              );
+              Set(
+                  var_Duration_central,
+                  With(
+                      { totalMinutes: Round(var_firstHalfDuration_central * 24 * 60, 0) },
+                      Text(RoundDown(totalMinutes / 60, 0), "00") & "h " &
+                      Text(Mod(totalMinutes, 60), "00") & "m"
+                  )
+              );
+
+              // Rebuild the "second half" string in Central (e.g. "7:30 AM - 12:30 PM")
+              Set(
+                  var_secondHalfTime_central,
+                  Text(var_StartDateTime_central, "h:mm AM/PM") & " - " & Text(var_EndDateTime_central, "h:mm AM/PM")
+              );
+
+
+              Navigate(Confirm);
+
+
+
+
+
+
+
+
+              /*
+              If(
+                  false And false,
+                  Notify(
+                      "You must select a date and time to continue",
+                      NotificationType.Warning
+                  ),
+
+                  ClearCollect(
+                      colBookedDesks,
+                      Filter(
+                          'Desk Reservations',
+                          ('Check Out From' < varEventEndTime And ('Check Out From' >= varEventStartTime Or 'Check Out To' > varEventStartTime))
+                      )
+                  );
+                  ForAll(
+                      Filter(
+                          colBookedDesks,
+                          Asset.Value = "Room"
+                      ) As bd,
+                      Collect(
+                          colBookedDesks,
+                          RenameColumns(
+                              ShowColumns(
+                                  Filter(
+                                      Desks,
+                                      'Room Location' = bd.DeskText And !(Asset.Value in [
+                                          "Desk",
+                                          "Item",
+                                      ])
+                                  ),
+                                  Asset,
+                                  ItemID_title,
+                                  RoomLocation
+                              ),
+                              Title,
+                              DeskText,
+                              RoomLocation,
+                              DeskFloor
+                          )
+                      )
+                  )
+              );
+              // Create a collection for distinct room locations
+              ClearCollect(
+                  colRoomLocations,
+                  {Value: "All Conference Rms"}// Add "All Conference Rms" option first
+              );
+              // Append distinct room locations to the collection
+              Collect(
+                  colRoomLocations,
+                  Distinct(
+                      Filter(
+                          Desks,
+                          Asset.Value in [
+                              "Desk",
+                              "Item"
+                          ])
+                      ),
+                      ItemID_title
+                  )
+              );
+              */
+
+
+              /*
+              Set(varInterval2, Text(ddRecurrenceFrequency.Selected.Value));
+              Set(varFirstDayName, Text(Min(CollectionRecurrence, StartDateTime), "dddd"));
+              Set(varRecurringtimes, RecurringWeekdd.Selected.Value);
+              Set(varStartDate,Text(Min(CollectionRecurrence, StartDateTime), "[$-en-US]yyyy-mm-ddTHH:mm:ss"));
+              Set(varReEndDate, Text(Max(CollectionRecurrence, EndDateTime), "[$-en-US]mm-dd-yyy"));
+              */
+
+              //Navigate(DeskSelect)
+            Text: ="Continue"
+            Width: =200
+            X: =btnBackDate.X + btnBackDate.Width + 20
+            Y: =btnBackDate.Y
+      - btnBackDate:
+          Control: Classic/Button@2.2.0
+          Properties:
+            Fill: =RGBA(128, 128, 128, 1)
+            Height: =45
+            HoverFill: =ColorFade(Self.Fill, -20%)
+            OnSelect: |-
+              =ClearCollect(CollectionRecurrence, Blank());
+              Reset(Calendar_1);
+              Reset(TimeTodd);
+              Reset(TimeFromdd);
+              Back();
+            Text: ="Back"
+            Width: =200
+            X: =(Parent.Width - (Self.Width + 20 + ContinueDatebtn.Width)) / 2
+            Y: =70
+      - SelectDatelb:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =RGBA(255, 255, 255, 1)
+            FontWeight: =FontWeight.Bold
+            Height: =50
+            Size: =32
+            Text: ="Select Date(s)/Time"
+            Width: =450
+            X: =(Parent.Width - Self.Width) / 2
+      - TextCanvas8_1:
+          Control: Text@0.0.51
+          Group: Group3
+          Properties:
+            Align: =Align.Left
+            Fill: =RGBA(180, 214, 250, 1)
+            Height: =27
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =12
+            Text: ="End Date/Time"
+            VerticalAlign: =VerticalAlign.Middle
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =125
+            X: =TextCanvas8.X + TextCanvas8.Width
+            Y: =TextCanvas8.Y
+      - TextCanvas8:
+          Control: Text@0.0.51
+          Group: Group3
+          Properties:
+            Align: =Align.Left
+            Fill: =RGBA(180, 214, 250, 1)
+            Height: =27
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =12
+            Text: ="Start Date/Time"
+            VerticalAlign: =VerticalAlign.Middle
+            Weight: ='TextCanvas.Weight'.Bold
+            Width: =125
+            X: =SelectTimeSlotlb_1.X
+            Y: =SelectTimeSlotlb_1.Y + SelectTimeSlotlb_1.Height
+      - SelectTimeSlotlb_3:
+          Control: Label@2.5.1
+          Group: Group3
+          Properties:
+            Align: =Align.Center
+            Height: =20
+            Italic: =true
+            Size: =10
+            Text: |-
+              =Switch(Gallery3.AllItemsCount,
+                  0, Gallery3.AllItemsCount & " no occurrences",
+                  1, Gallery3.AllItemsCount & " occurrence", 
+                  Gallery3.AllItemsCount & " occurrences"
+              )
+            Width: =250
+            X: =SelectTimeSlotlb_1.X
+            Y: =Gallery3.Y + Gallery3.Height
+      - shape_hiddenUnlessAdmin:
+          Control: Rectangle@2.3.0
+          Group: Group3
+          Properties:
+            Fill: =RGBA(236, 236, 236, 1)
+            Height: =ctn_ReservationsAlreadyBooked.Height + 1
+            Visible: =user_isAdmin
+            Width: =ctn_ReservationsAlreadyBooked.Width + 1
+            X: =ctn_ReservationsAlreadyBooked.X - 1
+            Y: =ctn_ReservationsAlreadyBooked.Y - 1
+      - calClickBtn:
+          Control: Classic/Button@2.2.0
+          Group: Group3
+          Properties:
+            FontWeight: =FontWeight.Bold
+            Height: =25
+            OnSelect: |-
+              =Clear(CollectionRecurrence);
+
+              Set(varSelectedStartDate, DateValue(startDateLbl.Text));
+
+              // Count workdays between start (Label17.Text) and end (DatePickerCanvas2.SelectedDate) dates
+              Set(numWorkDays,
+                  With(
+                      {
+                          // generate a one-column table of all dates between start date & end date
+                          varDateRange: ForAll(
+                              Sequence(DatePickerCanvas2.SelectedDate - DateValue(startDateLbl.Text) + 1),
+                              DateValue(startDateLbl.Text) + Value - 1
+                          )
+                      },
+                      If(
+                          And(
+                              IsBlank(DateValue(startDateLbl.Text)),
+                              IsBlank(DatePickerCanvas2.SelectedDate)
+                          ),
+                          // show nothing if any date pickers are blank
+                          0,
+                          // include only dates Monday to Friday
+                          CountIf(
+                              varDateRange,
+                              Weekday(Value) in [2, 3, 4, 5, 6]
+                          )
+                      )
+                  )
+              );
+
+              // set maxOccurrence variable
+              Switch(Radio1.Selected.Value,
+                  "End by:", Switch(ddRecurrenceFrequency.Selected.Value,
+                                  "Daily", Set(maxOccurrence, RoundUp((DateDiff(varSelectedStartDate, DatePickerCanvas2.SelectedDate, TimeUnit.Days) + 1) / Value(recurPeriodTxt.Text), 0)),
+                                  "Weekly", Set(maxOccurrence, RoundUp(((DateDiff(varSelectedStartDate, DatePickerCanvas2.SelectedDate, TimeUnit.Days) + 1) / 7) / Value(recurPeriodTxt.Text), 0)),
+                                  ///"Monthly", Set(maxOccurrence, RoundUp(((DateDiff(varSelectedStartDate, DatePickerCanvas2.SelectedDate, TimeUnit.Days) + 1) / 30) / Value(recurPeriodMonthTxt.Text), 0)),
+                                  "Monthly", If(Day(DatePickerCanvas2.SelectedDate) < Day(varSelectedStartDate),
+                                              Set(maxOccurrence, Month(DatePickerCanvas2.SelectedDate) - Month(varSelectedStartDate)),
+                                              //Else
+                                              Set(maxOccurrence, Month(DatePickerCanvas2.SelectedDate) - Month(varSelectedStartDate) + 1)
+                                              ),
+                                  Set(maxOccurrence, 1)
+                  ),    
+                  "End after:", Switch(ddRecurrenceFrequency.Selected.Value,
+                                  "Daily", If(Radio1.Selected.Value = "Every",
+                                              Set(maxOccurrence, Min(recurPeriodTxt_1.Text, 180)),
+                                              //Else
+                                              Set(maxOccurrence, NthWeekdayRecord)
+                                  ),
+                                  "Weekly", Set(maxOccurrence, Min(recurPeriodTxt_1.Text, RoundUp(26 / Value(recurPeriodTxt.Text), 0), 26)),
+                                  "Monthly", Switch(Radio2.Selected.Value,
+                                              "Day", Set(maxOccurrence, Min(RoundUp(Min(6 / Value(recurPeriodMonthTxt.Text)), 0), Value(recurPeriodTxt_1.Text), 6)),
+                                              Set(maxOccurrence, Min(RoundUp(Min(6 / Value(recurPeriodMonthTxt_1.Text)), 0), Value(recurPeriodTxt_1.Text), 6))
+                                   ),
+                                   Set(maxOccurrence, 1)
+                  ),    
+                  "No end date (max 180 days)", Switch(ddRecurrenceFrequency.Selected.Value,
+                                                  "Daily", Set(maxOccurrence, 180),
+                                                  "Weekly", Set(maxOccurrence, RoundUp(26 / Value(recurPeriodTxt.Text), 0)),
+                                                  "Monthly", Switch(Radio2.Selected.Value,
+                                                              "Day", Set(maxOccurrence, Min(RoundUp(6 / Value(recurPeriodMonthTxt.Text), 0), 6)),
+                                                              Set(maxOccurrence, Min(RoundUp(6 / Value(recurPeriodMonthTxt_1.Text), 0), 6))
+                                                          ),
+                                                  Set(maxOccurrence, 1)
+                  ),
+                  Set(maxOccurrence, 1)
+              );
+
+              If(ddRecurrenceFrequency.Selected.Value = "Weekly",
+                  Select(weeklyBtn),
+                  //Else
+                  ForAll(
+                      Sequence(maxOccurrence, 0, 1) As seqRec,
+                      // Universal local variables
+
+                      With(
+                          {
+                              baseDate: varSelectedStartDate,
+                              weekdayNum: Switch(Radio2.Selected.Value,
+                                              "The", Switch(ddDayOfWeek.Selected.Value,
+                                                  "Sunday", 1,
+                                                  "Monday", 2,
+                                                  "Tuesday", 3,
+                                                  "Wednesday", 4,
+                                                  "Thursday", 5,
+                                                  "Friday", 6,
+                                                  "Saturday", 7
+                                              ),
+                                              Weekday(varSelectedStartDate) // 1=Sunday...7=Saturday
+                                          ),
+                              weekIndex: Switch(Radio2.Selected.Value,
+                                          "The", Switch(ddWeekIndex.Selected.Value,
+                                                  "first", 1,
+                                                  "second", 2,
+                                                  "third", 3,
+                                                  "fourth", 4
+                                          ),
+                                          RoundDown(Day(varSelectedStartDate) / 7, 0) + 1
+                                      ),            
+                              isLastWeekday: Month(DateAdd(varSelectedStartDate, 7, TimeUnit.Days)) <> Month(varSelectedStartDate),
+                              firstWeekdayOfMonth: DateAdd(
+                                  Date(Year(varSelectedStartDate), Month(varSelectedStartDate) + seqRec.Value, 1),
+                                  Mod(Weekday(varSelectedStartDate) - Weekday(Date(Year(varSelectedStartDate), Month(varSelectedStartDate) + seqRec.Value, 1)) + 7, 7),
+                                  TimeUnit.Days
+                              ),
+                              lastDayOfMonth: DateAdd(
+                                  Date(Year(varSelectedStartDate), Month(varSelectedStartDate) + seqRec.Value + 1, 1),
+                                  -1,
+                                  TimeUnit.Days
+                              )
+                          },
+                          With(
+                              {
+                                  nthWeekday: DateAdd(firstWeekdayOfMonth, (weekIndex - 1) * 7, TimeUnit.Days),
+                                  lastWeekday: DateAdd(lastDayOfMonth, -Mod((Weekday(lastDayOfMonth) - weekdayNum + 7), 7), TimeUnit.Days)
+                              },
+                              With(
+                                  {
+                                  // Calculate the correct date based on frequency type
+                                  recurrenceDate:
+                                      Switch(
+                                          ddRecurrenceFrequency.Selected.Value,
+                                          "Daily", 
+                                              If(Radio2.Selected.Value = "Every",
+                                                  DateAdd(varSelectedStartDate, seqRec.Value * Value(recurPeriodTxt.Text), TimeUnit.Days),
+                                                  //Else
+                                                  If(Weekday(DateAdd(varSelectedStartDate, seqRec.Value * Value(recurPeriodTxt.Text), TimeUnit.Days)) >= 2 And Weekday(DateAdd(varSelectedStartDate, seqRec.Value * Value(recurPeriodTxt.Text), TimeUnit.Days)) <= 6, DateAdd(varSelectedStartDate, seqRec.Value * Value(recurPeriodTxt.Text), TimeUnit.Days)
+                                                  )
+                                              ),                        
+                                          // Weekly computation is located in weeklyBtn
+                                          "Monthly", Switch(Radio2.Selected.Value,
+                                                          "Day", DateAdd(Date(Year(startDateLbl.Text), Month(startDateLbl.Text), Value(recurPeriodTxt.Text)), seqRec.Value * Value(recurPeriodMonthTxt.Text) * 1, TimeUnit.Months), 
+                                                          If(isLastWeekday, lastWeekday, nthWeekday) // Monthly logic—use same as before
+                                                      ),                        
+                                          varSelectedStartDate // fallback: just use the base date
+                                      )
+                                  },
+
+
+                                  // Only add if Monthly and recurrenceDate is still in the target month, else always add for other types
+                                  If(
+                                      !IsBlank(recurrenceDate) And ddRecurrenceFrequency.Selected.Value <> "Weekly",
+                                          Collect(
+                                              CollectionRecurrence,
+                                              {
+                                                  Occurrence: seqRec.Value,
+                                                  OccurrenceDate: DateValue(recurrenceDate),
+                                                  StartDateTime: DateTimeValue(DateValue(recurrenceDate) + TimeValue(TimeFromdd.SelectedText.Value)),
+                                                  EndDateTime: DateTimeValue(recurrenceDate + TimeValue(TimeTodd.SelectedText.Value))
+                                              }
+                                          );
+              ///                        DateAdd(recurrenceDate, 1, TimeUnit.Months) /// 250609 CED Do not recall why this is here but assume it is for monthly option?
+                                  );
+                              )
+                          )
+                      )
+                  )
+              );
+
+              ClearCollect(
+                  colDeskChckRecur,
+                  Filter(
+                      'Desk Reservations',
+                      // convert your text‐dates to DateTime
+                      // (drop DateTimeValue() if these are real Date/Time columns)
+                      ! IsBlank(
+                          // LookUp will find the *first* recurrence where:
+                          //   — the recurrence start is on or before this reservation’s end, AND
+                          //   — the recurrence end   is on or after this reservation’s start
+                          // return anything non-blank (we just need existence)
+                          LookUp(
+                              CollectionRecurrence,
+                              StartDateTime <= 'Check Out To' And EndDateTime >= 'Check Out From',
+                              StartDateTime
+                          )
+                      )
+                  )
+              );
+              ///ClearCollect(colRecurrenceFreq, ddRecurrenceFrequency.Selected.Value);
+              ///Set(varLastEndDate, Max(CollectionRecurrence, EndDateTime));
+              ///Set(varNumberOccurances, RecurringWeekdd.Selected.Value)
+            Size: =10
+            Text: ="Recalculate"
+            Visible: =user_isAdmin
+            Width: =110
+            X: =8
+            Y: =609
+      - nthWeekdayBtn:
+          Control: Classic/Button@2.2.0
+          Group: Group3
+          Properties:
+            FontWeight: =FontWeight.Bold
+            Height: =25
+            OnSelect: |
+              =// Create 390 day date collection
+              ClearCollect(
+                  colDates,
+                  With(
+                      {
+                          startDate: DateValue(startDateLbl.Text),
+                          sequenceDays: Sequence(DateDiff(DateValue(startDateLbl.Text), DateAdd(DateValue(startDateLbl.Text), Calendar_1.DaysAheadRestriction, TimeUnit.Days) + 1)) // +1 to include both start and end dates
+                      },
+                      AddColumns(
+                          sequenceDays,
+                          Date,
+                          DateAdd(startDate, Value - 1, TimeUnit.Days),
+                          Weekday,
+                          Weekday(DateAdd(startDate, Value - 1, TimeUnit.Days))
+                      )
+                  )
+              );
+
+              // Create a weekdays only collection
+              ClearCollect(
+                  WeekdaysOnly,
+                  Filter(colDates, Weekday <> 1 And Weekday <> 7 // Assuming 1 is Sunday and 7 is Saturday
+                  )
+              );
+
+              // Retrieve the Nth weekday from this collection:
+              // You can use the FirstN function to get the first N weekdays and then the Last function to get the Nth weekday among them:
+              Set(NthWeekdayRecord, Last(FirstN(WeekdaysOnly, Value(recurPeriodTxt_1.Text))).Value)
+            Size: =10
+            Text: ="Get Nth weekday"
+            Visible: =user_isAdmin
+            Width: =110
+            X: =128
+            Y: =609
+      - weeklyBtn:
+          Control: Classic/Button@2.2.0
+          Group: Group3
+          Properties:
+            FontWeight: =FontWeight.Bold
+            Height: =25
+            OnSelect: |-
+              =Set(startWeekday, Weekday(varSelectedStartDate));
+              Set(endByDate, Switch(Radio1.Selected.Value,
+                              "End by:", DatePickerCanvas2.SelectedDate,
+                              "End after:", DateAdd(varSelectedStartDate, Min(Value(recurPeriodTxt_1.Text), 26) * 7, TimeUnit.Days),
+                              DateValue(maxEndDateLbl.Text)
+                          )
+              );
+
+              ClearCollect(wkDaysTemp, 
+                  AddColumns(
+                      Filter(Gallery6.AllItems, Checkbox2.Value), 
+                      numWeekday, Switch(Value, 
+                          "Sunday", 1, 
+                          "Monday", 2, 
+                          "Tuesday", 3, 
+                          "Wednesday", 4, 
+                          "Thursday", 5, 
+                          "Friday", 6, 
+                          "Saturday", 7
+                      )
+                  )
+              );
+
+              ClearCollect(wkDays,
+                  Sort(
+                      ForAll(
+                          wkDaysTemp,
+                          {
+                              Value: Value,
+                              numWeekday: numWeekday,
+                              SortOrder: If(numWeekday < startWeekday, numWeekday + 7 - startWeekday, numWeekday - startWeekday)
+                          }
+                      ), SortOrder
+                  )
+              );
+
+              // Create the recurrence schedule
+              ForAll(
+                  Sequence(maxOccurrence, 0, 1) As seqRec,
+                  With(
+                      {
+                          startOfWeek: DateAdd(varSelectedStartDate, seqRec.Value * 7 * Value(recurPeriodTxt.Text), TimeUnit.Days)
+                      },
+                      ForAll(
+                          wkDays As selectedDay,
+                          With(
+                              {
+                                  // Calculate the correct day within the current week
+                                  recurrenceDate: If(startOfWeek = varSelectedStartDate && selectedDay.numWeekday = startWeekday,
+                                                      varSelectedStartDate,
+                                                      //Else
+                                                      // Ensure we calculate correctly within the week or the specified recurrence period
+                                                      DateAdd(startOfWeek, If(selectedDay.numWeekday - startWeekday < 0, selectedDay.numWeekday - startWeekday + 7, selectedDay.numWeekday - startWeekday), TimeUnit.Days)
+                                                  )
+                              },
+                              If(
+                                  !IsBlank(recurrenceDate) And (recurrenceDate >= varSelectedStartDate) And (recurrenceDate <= endByDate) And
+                                  IsBlank(LookUp(CollectionRecurrence, OccurrenceDate = recurrenceDate)), // Check to avoid duplicates,
+                                  Collect(
+                                      CollectionRecurrence,
+                                      {
+                                          Occurrence: seqRec.Value,
+                                          OccurrenceDate: recurrenceDate,
+                                          StartDateTime: DateTimeValue(recurrenceDate + TimeValue(TimeFromdd.SelectedText.Value)),
+                                          EndDateTime: DateTimeValue(recurrenceDate + TimeValue(TimeTodd.SelectedText.Value))
+                                      }
+                                  )
+                              )
+                          )
+                      )
+                  )
+              );
+            Size: =10
+            Text: ="Get weekly"
+            Visible: =user_isAdmin
+            Width: =110
+            X: =248
+            Y: =609
+      - ctn_SelectTimeSlot:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Group: Group3
+          Properties:
+            Height: =ddImportance.Y + ddImportance.Height + 5
+            Width: =(Parent.Width - Self.X) / 2
+            X: =Calendar_1.X + Calendar_1.Width + 10
+            Y: =Calendar_1.Y
+          Children:
+            - TimeTodd:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  AccessibleLabel: ="End Time"
+                  BorderColor: =RGBA(135, 78, 181, 1)
+                  BorderThickness: =1
+                  ChevronBackground: =ColorValue("#0f6cbd")
+                  ChevronFill: =Color.White
+                  ChevronHoverBackground: =ColorValue("#874EB5")
+                  Default: |-
+                    =If(
+                        IsBlankOrError(varDefaultTime),
+                        DateAdd(
+                            DateTime(Year(TimeFromdd.Selected.Value),Month(TimeFromdd.Selected.Value),Day(TimeFromdd.Selected.Value),Hour(TimeFromdd.Selected.Value),Minute(TimeFromdd.Selected.Value),Second(TimeFromdd.Selected.Value)), //Time(Hour(TimeFromdd.Selected.Value),Minute(TimeFromdd.Selected.Value),Second(TimeFromdd.Selected.Value)),
+                            TimeUnit.Hours,
+                            1
+                        ),
+                        DateAdd(
+                            varDefaultTime,
+                            TimeUnit.Hours,
+                            1
+                        )
+                    )
+                  Height: =30
+                  HoverFill: =Color.LightGray
+                  Items: |-
+                    =Filter(
+                        With(
+                            {Interval: 30},
+                            ForAll(
+                                Sequence(60 * 24 / Interval),
+                                Time(
+                                    0,
+                                    Interval * (Value - 1),
+                                    0
+                                )
+                            )
+                        ),
+                        Value > TimeFromdd.Selected.Value
+                    )
+                    // Filter(With({Interval:60},ForAll(Sequence(60*24/Interval),Time(0,Interval*(Value-1),0))),Value>TimeFromdd.Selected.Value)
+                  Items.Value: =Value
+                  OnChange: =Select(calClickBtn)
+                  Reset: =
+                  Size: =18
+                  Width: =183
+                  X: =Tolb.X + Tolb.Width
+                  Y: =Fromlb.Y + Fromlb.Height
+            - Tolb:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Right
+                  Height: =30
+                  Size: =14
+                  Text: ="End Time:"
+                  Width: =Fromlb.Width
+                  X: =SelectTimeSlotlb.X
+                  Y: =Fromlb.Y + Fromlb.Height
+            - TimeFromdd:
+                Control: Classic/DropDown@2.3.1
+                Properties:
+                  AccessibleLabel: ="Start Time"
+                  BorderColor: =RGBA(135, 78, 181, 1)
+                  BorderThickness: =1
+                  ChevronBackground: =ColorValue("#0f6cbd")
+                  ChevronFill: =Color.White
+                  ChevronHoverBackground: =ColorValue("#874EB5")
+                  Default: |-
+                    =If(
+                        IsBlankOrError(varDefaultTime),
+                        Now(),
+                        varDefaultTime
+                    )
+                  Height: =30
+                  HoverFill: =Color.LightGray
+                  Items: |+
+                    =With(
+                        {Interval: 30},
+                        ForAll(
+                            Sequence(60 * 24 / Interval),
+                            Time(
+                                0,
+                                Interval * (Value - 1),
+                                0)
+                        )
+                    )
+                  Items.Value: =Value
+                  OnChange: |-
+                    =Select(calClickBtn);
+
+                    // OnCheck
+                    /*
+                    Set(varIsRecurring, true);
+                    Set(varIsRecurringcal, "Yes");
+                    Set(varRecurrenceFrequency, ddRecurrenceFrequency.Selected.Value); 
+                    */
+                  Reset: =
+                  Size: =18
+                  Width: =183
+                  X: '=Fromlb.X + Fromlb.Width '
+                  Y: =SelectTimeSlotlb.Y + SelectTimeSlotlb.Height
+            - Fromlb:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Right
+                  Height: =30
+                  Size: =14
+                  Text: ="Start Time:"
+                  Width: =115
+                  X: =SelectTimeSlotlb.X
+                  Y: =SelectTimeSlotlb.Y + SelectTimeSlotlb.Height
+            - SelectTimeSlotlb:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  AutoHeight: =true
+                  Height: =30
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  Size: =20
+                  Text: |-
+                    =If(
+                        ddRecurrenceFrequency.Selected.Value = "None",
+                            "Pick a time to receive training on this "&If(Weekday(Calendar_1.StartDate,"")=1,"Sunday",Weekday(Calendar_1.StartDate,"")=2,"Monday",Weekday(Calendar_1.StartDate,"")=3,"Tuesday",Weekday(Calendar_1.StartDate,"")=4,"Wednesday",Weekday(Calendar_1.StartDate,"")=5,"Thursday",Weekday(Calendar_1.StartDate,"")=6,"Friday",Weekday(Calendar_1.StartDate,"")=7,"Saturday")&":",
+                        ddRecurrenceFrequency.Selected.Value = "Daily", 
+                            "Pick a time to receive training on the selected days: ",
+                        ddRecurrenceFrequency.Selected.Value = "Weekly", //"Monthly",
+                            "Pick a time to receive training on the selected days: ",
+                        ddRecurrenceFrequency.Selected.Value = "Monthly",
+                            "Pick a time to receive training on the selected days: "
+                    )
+                  Width: =Parent.Width
+            - RecurringIntervalbl_1:
+                Control: Text@0.0.51
+                Properties:
+                  Align: =Align.Center
+                  Height: =20
+                  Size: =12
+                  Text: ="Importance"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  Width: =78
+                  X: =Fromlb.X
+                  Y: =Tolb.Y + Tolb.Height + 5
+            - ddImportance:
+                Control: DropDown@0.0.45
+                Properties:
+                  DefaultSelectedItems: =["Normal"]
+                  Fill: =RGBA(255, 255, 255, 1)
+                  FontSize: =12
+                  Height: =20
+                  Items: |
+                    =["Low", "Normal", "High"]
+                  PaddingBottom: =0
+                  PaddingLeft: =5
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Width: =78
+                  X: =RecurringIntervalbl_1.X + 5
+                  Y: =RecurringIntervalbl_1.Y + Self.Height
+            - reminderLbl:
+                Control: Text@0.0.51
+                Properties:
+                  Align: =Align.Center
+                  Height: =20
+                  Size: =12
+                  Text: ="Reminder:"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  Width: =60
+                  X: =RecurringIntervalbl_1.X + RecurringIntervalbl_1.Width + 10
+                  Y: =RecurringIntervalbl_1.Y
+            - ddReminder:
+                Control: DropDown@0.0.45
+                Properties:
+                  DefaultSelectedItems: =[15]
+                  Fill: =RGBA(255, 255, 255, 1)
+                  FontSize: =12
+                  Height: =20
+                  Items: |
+                    =[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
+                  OnChange: =Set(varReminder, Self.Selected.Value)
+                  PaddingBottom: =0
+                  PaddingLeft: =5
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Width: =60
+                  X: =reminderLbl.X + 5
+                  Y: =reminderLbl.Y + reminderLbl.Height
+      - ctn_ReservationsAlreadyBooked:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Group: Group3
+          Properties:
+            Height: =118
+            Visible: =user_isAdmin
+            Width: =Parent.Width - Self.X - 5
+            X: =ctn_SelectTimeSlot.X
+            Y: |-
+              =520 - 5
+              /* If(
+                  ddRecurrenceFrequency.Selected.Value = "None",
+                  (520 - 5),
+                  ctn_Recurrance.Y + ctn_Recurrance.Height
+              ) */
+          Children:
+            - Gallery5:
+                Control: Gallery@2.15.0
+                Variant: Vertical
+                Properties:
+                  Fill: =RGBA(180, 214, 250, 1)
+                  Height: =140
+                  Items: =colDeskChckRecur
+                  TemplateSize: |-
+                    =If(
+                        (lbl_valueDesk.Height + lbl_valueReservationPOCdepartment.Height) < 10,
+                        10,
+                        lbl_valueDesk.Height + lbl_valueReservationPOCdepartment.Height
+                    )
+                  Width: =Parent.Width
+                  Y: =lbl_Desk.Y + lbl_Desk.Height
+                Children:
+                  - shape_divider:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        Fill: =ColorFade(Color.Gray, .5)
+                        Height: =2
+                        OnSelect: =Select(Parent)
+                        Width: |+
+                          =Parent.Width - 10
+                  - lbl_valueReservationPOCdepartment:
+                      Control: Text@0.0.51
+                      Properties:
+                        FontItalic: =true
+                        Height: |-
+                          =If(
+                              IsBlankOrError(ThisItem.'Created By'.Department),
+                              0,
+                              20
+                          )
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: =ThisItem.'Created By'.Department
+                        Width: =175
+                        X: =lbl_valueReservationPOCname.X
+                        Y: =lbl_valueReservationPOCname.Y + lbl_valueReservationPOCname.Height
+                  - lbl_valueReservationPOCname:
+                      Control: Text@0.0.51
+                      Properties:
+                        Height: =20
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =ThisItem.'Reserved By'.DisplayName
+                        Width: =lbl_CheckedOutBy.Width
+                        X: =lbl_CheckedOutBy.X
+                        Y: =3
+                  - lbl_valueEndDateTime:
+                      Control: Text@0.0.51
+                      Properties:
+                        Height: =20
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =ThisItem.'Check Out To'
+                        Width: =lbl_EndTime.Width
+                        X: =lbl_EndTime.X
+                        Y: =3
+                  - lbl_valueStartDateTime:
+                      Control: Text@0.0.51
+                      Properties:
+                        Height: =20
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =ThisItem.'Check Out From'
+                        Width: =lbl_StartTime.Width
+                        X: =lbl_StartTime.X
+                        Y: =3
+                  - lbl_valueDeskText:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Start
+                        AutoHeight: =true
+                        Height: =20
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =ThisItem.DeskText
+                        Visible: =false
+                        Width: =133
+                        X: =120
+                        Y: =3
+                  - lbl_valueDesk:
+                      Control: Text@0.0.51
+                      Properties:
+                        Align: ='TextCanvas.Align'.Start
+                        AutoHeight: =true
+                        Height: =20
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =ThisItem.DeskText
+                        Width: =lbl_RoomLocation.Width
+                        Y: =3
+            - SelectTimeSlotlb_2:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  Height: =35
+                  PaddingBottom: =2
+                  PaddingLeft: =2
+                  PaddingRight: =2
+                  PaddingTop: =2
+                  Size: =20
+                  Text: ="Existing reservations already booked on the selected date:"
+                  Width: =Parent.Width
+            - lbl_StartTime:
+                Control: Text@0.0.51
+                Properties:
+                  Fill: =RGBA(180, 214, 250, 1)
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =5
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Text: ="Start Date/Time:"
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: =155
+                  X: =lbl_Desk.X + lbl_Desk.Width
+                  Y: =lbl_Desk.Y
+            - lbl_Desk:
+                Control: Text@0.0.51
+                Properties:
+                  Fill: =RGBA(180, 214, 250, 1)
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =5
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Text: ="Desk"
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: =lbl_valueDesk.Width
+                  Y: =SelectTimeSlotlb_2.Y + SelectTimeSlotlb_2.Height
+            - lbl_EndTime:
+                Control: Text@0.0.51
+                Properties:
+                  Fill: =RGBA(180, 214, 250, 1)
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =5
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Text: ="End Date/Time:"
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: =143
+                  X: =lbl_StartTime.X + lbl_StartTime.Width
+                  Y: =lbl_Desk.Y
+            - lbl_CheckedOutBy:
+                Control: Text@0.0.51
+                Properties:
+                  Fill: =RGBA(180, 214, 250, 1)
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =5
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Text: ="Reservation For:"
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: =200
+                  X: =lbl_EndTime.X + lbl_EndTime.Width
+                  Y: =lbl_Desk.Y
+            - lbl_RoomLocation:
+                Control: Text@0.0.51
+                Properties:
+                  Fill: =RGBA(180, 214, 250, 1)
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Text: ="Room Location"
+                  Weight: ='TextCanvas.Weight'.Bold
+                  Width: =218
+                  X: =498
+                  Y: =lbl_CheckedOutBy.Y
+      - ctn_Recurrance:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Group: Group3
+          Properties:
+            BorderColor: |-
+              =If(
+                  ddRecurrenceFrequency.Selected.Value = "None",
+                  RGBA(0, 0, 0, 1),
+                  Color.Red
+              )
+            BorderStyle: |-
+              =If(
+                  ddRecurrenceFrequency.Selected.Value = "None",
+                  BorderStyle.None,
+                  BorderStyle.Solid
+              )
+            BorderThickness: |-
+              =If(
+                  ddRecurrenceFrequency.Selected.Value = "None",
+                  0,
+                  3
+              )
+            DropShadow: =DropShadow.None
+            Height: |-
+              =If(
+                  ddRecurrenceFrequency.Selected.Value = "None", // Self.Visible = true,
+                  (ddRecurrenceFrequency.Height + ddRecurrenceFrequency.Y),
+                  (Radio1.Y + Radio1.Height)
+              )
+            Width: |-
+              =If(
+                  ddRecurrenceFrequency.Selected.Value = "None",
+                  (ddRecurrenceFrequency.Width + ddRecurrenceFrequency.X),
+                  (Gallery6.X + Gallery6.Width + 5)
+              )
+            X: |-
+              =If(
+                  ddRecurrenceFrequency.Selected.Value = "None",
+                  (ctn_SelectTimeSlot.X + reminderLbl.X + reminderLbl.Width + 15),
+                  ctn_SelectTimeSlot.X
+              )
+            Y: |-
+              =If(
+                  ddRecurrenceFrequency.Selected.Value = "None",
+                  (ctn_SelectTimeSlot.Y + ctn_SelectTimeSlot.Height) - (reminderLbl.Height * 2) - 5,
+                  (ctn_SelectTimeSlot.Y + ctn_SelectTimeSlot.Height + 5)
+              )
+          Children:
+            - RecurringWeeklb_2:
+                Control: Text@0.0.51
+                Properties:
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: ="Range of recurrence:"
+                  Visible: =ddRecurrenceFrequency.Selected.Value <> "None"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  Width: =120
+                  X: =6
+                  Y: |-
+                    =Switch(ddRecurrenceFrequency.Selected.Value,
+                        "Daily", Radio2.Y + Radio2.Height,
+                        "Weekly", Gallery6.Y + Gallery6.Height,
+                        "Monthly", RecurringWeeklb_4.Y + RecurringWeeklb_4.Height - 30
+                    )
+            - Gallery6:
+                Control: Gallery@2.15.0
+                Variant: Horizontal
+                Properties:
+                  Height: =70
+                  Items: =["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                  OnSelect: |-
+                    =Set(varWeekday, Filter(Gallery6.AllItems, Checkbox2.Value).Value);
+                    Select(calClickBtn)
+                  TemplatePadding: =0
+                  TemplateSize: =100
+                  Visible: =ddRecurrenceFrequency.Selected.Value = "Weekly"
+                  Width: =300
+                  WrapCount: =3
+                  X: =RecurringWeeklb.X
+                  Y: =RecurringWeeklb.Y + RecurringWeeklb.Height
+                Children:
+                  - Checkbox2:
+                      Control: Classic/CheckBox@2.1.0
+                      Properties:
+                        CheckboxSize: =20
+                        Default: |-
+                          =If(ThisItem.Value = Switch(Weekday(Calendar_1.StartDate),
+                              1, "Sunday",
+                              2, "Monday",
+                              3, "Tuesday",
+                              4, "Wednesday",
+                              5, "Thursday",
+                              6, "Friday",
+                              7, "Saturday"
+                          ), true, false)
+                        Height: =20
+                        OnSelect: =Select(Parent)
+                        Reset: =varWeeklyReset
+                        Size: =9
+                        Text: =ThisItem.Value
+                        Width: =100
+            - Radio2:
+                Control: Classic/Radio@2.3.0
+                Properties:
+                  Default: |-
+                    =Switch(ddRecurrenceFrequency.Selected.Value,
+                        "Daily",  "Every",
+                        "Monthly",  "Day"
+                    )
+                  FocusedBorderThickness: =0
+                  Font: =Font.'Segoe UI'
+                  Height: =50
+                  Items: |-
+                    =// In the event MS fixes the ability to do anything other than 1 in recurPeriodMonthTxt, the code below will enable the control accordingly
+                    Switch(ddRecurrenceFrequency.Selected.Value,
+                        "Daily",  ["Every", "Every weekday"],
+                        "Monthly",  ["Day"]
+                    )
+                    /*
+                    Switch(ddRecurrenceFrequency.Selected.Value,
+                        "Daily",  ["Every", "Every weekday"],
+                        "Monthly",  ["Day", "The"]
+                    )
+                    */
+                  Items.Value: =Value
+                  LineHeight: =1.5
+                  OnChange: |-
+                    =Concurrent(
+                        Reset(recurPeriodTxt),
+                        Reset(recurPeriodMonthTxt),
+                        Reset(ddWeekIndex),
+                        Reset(ddDayOfWeek),
+                        Reset(recurPeriodMonthTxt_1)
+                    );
+
+                    If(Self.Selected.Value = "Every weekday",
+                        Set(varWeekday, ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]),
+                        //Else
+                        Set(varWeekday, [])
+                    );
+
+                    Select(calClickBtn);
+                  PaddingBottom: =0
+                  PaddingTop: =0
+                  RadioSize: =15
+                  Reset: =
+                  Size: =10.5
+                  Visible: =ddRecurrenceFrequency.Selected.Value = "Daily" Or ddRecurrenceFrequency.Selected.Value = "Monthly"
+                  Width: =169
+                  X: =RecurringIntervalbl.X + RecurringIntervalbl.Width + 7
+                  Y: =ddRecurrenceFrequency.Y - 5
+            - RecurringWeeklb_1:
+                Control: Text@0.0.51
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  FontColor: =RGBA(0, 0, 0, 1)
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =13
+                  Text: |-
+                    =Switch(ddRecurrenceFrequency.Selected.Value,
+                        "None", "",
+                        "Daily", "day(s)",
+                        "Weekly", "week(s) on:",
+                        "Monthly", "of every "
+                    )
+                  Visible: =ddRecurrenceFrequency.Selected.Value = "Daily" Or ddRecurrenceFrequency.Selected.Value = "Weekly" Or ddRecurrenceFrequency.Selected.Value = "Monthly"
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =75
+                  X: =recurPeriodTxt.X + recurPeriodTxt.Width + 10
+                  Y: =ddRecurrenceFrequency.Y - 3
+            - recurPeriodTxt:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  Align: =Align.Center
+                  BorderThickness: =1
+                  Default: |-
+                    =Switch(ddRecurrenceFrequency.Selected.Value,
+                        "Monthly",  Day(Text(Calendar_1.StartDate, DateTimeFormat.ShortDate)),
+                        1
+                    )
+                  DisplayMode: |-
+                    =DisplayMode.Disabled
+                    // In the event MS fixes the ability to do anything other than 1 in recurPeriodTxt, the code below will enable the control accordingly
+                    /*
+                    If(
+                        (ddRecurrenceFrequency.Selected.Value = "Daily" And (Radio2.Selected.Value = "Every weekday" Or IsBlank(Radio2.Selected.Value))) Or
+                        (ddRecurrenceFrequency.Selected.Value = "Monthly" And (Radio2.Selected.Value = "The" Or IsBlank(Radio2.Selected.Value))),
+                        DisplayMode.Disabled,
+                        //Else
+                        DisplayMode.Edit
+                    )
+                    */
+                  FocusedBorderThickness: =2
+                  Height: =20
+                  OnChange: =Select(calClickBtn)
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =3
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Reset: =varWeeklyReset
+                  Size: =9
+                  Visible: =ddRecurrenceFrequency.Selected.Value = "Daily" Or ddRecurrenceFrequency.Selected.Value = "Weekly" Or ddRecurrenceFrequency.Selected.Value = "Monthly"
+                  Width: =25
+                  X: =RecurringWeeklb.X + RecurringWeeklb.Width + 18
+                  Y: =ddRecurrenceFrequency.Y - 3
+            - RecurringWeeklb:
+                Control: Text@0.0.51
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =13
+                  Text: ="Recur every"
+                  Visible: =ddRecurrenceFrequency.Selected.Value = "Weekly"
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =70
+                  X: =RecurringIntervalbl.X + RecurringIntervalbl.Width + 15
+                  Y: =ddRecurrenceFrequency.Y- 3
+            - ddRecurrenceFrequency:
+                Control: DropDown@0.0.45
+                Properties:
+                  DefaultSelectedItems: =["None"]
+                  Fill: =RGBA(255, 255, 255, 1)
+                  FontSize: =12
+                  Height: =20
+                  Items: =["None", "Daily", "Weekly","Monthly"]
+                  OnChange: |-
+                    =Reset(Radio1);
+                    Reset(Radio2);
+                    Reset(DatePickerCanvas2);
+                    UpdateContext({varWeeklyReset: true});
+                    UpdateContext({varWeeklyReset: false});
+
+                    Select(calClickBtn)
+                  PaddingLeft: =5
+                  Width: =RecurringIntervalbl.Width
+                  X: |-
+                    =If(
+                        ddRecurrenceFrequency.Selected.Value = "None",
+                        RecurringIntervalbl.X + 5,
+                        //Else
+                        6
+                    )
+                  Y: =RecurringIntervalbl.Y + RecurringIntervalbl.Height
+            - RecurringIntervalbl:
+                Control: Text@0.0.51
+                Properties:
+                  Align: =Align.Center
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: ="Event Recurrance:"
+                  Weight: ='TextCanvas.Weight'.Semibold
+                  Width: =105
+                  X: |-
+                    =If(ddRecurrenceFrequency.Selected.Value = "None",
+                        0, //(reminderLbl.X + reminderLbl.Width + 10),
+                        6
+                    )
+            - RecurringWeeklb_3:
+                Control: Text@0.0.51
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  FontColor: =RGBA(0, 0, 0, 1)
+                  Height: =20
+                  Size: =12.5
+                  Text: ="month(s)"
+                  Visible: =ddRecurrenceFrequency.Selected.Value = "Monthly"
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =60
+                  X: =recurPeriodMonthTxt.X + recurPeriodMonthTxt.Width + 5
+                  Y: =ddRecurrenceFrequency.Y - 3
+            - recurPeriodMonthTxt:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  Align: =Align.Center
+                  BorderThickness: =1
+                  Default: =1
+                  DisplayMode: |-
+                    =DisplayMode.Disabled
+                    // In the event MS fixes the ability to do anything other than 1 in recurPeriodMonthTxt, the code below will enable the control accordingly
+                    /*
+                    If(
+                        IsBlank(Radio2.Selected.Value) Or
+                        (ddRecurrenceFrequency.Selected.Value = "Daily" And Radio2.Selected.Value = "Every weekday") Or
+                        (ddRecurrenceFrequency.Selected.Value = "Monthly" And Radio2.Selected.Value = "The"),
+                        DisplayMode.Disabled,
+                        //Else
+                        DisplayMode.Edit
+                    )
+                    */
+                  FocusedBorderThickness: =2
+                  Height: =20
+                  OnChange: =Select(calClickBtn)
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =3
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Reset: =varWeeklyReset
+                  Size: =9
+                  Visible: =ddRecurrenceFrequency.Selected.Value = "Monthly"
+                  Width: =25
+                  X: =RecurringWeeklb_1.X + RecurringWeeklb_1.Width
+                  Y: =ddRecurrenceFrequency.Y - 3
+            - RecurringWeeklb_4:
+                Control: Text@0.0.51
+                Properties:
+                  DisplayMode: |-
+                    =If(
+                        IsBlank(Radio2.Selected.Value) Or
+                        (ddRecurrenceFrequency.Selected.Value = "Monthly" And Radio2.Selected.Value = "Day"),
+                        DisplayMode.Disabled,
+                        //Else
+                        DisplayMode.Edit
+                    )
+                  Font: =Font.'Segoe UI'
+                  FontColor: =RGBA(0, 0, 0, 1)
+                  Height: =20
+                  Size: =12.5
+                  Text: ="of every "
+                  Visible: |-
+                    =false // In the event MS fixes the ability to do anything other than 1, the code below will enable the control accordingly
+                    /*
+                    ddRecurrenceFrequency.Selected.Value = "Monthly"
+                    */
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =50
+                  X: =ddWeekIndex.X + 20
+                  Y: =ddWeekIndex.Y + ddWeekIndex.Height + 2
+            - RecurringWeeklb_5:
+                Control: Text@0.0.51
+                Properties:
+                  DisplayMode: |-
+                    =If(
+                        IsBlank(Radio2.Selected.Value) Or
+                        (ddRecurrenceFrequency.Selected.Value = "Monthly" And Radio2.Selected.Value = "Day"),
+                        DisplayMode.Disabled,
+                        //Else
+                        DisplayMode.Edit
+                    )
+                  Font: =Font.'Segoe UI'
+                  FontColor: =RGBA(0, 0, 0, 1)
+                  Height: =20
+                  Size: =12.5
+                  Text: ="month(s)"
+                  Visible: |-
+                    =false // In the event MS fixes the ability to do anything other than 1, the code below will enable the control accordingly
+                    /*
+                    ddRecurrenceFrequency.Selected.Value = "Monthly"
+                    */
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =60
+                  X: =recurPeriodMonthTxt_1.X + recurPeriodMonthTxt_1.Width + 5
+                  Y: =RecurringWeeklb_4.Y
+            - recurPeriodMonthTxt_1:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  Align: =Align.Center
+                  BorderThickness: =1
+                  Default: =1
+                  DisplayMode: |-
+                    =If(
+                        IsBlank(Radio2.Selected.Value) Or
+                        (ddRecurrenceFrequency.Selected.Value = "Daily" And Radio2.Selected.Value = "Every weekday") Or
+                        (ddRecurrenceFrequency.Selected.Value = "Monthly" And Radio2.Selected.Value = "Day"),
+                        DisplayMode.Disabled,
+                        //Else
+                        DisplayMode.Edit
+                    )
+                  FocusedBorderThickness: =2
+                  Height: =20
+                  OnChange: |-
+                    =///Select(dayMonthBtn);
+                    Select(calClickBtn)
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =3
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Reset: =varWeeklyReset
+                  Size: =9
+                  Visible: |-
+                    =false // In the event MS fixes the ability to do anything other than 1, the code below will enable the control accordingly
+                    /*
+                    ddRecurrenceFrequency.Selected.Value = "Monthly"
+                    */
+                  Width: =25
+                  X: =RecurringWeeklb_4.X + RecurringWeeklb_4.Width
+                  Y: =RecurringWeeklb_4.Y
+            - ddWeekIndex:
+                Control: DropDown@0.0.45
+                Properties:
+                  DefaultSelectedItems: =["first"]
+                  DisplayMode: |-
+                    =If(
+                        IsBlank(Radio2.Selected.Value) Or
+                        (ddRecurrenceFrequency.Selected.Value = "Monthly" And Radio2.Selected.Value = "Day"),
+                        DisplayMode.Disabled,
+                        //Else
+                        DisplayMode.Edit
+                    )
+                  Fill: =RGBA(255, 255, 255, 1)
+                  FontSize: =12
+                  Height: =20
+                  Items: |
+                    =["first", "second", "third","fourth"]
+                  OnChange: |-
+                    =///Set(ActualDate2, Blank());
+                    ///Select(dayMonthBtn);
+                    Select(calClickBtn)
+                  Visible: |-
+                    =false // In the event MS fixes the ability to do anything other than 1 in recurPeriodMonthTxt, the code below will enable the control accordingly
+                    /*
+                    ddRecurrenceFrequency.Selected.Value = "Monthly"
+                    */
+                  Width: =85
+                  X: =recurPeriodTxt.X
+                  Y: =RecurringWeeklb_1.Y + RecurringWeeklb_1.Height + 2
+            - ddDayOfWeek:
+                Control: DropDown@0.0.45
+                Properties:
+                  DefaultSelectedItems: |-
+                    =Switch(Day(Today()),
+                        1, ["Sunday"],
+                        2, ["Monday"],
+                        3, ["Tuesday"],
+                        4, ["Wednesday"],
+                        5, ["Thursday"],
+                        6, ["Friday"],
+                        7, ["Saturday"]
+                    )
+                  DisplayMode: |-
+                    =If(
+                        IsBlank(Radio2.Selected.Value) Or
+                        (ddRecurrenceFrequency.Selected.Value = "Monthly" And Radio2.Selected.Value = "Day"),
+                        DisplayMode.Disabled,
+                        //Else
+                        DisplayMode.Edit
+                    )
+                  Fill: =RGBA(255, 255, 255, 1)
+                  FontSize: =12
+                  Height: =20
+                  Items: |
+                    =["Sunday", "Monday", "Tuesday","Wednesday", "Thursday", "Friday", "Saturday"]
+                  OnChange: |-
+                    =///Set(ActualDate2, Blank());
+                    ///Select(dayMonthBtn);
+                    Select(calClickBtn)
+                  Visible: |-
+                    =false // In the event MS fixes the ability to do anything other than 1 in recurPeriodMonthTxt, the code below will enable the control accordingly
+                    /*
+                    ddRecurrenceFrequency.Selected.Value = "Monthly"
+                    */
+                  Width: =115
+                  X: =ddWeekIndex.X + ddWeekIndex.Width+ 10
+                  Y: =ddWeekIndex.Y
+            - startDateLbl:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  DisplayMode: =DisplayMode.View
+                  Fill: =RGBA(244, 244, 244, 1)
+                  Height: =20
+                  PaddingBottom: =7
+                  Size: =9
+                  Text: |-
+                    =Text(
+                        //Calendar_1.StartDate,
+                        Calendar_1.DefaultStartDate,
+                        DateTimeFormat.ShortDate
+                        )
+                  Visible: =RecurringWeeklb_2.Visible
+                  Width: =70
+                  X: =RecurringWeeklb_7.X + RecurringWeeklb_7.Width
+                  Y: =RecurringWeeklb_2.Y + RecurringWeeklb_2.Height
+            - Radio1:
+                Control: Classic/Radio@2.3.0
+                Properties:
+                  Default: ="End by:"
+                  FocusedBorderThickness: =0
+                  Height: |-
+                    =If(
+                        Parent.Visible = true,
+                        70,
+                        0
+                    )
+                  Items: =["End by:", "End after:", "No end date (max 180 days)"]
+                  Items.Value: =Value
+                  LineHeight: =1.5
+                  OnChange: |+
+                    =
+                    Reset(recurPeriodTxt_1);
+                    Select(calClickBtn)
+                  PaddingBottom: =0
+                  PaddingTop: =0
+                  RadioSize: =15
+                  Reset: =
+                  Size: =10
+                  Visible: =RecurringWeeklb_2.Visible
+                  Width: =218
+                  X: =Radio2.X
+                  Y: =startDateLbl.Y - 5
+            - DatePickerCanvas2:
+                Control: DatePicker@0.0.46
+                Properties:
+                  DisplayMode: |-
+                    =If(
+                        IsBlank(Radio1.Selected.Value) Or
+                        Radio1.Selected.Value <> "End by:",
+                        DisplayMode.Disabled,
+                        //Else
+                        DisplayMode.Edit
+                    )
+                  Fill: =RGBA(255, 255, 255, 1)
+                  FontSize: =12
+                  Format: ='DatePickerCanvas.Format'.Short
+                  Height: =20
+                  OnChange: =Select(calClickBtn)
+                  PaddingBottom: =10
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  SelectedDate: =DateAdd(DateValue(startDateLbl.Text), 45, TimeUnit.Days)
+                  Visible: =RecurringWeeklb_2.Visible
+                  Width: =120
+                  X: =240
+                  Y: =RecurringWeeklb_2.Y + RecurringWeeklb_2.Height - 5
+            - recurPeriodTxt_1:
+                Control: Classic/TextInput@2.3.2
+                Properties:
+                  Align: =Align.Center
+                  BorderThickness: =1
+                  Default: =1
+                  DisplayMode: |-
+                    =If(
+                        IsBlank(Radio1.Selected.Value) Or
+                        Radio1.Selected.Value <> "End after:",
+                        DisplayMode.Disabled,
+                        //Else
+                        DisplayMode.Edit
+                    )
+                  FocusedBorderThickness: =2
+                  Height: =20
+                  OnChange: |-
+                    =Select(nthWeekdayBtn);
+                    Select(calClickBtn)
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =3
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Reset: =varWeeklyReset
+                  Size: =9
+                  Visible: =RecurringWeeklb_2.Visible
+                  Width: =25
+                  X: =240
+                  Y: =DatePickerCanvas2.Y + DatePickerCanvas2.Height + 3
+            - RecurringWeeklb_6:
+                Control: Text@0.0.51
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  FontColor: =RGBA(0, 0, 0, 1)
+                  Height: =20
+                  Size: =12.5
+                  Text: ="occurrences"
+                  Visible: =RecurringWeeklb_2.Visible
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =80
+                  X: =recurPeriodTxt_1.X + recurPeriodTxt_1.Width + 8
+                  Y: =recurPeriodTxt_1.Y + 2
+            - RecurringWeeklb_7:
+                Control: Text@0.0.51
+                Properties:
+                  Font: =Font.'Segoe UI'
+                  FontColor: =RGBA(0, 0, 0, 1)
+                  Height: =20
+                  Size: =12.5
+                  Text: ="Start:"
+                  Visible: =RecurringWeeklb_2.Visible
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =35
+                  X: =RecurringWeeklb_2.X
+                  Y: =RecurringWeeklb_2.Y + RecurringWeeklb_2.Height
+            - RecurringWeeklb_8:
+                Control: Text@0.0.51
+                Properties:
+                  Align: ='TextCanvas.Align'.Start
+                  FontItalic: =true
+                  Height: =20
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: ="Max end date"
+                  Visible: =ddRecurrenceFrequency.Selected.Value <> "None"
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =75
+                  X: =16
+                  Y: =RecurringWeeklb_7.Y + RecurringWeeklb_7.Height
+            - maxEndDateLbl:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  DisplayMode: =DisplayMode.View
+                  Fill: =RGBA(244, 244, 244, 1)
+                  Height: =20
+                  Italic: =true
+                  PaddingBottom: =7
+                  Size: =9
+                  Text: =Text(DateAdd(DateValue(startDateLbl.Text), Calendar_1.DaysAheadRestriction, TimeUnit.Days), DateTimeFormat.ShortDate)
+                  Visible: =RecurringWeeklb_8.Visible
+                  Width: =75
+                  X: =16
+                  Y: =RecurringWeeklb_8.Y + RecurringWeeklb_8.Height
+            - RecurringIntervalbl_2:
+                Control: Text@0.0.51
+                Properties:
+                  Align: =Align.Justify
+                  AutoHeight: =true
+                  Height: =67
+                  PaddingBottom: =0
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  PaddingTop: =0
+                  Size: =8
+                  Text: ="Ensure the first day to start the pattern is reflected in the 'Range of recurrence', below, by selecting the start date on the calendar."
+                  Visible: =ddRecurrenceFrequency.Selected.Value = "Weekly"
+                  Weight: ='TextCanvas.Weight'.Regular
+                  Width: =105
+                  X: |-
+                    =If(ddRecurrenceFrequency.Selected.Value = "None",
+                        90,
+                        6
+                    )
+                  Y: =ddRecurrenceFrequency.Y + ddRecurrenceFrequency.Height
+      - Preloader_2:
+          Control: CanvasComponent
+          ComponentName: Preloader
+          Properties:
+            AnimatedGIF: ="https://aka.ms/preloadergif"
+            Color: =
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =Parent.Height
+            IsLoading: =true
+            Styles: =Table({Key:"Fill", Value:"#0086D0" , Type:"Color"})
+            Text: =
+            Width: =Parent.Width
+      - Timer4:
+          Control: Timer@2.1.0
+          Properties:
+            AutoStart: =true
+            BorderThickness: =5
+            Color: =RGBA(9, 33, 98, 1)
+            Duration: =1000
+            Fill: =RGBA(0, 0, 0, 0)
+            FontWeight: =FontWeight.Bold
+            Height: =Preloader_2.Height
+            OnTimerEnd: |-
+              =//=====================================================================
+              //SET var_EmailBody  —  578 EHRM Learning Lab calendar-invite body
+              //=====================================================================
+
+              Set(
+                  var_EmailBody,
+
+              //<!-- ===== CRITICAL PREREQUISITES ===== -->
+                  $"
+                  <!-- ===== CRITICAL PREREQUISITES ===== -->
+                  <meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"">
+                  <table style=""max-width:1200px;width:1200px;margin:0 auto;font-family:Arial,sans-serif;border-collapse:collapse;background-color:#D5FFFF;"" border=""1"" cellspacing=""0"" cellpadding=""0"">
+                    <tr>
+                      <td style=""background-color:#28a745;padding:15px;text-align:center;"">
+                        <span style=""color:#ffffff;padding:1px 1px;border-radius:2px;font-size:8px;font-weight:bold;letter-spacing:1px;display:inline-block;"">&nbsp;---&nbsp;&nbsp;AN AUTOMATED MESSAGE FROM THE EDWARD HINES JR. VA HOSPITAL&nbsp;&nbsp;---&nbsp;</span>
+                        <h2 style=""background-color:#28a745;color:#ffffff;padding:8px 14px;border-radius:25px;font-size:32px;font-weight:bold;display:inline-block;margin:15px 0 5px 0;"">&nbsp;&nbsp;</h2><h2 style=""background-color:#28a745;color:#ffffff;padding:8px 14px;border-radius:25px;font-size:20px;font-weight:bold;display:inline-block;margin:15px 0 5px 0;"">&#127881;&nbsp;&nbsp;&nbsp;&nbsp;REGISTRATION CONFIRMED - EHRM Learning Lab Training</h2>
+                        <div style=""color:#ffffff;font-size:16px;font-weight:400;"">
+                          <a style=""color:#000080;text-decoration:underline;font-size:18px;"" href=""https://dvagov.sharepoint.com/sites/vhahin/svc/ci/SitePages/Federal-Electronic-Health-Record.aspx"" target=""_blank""><strong>Hines EHRM SharePoint</strong></a>
+                          <span style=""font-size:22px;"">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                          <a style=""color:#000080;text-decoration:underline;font-size:18px;"" href=""https:www.va.gov/hines-health-care/"" target=""_blank""><strong>Edward Hines Jr. VA Hospital</strong></a>
+                          <span style=""font-size:22px;"">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+                          <a style=""color:#000080;text-decoration:underline;font-size:18px;"" href=""https:www.va.gov/"" target=""_blank""><strong>U.S. Department of Veterans Affairs</strong></a>
+                        </div>
+                      </td>
+                    </tr>
+                  "
+
+              //<!-- ===== CRITICAL PREREQUISITES ===== -->
+                  & $"
+                    <!-- ===== CRITICAL PREREQUISITES ===== -->
+                    <tr><td style=""padding:20px 15px 15px 15px;"">
+                      <table style=""width:100%;border:6px solid #b30000;border-collapse:collapse;background-color:#fff0f0;box-shadow:0 0 0 3px #ff0000;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                        <tr><td style=""background-color:#cc0000;color:#ffffff;padding:16px 14px;font-size:26px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;border-bottom:4px solid #cc0000;"">&#128680;&nbsp;&nbsp;CRITICAL PREREQUISITES&nbsp;&nbsp;</td></tr>
+                        <tr><td style=""background-color:#ffffff;"">
+                          <p style=""color:#cc0000;margin:0 3px 8px 3px;font-size:20px;font-weight:bold;line-height:1.5;background-color:#ffe6e6;border:2px dashed #cc0000;padding:12px;""><span style=""font-size:24px;""><strong><u>ATTENTION!</u></strong></span>&nbsp;&nbsp;&nbsp;You <b><u><i>must</i></u></b> have Sandbox access in order to participate in Learning Labs. Access can take <span style=""background-color:#ffff00;color:#cc0000;padding:0 4px;"">up to four weeks!</span><br>Follow the steps below to ensure you are ready to participate:</p>
+                          <ul style=""margin:0;padding-left:22px;font-size:16px;color:#0D0D0D;line-height:1.6;"">
+                            <li style=""margin-bottom:12px;""><strong style=""color:#cc0000;font-size:20px;""><u>STEP 1:</u></strong>&nbsp;&nbsp;&nbsp;Complete the TMS course for Sandbox access (<strong>TMS ID 4686318</strong>). After watching the 10-minute video, the Sandbox team will provision you within four weeks. You will receive an email from the Oracle team (sent from their <strong><i>VA-Account-Provisioning_US@Oracle.com</i></strong> email address) once you have been granted access. <em>If you have already completed this step, skip to Step 2.</em></li>
+                            <li style=""margin-bottom:4px;""><strong style=""color:#cc0000;font-size:20px;""><u>STEP 2:</u></strong>&nbsp;&nbsp;&nbsp;Log in to the Sandbox to confirm your access. View the step-by-step <a style=""color:#000080;text-decoration:underline;font-weight:bold;"" href=""https:dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/_layouts/15/embed.aspx?UniqueId=81a58232-44f3-4c74-83df-6f8ca1a67de9"" target=""_blank""><i>Sandbox Login Instructions here</i></a>).</li>
+                          </ul>
+                        </td></tr>
+                        <tr><td style=""background-color:#ffffff;"">
+                          <p style=""color:#cc0000;margin:0 3px 8px 3px;font-size:20px;line-height:1.5;font-weight:bold;background-color:#ffe6e6;border:2px dashed #cc0000;padding:10px;"">If you have completed the TMS more than four weeks ago AND you are still unable to log in, please email <a style=""color:#000080;text-decoration:underline;"" href=""mailto:VAEHRMSandbox@va.gov"" target=""_blank""><i>VAEHRMSandbox@va.gov</i></a> for assistance as soon as possible!</p>
+                        </td></tr>
+                      </table>
+                    </td></tr>
+                  "
+
+              //<!-- ===== EVENT DETAILS ===== -->
+                  & $"
+                    <!-- ===== EVENT DETAILS ===== -->
+                    <tr><td style=""padding:20px 15px 15px 15px;"">
+                      <table style=""width:100%;border:4px solid #0066cc;border-collapse:collapse;background-color:#e7f3ff;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                        <tr><td style=""background-color:#0066cc;color:#ffffff;padding:10px 12px;font-size:26px;font-weight:bold;"">&#128197;&nbsp;&nbsp;&nbsp;Event Details</td></tr>
+                        <tr><td style=""padding:10px;background-color:#ffffff;"">
+                          <table style=""width:100%;"" border=""0"" cellspacing=""0"" cellpadding=""6"">
+                            <tr>
+                              <td style=""color:#0066cc;font-size:11px;width:15%;vertical-align:top;""><i>Training Scenario:</i></td>
+                              <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_reservationScenario & ""}</b></strong></td>
+                            </tr>
+                            <tr>
+                              <td style=""color:#0066cc;font-size:11px;vertical-align:top;""><i>Training Role:</i></td>
+                              <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_reservationRole & ""}</b></strong></td>
+                            </tr>
+                            <tr>
+                              <td style=""color:#0066cc;font-size:11px;vertical-align:top;""><i>Training Date:</i></td>
+                              <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_Date_central & ""}</b></strong></td>
+                            </tr>
+                            <tr>
+                              <td style=""color:#0066cc;font-size:11px;vertical-align:top;""><i>Training Time:</i></td>
+                              <td style=""font-size:16px;color:#333333;""><strong><b>{"" & var_secondHalfTime_central & ""}</b></strong></td>
+                            </tr>
+                            <tr>
+                              <td style=""color:#0066cc;font-size:11px;vertical-align:top;""><i>Training Location:</i></td>
+                              <td style=""font-size:16px;color:#333333;""><strong><b>{"" & "Room #" & var_reservationRoomNumber & ", Floor #" & var_reservationFloorNumber & ", Building #" & var_reservationBuildingNumber & ", " & var_reservationDivision & ""}</b></strong></td>
+                            </tr>
+                            </td></tr>
+                          </table>
+                        </td></tr>
+                      </table>
+                    </td></tr>
+                  "
+
+
+              //<!-- ===== CONTACT/HELP ===== -->
+                  & $"
+                    <!-- ===== CONTACT/HELP ===== -->
+                    <tr><td style=""padding:20px 15px 15px 15px;"">
+                      <table style=""width:100%;border:4px solid #6c757d;border-collapse:collapse;background-color:#fff9e6;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                        <tr><td style=""background-color:#6c757d;color:#ffffff;padding:10px 12px;font-size:26px;font-weight:bold;"">&#10067;&nbsp;&nbsp;&nbsp;Have Questions or Need Assistance?</td></tr>
+                        <tr><td style=""padding:15px;background-color:#ffffff;"">
+                          <p style=""margin:0 0 10px 0;font-size:20px;color:#333333;line-height:1.5;"">Contact the EHRM Training Coordinators at the Edward Hines Jr. VA Hospital:</p>
+                          <p style=""margin:0 0 6px 0;font-size:20px;color:#333333;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#128222;<p style=""margin:0 0 6px 0;font-size:16px;color:#333333;"">&nbsp;&nbsp;&nbsp;Reach your Clinical Informatics direct help line, by calling us at <a style=""color:#000080;text-decoration:underline;"" href=""tel:+17082022777"">(708)</a><a style=""color:#000080;text-decoration:none;"" href=""tel:+17082022777""> </a><a style=""color:#000080;text-decoration:underline;"" href=""tel:+17082022777"">202-2777</a></p>
+                          <p style=""margin:0;font-size:20px;color:#333333;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#128231;<p style=""margin:0;font-size:16px;color:#333333;"">&nbsp;&nbsp;&nbsp;Connect with your Hines EHRM Training Coordinators, by emailing us at <a style=""color:#000080;text-decoration:underline;"" href=""mailto:VHAHINInformaticsTrainingAndSupport@va.gov"">VHAHINInformaticsTrainingAndSupport@va.gov</a></p>
+                          <p style=""margin:12px 0 0 0;font-size:16px;color:#333333;"">Please reference your Registration ID number (&nbsp;#<strong><u><i><b>{"" & (Max('Desk Reservations', Value(ID)) + 1) & ""}</u></i></b></strong>&nbsp;) handy when contacting our team!</p>
+                        </td></tr>
+                      </table>
+                    </td></tr>
+                    <br>
+                  "
+
+
+              //<!-- ===== FOOTER ===== -->
+                  & $"
+                    <!-- ===== Footer ===== -->
+                    <tr><td style=""padding:8px 8px;background-color:#1f4e79;border-top:4px solid #e03e2d;text-align:center;"">
+                      <p style=""margin:0;color:#ffffff;font-size:12px;line-height:1;""><i>This is an automated confirmation from the Edward Hines Jr. VA Hospital's CLINICAL INFORMATICS TEAM.<br><em><strong>Please do not reply back directly to this email.</i></strong></em></p>
+                    </td></tr>
+                  </table>"
+              );
+
+              Set(var_timerPopUP_SubmitScreen, Blank());
+
+              Select(ContinueDatebtn);
+
+
+
+
+
+
+              //     ---------- YOUR REGISTRATION DETAILS ----------
+              /*    & $"
+                    <!-- ===== YOUR REGISTRATION DETAILS ===== --> 
+                     <tr><td style=""padding:20px 15px 0 15px;"">
+                       <table style=""width:100%;border:4px solid #636363;border-collapse:collapse;"" border=""0"" cellspacing=""0"" cellpadding=""0"">
+                         <tr><td colspan=""2"" style=""background-color:#636363;color:#ffffff;padding:10px 12px;font-size:16px;font-weight:bold;"">&nbsp;&nbsp;&#128203;&nbsp;&nbsp;&nbsp;&nbsp;Your Registration Details</td></tr>
+                         <tr>
+                           <td style=""background-color:#f1c40f;color:#2c3e50;padding:3px 3px;font-weight:bold;font-size:10px;text-transform:uppercase;width:35%;border-bottom:2px solid #d4a017;"">Field/Parameter</td>
+                           <td style=""background-color:#f1c40f;color:#2c3e50;padding:3px 3px;font-weight:bold;font-size:10px;text-transform:uppercase;width:65%;border-bottom:2px solid #d4a017;"">Your VALUES</td>
+                         </tr>
+                         <tr>
+                           <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Registration Status:</td>
+                           <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong>SUBMITTED / PENDING APPROVAL</strong></em></td>
+                         </tr>
+                         <tr>
+                           <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">First Name:</td>
+                           <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.GivenName & ""}</b></strong></em></td>
+                         </tr>
+                         <tr>
+                           <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Last Name:</td>
+                           <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.Surname & ""}</b></strong></em></td>
+                         </tr>
+                         <tr>
+                           <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Title:</td>
+                           <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.JobTitle & ""}</b></strong></em></td>
+                         </tr>
+                         <tr>
+                           <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Email Address:</td>
+                           <td style=""padding:5px;color:#000080;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.Mail & ""}</b></strong></em></td>
+                         </tr>
+                         <tr>
+                           <td style=""padding:5px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;border-bottom:1px solid #e9ecef;"">Network Account :</td>
+                           <td style=""padding:5px;color:#495057;font-size:16px;background-color:#fafbfc;border-bottom:1px solid #e9ecef;""><em><strong><b>{"" & _selectedUser.MailNickname & ""}</b></strong></em></td>
+                         </tr>
+                         <tr>
+                           <td style=""padding:12px;font-weight:bold;color:#1f4e79;width:20%;font-size:11px;"">Submission Date/Time:</td>
+                           <td style=""padding:12px;color:#495057;font-size:16px;background-color:#fafbfc;""><em><strong><b>{"" & Now() & ""}</b></strong></em></td>
+                         </tr>
+                       </table>
+                     </td></tr>"
+              */
+            Repeat: =true
+            Size: =30
+            Text: =
+            Width: =Preloader_2.Width
+            X: =Preloader_2.X
+            Y: =Preloader_2.Y

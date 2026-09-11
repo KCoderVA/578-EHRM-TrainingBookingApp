@@ -1,13 +1,22 @@
 # Power Apps — Canvas App (`578-EHRM-Training-App`)
 
-The **EHRM Training & Booking App** is a responsive, mobile-first Power Apps **canvas app** that lets
+The **578 EHRM Training App** is a responsive, mobile-first Power Apps **canvas app** that lets
 staff at a VA hospital self-register (or be registered by a POC/supervisor) for **EHRM "Learning Lab"
 training sessions** and reserve the physical/virtual desks used to run them. It is the primary
 user-facing component of this solution and orchestrates the SharePoint lists, Power Automate flows, and
 Power BI reporting documented elsewhere in this repository.
 
-> **Current release:** `v1.0.12` (public) — see [`v1.0.12_differenceAnalysis.md`](v1.0.12_differenceAnalysis.md)
-> for the full `v0.12.2 → v1.0.12` change history. The packaged export lives in [`.msapp/`](.msapp/).
+> **Current release:** `v1.1.20` (public) — see the `v1.0.12 → v1.1.20` analysis set:
+> [`v1.1.20_diffAnalysis.md`](v1.1.20_diffAnalysis.md) (technical),
+> [`v1.1.20_changeSummary.md`](v1.1.20_changeSummary.md) (functional),
+> [`v1.1.20_knownIssues.md`](v1.1.20_knownIssues.md), and
+> [`v1.1.20_recommendations.md`](v1.1.20_recommendations.md). The prior
+> [`v1.0.12_differenceAnalysis.md`](v1.0.12_differenceAnalysis.md) (`v0.12.2 → v1.0.12`) is retained as history.
+> The packaged export lives in [`.msapp/`](.msapp/).
+>
+> ℹ️ **Version note:** the app is internally consistent at `v1.1.20` — `varRepoVersion`, manifest
+> `AppDescription`, the `.zip` bundle, and the tracked `.msapp` package (`v1.1.20_578EHRMTrainingApp.msapp`)
+> all read `1.1.20`.
 
 ---
 
@@ -58,15 +67,22 @@ See [`../sharePoint/README.md`](../sharePoint/README.md) for the list schemas an
 ```
 src/powerApps/
 ├── .msapp/        — packaged canvas app (import this into Power Apps Studio)
-├── .unpacked/     — pac-unpacked source (Power Fx .fx.yaml, DataSources, pkgs, CanvasManifest.json)
+├── .unpacked/     — pac-unpacked source; newer pac emits a dual layout:
+│                     layoutDefault/    (classic .fx.yaml, DataSources, pkgs, CanvasManifest.json)
+│                     layoutSourceCode/ (source-code layout + *.msapr bundle)
 ├── .zip/          — legacy/full export bundle (git-ignored *.zip)
-├── local/         — developer-only scratch (git-ignored): version-history CSV, formula snippets
+├── .local/        — developer-only scratch (git-ignored): formula snapshots, proposed content, notes
 ├── README.md
-└── v1.0.12_differenceAnalysis.md
+├── v1.1.20_diffAnalysis.md        — technical diff (v1.0.12 → v1.1.20)
+├── v1.1.20_changeSummary.md       — functional summary
+├── v1.1.20_knownIssues.md         — bugs, risks, follow-ups
+├── v1.1.20_recommendations.md     — roadmap for next versions
+└── v1.0.12_differenceAnalysis.md  — prior cycle (v0.12.2 → v1.0.12), historical
 ```
 
-Screen logic lives in `.unpacked/Src/*.fx.yaml`; shared components (nav `Tabs`/`Tabs_3`, `Calendar`,
-`Preloader`) in `.unpacked/Src/Components/`; data-source bindings in `.unpacked/DataSources/`.
+Screen logic lives in `.unpacked/layoutDefault/Src/*.fx.yaml`; shared components (nav `Tabs`/`Tabs_3`,
+`Calendar`, `Preloader`) in `.unpacked/layoutDefault/Src/Components/`; data-source bindings in
+`.unpacked/layoutDefault/DataSources/`.
 
 ---
 
@@ -113,6 +129,13 @@ data loads.
 | `AccessDenied` | ✅ | — | — | — | ✅ | — |
 
 ---
+
+## Version history (component)
+
+| Component version | Project release | Highlights |
+|---|---|---|
+| **v1.1.20** | v1.1.20 | Booking-commit refactor on `Confirm` (orchestrator + verification timer + both-lists fallback cascade); rebuilt Help screen (end-user Quick-Start guide + admin changelog); class picker re-pointed to Hines-scoped collections with new `sessionActive_text` active-session filter; `btnOutlook_*`/`btnPatch_*`/`timer_*` control renames. Follow-ups: `BindingErrorCount` `0 → 24` on the `Success` screen (KI-02, next patch); Teams connector is an intentional placeholder (KI-03) — see [`v1.1.20_knownIssues.md`](v1.1.20_knownIssues.md). |
+| v1.0.12 | v1.0.12 | Removed impersonation backdoor; RBAC default-to-`User`; single-student proxy registration; Learning Labs Library picker; binding errors 120 → 0; removed dead `CreateMeeting`/`Screen3`. See [`v1.0.12_differenceAnalysis.md`](v1.0.12_differenceAnalysis.md). |
 
 ## License
 

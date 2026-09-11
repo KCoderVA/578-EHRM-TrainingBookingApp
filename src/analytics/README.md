@@ -1,6 +1,6 @@
 # Analytics (Power BI, SQL & TMS data)
 
-This folder holds the reporting and data-analysis components for the EHRM Training & Booking App: Power BI
+This folder holds the reporting and data-analysis components for the 578 EHRM Training App: Power BI
 reports/dashboards, supporting SQL, and staged VA **TMS** (Talent Management System) completion data.
 
 **Status @ v1.0.12:** actively developed. Two Power BI reports now exist (one still work-in-progress) and a
@@ -19,7 +19,6 @@ src/analytics/
 │   ├── lists/       — staged VA TMS completion exports (.xlsx) + Power BI links (.url) (git-ignored data)
 │   └── powerBI/     — placeholder for TMS-specific reports
 └── sql/
-    ├── procedures/  — stored procedures (scaffold)
     ├── queries/     — reporting queries
     └── local/       — local-only staging/scratch (git-ignored)
 ```

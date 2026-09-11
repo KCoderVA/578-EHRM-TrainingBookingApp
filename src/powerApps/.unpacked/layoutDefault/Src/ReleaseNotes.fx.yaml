@@ -1,0 +1,986 @@
+"ReleaseNotes As screen.'phoneLayout_Success_ver3.0'":
+    Fill: =RGBA(236, 236, 236, 1)
+    Height: =Max(App.Height, App.DesignHeight)
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    Width: =Max(App.Width, App.DesignWidth)
+
+    bgRounded_13 As htmlViewer:
+        Height: |-
+            =//640
+            htmlText_userGuide.Height + 10
+        HtmlText: |-
+            =//"<div style='border-radius:10%;height:800px;width:100%;background-color:#FCFCFC'></div>"
+            "<div style='border-radius:10%;height:590px;width:100%;background-color:#FCFCFC'></div>"
+        Width: |-
+            =//610
+            htmlText_userGuide.Width + 20
+        X: |-
+            =//15
+            htmlText_userGuide.X - 20
+        Y: =htmlText_userGuide.Y - 15
+        ZIndex: =1
+
+    htmlText_userGuide As htmlViewer:
+        Height: |-
+            =//640
+            Parent.Height - Image2_10.Y - Image2_10.Height - 25
+        HtmlText: |-
+            ="<div style='font-family:Segoe UI, Arial, sans-serif; color:#1b1b1b; padding:10px; font-size:14px; line-height:1.45;'>
+            
+                <h2 style='color:#005ea2; margin:0 0 2px 0;'>EHRM Learning Lab &mdash; Quick Start Guide</h2>
+                <p style='margin:0 0 14px 0; color:#3d3d3d;'>Registering for a training session takes about a minute. Follow the steps below. You can tap <b>Help</b> at any time to come back to this guide.</p>
+            
+                <div style='background:#eef5fb; border-left:4px solid #005ea2; padding:8px 12px; margin:0 0 8px 0; border-radius:4px;'>
+                <span style='display:inline-block; background:#005ea2; color:#ffffff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-weight:bold; margin-right:6px;'>1</span>
+                <b style='color:#005ea2;'>From the app's 'HOME' screen/dashboard:</b><br>
+                This is the app's landing page & home screen. To start a new registration, tap the <b>+ NEW</b> button to begin a new request...
+                </div>
+            
+                <div style='background:#f4f8fc; border-left:4px solid #4f9ad6; padding:8px 12px; margin:0 0 8px 0; border-radius:4px;'>
+                <span style='display:inline-block; background:#4f9ad6; color:#ffffff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-weight:bold; margin-right:6px;'>2</span>
+                <b style='color:#005ea2;'>Once you are on the 'Create a new reservation...' screen:</b><br>
+                Search & select the person who needs training, &mdash; either <b>yourself</b>, or a <b>staff member you support</b> &mdash;, Then be sure that the <b>Manager</b> shown and <b>Service Line</b> boxes auto-populate correctly depending on the person you selected. Then, you can use the drop-down input to select the <b>training type</b> for your selected user...
+                </div>
+            
+                <div style='background:#f4f8fc; border-left:4px solid #4f9ad6; padding:8px 12px; margin:0 0 8px 0; border-radius:4px;'>
+                <span style='display:inline-block; background:#4f9ad6; color:#ffffff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-weight:bold; margin-right:6px;'>3</span>
+                <b style='color:#005ea2;'>Click the <b>CONTINUE</b> button</b><br>
+                Once your employee, manager, service line, and training type selections all look correct, click the <b>'CONTINUE'</b> to continue.
+                </div>
+            
+                <div style='background:#f4f8fc; border-left:4px solid #4f9ad6; padding:8px 12px; margin:0 0 8px 0; border-radius:4px;'>
+                <span style='display:inline-block; background:#4f9ad6; color:#ffffff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-weight:bold; margin-right:6px;'>4</span>
+                <b style='color:#005ea2;'>Choose the details</b><br>
+                Use the drop-downs to set the <b>Role</b>, <b>Scenario</b> (class), <b>Date &amp; Time</b>, and <b>Location</b> for the session. As you make a selection in each of the drop-down boxes, the next question will become visible & will automatically filter according to your previous selections.
+                </div>
+            
+                <div style='background:#f4f8fc; border-left:4px solid #4f9ad6; padding:8px 12px; margin:0 0 8px 0; border-radius:4px;'>
+                <span style='display:inline-block; background:#4f9ad6; color:#ffffff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-weight:bold; margin-right:6px;'>5</span>
+                <b style='color:#005ea2;'>Click the next <b>CONTINUE</b> button</b><br>
+                Tap <b>'CONTINUE'</b> button (which has now become selectable), to move on to the agreement page.
+                </div>
+            
+                <div style='background:#f4f8fc; border-left:4px solid #4f9ad6; padding:8px 12px; margin:0 0 8px 0; border-radius:4px;'>
+                <span style='display:inline-block; background:#4f9ad6; color:#ffffff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-weight:bold; margin-right:6px;'>6</span>
+                <b style='color:#005ea2;'>Accept the terms</b><br>
+                Read the <b>Terms &amp; Conditions</b>, then tap <b>Accept</b> to confirm.
+                </div>
+            
+                <div style='background:#f4f8fc; border-left:4px solid #4f9ad6; padding:8px 12px; margin:0 0 8px 0; border-radius:4px;'>
+                <span style='display:inline-block; background:#4f9ad6; color:#ffffff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-weight:bold; margin-right:6px;'>7</span>
+                <b style='color:#005ea2;'>Review before you submit</b><br>
+                Check everything on the summary. Need to change something? Tap <b>Back</b> to fix it &mdash; nothing is saved yet.
+                </div>
+            
+                <div style='background:#eef7ee; border-left:4px solid #2e8540; padding:8px 12px; margin:0 0 8px 0; border-radius:4px;'>
+                <span style='display:inline-block; background:#2e8540; color:#ffffff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-weight:bold; margin-right:6px;'>8</span>
+                <b style='color:#2e8540;'>Submit</b><br>
+                When everything is correct, tap <b>Submit</b> to book the session.
+                </div>
+            
+                <div style='background:#eef7ee; border-left:4px solid #2e8540; padding:8px 12px; margin:0 0 8px 0; border-radius:4px;'>
+                <span style='display:inline-block; background:#2e8540; color:#ffffff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-weight:bold; margin-right:6px;'>9</span>
+                <b style='color:#2e8540;'>Confirmation</b><br>
+                You will see a <b>success screen</b>. A <b>calendar invite</b> and a <b>confirmation email</b> are sent to you automatically.
+                </div>
+            
+                <div style='background:#eef7ee; border-left:4px solid #2e8540; padding:8px 12px; margin:0 0 12px 0; border-radius:4px;'>
+                <span style='display:inline-block; background:#2e8540; color:#ffffff; border-radius:50%; width:22px; height:22px; text-align:center; line-height:22px; font-weight:bold; margin-right:6px;'>10</span>
+                <b style='color:#2e8540;'>Return to the Dashboard</b><br>
+                Tap <b>Return to Dashboard</b> to go back to the home screen. You are all set!
+                </div>
+            
+                <h3 style='color:#005ea2; margin:14px 0 4px 0;'>Handy tips</h3>
+                <ul style='margin:0 0 8px 0; padding-left:18px;'>
+                <li><b>My Items</b> &mdash; view, review, or cancel your existing reservations.</li>
+                <li><b>Menu bar</b> &mdash; the buttons along the edge switch between the main screens.</li>
+                <li><b>Made a mistake?</b> Use the <b>Back</b> button any time <i>before</i> you submit.</li>
+                <li><b>Need help?</b> Contact your training POC or the app administrator.</li>
+                </ul>
+            
+                <p style='margin:10px 0 0 0; font-size:12px; color:#6b6b6b;'>EHRM Training &amp; Booking App &middot; Edward Hines Jr. VA Hospital (Station 578) &middot; VISN 12</p>
+            
+                </div>"
+        Size: =12
+        Visible: |-
+            =If(
+                user_isAdmin = true,
+                false,
+                true
+            )
+        Width: |-
+            =//560
+            Parent.Width - 50
+        X: |-
+            =//40
+            25
+        Y: |-
+            =//0
+            Image2_10.Y + Image2_10.Height + 20
+        ZIndex: =2
+
+    lblSuccess_2 As label:
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(255, 255, 255, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Bold
+        Height: =Image2_10.Height
+        Size: =32
+        Text: ="   Release Notes"
+        Width: =Image2_10.Width
+        ZIndex: =5
+
+    Tabs_11 As Tabs:
+        Width: =600
+        X: =536
+        ZIndex: =6
+
+    htmlText_releaseNotes As htmlViewer:
+        Height: |-
+            =//640
+            Parent.Height - Image2_10.Y - Image2_10.Height - 25
+        HtmlText: |
+            =/*
+            # ============================================================================
+            # PROPOSED Canvas App "Release Notes" — FULL CHANGELOG edition  (draft for a future v1.1.0)
+            # ----------------------------------------------------------------------------
+            # Author: Kyle J. Coder (github.com/KCoderVA) | Apache-2.0 (see root LICENSE)
+            #
+            # WHAT THIS IS:
+            #   ALTERNATIVE #2 to v1.1.0_proposedUpdatedReleaseNotes.yaml. Instead of a short,
+            #   end-user, step-by-step quick-start guide, this stand-alone `htmlViewer` control
+            #   renders the COMPLETE, verbose project CHANGELOG.md — every version entry from
+            #   [Unreleased] back to [0.0.1] — as richly-formatted HTML, for use on the in-app
+            #   `ReleaseNotes` (Help) screen.
+            #
+            #   Source of truth: the repository-root CHANGELOG.md (Keep a Changelog format,
+            #   Semantic Versioning). This is a POINT-IN-TIME rendering — re-sync it whenever
+            #   CHANGELOG.md changes. This file lives in local/ (git-ignored) for review only;
+            #   it is NOT yet wired into the live app.
+            #
+            # HOW TO USE:
+            #   1. In Power Apps Studio, open the ReleaseNotes (Help) screen.
+            #   2. Insert an HTML text control (or select the existing htmlViewer).
+            #   3. Copy the HtmlText formula below into its HtmlText property.
+            #   4. Adjust Width/Height/X/Y/Fill to fit the screen. The content is long, so
+            #      place the control inside a scrollable container (or keep AutoHeight = true
+            #      inside a vertical-scroll gallery/container).
+            #
+            # RENDERING NOTES:
+            #   * This version uses ONE <style> block (CSS classes) instead of repeating inline
+            #     styles on hundreds of list items, to keep the (already very long) formula
+            #     manageable. The Power Apps HTML text control supports <style> blocks. If your
+            #     tenant's control ever fails to honor it, the markup still degrades to clean,
+            #     readable structured HTML; you can then fall back to inline styles as done in
+            #     the companion quick-start alternative file.
+            #   * Literal double-quotes from the changelog text are encoded as &quot; so they
+            #     do not terminate the Power Apps string. Angle brackets, ampersands, arrows,
+            #     and dashes are HTML-encoded (&lt; &gt; &amp; &rarr; &mdash; &ndash;).
+            #   * Color key: Added = green, Changed = blue, Fixed = amber, Removed = red,
+            #     Notes = gray, Validation = teal; version banners = VA blue (gray = Unreleased).
+            #   * The source CHANGELOG.md is missing the "## [0.3.6]" heading for one entry
+            #     (its content sits un-headed between [0.3.7] and [0.3.5]); it is rendered here
+            #     under a [0.3.6] banner so the document does not appear broken.
+            # ============================================================================
+            htmlChangelogViewer As htmlViewer:
+              # --- Suggested layout properties (adjust to your screen) ---
+              AutoHeight: =true
+              Width: =Parent.Width - 40
+              X: =20
+              Y: =20
+              Fill: =RGBA(255, 255, 255, 1)
+              # Font/size/color are controlled by the inline <style> block in HtmlText above.
+              # NOTE: content is long — host this control inside a vertically scrollable
+              # container (or a single-column gallery) so users can scroll the full history.
+              HtmlText: |
+                =*/
+                "<style>
+                .cl, .cl div, .cl p, .cl li, .cl h1, .cl h2, .cl h3 { font-family:'Segoe UI', Arial, sans-serif; }
+                .cl { color:#1b1b1b; padding:10px; font-size:13px; line-height:1.45; }
+                .cl h1.title { color:#005ea2; font-size:20px; margin:0 0 4px 0; }
+                .cl p.intro { color:#3d3d3d; margin:0 0 6px 0; }
+                .cl p.meta { color:#6b6b6b; font-size:12px; margin:0 0 14px 0; }
+                .cl h2.ver { color:#ffffff; background:#005ea2; padding:6px 10px; border-radius:4px; margin:20px 0 8px 0; font-size:16px; }
+                .cl h2.ver .date { font-weight:normal; font-size:13px; opacity:0.9; }
+                .cl h2.unrel { background:#6b6b6b; }
+                .cl h2.major { background:#2e8540; }
+                .cl div.note { background:#eef5fb; border-left:4px solid #4f9ad6; padding:8px 12px; margin:0 0 10px 0; border-radius:4px; font-style:italic; color:#3d3d3d; }
+                .cl h3.sec { margin:12px 0 2px 0; font-size:12px; text-transform:uppercase; letter-spacing:0.04em; }
+                .cl h3.added { color:#2e8540; }
+                .cl h3.changed { color:#005ea2; }
+                .cl h3.fixed { color:#b8860b; }
+                .cl h3.removed { color:#b50909; }
+                .cl h3.notes { color:#6b6b6b; }
+                .cl h3.validation { color:#1a7f7f; }
+                .cl ul { margin:2px 0 10px 0; padding-left:20px; }
+                .cl ul ul { margin:3px 0 3px 0; }
+                .cl li { margin:3px 0; }
+                .cl code { background:#f0f0f0; padding:0 3px; border-radius:3px; font-family:Consolas,'Courier New',monospace; font-size:12px; color:#333333; }
+                .cl a { color:#005ea2; }
+                .cl hr { border:0; border-top:1px solid #d9d9d9; margin:16px 0; }
+                </style>
+            
+                <div class='cl'>
+            
+                <h1 class='title'>EHRM Training &amp; Booking App &mdash; Full Changelog</h1>
+                <p class='intro'>All notable changes to the <b>EHRM Training &amp; Booking App</b> repository are documented here. The format is based on <a href='https://keepachangelog.com/en/1.0.0/'>Keep a Changelog</a>, and the project follows <a href='https://semver.org/spec/v2.0.0.html'>Semantic Versioning</a> for the <b>project-wide release version</b> (<code>MAJOR.MINOR.PATCH</code>).</p>
+                <p class='meta'>Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked in each component README under <code>src/</code>.</p>
+            
+                <hr/>
+            
+                <h2 class='ver major'>[1.0.12] <span class='date'>&mdash; 2026-08-25</span></h2>
+                <div class='note'><b>First production / go-live release line.</b> The app went live as v1.0.0; this documents the public <b>v1.0.12</b> milestone (Canvas app v0.12.2 &rarr; v1.0.12). Project version jumps <code>0.12.4 &rarr; 1.0.12</code> (the interim 0.12.4 release-note stubs were never shipped). Full technical detail is in the per-component <code>v1.0.12_differenceAnalysis.md</code> files under <code>src/</code>.</div>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b>Canvas app</b> &mdash; single-student <b>proxy registration</b> (a POC/supervisor can register a student on their behalf); <b>Learning Labs Library</b> class/scenario picker (new read-only SharePoint document library on <code>vacoehrmioeue/Sandbox</code>); printable <b>Power BI <code>Screen1</code></b> (GOV-cloud embed); <b>series-vs-single</b> reservation cancellation; <b>bulk SuperUser autosync</b> in <code>ManageUsers</code>.</li>
+                <li><b>Power Automate</b> &mdash; new <b><code>CreateBackups</code></b> flow (<code>5bf4e999&hellip;</code>): Outlook-triggered on the confirmation-email subject <code>[REGISTERED] EHRM Learning Lab Training -</code>, parses the email and writes a backup reservation record.</li>
+                <li><b>Power Automate</b> &mdash; <code>SendReminders</code> now also posts <b>Microsoft Teams adaptive cards</b> (in addition to email).</li>
+                <li><b>SharePoint</b> &mdash; national EHRM <b>Sandbox Resource Center</b> reference lists added as tracked <code>.url</code> shortcuts (EHRM Roles, Scenario, Service Line, Learning Lab Sessions, Learning Lab Signups, Scenario Workflows) plus the Learning Labs Library; new <code>library/</code> and <code>events/</code> areas.</li>
+                <li><b>Analytics</b> &mdash; new <b><code>SuperUserDashboard-Final</code></b> Power BI report (WIP) and new <b><code>tms/</code></b> TMS-completion data-staging folder.</li>
+                <li><b>Docs</b> &mdash; content READMEs and verbose <code>v1.0.12_differenceAnalysis.md</code> for every component (powerApps, powerAutomate, sharePoint, analytics).</li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>VERSION</code></b> &mdash; <code>0.12.4 &rarr; 1.0.12</code> (first 1.x / production line).</li>
+                <li><b>Canvas app</b> &mdash; RBAC hardened to <b>default-to-<code>User</code>-first</b> (self-provisions an access row with a 6-month window; eliminates the new-user <code>AccessDenied</code> race); <code>Learning Lab Sessions</code> scoped to <code>Facility = Hines</code>; partial <b>classic &rarr; modern control</b> migration (host control enabled); audit trails now use <code>varRealEmail</code>.</li>
+                <li><b><code>SendReminders</code></b> &mdash; trigger polling reduced 1 min &rarr; 5 min; email send gated behind a <code>CreatedBy</code> rollout condition; actions reordered.</li>
+                <li><b>SharePoint</b> &mdash; <code>list/</code> reorganized into a <code>nationalEHRM/sandbox/</code> namespace; <code>schedule/</code> &rarr; <code>masterScheduleList/</code>; added <code>superUserList/</code> and <code>backupList_DeskReservations/</code>.</li>
+                <li><b><code>src/solution.xml</code></b> &mdash; version &rarr; 1.0.12; description refreshed; <code>SendReminders</code> + <code>CreateBackups</code> added to root components (regenerate on next <code>pac solution export</code>).</li>
+                <li>Component READMEs (powerApps, powerAutomate, sharePoint, analytics, powerBI) rewritten/updated for the import audience.</li>
+                </ul>
+                <h3 class='sec removed'>Removed</h3>
+                <ul>
+                <li><b>Canvas app</b> &mdash; deleted two dead Microsoft-template screens (<code>CreateMeeting</code>, <code>Screen3</code>); screen count 21 &rarr; 20.</li>
+                <li><b>Security</b> &mdash; removed the hard-coded developer <b>impersonation backdoor</b> in <code>App.OnStart</code> (it previously spoofed one developer's identity to another user).</li>
+                </ul>
+                <h3 class='sec fixed'>Fixed</h3>
+                <ul>
+                <li><b>Canvas app</b> &mdash; binding errors driven <b>120 &rarr; 0</b>: pervasive <code>IsBlankOrError()</code> guards; <code>Tabs</code>/<code>Tabs_3</code> empty-menu <code>TemplateSize</code> guard; <code>Tabs_3</code> width <code>&amp;</code> &rarr; <code>*</code> bug; <code>Calendar</code> invalid hex <code>#0707077</code> &rarr; <code>#070707</code>.</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Public release is <b>v1.0.12</b>; the <code>.msapp</code> and flow <code>.zip</code> artifacts are named <code>v1.0.12_*</code> to match. <i>(The <code>.msapp</code> binary's internal build number aligns fully on the next export from the editor at version 1.0.12.)</i></li>
+                <li>A ~6.6 GB <code>OneDrive_1_8-21-2026.zip</code> sits in <code>src/sharePoint/library/.../learningLabLibrary/local/</code> (git-ignored; intentionally retained as developer-only content).</li>
+                <li><code>src/sharePoint/searchConfig/SearchConfiguration.xml</code> restored (valid baseline search-schema export).</li>
+                <li>Assets: no tracked/public changes this cycle.</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.12.3] <span class='date'>&mdash; 2026-08-20</span></h2>
+                <div class='note'><b>Power Automate release:</b> introduces the new <code>SendReminders</code> (&quot;Send Email Reminder&quot;) flow and refreshes the <code>AppUserList</code> flow export. No Canvas app changes &mdash; the Canvas app component remains <b>v0.12.2</b>.</div>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b>New Power Automate flow <code>SendReminders</code> (&quot;Send Email Reminder&quot;)</b> in <code>src/powerAutomate/SendReminders/</code>:
+                  <ul>
+                  <li>Unpacked source under <code>.unpacked/Microsoft.Flow/flows/ecd1d899-5df4-4795-a98b-f1a1b55ee837/</code>.</li>
+                  <li>Adaptive-card email design at <code>adaptiveCards/v0.12.4_flowSendReminders_adaptiveCard.json</code> &mdash; sends a &quot;You are scheduled for EHRM Learning Lab training!&quot; confirmation/reminder pulling name, email, role, scheduled-by, and access window from <code>DeskAccessControl</code>.</li>
+                  <li>Packed export <code>.zip/v0.12.2_578EHRMTrainingApp_SendEmailReminder_20260812115737.zip</code> (local-only; <code>.zip</code> is git-ignored).</li>
+                  <li>Directly addresses the previously-tracked roadmap item to build the reminder flow.</li>
+                  </ul>
+                </li>
+                <li><b><code>assets/images/screenshots/2026.08.12_confirmationEmailChangeRequest.png</code></b> &mdash; screenshot of the <code>AppUserList</code> access-change confirmation email.</li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>VERSION</code></b> &mdash; <code>0.12.2 -&gt; 0.12.3</code>.</li>
+                <li><b><code>src/powerAutomate/AppUserList/</code></b> &mdash; flow re-exported (connection/API/manifest map refresh); export <code>.json</code> renamed with the <code>v0.12.2_</code> project-version prefix (<code>578EHRMTrainingApp_AppUserList.json -&gt; v0.12.2_578EHRMTrainingApp_AppUserList.json</code>).</li>
+                <li><b><code>src/powerAutomate/README.md</code></b> &mdash; documented the new <code>SendReminders</code> flow and the <code>AppUserList</code> re-export; added a component-version table.</li>
+                <li><b><code>README.md</code></b> &mdash; project badge and current-version references updated to v0.12.3; Power Automate component list now includes <code>SendReminders</code>.</li>
+                <li><b><code>docs/PROJECT_STATUS.md</code></b> &mdash; status summary, component versions, release history, and roadmap updated for the new reminder flow.</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Canvas app component unchanged (remains <b>v0.12.2</b>); this is a Power Automate-only patch.</li>
+                <li>These <code>src/powerAutomate/**</code> changes were intentionally excluded from the v0.12.2 release and are landed here.</li>
+                <li>The superseded older adaptive-card design <code>v0.12.2_flowSendReminders_adaptiveCard.json</code> was moved to local-only <code>archive/</code> (git-ignored).</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.12.2] <span class='date'>&mdash; 2026-08-12</span></h2>
+                <div class='note'><b>Go-live readiness release:</b> this version advances the project-wide release line to <code>0.12.2</code> and aligns the Canvas app, solution manifest, and release artifacts around a single semantic baseline for imminent production deployment.</div>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b>Canvas analysis documentation (new v0.12.2 set) in <code>src/powerApps/</code>:</b>
+                  <ul>
+                  <li><code>v0.12.2_diffAnalysis.md</code></li>
+                  <li><code>v0.12.2_changeSummary.md</code></li>
+                  <li><code>v0.12.2_knownIssues.md</code></li>
+                  <li><code>v0.12.2_recommendations.md</code></li>
+                  </ul>
+                </li>
+                <li><b>Release-note artifacts for v0.12.2 in <code>docs/release-notes/</code>:</b>
+                  <ul>
+                  <li><code>v0.12.2_commitMessage.md</code></li>
+                  <li><code>v0.12.2_pullRequest.md</code></li>
+                  <li><code>v0.12.2_releaseNotes.md</code></li>
+                  </ul>
+                </li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>VERSION</code></b> &mdash; <code>0.9.27 -&gt; 0.12.2</code>.</li>
+                <li><b><code>src/solution.xml</code></b> &mdash; solution <code>&lt;Version&gt;</code> updated <code>0.9.26 -&gt; 0.12.2</code>; description refreshed to v0.12.2 go-live context.</li>
+                <li><b><code>README.md</code></b> &mdash; project badge and current-version references updated to v0.12.2.</li>
+                <li><b><code>docs/PROJECT_STATUS.md</code></b> &mdash; release history, component baseline, status summary, connector/data-source references, and roadmap text updated for v0.12.2.</li>
+                <li><b><code>src/powerApps/README.md</code></b> &mdash; current section switched to v0.12.2, version-history table extended, and current data-source/screen inventory updated.</li>
+                <li><b><code>docs/release-notes/v0.9.27_commitMessage.md</code></b>, <b><code>docs/release-notes/v0.9.27_pullRequest.md</code></b>, <b><code>docs/release-notes/v0.9.27_releaseNotes.md</code></b> &mdash; template placeholders replaced with populated v0.12.2-ready content for continuity with existing naming cycle.</li>
+                </ul>
+                <h3 class='sec fixed'>Fixed</h3>
+                <ul>
+                <li><b>Version identity drift corrected</b> &mdash; app/package/manifest/repo release baselines now align at <code>0.12.2</code>.</li>
+                <li><b>Canvas metadata quality improved</b> &mdash; <code>BindingErrorCount</code> reduced from <code>329</code> to <code>120</code> (remaining issues are tracked as follow-up work).</li>
+                </ul>
+                <h3 class='sec removed'>Removed</h3>
+                <ul>
+                <li><b>Legacy screen set removed from active app topology:</b> <code>alt_ManageDesks</code>, <code>Screen1</code>, <code>Screen2</code>.</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li><b>Screen topology update:</b> Added <code>ManageUsers</code> and <code>CreateMeeting</code>; current net screen count is 21.</li>
+                <li><b>Data-source expansion:</b> Current bindings now include <code>MasterScheduleList</code>, <code>SuperUserList</code>, <code>backupList_DeskReservations</code>, and <code>Learning Lab Sessions</code>.</li>
+                <li><b>Deferred integration fields remain intentional:</b> <code>OutlookEventID</code>, <code>OutlookSeriesID</code>, and <code>ParentReservationID</code> are still app-layer deferred and require companion flow completion.</li>
+                <li><b>Known follow-up:</b> complete App Checker cleanup for remaining binding warnings before final production hardening sign-off.</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.9.26] <span class='date'>&mdash; 2026-08-04</span></h2>
+                <div class='note'><b>Version realignment:</b> the project-wide version jumps <code>0.8.16</code> &rarr; <code>0.9.26</code> to re-align the repository release line with the Canvas app's independently-advancing version (now <b>v0.9.26</b>), continuing the alignment strategy begun at <code>0.8.16</code>. This <b>supersedes the never-completed <code>0.8.17</code></b> cycle &mdash; its blank <code>docs/release-notes/v0.8.17_*</code> stubs were renamed and filled in as <code>v0.9.26_*</code>, and no <code>[0.8.17]</code> release was ever published.<br/><br/><b>This release DOES change the SharePoint schema</b> (contrast with <code>[0.8.16]</code>, which had none): the <code>Desk Reservations</code> list gained ~40 columns and the <code>Desks</code> list was normalized. See below and <code>src/powerApps/v0.9.26_recentChangesSummary.md</code> &sect;7.</div>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b>Canvas app v0.9.26 unpacked source</b> &mdash; the updated Canvas app was exported and unpacked into <code>src/powerApps/.unpacked/</code> (package <code>src/powerApps/.msapp/v0.9.26_578EHRMTrainingApp.msapp</code>, tracked via <code>.gitignore</code> <code>!*.msapp</code>, replacing the prior v0.8.14 package). Where v0.8.14 was about <i>access</i>, v0.9.26 is about <i>data</i> &mdash; every booking is now a complete, persisted training record:
+                  <ul>
+                  <li><b><code>Desk Reservations</code> SharePoint list schema expanded by ~40 columns</b>, grouped into <b>submitter</b> (who created the request), <b>student/attendee</b> (who the training is for, incl. manager email), <b>reservation</b> (scenario / role / session start-end / decomposed location), <b>narrative bodies</b> (agreement / description / comments / invite body), <b>trainer approval</b> (received &rarr; approved &rarr; recorded-in-Excel lifecycle), and <b>automated-reminder</b> tracking (1 week / 72 h / 1 h pre-class + 24 h post-create, for student and trainer). This is the backbone of the release.</li>
+                  <li><b>Class/Session Picker is now persisted</b> &mdash; the <b>Confirm</b> SUBMIT <code>Patch</code> writes the full scenario/role/session/location plus separate submitter and student identities into the new columns (previously displayed but never saved).</li>
+                  <li><b>Booking on behalf of others</b> &mdash; POCSUPERVISOR gained an attendee people-picker (<code>var_Attendees</code>); the app records the <b>submitter</b> (real signed-in user) and the <b>student</b> (chosen attendee) as distinct fields, and generates a structured <code>Title</code> (<code>&lt;attendee&gt; &ndash; &lt;category&gt; - &lt;scenario&gt; (&lt;role&gt;)</code>).</li>
+                  <li><b>POCSUPERVISOR reworked (<code>+63 KB</code>)</b> &mdash; semantic picker control names (<code>dropdown_ScenarioPicker</code>/<code>RolePicker</code>/<code>DateTimePicker</code>/<code>LocationPicker</code>), a live HTML selection summary, a scenario-materials deep-link, and an admin <code>RESET</code> button.</li>
+                  <li><b>Reservation Details enriched</b> &mdash; surfaces scenario/role/session/submitter and a <i>&quot;Contact the EHRM Trainers about this item (#ID)&quot;</i> action.</li>
+                  <li><b>Two modern control templates</b> (<code>modernText</code>, <code>modernTextInput</code>) registered and used in the reworked forms.</li>
+                  <li>Full file-by-file structural/behavioral diff with per-change rationale: <b><code>src/powerApps/v0.9.26_recentChangesSummary.md</code></b> (renamed from <code>v0.8.14_recentChangesSummary.md</code>).</li>
+                  </ul>
+                </li>
+                <li><b><code>docs/release-notes/v0.9.26_commitMessage.md</code></b>, <b><code>v0.9.26_pullRequest.md</code></b>, <b><code>v0.9.26_releaseNotes.md</code></b> &mdash; authored release artifacts for this release (renamed from the blank <code>v0.8.17_*</code> stubs).</li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>VERSION</code></b> &mdash; 0.8.17 &rarr; 0.9.26 (see version-realignment note above).</li>
+                <li><b><code>README.md</code></b> &mdash; release badge v0.8.16 &rarr; v0.9.26; Canvas app component version v0.8.14 &rarr; v0.9.26 with a training-record description.</li>
+                <li><b><code>src/powerApps/README.md</code></b> &mdash; updated header to v0.9.26, added a &quot;What changed in v0.9.26 (current)&quot; narrative, demoted the v0.8.14 section to &quot;previous&quot;, added a v0.9.26 component version-history row, and refreshed the data-sources / screenshots notes.</li>
+                <li><b><code>docs/PROJECT_STATUS.md</code></b> &mdash; status summary, component versions, release history table, data model, and roadmap updated for v0.9.26 / Canvas app v0.9.26.</li>
+                <li><b><code>src/solution.xml</code></b> &mdash; Power Platform solution <code>Version</code> 0.3.4 &rarr; 0.9.26; description refreshed to current v0.9.26 features.</li>
+                <li><b><code>src/sharePoint/README.md</code></b> &mdash; documented the <code>Desk Reservations</code> schema expansion and the <code>Desks</code> normalization.</li>
+                <li><b><code>assets/images/</code> reorganized</b> &mdash; loose image files consolidated into categorized subfolders (<code>graphics/</code>, <code>icons/</code>, <code>logos/</code>, <code>objects/</code>, <code>screenshots/</code>); the in-app screenshots moved from <code>assets/screenshots/</code> &rarr; <code>assets/images/screenshots/appGuide/</code> (the <code>src/powerApps/README.md</code> screenshot links were repointed accordingly).</li>
+                <li><b><code>Desks</code> SharePoint list normalized</b> &mdash; legacy untyped/duplicate columns removed in favor of typed <code>*_choice</code> / <code>*_text</code> / <code>*_boolean</code> columns; <code>DeskSelect</code> / <code>ManageDesks</code> / <code>NewDesk</code> re-bound to the cleaned schema.</li>
+                <li><b><code>App.OnStart</code></b> &mdash; <code>varRepoVersion</code> corrected <code>0.8.12</code> &rarr; <code>0.9.26</code>; <code>varIsImpersonating</code> detection logic corrected (was inverted).</li>
+                </ul>
+                <h3 class='sec removed'>Removed</h3>
+                <ul>
+                <li><b>3 legacy <code>Desk Reservations</code> columns</b> &mdash; <code>DeskFloor</code>, <code>Floor</code>, <code>Reason for desk reservation</code> (superseded by the new decomposed-location and narrative-body columns).</li>
+                <li><b>Prior Canvas artifacts superseded</b> &mdash; the v0.8.14 <code>.msapp</code> package and <code>src/powerApps/v0.8.14_recentChangesSummary.md</code> were replaced (the v0.8.14 change summary was retained locally under <code>archive/</code>).</li>
+                <li><b>Abandoned <code>v0.8.17_*</code> release-note stubs</b> &mdash; renamed/refilled as <code>v0.9.26_*</code>.</li>
+                <li><b>6 unused desk-specific sample images</b> &mdash; the <code>mapBldg110</code> / <code>mapFloor6</code> / <code>mapDesk3</code> / <code>RoomGA141</code> maps and the <code>Desk3</code> / <code>RoomGA141</code> photos (no references remain outside the app's own internal asset copies).</li>
+                <li><b><code>docs/release-notes/v0.8.16_*</code></b> &mdash; prior release notes rotated out of <code>docs/release-notes/</code> (retained under <code>archive/</code>).</li>
+                </ul>
+                <h3 class='sec fixed'>Fixed</h3>
+                <ul>
+                <li><b>Class/Session Picker persistence gap</b> &mdash; the <code>varPopUp_ClassPicker_*</code> / <code>var_reservation*</code> values are now written to SharePoint in the Confirm SUBMIT <code>Patch</code> (was follow-up &sect;9 item 1 of the v0.8.14 summary).</li>
+                <li><b>In-app version stamp</b> &mdash; <code>App.OnStart</code> <code>varRepoVersion</code> now reads <code>0.9.26</code>, so the Dashboard version badge is accurate.</li>
+                <li><b>Impersonation detection</b> &mdash; <code>varIsImpersonating</code> now evaluates <code>varRealEmail &lt;&gt; varTargetEmail</code> (the v0.8.14 expression was inverted).</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li><b>Known follow-ups (see <code>src/powerApps/v0.9.26_recentChangesSummary.md</code> &sect;9):</b>
+                  <ul>
+                  <li><code>BindingErrorCount</code> rose <b>49 &rarr; 329</b> &mdash; validate in the Power Apps App Checker before production deployment (likely references to the removed columns plus the modern Text/TextInput control migration).</li>
+                  <li>The <b>trainer</b> and <b>reminder</b> columns are inserted <b>blank</b> by the app &mdash; they are the schema contract for companion <b>Power Automate</b> approval/reminder flows that still need to be built/deployed (<code>src/powerAutomate/</code>). <code>OutlookEventID</code>/<code>OutlookSeriesID</code> are likewise deferred to a flow.</li>
+                  <li>Residual version drift: the manifest <code>AppDescription</code> reads <code>v0.9.17</code> while the <code>.msapp</code>/<code>varRepoVersion</code> read <code>0.9.26</code>.</li>
+                  </ul>
+                </li>
+                <li><b>Open security gap (carried forward):</b> new/unknown users are still auto-granted the <code>User</code> access level rather than <code>AccessDenied</code>. Populating <code>DeskAccessControl.AccessLevel_Text</code> for all intended users, and deciding the unknown-user default, remains a required admin action.</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.8.16] <span class='date'>&mdash; 2026-07-28</span></h2>
+                <div class='note'><b>Version alignment:</b> With this release the project-wide version jumps from <code>0.3.8</code> to <code>0.8.16</code> to bring the repository release line onto the Canvas app's independently-advancing <code>0.8.x</code> version series. The Canvas app component advances <b>v0.3.4 &rarr; v0.8.14</b> (the app-internal version strings still show minor drift &mdash; <code>App.OnStart</code> sets <code>varRepoVersion &quot;0.8.12&quot;</code> and the Dashboard timer shows the prior stamp &mdash; tracked as a follow-up). This supersedes the note in the <code>[0.3.8]</code> entry below, which stated the Canvas app &quot;remains v0.3.4&quot; and that the v0.8.14 app had &quot;not yet been exported/unpacked.&quot;</div>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b>Canvas app v0.8.14 unpacked source</b> &mdash; the substantially updated Canvas app was exported and unpacked into <code>src/powerApps/.unpacked/</code> (package <code>src/powerApps/.msapp/v0.8.14_578EHRMTrainingApp.msapp</code>, tracked via <code>.gitignore</code> <code>!*.msapp</code>, replacing the prior v0.3.4 package). This is the largest functional advance since the baseline:
+                  <ul>
+                  <li><b>App-wide role-based access control (RBAC) engine</b> &mdash; <code>App.OnStart</code> grew from a 1-line version stub into a full RBAC + auto-provisioning + impersonation engine. Eight access tiers (<code>AccessDenied</code> &rarr; <code>View-only</code> &rarr; <code>User</code> &rarr; <code>SuperUser</code> &rarr; <code>Manager</code> &rarr; <code>ServiceChief</code> &rarr; <code>ProjectLeader</code> &rarr; <code>AppAdmin</code>) are read live per-user from <code>DeskAccessControl</code> and wired into the navigation menu (<code>colMenu</code>, moved out of <code>Dashboard.OnVisible</code>), Dashboard messaging, calendar <code>DisplayMode</code>/<code>Items</code> filters, and admin-only controls.</li>
+                  <li><b>Impersonation (&quot;act as another user&quot;)</b> &mdash; admins get a hidden Dashboard combobox that re-renders the entire app as any selected user (support/troubleshooting and booking on behalf of others); the real signed-in identity is captured separately and auto-provisioning never writes while impersonating.</li>
+                  <li><b>Zero-touch user onboarding</b> &mdash; first-launch users with no <code>DeskAccessControl</code> row are auto-provisioned at the default <code>&quot;User&quot;</code> level (Entra ID, timestamps, manager email via <code>Office365Users.Manager</code>).</li>
+                  <li><b>Training Class/Session Picker</b> &mdash; new <code>ctn_PopUp_ClassPicker</code> popup on <code>POCSUPERVISOR</code> (Scenario &rarr; Role &rarr; Date/Time session &rarr; Location), with a deep-link into the SharePoint Learning Lab Workbook library and selections echoed on the Confirm screen.</li>
+                  <li><b>New <code>alt_ManageDesks</code> screen</b> &mdash; modern responsive CRUD console for the <code>Desks</code> list, staged alongside legacy <code>ManageDesks</code> ahead of a planned cutover (22 screens total).</li>
+                  <li><b>Dashboard redesign</b> &mdash; dark-navy theme, mascot banner, role-aware welcome / &quot;ACCESS DENIED&quot; / &quot;VIEW ONLY&quot; messaging, author/version timer.</li>
+                  <li><b>Assets &amp; components</b> &mdash; image assets grew from 6 &rarr; 38; new <code>Tabs_altColor</code> component.</li>
+                  <li>Full file-by-file structural/behavioral diff with per-screen rationale: <b><code>src/powerApps/v0.8.14_recentChangesSummary.md</code></b> (new).</li>
+                  </ul>
+                </li>
+                <li><b><code>docs/release-notes/v0.8.16_commitMessage.md</code></b>, <b><code>v0.8.16_pullRequest.md</code></b>, <b><code>v0.8.16_releaseNotes.md</code></b> &mdash; populated release artifacts for this release.</li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>VERSION</code></b> &mdash; 0.3.8 &rarr; 0.8.16.</li>
+                <li><b><code>README.md</code></b> &mdash; release badge v0.3.8 &rarr; v0.8.16; Canvas app component version v0.3.4 &rarr; v0.8.14.</li>
+                <li><b><code>src/powerApps/README.md</code></b> &mdash; updated header to v0.8.14, added a &quot;What changed in v0.8.14 (current)&quot; narrative, demoted the v0.3.4 section to &quot;previous&quot;, added a v0.8.14 component version-history row, and updated the screen inventory (21 &rarr; 22 screens; added <code>alt_ManageDesks</code>).</li>
+                <li><b><code>docs/PROJECT_STATUS.md</code></b> &mdash; status summary, component versions, release history table, data model, and RBAC section updated for v0.8.16 / Canvas app v0.8.14.</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li><b>Data sources and connections are unchanged</b> &mdash; no SharePoint schema or connector changes at the app-manifest level.</li>
+                <li><b>Open security gap (carried forward from <code>[0.3.8]</code>):</b> new/unknown users are still auto-granted the <code>User</code> access level rather than <code>AccessDenied</code>. Populating <code>DeskAccessControl.AccessLevel_Text</code> for all intended users, and deciding the unknown-user default, remains a required admin action.</li>
+                <li><b>Known follow-ups:</b> the Class/Session Picker values are displayed on Confirm but not yet persisted in the SUBMIT <code>Patch</code>; app-internal version strings show minor drift (msapp <code>v0.8.14</code>, <code>varRepoVersion &quot;0.8.12&quot;</code>, hardcoded Dashboard stamp, <code>VERSION</code> <code>0.8.16</code>) to be reconciled. See <code>src/powerApps/v0.8.14_recentChangesSummary.md</code> &sect;9.</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.3.8] <span class='date'>&mdash; 2026-07-28</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b><code>src/analytics/</code></b> &mdash; New repository component for reporting/data-analysis, replacing the previously-aspirational (never populated) flat <code>src/powerBI/</code> and <code>src/sql/</code> placeholders described in <code>copilot-instructions.md</code>:
+                  <ul>
+                  <li><b><code>src/analytics/powerBI/.pbit/Signup Tool.pbit</code></b> &mdash; First tracked Power BI report template (sign-up/attendance analytics).</li>
+                  <li><b><code>src/analytics/powerBI/.pbix/</code></b>, <b><code>src/analytics/powerBI/local/</code></b>, <b><code>src/analytics/sql/procedures/</code></b>, <b><code>src/analytics/sql/queries/</code></b>, <b><code>src/analytics/sql/local/</code></b> &mdash; Scaffolded subfolders (currently empty; local-only where applicable).</li>
+                  <li><b><code>src/analytics/README.md</code></b> &mdash; New component README documenting the Power BI / SQL structure and current (early-stage) status.</li>
+                  </ul>
+                </li>
+                <li><b><code>src/sharePoint/</code></b> &mdash; Restructured SharePoint component (see &quot;Changed&quot; below for what it replaces):
+                  <ul>
+                  <li><b><code>src/sharePoint/list/{deskAccessControl,deskReservations,desks}/local/</code></b> &mdash; Raw list export data (CSV/XLSX), local-only/git-ignored.</li>
+                  <li><b><code>src/sharePoint/list/schedule/</code></b> &mdash; New 4th list scaffold (no schema exported yet; staged from <code>SULL_Jesse_Brown_Schedule_7.10.26 - Integrated.xlsx</code>) in support of the ongoing &quot;desk reservation&quot; &rarr; &quot;training booking&quot; terminology migration.</li>
+                  <li><b><code>src/sharePoint/searchConfig/SearchConfiguration.xml</code></b> &mdash; New tracked SharePoint search configuration export.</li>
+                  <li><b><code>src/sharePoint/README.md</code></b> &mdash; New component README documenting the <code>list/&lt;listName&gt;/local/</code> structure, list status table, and provenance of the prior flat layout.</li>
+                  </ul>
+                </li>
+                <li><b><code>assets/images/Spinner.gif</code></b> &mdash; New loading-spinner UI asset.</li>
+                <li><b><code>assets/images/mascot_banner_croppedHighRes.png</code></b> &mdash; Higher-resolution variant of the existing cropped mascot banner (<code>mascot_banner_cropped.png</code>).</li>
+                <li><b><code>assets/local/</code></b> &mdash; New local-only staging area (git-ignored) for raw screen recordings, e.g. a ~106 MB app walkthrough video (<code>video/SU LL Sign up APP EHRMIO.webm</code>).</li>
+                <li><b><code>docs/release-notes/v0.3.8_commitMessage.md</code></b>, <b><code>v0.3.8_pullRequest.md</code></b>, <b><code>v0.3.8_releaseNotes.md</code></b> &mdash; Fresh v0.3.8 release artifact stubs (populated for this release).</li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>VERSION</code></b> &mdash; 0.3.7 &rarr; 0.3.8</li>
+                <li><b><code>README.md</code></b> &mdash; Release badge updated v0.3.7 &rarr; v0.3.8; release date updated to 2026-07-28; &quot;Repository layout&quot; section updated to reference <code>src/analytics/</code> and clarify <code>src/sharePoint/</code> now covers lists + search config.</li>
+                <li><b><code>.gitignore</code></b> &mdash; Repository hygiene follow-up:
+                  <ul>
+                  <li>Added <b>&sect;11 <code>**/local/</code></b> &mdash; a generic rule ignoring any folder literally named <code>local</code> anywhere in the repo (covers <code>assets/local/</code>, <code>src/analytics/{powerBI,sql}/local/</code>, <code>src/sharePoint/list/*/local/</code>, and any future local-only folder), closing the gap that previously left files like the <code>.webm</code> recording above completely untracked by any rule.</li>
+                  <li>Updated the stale &sect;3 (<code>config/</code>) and &sect;10 (data files) comments &mdash; both previously noted &quot;N files remain tracked pending <code>git rm --cached</code>&quot;; confirmed via <code>git ls-files</code> that this cleanup was already completed (0 tracked files under <code>config/</code> or <code>src/sharePoint/</code> at HEAD), so the notes now describe the resolved state instead of a pending action.</li>
+                  <li>Updated the &sect;10 negation example path from the old flat <code>src/sharePoint/Desks/Desks.csv</code> to the new <code>src/sharePoint/list/desks/local/Desks.csv</code>.</li>
+                  <li><code>Last updated</code> bumped to 2026-07-28.</li>
+                  </ul>
+                </li>
+                <li><b><code>src/sharePoint/</code></b> &mdash; Superseded the flat per-list sample layout (<code>Desk Reservations/</code>, <code>DeskAccessControl/</code>, <code>Desks/</code>) with the <code>list/&lt;listName&gt;/local/</code> + <code>searchConfig/</code> structure described above. The prior layout was already archived locally to <code>archive/src/sharePoint/</code> and was never tracked in git under its new paths (the previously-tracked sanitized CSVs at the old paths had already been untracked in a prior cleanup pass).</li>
+                <li><b><code>src/powerAutomate/AppUserList/README.md</code></b> &mdash; Updated the <code>DeskAccessControl.csv</code> sample path reference from the old <code>src/sharePoint/DeskAccessControl/DeskAccessControl.csv</code> to the new <code>src/sharePoint/list/deskAccessControl/local/DeskAccessControl.csv</code>.</li>
+                <li><b><code>src/powerApps/README.md</code></b> &mdash; Markdown table formatting normalized (column widths/spacing only; no content change).</li>
+                <li><b><code>docs/PROJECT_STATUS.md</code></b> &mdash; Comprehensive refresh (had not been updated since v0.3.6, despite two intervening releases): status summary and release history table brought current through v0.3.8; repository contents/exclusions sections corrected to match the resolved <code>.gitignore</code> tracking state and new <code>src/analytics/</code> + <code>src/sharePoint/</code> structure; data model section updated to mention the new <code>Schedule</code> list scaffold.</li>
+                <li><b><code>.github/copilot-instructions.md</code></b> &mdash; &quot;Core Project/Workspace Components&quot; list updated: the separate aspirational <code>Power BI (src\powerBI\)</code> and <code>SQL (src\sql\)</code> bullets are consolidated into a single <code>Analytics (src\analytics\powerBI\, src\analytics\sql\)</code> line reflecting the structure actually adopted.</li>
+                <li><b><code>config/</code></b> &mdash; Local-only architecture/runbook/tooling folder relocated to <code>archive/src/config/</code> per the project's archive conventions (folder is fully git-ignored; this is a local filesystem change only, not a tracked-content change).</li>
+                </ul>
+                <h3 class='sec removed'>Removed</h3>
+                <ul>
+                <li><b><code>docs/release-notes/v0.3.7_commitMessage.md</code></b> &mdash; Rotated out of the live <code>docs/release-notes/</code> folder as part of the v0.3.7 &rarr; v0.3.8 artifact cycle.</li>
+                <li><b><code>docs/release-notes/v0.3.7_pullRequest.md</code></b> &mdash; Rotated out (same cycle).</li>
+                <li><b><code>docs/release-notes/v0.3.7_releaseNotes.md</code></b> &mdash; Rotated out (same cycle).</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Release type: <b>Maintenance/Patch</b> &mdash; repository restructuring (SharePoint + new Analytics component), asset additions, and documentation catch-up; no functional changes to Canvas app or Power Automate.</li>
+                <li>Canvas app baseline remains v0.3.4 (unchanged). A substantially updated Canvas app (targeted v0.8.14 in the Power Apps web editor) is in progress but has not yet been exported/unpacked into <code>src/powerApps/</code>; it will be evaluated and documented in a future release once available.</li>
+                <li><code>AppUserList</code> flow baseline remains v0.1.0 (unchanged).</li>
+                <li>Resolves the &quot;pending tracking cleanup&quot; item first raised in the v0.3.6 entry and tracked in <code>docs/release-notes/v0.3.7_priorityWorklist.md</code> &sect;5.1: <code>config/</code> and <code>src/sharePoint/*.csv</code> are now confirmed fully untracked from git (no <code>git rm --cached</code> action remains outstanding).</li>
+                <li>Addresses <code>v0.3.7_priorityWorklist.md</code> &sect;5.2 (&quot;Core Components&quot; claim reconciliation) via Path A (making Power BI/SQL real, under a consolidated <code>src/analytics/</code> grouping) rather than the alternative of demoting them to a &quot;planned&quot; list.</li>
+                <li><b>Security gap still open</b> (carried forward from v0.3.7, tracked in <code>v0.3.7_priorityWorklist.md</code> &sect;1.1): New unknown users are still auto-granted <code>User</code> access instead of <code>AccessDenied</code> in the Canvas app RBAC default. No Canvas app changes are included in v0.3.8; this remains targeted for the next Canvas app update.</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.3.7] <span class='date'>&mdash; 2026-07-17</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b><code>assets/images/</code></b> &mdash; 21 new app branding and UI image files committed to version control for the first time, covering the full visual asset library:
+                  <ul>
+                  <li>Site theme / header: <code>23715-Hines-Site-Theme-DASH-cheetah_14x9-SCREEN.png</code></li>
+                  <li>People/staff banner: <code>banner_genericPeople.png</code></li>
+                  <li>UI button graphics: <code>button_getSupport.png</code>, <code>button_upcoming60Days.png</code>, <code>button_upcoming90Days.png</code></li>
+                  <li>Feature/role icons: <code>icon_bullhorn.png</code>, <code>icon_computerReports.png</code>, <code>icon_heartHands.jpg</code>, <code>icon_silhouetteAlert.png</code>, <code>icon_silhouetteChecklist.png</code>, <code>icon_silhouetteCrowd.png</code>, <code>icon_silhouetteExecutives.png</code>, <code>icon_silhouetteExecutivesCheckmark.png</code>, <code>icon_silhouetteReports.png</code></li>
+                  <li>Super-user role image: <code>image_genericSuperUser.png</code></li>
+                  <li>Mascot variants: <code>mascot_banner_cropped.png</code>, <code>mascot_banner_highRes.png</code>, <code>mascot_iconHorizontal_peachBackground.png</code>, <code>mascot_iconRound_transparent.png</code>, <code>mascot_iconVertical_whiteBackground.png</code>, <code>mascot_icon_lowRes.png</code></li>
+                  </ul>
+                </li>
+                <li><b><code>src/scripts/pwsh/backupProject.ps1</code></b> &mdash; New PowerShell 7 script that creates a timestamped <code>.zip</code> archive of the entire workspace to <code>archive/backup/</code> (git-ignored). Compresses to <code>$env:TEMP</code> first, runs 7-Zip integrity validation (<code>7z t</code>), then moves to the permanent location and re-validates. Auto-detects the project root whether invoked from <code>src/scripts/pwsh/</code> or the workspace root.</li>
+                <li><b><code>docs/release-notes/v0.3.7_commitMessage.md</code></b> &mdash; Fresh v0.3.7 commit message artifact (populated for this release).</li>
+                <li><b><code>docs/release-notes/v0.3.7_pullRequest.md</code></b> &mdash; Fresh v0.3.7 PR description artifact (populated for this release).</li>
+                <li><b><code>docs/release-notes/v0.3.7_releaseNotes.md</code></b> &mdash; Fresh v0.3.7 release notes artifact (populated for this release).</li>
+                <li><b><code>docs/release-notes/v0.3.7_priorityWorklist.md</code></b> &mdash; Comprehensive developer planning document listing all Canvas app security fixes, feature improvements, and repository health items planned for v0.3.7 and near-term. Generated during the 2026-07-14 project deep-dive (Sections 1&ndash;6: RBAC security, UX, training schedule, admin features, repo health, and deferred v0.4.x backlog).</li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>VERSION</code></b> &mdash; 0.3.6 &rarr; 0.3.7</li>
+                <li><b><code>README.md</code></b> &mdash; Release badge updated v0.3.6 &rarr; v0.3.7; release date updated to 2026-07-17.</li>
+                <li><b><code>CHANGELOG.md</code></b> &mdash; [0.3.7] entry added (this entry).</li>
+                </ul>
+                <h3 class='sec removed'>Removed</h3>
+                <ul>
+                <li><b><code>src/scripts/pwsh/enterpriseCommitGuide.ps1</code></b> &mdash; Removed from tracked source and relocated locally to <code>docs/release-notes/releaseTemplates/</code> (git-ignored). These release-cycle orchestration scripts are better co-located with the release artifact templates they operate on; they were incorrectly placed in <code>src/scripts/pwsh/</code> when first added in v0.3.5.</li>
+                <li><b><code>src/scripts/pwsh/postEnterpriseCommitArchival.ps1</code></b> &mdash; Same rationale and relocation as <code>enterpriseCommitGuide.ps1</code> above.</li>
+                <li><b><code>docs/release-notes/v0.3.6_commitMessage.md</code></b> &mdash; Rotated out of the live <code>docs/release-notes/</code> folder as part of the v0.3.6 &rarr; v0.3.7 artifact cycle.</li>
+                <li><b><code>docs/release-notes/v0.3.6_pullRequest.md</code></b> &mdash; Rotated out (same cycle).</li>
+                <li><b><code>docs/release-notes/v0.3.6_releaseNotes.md</code></b> &mdash; Rotated out (same cycle).</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Release type: Maintenance/Patch &mdash; repository asset additions, developer tooling, and ALM housekeeping; no functional changes to Canvas app, Power Automate, or SharePoint.</li>
+                <li>Canvas app baseline remains v0.3.4 (unchanged).</li>
+                <li><code>AppUserList</code> flow baseline remains v0.1.0 (unchanged).</li>
+                <li><b>Security gap still open</b> (tracked in <code>v0.3.7_priorityWorklist.md</code> &sect;1.1): New unknown users are auto-granted <code>User</code> access instead of <code>AccessDenied</code> in the Canvas app RBAC default. Fix requires a Canvas app editor change, re-export, and unpack &mdash; targeted for the next Canvas app update.</li>
+                <li><b>Pending tracking cleanup</b> (carried forward from v0.3.6): 3 <code>config/</code> files and 10 <code>src/sharePoint/*.csv</code> files remain in the git index until <code>git rm --cached</code> is explicitly run. See worklist item 5.1 in <code>v0.3.7_priorityWorklist.md</code>.</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.3.6] <span class='date'>&mdash; ~2026-07-14 (header missing in source)</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b><code>docs/release-notes/v0.3.6_commitMessage.md</code></b> &mdash; Fresh template stub created by the post-v0.3.5 artifact rotation (<code>postEnterpriseCommitArchival.ps1</code>); ready for population before the release commit.</li>
+                <li><b><code>docs/release-notes/v0.3.6_pullRequest.md</code></b> &mdash; Fresh template stub (same post-v0.3.5 rotation).</li>
+                <li><b><code>docs/release-notes/v0.3.6_releaseNotes.md</code></b> &mdash; Fresh template stub (same post-v0.3.5 rotation).</li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>.gitignore</code></b> &mdash; Comprehensive overhaul for security hardening and repo hygiene (2026-07-14):
+                  <ul>
+                  <li>Added <code>/config/</code> &mdash; now fully ignores the entire root-level <code>config/</code> directory; previously only <code>config/local/</code> and <code>config/logs/</code> were excluded. The 3 files currently tracked under <code>config/</code> (<code>ARCHITECTURE.md</code>, <code>ALM-RUNBOOK.md</code>, <code>alm.ps1</code>) remain in the git index until explicitly untracked with <code>git rm --cached -r config/</code>.</li>
+                  <li>Added <code>/.git/</code> &mdash; explicit entry for documentation clarity (Git always protects this directory internally; entry is redundant but intentional).</li>
+                  <li>Added full suite of compressed archive format rules: <code>**/*.7z</code>, <code>**/*.gz</code>, <code>**/*.bz2</code>, <code>**/*.tar</code>, <code>**/*.tgz</code>, <code>**/*.tar.gz</code>, <code>**/*.tar.bz2</code>, <code>**/*.rar</code> (previously only <code>*.zip</code> was covered).</li>
+                  <li>Added spreadsheet and data list file type rules: <code>**/*.csv</code>, <code>**/*.tsv</code>, <code>**/*.xlsx</code>, <code>**/*.xls</code>, <code>**/*.xlsm</code>, <code>**/*.xlsb</code>, <code>**/*.ods</code> &mdash; prevents PII or sensitive VA data files from being committed accidentally. The 10 sanitized CSVs currently tracked under <code>src/sharePoint/</code> remain in the git index until explicitly untracked.</li>
+                  <li>Fixed <code>/docs/release-notes/releaseTemplates/</code> &mdash; added root-anchoring <code>/</code> prefix for consistency with all other directory rules (rule was already working but was not root-anchored).</li>
+                  <li>Removed redundant <code>config/local/</code> and <code>config/logs/</code> entries &mdash; now superseded by the broader <code>/config/</code> rule.</li>
+                  <li>Updated <code>Last updated</code> date to 2026-07-14; refreshed section numbering (now &sect;1&ndash;&sect;10) and added instructional inline comments to &sect;9 and &sect;10 guiding use of <code>!</code> negation for per-file exceptions.</li>
+                  </ul>
+                </li>
+                <li><b><code>VERSION</code></b> &mdash; 0.3.5 &rarr; 0.3.6 (automated by <code>postEnterpriseCommitArchival.ps1</code> post-v0.3.5 release rotation).</li>
+                </ul>
+                <h3 class='sec removed'>Removed</h3>
+                <ul>
+                <li><b><code>docs/release-notes/v0.3.5_commitMessage.md</code></b> &mdash; Rotated out of the live <code>docs/release-notes/</code> folder by <code>postEnterpriseCommitArchival.ps1</code> as part of the v0.3.5 &rarr; v0.3.6 artifact cycle.</li>
+                <li><b><code>docs/release-notes/v0.3.5_pullRequest.md</code></b> &mdash; Rotated out of the live <code>docs/release-notes/</code> folder (same post-release rotation).</li>
+                <li><b><code>docs/release-notes/v0.3.5_releaseNotes.md</code></b> &mdash; Rotated out of the live <code>docs/release-notes/</code> folder (same post-release rotation).</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Release type: Patch &mdash; repository hygiene and <code>.gitignore</code> security hardening; no functional changes to Canvas app, Power Automate, or SharePoint.</li>
+                <li>Canvas app baseline remains v0.3.4 (unchanged).</li>
+                <li><code>AppUserList</code> flow baseline remains v0.1.0 (unchanged).</li>
+                <li><b>Pending tracking cleanup</b> (requires explicit <code>git rm --cached</code> before or alongside this release commit):
+                  <ul>
+                  <li><code>config/</code> &mdash; 3 files currently tracked (<code>config/architecture/ARCHITECTURE.md</code>, <code>config/runbooks/ALM-RUNBOOK.md</code>, <code>config/tools/pac/alm.ps1</code>) will remain in the remote repo until <code>git rm --cached -r config/</code> is run.</li>
+                  <li><code>src/sharePoint/</code> &mdash; 10 sanitized CSV files currently tracked will remain in the remote repo until individually removed or until a decision is made on which (if any) to retain as public-facing samples. Use <code>git rm --cached -r src/sharePoint/</code> or <code>!path/to/file.csv</code> negation entries for retained files.</li>
+                  </ul>
+                </li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.3.5] <span class='date'>&mdash; 2026-07-10</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b><code>src/scripts/pwsh/enterpriseCommitGuide.ps1</code></b> &mdash; New enterprise-grade PowerShell 7 script that fully automates the release branch/commit/push/PR/checks/merge/sync cycle for VA GHES environments. Validates prerequisites (VERSION + all three release artifact <code>.md</code> files), creates a <code>pr/release-vX.Y.Z</code> branch, commits all staged changes using the first line of <code>_commitMessage.md</code> as the title, opens a draft PR with <code>gh pr create --body-file</code>, watches CI checks with <code>gh pr checks --watch</code>, marks ready, merges, and re-syncs the local <code>main</code> branch. Supersedes the manual <code>docs/local/v6_manualRepoManagement.md</code> workflow guide.</li>
+                <li><b><code>src/scripts/pwsh/postEnterpriseCommitArchival.ps1</code></b> &mdash; New PowerShell 7 script that performs the three-step post-release artifact rotation: (1) archives current live <code>docs/release-notes/v*_commitMessage.md</code>, <code>v*_pullRequest.md</code>, and <code>v*_releaseNotes.md</code> files to <code>.\archive\docs\release-notes\</code> (with timestamp suffix on name collision); (2) renames the live files by swapping the old version prefix with the next version from <code>.\VERSION</code>; (3) overwrites renamed files with fresh template content from <code>.\docs\release-notes\releaseTemplates\</code>, leaving them ready for the next release cycle.</li>
+                <li><b><code>.github/prompts/</code></b> &mdash; Four new Copilot Chat prompt files (<code>.prompt.md</code> format) that act as AI-driven release documentation agents. Each reads the current <code>VERSION</code>, runs <code>git status/diff/log</code> commands, analyzes all pending workspace changes, and populates <code>{{PLACEHOLDER}}</code> fields in the targeted release artifact documents. Scopes:
+                  <ul>
+                  <li><code>enterprisePrepareAll.prompt.md</code> &mdash; all three release artifacts (<code>_commitMessage.md</code>, <code>_pullRequest.md</code>, <code>_releaseNotes.md</code>) plus a <code>CHANGELOG.md</code> entry in a single pass</li>
+                  <li><code>enterprisePrepareCommit.prompt.md</code> &mdash; commit message artifact + CHANGELOG entry</li>
+                  <li><code>enterprisePreparePR.prompt.md</code> &mdash; pull request artifact only</li>
+                  <li><code>enterprisePrepareRelease.prompt.md</code> &mdash; release notes artifact only</li>
+                  </ul>
+                </li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>VERSION</code></b> &mdash; 0.3.4 &rarr; 0.3.5</li>
+                <li><b><code>CHANGELOG.md</code></b> &mdash; [0.3.5] entry added (this file)</li>
+                </ul>
+                <h3 class='sec removed'>Removed</h3>
+                <ul>
+                <li><b><code>docs/release-notes/v0.3.4_commitMessage.md</code></b> &mdash; removed from live folder as part of v0.3.4&rarr;v0.3.5 artifact rotation; previously committed with the v0.3.4 release</li>
+                <li><b><code>docs/release-notes/v0.3.4_pullRequest.md</code></b> &mdash; removed from live folder (same rotation)</li>
+                <li><b><code>docs/release-notes/v0.3.4_releaseNotes.md</code></b> &mdash; removed from live folder (same rotation)</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Release type: Patch &mdash; developer tooling and ALM infrastructure only; no functional Canvas app, Power Automate, or SharePoint changes</li>
+                <li>Canvas app baseline remains v0.3.4 (unchanged)</li>
+                <li><code>AppUserList</code> flow baseline remains v0.1.0 (unchanged)</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.3.4] <span class='date'>&mdash; 2026-07-09</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b>Canvas app <code>scrn_DailyCal</code> screen</b> &mdash; New &quot;Daily Calendar List&quot; screen replacing the deprecated <code>scrn_WeeklyCal_1</code>. Displays a filterable daily training room reservation list (&quot;Daily Training Room List&quot;) with ID#, Desk Reservation Info, and POC Comments columns. Built on the modern Power Apps container grid layout (6 col &times; 6 row).</li>
+                <li><b>Canvas app role-based access control (RBAC)</b> &mdash; <code>Dashboard.OnVisible</code> now resolves the current user's <code>AccessLevel_Text</code> from the <code>DeskAccessControl</code> SharePoint list and builds <code>colMenu</code> conditionally across 8 access tiers: <code>SuperUser</code>, <code>AppAdmin</code>, <code>Manager</code>, <code>ServiceChief</code>, <code>ProjectLeader</code>, <code>User</code>, <code>View-only</code>, <code>AccessDenied</code>. Users with <code>AccessDenied</code> receive an empty menu.</li>
+                <li><b>Canvas app <code>userAccessDemographics</code> collection</b> &mdash; Populated on Dashboard load with the current user's full access control record for downstream use.</li>
+                <li><b>Canvas app <code>App.OnStart</code> version variable</b> &mdash; <code>Set(varGetRepo_ProjectVersion, &quot;0.3.4&quot;)</code> added to <code>App.OnStart</code> (previously empty), initializing a global version string displayed in the Dashboard top-left corner.</li>
+                <li><b>Canvas app smart scheduling default time</b> &mdash; <code>chkWeekDays.OnVisible</code> now calculates and injects a default start time rounded up to the nearest 15-minute boundary from current clock time.</li>
+                <li><b>Canvas app booking conflict detector</b> &mdash; <code>chkWeekDays</code> surfaces all existing reservations on the selected date in a live &quot;Existing reservations already booked&quot; gallery, visible before the user continues.</li>
+                <li><b>Canvas app <code>MyAppts</code> &mdash; explicit action buttons</b> &mdash; Added &quot;View This&quot; (green) and &quot;Cancel This&quot; (red) buttons inside the <code>gallUpcoming</code> gallery template, replacing icon-only navigation.</li>
+                <li><b>Canvas app cancellation confirmation dialog</b> &mdash; <code>MyAppts</code> shows a modal &quot;Confirm Cancellation?&quot; overlay (NEVERMIND / CONFIRM) before any reservation cancellation executes.</li>
+                <li><b>Canvas app scheduling dropdowns</b> &mdash; New <code>ddImportance</code> (Normal/High/Low), <code>ddReminder</code> (minute intervals), and <code>ddRecurrenceFrequency</code> (None/Daily/Weekly) controls on <code>chkWeekDays</code> for richer booking options.</li>
+                <li><b>Canvas app O365 Users connector actions</b> &mdash; Added <code>MyProfileV2</code>, <code>ManagerV2</code>, <code>UserProfileV2</code> to the connector manifest.</li>
+                <li><b>Screenshots (v0.3.4)</b> &mdash; 19 app screenshots captured 2026-07-09 and stored under <code>assets/screenshots/</code> (renamed from <code>v0.2.7_*</code> to <code>v0.3.4_*</code>; <code>scrn_WeeklyCal1</code> renamed to <code>scrn_DailyCal</code>).</li>
+                <li><b><code>.github/ISSUE_TEMPLATE/commit_message-TEMPLATE.md</code></b> &mdash; New commit message template modeled on the v0.3.4 commit style; Conventional Commits format with type/scope/version title line, Context section, per-file-area change bullets, documentation sub-sections for updated/new/renamed files, and an inline type and scope reference guide.</li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b>Canvas app <code>Dashboard</code> &mdash; gallery filter</b> &mdash; <code>gallMyReservationsPreview</code> filter simplified to <code>'Reserved By'.Email</code> only (removed the OR <code>'Created By'.Email</code> condition).</li>
+                <li><b>Canvas app <code>Dashboard</code> &mdash; calendar button</b> &mdash; <code>Button5</code> text &quot;Click to see calendar&quot; &rarr; &quot;View calendars!&quot;; height 94&rarr;37, width 240&rarr;333.</li>
+                <li><b>Canvas app <code>Dashboard</code> &mdash; reason label</b> &mdash; <code>Label6</code> height 26&rarr;94px, <code>Overflow = Scroll</code>, <code>VerticalAlign = Top</code> to support multi-line text.</li>
+                <li><b>Canvas app <code>chkWeekDays</code> &mdash; advance booking window</b> &mdash; <code>DaysAheadRestriction</code> 180 &rarr; <b>230 days</b>.</li>
+                <li><b>Canvas app <code>chkWeekDays</code> &mdash; auto 1-hour duration</b> &mdash; <code>ContinueDatebtn.OnSelect</code> pre-calculates <code>varEventEndTime = varEventStartTime + 60 minutes</code>.</li>
+                <li><b>Canvas app <code>MyAppts</code> &mdash; past reservations filter</b> &mdash; <code>gallPast</code> filter expanded to include items where <code>Active_choice.Value</code> is blank or <code>&quot;false&quot;</code>.</li>
+                <li><b>Canvas app <code>Reservation</code> screen labels</b> &mdash; Comprehensive relabeling: title &rarr; &quot;Reservation Details&quot;; name label &rarr; &quot;EHRM Training Description&quot; (Bold); floor label &rarr; &quot;Location (Desk/Room/Building/Division):&quot;; map label &rarr; &quot;Start Date/Time&quot;; description label &rarr; &quot;Additional Comments/Notes:&quot;.</li>
+                <li><b>Canvas app <code>Confirm</code> screen</b> &mdash; <code>Container2</code> upgraded to 6&times;6 layout grid; <code>Gallery3_1</code> template size 22&rarr;175px; <code>TextCanvas7_4</code> renders combined training category + location.</li>
+                <li><b>Canvas app <code>scrn_WeeklyCal</code> + <code>scrn_MoCalendar</code></b> &mdash; Containers updated to 6&times;6 grid layout.</li>
+                <li><b>Canvas app <code>scrn_MoCalendar</code> &mdash; Daily button</b> &mdash; <code>OnSelect</code> updated from <code>Navigate(scrn_WeeklyCal_1)</code> &rarr; <code>Navigate(scrn_DailyCal)</code>.</li>
+                <li><b>Canvas app platform format</b> &mdash; <code>FormatVersion</code> 0.24&rarr;0.30, <code>DocVersion</code> 1.347&rarr;1.349, <code>MinVersionToLoad</code> 1.331&rarr;1.349. Preview flags <code>commentgeneratedformulasv2</code>, <code>enablecreateaformula</code>, <code>enablesaveloadcleardataonweb</code> all toggled <code>false</code>&rarr;<code>true</code>.</li>
+                <li><b><code>src/powerApps/README.md</code></b> &mdash; Complete rewrite for v0.3.4: full screen inventory table (21 screens), all 8 change areas documented, screenshots table, connector/platform diff tables, component version history.</li>
+                <li><b><code>README.md</code></b> (root) &mdash; Version badge v0.3.2&rarr;v0.3.4; project release 2026-07-07&rarr;2026-07-09; Canvas app v0.0.2&rarr;v0.3.4.</li>
+                <li><b><code>VERSION</code></b> &mdash; 0.3.2&rarr;0.3.4.</li>
+                <li><b><code>docs/PROJECT_STATUS.md</code></b> &mdash; Status summary and release history updated for v0.3.4.</li>
+                <li><b><code>assets/screenshots/</code></b> &mdash; All 19 files renamed from <code>v0.2.7_*</code> to <code>v0.3.4_*</code> prefix.</li>
+                <li><b><code>src/solution.xml</code></b> &mdash; Completely corrected from an unrelated Employee Recognition project placeholder to the correct EHRM Training &amp; Booking App content: <code>UniqueName</code> &rarr; <code>EHRMTrainingBooking</code>; <code>LocalizedName</code> &rarr; &quot;578 EHRM Training &amp; Booking App&quot;; <code>Version</code> &rarr; 0.3.4; Canvas app schema &rarr; <code>vah_EHRMTrainingBookingApp</code>; Power Automate flow &rarr; <code>vah_AppUserList</code>; connections &rarr; SharePoint, Outlook, O365Users (Teams and Approvals removed); environment variables &rarr; <code>vah_SharePointSiteUrl</code>, <code>vah_NotificationEmailFrom</code>, <code>vah_BookingHorizonDays</code>.</li>
+                <li><b><code>.github/ISSUE_TEMPLATE/pull_request-TEMPLATE.md</code></b> &mdash; Substantially rewritten from a generic GitHub checkbox-style template to match the v0.3.4 PR narrative style: Summary paragraph, &quot;Changes at a glance&quot; table, numbered detailed breakdown sections, Known Issues block, and artifact-level verification checklist.</li>
+                <li><b><code>.github/ISSUE_TEMPLATE/release_notes-TEMPLATE.md</code></b> &mdash; Substantially updated from a generic Added/Changed/Fixed structure to match the v0.3.4 detailed release notes style: metadata block, Executive Summary with numbered change area list, per-area narrative sections with before/after tables and formula code blocks, Upgrade Notes callout, Known Issues block, and Component Baselines table.</li>
+                </ul>
+                <h3 class='sec removed'>Removed</h3>
+                <ul>
+                <li><b>Canvas app <code>scrn_WeeklyCal_1</code> screen</b> &mdash; Removed and replaced by <code>scrn_DailyCal</code>.</li>
+                <li><b>Canvas app legacy Outlook actions</b> &mdash; <code>V4CalendarGetItems</code> and <code>CalendarGetTables_V2</code> removed from connector manifest (deprecated).</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Release type: <b>Feature</b> &mdash; First major Canvas app functional update since v0.0.2.</li>
+                <li>Canvas app component version: v0.0.2 &rarr; <b>v0.3.4</b> (now aligned with project release versioning).</li>
+                <li><code>AppUserList</code> flow baseline remains v0.1.0 (unchanged).</li>
+                <li>SharePoint schema unchanged &mdash; new RBAC requires <code>DeskAccessControl</code> list's <code>AccessLevel_Text</code> column to be populated per-user for full role enforcement.</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.3.2] <span class='date'>&mdash; 2026-07-07</span></h2>
+                <h3 class='sec fixed'>Fixed</h3>
+                <ul>
+                <li><b><code>release.yml</code></b> &mdash; added <code>GH_HOST</code> and <code>--repo</code> flags for GHES compatibility (would have failed with 401 on first tag push).</li>
+                <li><b><code>version-bump.yml</code></b> &mdash; added <code>GH_HOST</code> and <code>--repo</code> flags for GHES compatibility (would have failed with 401 on first version bump).</li>
+                <li><b><code>pr-auto-setup.yml</code></b> &mdash; disabled Copilot review job (not available on GHES; was producing a misleading red X on every PR).</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Release type: Patch</li>
+                <li>Canvas app baseline remains v0.0.2</li>
+                <li><code>AppUserList</code> flow baseline remains v0.1.0</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.3.1] <span class='date'>&mdash; 2026-07-07</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b><code>src/scripts/pwsh/powerapps-web.ps1</code></b> &mdash; Power Apps web development workflow helper script with commands for packaging (.msapp), opening the Power Apps portal, opening source in VS Code, and showing development status.</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Release type: Patch</li>
+                <li>Canvas app baseline remains v0.0.2</li>
+                <li><code>AppUserList</code> flow baseline remains v0.1.0</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.3.0] <span class='date'>&mdash; 2026-07-07</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li><b><code>VERSION</code> file</b> &mdash; single source of truth for the project-wide SemVer number, read by all workflows and scripts.</li>
+                <li><b><code>.github/labeler.yml</code></b> &mdash; label-to-path mapping config for the Labeler workflow (moved from <code>.github/workflows/</code> to the correct location).</li>
+                <li><b>New workflow: <code>pr-auto-setup.yml</code></b> &mdash; auto-assigns PRs, posts contextual review checklist, requests Copilot code review.</li>
+                <li><b>New workflow: <code>version-bump.yml</code></b> &mdash; manual-trigger workflow that scaffolds a new version: updates VERSION, README, CHANGELOG, PROJECT_STATUS, creates release notes templates, and opens a draft PR.</li>
+                <li><b>New workflow: <code>repo-lint.yml</code></b> &mdash; validates repo structure (required files, component READMEs, VERSION/badge sync, JSON integrity, file placement).</li>
+                <li><b>New workflow: <code>pr-security-scan.yml</code></b> &mdash; scans PRs for GUIDs, SharePoint URLs, VA emails, secrets, and SSN-like patterns in source files and CSVs.</li>
+                <li><b>New workflow: <code>release.yml</code></b> &mdash; auto-creates GitHub Releases when a <code>v*</code> tag is pushed, using pre-written release notes.</li>
+                <li>v0.3.0 release drafts: <code>docs/release-notes/v0.3.x/v0.3.0/</code></li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b>GitHub Actions/workflows fully overhauled</b> &mdash; removed 2 unused workflows (<code>greetings.yml</code>, <code>summary.yml</code>), re-enabled and enhanced all remaining workflows with proper triggers, updated action versions, and path corrections.</li>
+                <li><b><code>label.yml</code></b> &mdash; upgraded <code>actions/labeler</code> from v4 to v5, added proper <code>pull_request_target</code> event types.</li>
+                <li><b><code>powerplatform-ci.yml</code></b> &mdash; added Canvas app JSON validation (all files, not just manifest), added Power Automate flow JSON validation, fixed solution path from <code>src/solutions/</code> to <code>config/solutions/</code>, added <code>pull_request</code> trigger, added path filters.</li>
+                <li><b><code>stale.yml</code></b> &mdash; tuned for solo developer: 90-day stale window (was 30), 30-day close (was 14), weekly schedule (was daily), exempt <code>in-progress</code>/<code>pinned</code>/<code>blocked</code> labels, upgraded <code>actions/stale</code> from v5 to v9.</li>
+                <li><b><code>.github/labeler.yml</code></b> &mdash; added <code>scripts</code>, <code>release</code> labels; split <code>repo-hygiene</code> from <code>scripts</code>.</li>
+                <li><b>All workflow files</b> &mdash; added comprehensive commented-out educational documentation headers and inline annotations.</li>
+                <li><b><code>PULL_REQUEST_TEMPLATE.md</code></b> &mdash; moved from <code>.github/ISSUE_TEMPLATE/</code> to <code>.github/</code> (correct location for GitHub to auto-populate PR descriptions).</li>
+                </ul>
+                <h3 class='sec removed'>Removed</h3>
+                <ul>
+                <li><b><code>greetings.yml</code></b> &mdash; first-interaction greeting (no value for solo developer; <code>actions/first-interaction@v1</code> is archived).</li>
+                <li><b><code>summary.yml</code></b> &mdash; AI issue summarization (requires GitHub Models; summarizes your own issues back to you).</li>
+                </ul>
+                <h3 class='sec fixed'>Fixed</h3>
+                <ul>
+                <li><b><code>.github/labeler.yml</code></b> location &mdash; moved from <code>.github/workflows/</code> to <code>.github/</code> where <code>actions/labeler@v5</code> expects it.</li>
+                <li><b><code>.github/PULL_REQUEST_TEMPLATE.md</code></b> location &mdash; moved from <code>.github/ISSUE_TEMPLATE/</code> to <code>.github/</code> where GitHub expects it.</li>
+                <li><b><code>powerplatform-ci.yml</code></b> solution path &mdash; changed <code>src/solutions/EHRMTrainingBooking</code> to <code>config/solutions/EHRMTrainingBooking</code> matching actual repo layout.</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Release type: Feature</li>
+                <li>This release adds significant CI/CD automation but makes no functional changes to the Canvas app or Power Automate flows.
+                  <ul>
+                  <li>Canvas app baseline remains v0.0.2 (see <code>src/powerApps/README.md</code>)</li>
+                  <li><code>AppUserList</code> flow baseline remains v0.1.0 (see <code>src/powerAutomate/AppUserList/README.md</code>)</li>
+                  </ul>
+                </li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.2.1] <span class='date'>&mdash; 2026-07-07</span></h2>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>docs/PROJECT_STATUS.md</code></b> &mdash; comprehensive update to reflect current project state:
+                  <ul>
+                  <li>Updated status summary from v0.1.1 to v0.2.1 with release history table covering all releases.</li>
+                  <li>Expanded repository contents and exclusions documentation.</li>
+                  <li>Enriched data model section with screen count and connectors/data sources.</li>
+                  <li>Added <code>.gitignore</code> verification step to release readiness checklist.</li>
+                  <li>Extended roadmap with user guide and additional flow goals.</li>
+                  </ul>
+                </li>
+                <li><b><code>README.md</code></b> &mdash; updated version badge and current version to v0.2.1.</li>
+                </ul>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li>v0.2.1 release drafts: <code>docs/release-notes/v0.2.x/v0.2.1/</code></li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Documentation-only patch release; no functional changes to the Canvas app or Power Automate flows.
+                  <ul>
+                  <li>Canvas app baseline remains v0.0.2 (see <code>src/powerApps/README.md</code>)</li>
+                  <li><code>AppUserList</code> flow baseline remains v0.1.0 (see <code>src/powerAutomate/AppUserList/README.md</code>)</li>
+                  </ul>
+                </li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.2.0] <span class='date'>&mdash; 2026-07-07</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li>PR template: <code>.github/PULL_REQUEST_TEMPLATE.md</code> &mdash; now tracked (was previously excluded by an overly broad <code>*_temp*</code> gitignore pattern).</li>
+                <li>Release notes template: <code>docs/release-notes/RELEASE_TEMPLATE.md</code> &mdash; now tracked (same root cause).</li>
+                <li>v0.2.0 release drafts: <code>docs/release-notes/v0.2.x/v0.2.0/</code></li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li><b><code>.gitignore</code> rewrite</b> &mdash; restructured and corrected:
+                  <ul>
+                  <li>Removed overly broad <code>*_temp*</code> / <code>*temp_*</code> patterns that were incorrectly hiding <code>*_TEMPLATE*</code> files.</li>
+                  <li>Removed <code>.gitattributes</code> and <code>.editorconfig</code> from ignore list (these are team-shared configs and should be tracked).</li>
+                  <li>Consolidated redundant rules (<code>/archive/</code> + <code>/archive/**</code> &rarr; <code>/archive/</code>; <code>**/*.bak</code> + <code>*.bak</code> &rarr; <code>**/*.bak</code>).</li>
+                  <li>Added missing common patterns: <code>~$*</code> (Office temp-lock files), <code>**/*.log</code>, <code>*.swp</code>, <code>*.swo</code>, <code>*.tmp</code>.</li>
+                  </ul>
+                </li>
+                <li><b><code>.vs/</code> folder removed from tracking</b> (9 files) &mdash; Visual Studio IDE cache, index, and SQLite files are machine-specific and should never be in a public repository.</li>
+                <li><b><code>tmp/</code> folder removed from tracking</b> (8 files) &mdash; temporary scratch/probe files are developer-only local artifacts.</li>
+                <li><b><code>.github/copilot-instructions.md</code></b> &mdash; updated Copilot agent guidance:
+                  <ul>
+                  <li>Added explicit PowerShell terminal <code>^U</code> workaround documentation for new-terminal initialization.</li>
+                  <li>Re-enabled previously disabled &quot;Releases, Tags, and Release Notes&quot; guidance section.</li>
+                  <li>Updated folder structure references to include <code>archive/</code> and <code>tmp/</code> conventions.</li>
+                  </ul>
+                </li>
+                <li><b><code>.vscode/578-EHRM-TrainingSchedulerApp.code-workspace</code></b> &mdash; enriched workspace configuration:
+                  <ul>
+                  <li>Added workspace folder display name.</li>
+                  <li>Added editor settings (<code>trimTrailingWhitespace</code>, <code>insertFinalNewline</code>, <code>formatOnSave</code>).</li>
+                  <li>Added <code>files.exclude</code> visibility rules for <code>.cache</code> and <code>dist</code>.</li>
+                  <li>Added GitHub authentication settings.</li>
+                  <li>Added recommended extensions list (Copilot, PowerShell, Power Platform, etc.).</li>
+                  <li>Embedded PAC CLI task definitions directly in the workspace file.</li>
+                  </ul>
+                </li>
+                </ul>
+                <h3 class='sec fixed'>Fixed</h3>
+                <ul>
+                <li><code>.github/PULL_REQUEST_TEMPLATE.md</code> and <code>docs/release-notes/RELEASE_TEMPLATE.md</code> are now visible on the public repository (previously hidden by the <code>*_temp*</code> gitignore bug).</li>
+                <li><code>.vs/</code> IDE cache files no longer pollute the public repository history.</li>
+                <li><code>tmp/</code> scratch files no longer appear in the public repository.</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>This release is focused on repository hygiene, developer tooling, and gitignore correctness; no functional changes to the Canvas app or Power Automate flows.
+                  <ul>
+                  <li>Canvas app baseline remains v0.0.2 (see <code>src/powerApps/README.md</code>)</li>
+                  <li><code>AppUserList</code> flow baseline remains v0.1.0 (see <code>src/powerAutomate/AppUserList/README.md</code>)</li>
+                  </ul>
+                </li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.1.1] <span class='date'>&mdash; 2026-05-28</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li>Release readiness and public-facing documentation:
+                  <ul>
+                  <li><code>docs/PROJECT_STATUS.md</code></li>
+                  <li>v0.1.1 release drafts: <code>docs/release-notes/v0.1.x/v0.1.1/</code></li>
+                  </ul>
+                </li>
+                <li>Canonical runbook documentation under <code>config/</code>:
+                  <ul>
+                  <li><code>config/architecture/ARCHITECTURE.md</code></li>
+                  <li><code>config/runbooks/ALM-RUNBOOK.md</code></li>
+                  </ul>
+                </li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li>Updated public &quot;start here&quot; docs and links:
+                  <ul>
+                  <li><code>README.md</code></li>
+                  <li>Release notes template: <code>docs/release-notes/RELEASE_TEMPLATE.md</code></li>
+                  </ul>
+                </li>
+                <li>Updated GitHub community health files for public use:
+                  <ul>
+                  <li>Security policy: <code>.github/SECURITY.md</code></li>
+                  <li>Contributing guide: <code>.github/CONTRIBUTING.md</code></li>
+                  <li>PR template: <code>.github/PULL_REQUEST_TEMPLATE.md</code></li>
+                  <li>Issue templates: <code>.github/ISSUE_TEMPLATE/</code></li>
+                  </ul>
+                </li>
+                <li>Updated PAC task paths to match current canonical unpack locations:
+                  <ul>
+                  <li><code>.vscode/tasks.json</code></li>
+                  </ul>
+                </li>
+                </ul>
+                <h3 class='sec fixed'>Fixed</h3>
+                <ul>
+                <li>Removed stale placeholder references (unrelated project/version text) from v0.1.1 release drafts and templates.</li>
+                <li>Corrected documentation links after reorganizing canonical doc locations.</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>This release is focused on documentation + repository alignment; no functional changes are intended to the Canvas app or <code>AppUserList</code> flow.
+                  <ul>
+                  <li>Canvas app baseline remains v0.0.2 (see <code>src/powerApps/README.md</code>)</li>
+                  <li><code>AppUserList</code> flow baseline remains v0.1.0 (see <code>src/powerAutomate/AppUserList/README.md</code>)</li>
+                  </ul>
+                </li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.1.0] <span class='date'>&mdash; 2026-05-27</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li>Release draft templates under <code>docs/release-notes/</code>.</li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li>Power Automate: <code>AppUserList</code> flow updated to v0.1.0 (see <code>src/powerAutomate/AppUserList/README.md</code>).</li>
+                </ul>
+                <h3 class='sec fixed'>Fixed</h3>
+                <ul>
+                <li>Broken documentation links and stale path references.</li>
+                <li>Invalid JSON in VS Code workspace config.</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.0.2] <span class='date'>&mdash; 2026-01-02</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li>Canvas app v0.0.2 unpacked source under <code>src/powerApps/.unpacked/</code> (pack/unpack artifact is a local <code>.msapp</code>, git-ignored).</li>
+                </ul>
+                <h3 class='sec changed'>Changed</h3>
+                <ul>
+                <li>SharePoint list bindings and screen behavior improvements (see <code>src/powerApps/README.md</code>).</li>
+                </ul>
+                <h3 class='sec validation'>Validation</h3>
+                <ul>
+                <li>Manual smoke test: submit reservation requests and verify persistence in SharePoint.</li>
+                </ul>
+            
+                <hr/>
+            
+                <h2 class='ver'>[0.0.1] <span class='date'>&mdash; 2025-12-31</span></h2>
+                <h3 class='sec added'>Added</h3>
+                <ul>
+                <li>Initial repository baseline:
+                  <ul>
+                  <li>Unpacked Canvas app source under <code>src/powerApps/.unpacked/</code></li>
+                  <li>Unpacked Power Automate sources under <code>src/powerAutomate/</code></li>
+                  <li>Sanitized SharePoint sample CSVs under <code>src/sharePoint/</code></li>
+                  </ul>
+                </li>
+                <li>VS Code task scaffolding for common Power Platform CLI (<code>pac</code>) operations.</li>
+                </ul>
+                <h3 class='sec notes'>Notes</h3>
+                <ul>
+                <li>Unpacked artifacts may include environment-specific IDs/URLs/emails; sanitize before broad sharing.</li>
+                </ul>
+            
+                <p class='meta' style='margin-top:16px;'>EHRM Training &amp; Booking App &middot; Edward Hines Jr. VA Hospital (Station 578) &middot; VISN 12 &middot; Apache-2.0</p>
+            
+                </div>"
+        Size: =12
+        Visible: |-
+            =If(
+                htmlText_userGuide.Visible = true,
+                false,
+                true
+            )
+        Width: |-
+            =//560
+            Parent.Width - 50
+        X: |-
+            =//40
+            25
+        Y: |-
+            =//0
+            Image2_10.Y + Image2_10.Height + 20
+        ZIndex: =7
+
+    grpHeader_9 As group:
+        Height: =5
+        Width: =5
+        X: =40
+        Y: =20
+        ZIndex: =10
+
+        Image2_10 As image:
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Height: =Tabs_11.Height
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+            ZIndex: =3
+
+        Rectangle2_9 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(135, 78, 181, 0.65)
+            Height: =Image2_10.Height
+            Width: =600
+            X: =536
+            ZIndex: =4
+

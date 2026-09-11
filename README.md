@@ -1,21 +1,39 @@
-# EHRM Training & Booking App (Station 578)
+# 578 EHRM Training App (Station 578)
 
-[![Release](https://img.shields.io/badge/release-v1.0.12-blue)](CHANGELOG.md)
+[![Release](https://img.shields.io/badge/release-v1.1.20-blue)](CHANGELOG.md)
 
-This repository contains the **unpacked (source-controlled)** Microsoft Power Platform assets, documentation, and ALM helpers for the EHRM Training & Booking App used at Edward Hines Jr. VA Hospital (Station #578), VISN12.
+![578 EHRM Training App banner](assets/images/graphics/illustrations/sessionSchedulerBanner.png)
+
+This repository contains the **unpacked (source-controlled)** Microsoft Power Platform assets, documentation, and ALM helpers for the 578 EHRM Training App used at Edward Hines Jr. VA Hospital (Station #578), VISN12.
+
+## Contents
+
+- [Current versions](#current-versions)
+- [Repository layout](#repository-layout)
+- [Quick start (maintainers)](#quick-start-maintainers)
+- [Documentation](#documentation)
+- [Public repo hygiene (important)](#public-repo-hygiene-important)
+- [Credits / provenance (baseline)](#credits--provenance-baseline)
+- [Contributing](#contributing)
+- [License](#license)
+
+> **Architecture at a glance:** a Power Apps **Canvas app** (`src/powerApps/`) is the user-facing front end;
+> it reads/writes **SharePoint** lists (`src/sharePoint/`), companion **Power Automate** flows
+> (`src/powerAutomate/`) handle provisioning/reminders/backups, and **Power BI** (`src/analytics/`) provides
+> reporting. All are packaged by the Power Platform **Solution** (`src/solution.xml`).
 
 ## Current versions
 
-- **Project release (repo)**: v1.0.12 (2026-08-25) — first production / go-live release line — see [CHANGELOG.md](CHANGELOG.md)
-- **Canvas app (component)**: v1.0.12 *(public)* — v0.12.2 → v1.0.12: removed impersonation backdoor, hardened RBAC (default-to-`User`), single-student proxy registration, Learning Labs Library class picker, binding errors 120 → 0, partial modern-control migration; removed dead `CreateMeeting`/`Screen3` screens — see [src/powerApps/README.md](src/powerApps/README.md) and [src/powerApps/v1.0.12_differenceAnalysis.md](src/powerApps/v1.0.12_differenceAnalysis.md)
-- **Power Automate (component)**: `AppUserList` (unchanged) + `SendReminders` (updated — email **+ Teams card**) + **`CreateBackups`** *(new — email-triggered backup-reservation flow)* — see [src/powerAutomate/README.md](src/powerAutomate/README.md)
-- **SharePoint**: app lists + new national EHRM **Sandbox Resource Center** reference lists/library — see [src/sharePoint/README.md](src/sharePoint/README.md)
-- **Analytics**: Power BI `Signup Tool` + new `SuperUserDashboard-Final` (WIP) + new `tms/` data staging — see [src/analytics/README.md](src/analytics/README.md)
+- **Project release (repo)**: v1.1.20 (2026-09-11) — Canvas-app reliability & usability update — see [CHANGELOG.md](CHANGELOG.md)
+- **Canvas app (component)**: v1.1.20 *(public)* — v1.0.12 → v1.1.20: re-architected `Confirm` booking-commit (orchestrator + verification timer + both-lists fallback cascade), rebuilt in-app Help (end-user Quick-Start guide + admin changelog), class picker re-pointed to Hines-scoped collections with a new `sessionActive_text` active-session filter, `btnOutlook_*`/`btnPatch_*`/`timer_*` control renames — see [src/powerApps/README.md](src/powerApps/README.md) and the `v1.1.20_*` analysis docs ([diff](src/powerApps/v1.1.20_diffAnalysis.md), [summary](src/powerApps/v1.1.20_changeSummary.md), [known issues](src/powerApps/v1.1.20_knownIssues.md), [roadmap](src/powerApps/v1.1.20_recommendations.md)).
+- **Power Automate (component)**: `AppUserList` + `SendReminders` (email **+ Teams card**) + **`CreateBackups`** (email-triggered backup-reservation flow) — *unchanged since v1.0.12* — see [src/powerAutomate/README.md](src/powerAutomate/README.md)
+- **SharePoint**: app lists + national EHRM **Sandbox Resource Center** reference lists/library — *unchanged this cycle; the app now references a new `MasterScheduleList.sessionActive_text` flag whose SharePoint list-schema extraction is deferred to a future patch* — see [src/sharePoint/README.md](src/sharePoint/README.md)
+- **Analytics**: Power BI `Signup Tool` + `SuperUserDashboard-Final` (WIP) + `tms/` data staging — *unchanged since v1.0.12* — see [src/analytics/README.md](src/analytics/README.md)
 
 ## Repository layout
 
 - [src/](src/) — unpacked, human-reviewable source artifacts
-  - Canvas app: [src/powerApps/](src/powerApps/) (unpacked source lives under `.unpacked/`)
+  - Canvas app: [src/powerApps/](src/powerApps/) (unpacked source under `.unpacked/`; newer `pac` emits `layoutDefault/` + `layoutSourceCode/`)
   - Power Automate: [src/powerAutomate/](src/powerAutomate/)
   - SharePoint lists/search config: [src/sharePoint/](src/sharePoint/)
   - Analytics (Power BI, SQL & TMS): [src/analytics/](src/analytics/)

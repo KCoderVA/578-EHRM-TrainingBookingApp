@@ -4,9 +4,17 @@
 *.json text eol=lf
 *.yaml text eol=lf
 *.yml text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
 
 # Binary files
 *.msapp binary
+*.msapr binary
 *.zip binary
 *.pbix binary
 *.pbit binary
+*.pdf binary
+
+# Generated Power Apps source — exclude from GitHub language stats and collapse
+# in diffs (this is `pac canvas unpack` output, not hand-authored code).
+**/.unpacked/** linguist-generated

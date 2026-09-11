@@ -2,21 +2,19 @@
 $Timestamp =
 	Get-Date -Format "yyyy.MM.dd-HH.mm.ss"
 	## e.g. "2026.07.16-11.12.43"
+
+# Script artifact self-locater: anchor the project root to THIS script's own
+# location (src/scripts/pwsh/backupProject.ps1 -> three parents up = repo root),
+# so the backup works regardless of the current working directory.
+$ProjectPath =
+	(Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
+	## e.g. "S:\...\App Programing\578-EHRM-TrainingSchedulerApp"
 $NetworkDrivePath =
-	Split-Path (Split-Path $PWD -Parent) -Parent
+	Split-Path (Split-Path $ProjectPath -Parent) -Parent
 	## e.g. "S:\Informatics\Data Team\Coder - Informatics"
 $ProjectTypeName =
-	Split-Path (Split-Path $PWD -Parent) -Leaf
+	Split-Path (Split-Path $ProjectPath -Parent) -Leaf
 	## e.g. "App Programing"
-
-# Script artifact self-locater switch
-if ($PWD -like (Join-Path -Path $NetworkDrivePath -ChildPath "\")) {
-	$ProjectPath = Split-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) -Parent
-	## e.g. "C:\Users\VHAHINCoderK1\OneDrive - Department of Veterans Affairs\Desktop"
-} else {
-	$ProjectPath = $PWD
-	## e.g. "S:\Informatics\Data Team\Coder - Informatics\App Programing\578-EHRM-TrainingSchedulerApp"
-}
 $ProjectName =
 	Split-Path -Path $ProjectPath -Leaf
 	## e.g. "578-EHRM-TrainingSchedulerApp"

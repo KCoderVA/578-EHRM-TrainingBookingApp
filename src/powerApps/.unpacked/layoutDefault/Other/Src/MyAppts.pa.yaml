@@ -1,0 +1,849 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  MyAppts:
+    Properties:
+      Fill: =RGBA(236, 236, 236, 1)
+      Height: =Max(App.Height, App.DesignHeight)
+      OnVisible: =UpdateContext({prevSelected:false});UpdateContext({upSelected:true});
+      Width: =Max(App.Width, App.DesignWidth)
+    Children:
+      - gallPast:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_OneTextVariant_ver4.0
+          Properties:
+            AccessibleLabel: ="Previous Reservations"
+            Height: =Parent.Height - (rectSeperator.Y + rectSeperator.Height) - Self.X
+            Items: |-
+              =FirstN(
+                  SortByColumns(
+                      Filter(
+                          'Desk Reservations',
+                              (
+                                  submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                  || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                  || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                  || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                              )
+                          && (
+                                 ((IsBlankOrError(Active_choice.Value) || Active_choice.Value <> Text(true)) && ('Check Out From' >= Today() || reservationStart_datetime >= Today()))
+                              || (Active_choice.Value = Text(false) && !IsBlankOrError(Active_choice.Value) && ('Check Out From' <= Today() || reservationStart_datetime <= Today()))
+                              || (Active_choice.Value <> Text(true) && !IsBlankOrError(Active_choice.Value) && ('Check Out From' <= Today() || reservationStart_datetime <= Today()))
+                              )
+                          && (!IsBlankOrError(RoomReservation))
+                          && !IsBlankOrError(DeskText)
+                      ),
+                      "reservationStart_datetime",
+                      SortOrder.Descending
+                  ),
+                  500
+              )
+
+
+
+
+
+
+
+              /*
+              FirstN(
+                  SortByColumns(
+                      Filter(
+                          'Desk Reservations',
+                          (
+                              submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                              || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                          )
+                          && //'Check Out From' <= Today(),DeskFloor,
+                          Or(
+                              //'Check Out From' >= Today(),
+                              reservationStart_datetime >= Today(),
+                              !IsBlank(RoomReservation)
+                              //DeskFloor
+                          )            
+                      ),
+                      "reservationStart_datetime",
+                      SortOrder.Ascending
+                  ),
+                  500
+              )
+              */
+
+
+
+              /*
+              FirstN(
+                  SortByColumns(
+                      Filter(
+                          'Desk Reservations',
+                          (
+                              'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                              // || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                          )
+                          && //'Check Out From' <= Today(),DeskFloor,
+                          Or(
+                              reservationStart_datetime <= Today(),
+                              !IsBlank(RoomReservation)
+                          )
+                      ),
+                      "CheckOutFrom",
+                      SortOrder.Descending
+                  ),
+                  500
+              )
+              */
+            OnSelect: =
+            ShowNavigation: =true
+            TabIndex: =3
+            TemplateSize: =gallUpcoming.TemplateHeight
+            Visible: =prevSelected
+            Width: =Parent.Width - (Self.X * 2)
+            X: |+
+              =10
+            Y: =rectSeperator.Y
+          Children:
+            - Separator2_2:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(135, 78, 181, 1)
+                  Height: =1
+                  OnSelect: =Select(Parent)
+                  Width: =Parent.TemplateWidth
+                  Y: =Parent.TemplateHeight - 1
+            - icon_View2:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Color: =RGBA(39, 113, 194, 1)
+                  Height: =btn_View2.Height
+                  Icon: =Icon.OpenInNewWindow
+                  OnSelect: =Set(varSelectedReservation,ThisItem);Navigate(Reservation)
+                  Visible: =false
+                  Width: =Self.Height
+                  X: =btn_View2.X - Self.Width
+                  Y: =btn_View2.Y
+            - btn_View2:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(109, 49, 162, 1)
+                  BorderThickness: =3
+                  Fill: =RGBA(152, 208, 70, 1)
+                  Height: =30
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =Select(icon_View2)
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =16
+                  Text: ="View This"
+                  Width: =142
+                  X: =Parent.Width - Self.Width - 10
+                  Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
+            - lbl_Description2:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =lbl_Description1.FontWeight
+                  Height: =Parent.TemplateHeight
+                  Italic: =lbl_Description1.Italic
+                  LineHeight: =1
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: |-
+                    ="Name:   " & ThisItem.studentName_text & "
+                    Scenario:   " & ThisItem.reservationScenario_text & "
+                    Role:   " & ThisItem.reservationRole_text
+                  Underline: =lbl_Description1.Underline
+                  Width: =493
+                  X: =lbl_MeetingCategory2.X + lbl_MeetingCategory2.Width
+                  Y: =lbl_MeetingCategory2.Y
+            - lbl_MeetingCategory2:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Right
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =51
+                  OnSelect: =Select(btn_View1)
+                  PaddingBottom: =0
+                  PaddingLeft: =20
+                  PaddingRight: =20
+                  PaddingTop: =0
+                  Size: =17
+                  Text: =ThisItem.MeetingCategory
+                  Underline: =true
+                  Width: =310
+                  X: =lbl_Day2.X + lbl_Day2.Width
+                  Y: =lbl_Day2.Y
+            - lbl_Time2:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =Parent.TemplateHeight - Self.Y
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =12
+                  Text: |-
+                    =Text(ThisItem.'Check Out From Text') & " to " & Text(ThisItem.'Check Out To Text') & " (Central)"
+                    & "
+                    " & ThisItem.reservationRoom_text & " - " & ThisItem.reservationBuilding_text
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =289
+                  X: =lbl_Year2.X
+                  Y: =lbl_Year2.Y + lbl_Year2.Height
+            - lbl_Year2:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  FontWeight: =FontWeight.Bold
+                  Height: =20
+                  OnSelect: =Select(Parent)
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]yyyy"))
+                  Width: =lbl_Month2.Width + lbl_Day2.Width
+                  X: =lbl_Month2.X
+                  Y: |+
+                    =lbl_Month2.Y + lbl_Month2.Height - 5
+            - lbl_Day2:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Color: =RGBA(39, 113, 194, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]dd"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =40
+                  X: =lbl_Month2.X + lbl_Month2.Width
+                  Y: =lbl_Month2.Y
+            - lbl_Month2:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]mmm"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =60
+      - gallUpcoming:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_OneTextVariant_ver4.0
+          Properties:
+            AccessibleLabel: ="Upcoming Reservations"
+            Height: =Parent.Height - (rectSeperator.Y + rectSeperator.Height) - Self.X
+            Items: |-
+              =    FirstN(
+                      SortByColumns(
+                          Filter(
+                              'Desk Reservations',
+                              (
+                                     submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                  || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                                  || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                  || 'Created By'.Email = Lower(varDeskAccessControl_record.Email_Text)
+                                  || OptionalAttendees.Email = Lower(varDeskAccessControl_record.Email_Text)
+                              )
+                              && (Active_choice.Value = Text(true))
+                              && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                              && (!IsBlankOrError(RoomReservation))
+                              && !IsBlankOrError(DeskText)
+                          ),
+                          "reservationStart_datetime",
+                          SortOrder.Descending
+                      ),
+                      500
+                  )
+
+
+              /*
+              ////  Content prior to v0.14.12:
+              FirstN(
+                  SortByColumns(
+                      Filter(
+                          'Desk Reservations',
+                              (  submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                              || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                              || 'Reserved By'.Email = Lower(varDeskAccessControl_record.Email_Text))
+                              && (Active_choice.Value = Text(true))
+                              && ('Check Out From' >= Today() || reservationStart_datetime >= Today())
+                              && (!IsBlankOrError(RoomReservation))
+                      ),
+                      "reservationStart_datetime",
+                      SortOrder.Descending
+                  ),
+                  500
+              )
+              */
+
+
+              /*
+              FirstN(
+                  SortByColumns(
+                      Filter(
+                          'Desk Reservations',
+                          (
+                              submitterEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                              || studentEmail_text = Lower(varDeskAccessControl_record.Email_Text)
+                          )
+                          && //'Check Out From' <= Today(),DeskFloor,
+                          Or(
+                              //'Check Out From' >= Today(),
+                              reservationStart_datetime >= Today(),
+                              !IsBlank(RoomReservation)
+                              //DeskFloor
+                          )            
+                      ),
+                      "reservationStart_datetime",
+                      SortOrder.Ascending
+                  ),
+                  500
+              )
+              */
+            OnSelect: =
+            ShowNavigation: =true
+            TabIndex: =3
+            TemplateSize: =91
+            Visible: =upSelected
+            Width: =Parent.Width - (Self.X * 2)
+            X: |+
+              =10
+            Y: =rectSeperator.Y
+          Children:
+            - Separator2_1:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(135, 78, 181, 1)
+                  Height: =2
+                  OnSelect: =Select(btn_View1)
+                  Width: =Parent.TemplateWidth
+                  Y: =Parent.TemplateHeight - 1
+            - icon_Cancel1:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Color: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(184, 0, 0, 1)
+                  Height: =40
+                  Icon: =Icon.CancelBadge
+                  OnSelect: |+
+                    =Select(Parent);
+                    UpdateContext({varConfirmCancel:true});
+                    UpdateContext({varReservationToCancel:ThisItem});
+
+                  PaddingBottom: =5
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  PaddingTop: =5
+                  Visible: =false
+                  Width: =46
+                  X: =860
+                  Y: =Parent.TemplateHeight - Self.Height - 3
+            - btn_Cancel1:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(109, 49, 162, 1)
+                  BorderThickness: =3
+                  DisplayMode: |-
+                    =If(
+                        (userAccessLevel_text = "View-Only" || userAccessLevel_text = "AccessDenied"),
+                            DisplayMode.View,
+                        IsBlankOrError(userAccessLevel_text),
+                            DisplayMode.View,
+                        DisplayMode.Edit
+                    )
+                  Fill: =RGBA(184, 0, 0, 1)
+                  Height: =btn_View1.Height
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =Select(icon_Cancel1)
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =16
+                  Text: ="Cancel This"
+                  Visible: |-
+                    =If(
+                        Self.DisplayMode = DisplayMode.View,
+                            false,
+                        true
+                    )
+                  Width: =142
+                  X: =Parent.Width - Self.Width - 10
+                  Y: =Parent.TemplateHeight - Self.Height - 10
+            - icon_View1:
+                Control: Classic/Icon@2.5.0
+                Properties:
+                  Color: =RGBA(109, 49, 162, 1)
+                  Fill: =RGBA(152, 208, 70, 1)
+                  Height: =40
+                  Icon: =Icon.OpenInNewWindow
+                  OnSelect: |-
+                    =Set(varSelectedReservation,ThisItem);
+                    Navigate(Reservation)
+                  PaddingBottom: =5
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  PaddingTop: =5
+                  Visible: =false
+                  Width: =46
+                  X: =860
+                  Y: =3
+            - btn_View1:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(109, 49, 162, 1)
+                  BorderThickness: =3
+                  Fill: =RGBA(152, 208, 70, 1)
+                  Height: =30
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =Select(icon_View1)
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =16
+                  Text: ="View This"
+                  Width: =142
+                  X: =Parent.Width - Self.Width - 10
+                  Y: =10
+            - lbl_Description1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  Height: =91
+                  LineHeight: =1
+                  OnSelect: =Select(btn_View1)
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =16
+                  Text: |-
+                    ="Name:   " & ThisItem.studentName_text & "
+                    Scenario:   " & ThisItem.reservationScenario_text & "
+                    Role:   " & ThisItem.reservationRole_text
+                  Width: =496
+                  X: =410
+            - lbl_MeetingCategory1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Right
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =51
+                  OnSelect: =Select(btn_View1)
+                  PaddingBottom: =0
+                  PaddingLeft: =20
+                  PaddingRight: =20
+                  PaddingTop: =0
+                  Size: =17
+                  Text: =ThisItem.MeetingCategory
+                  Underline: =true
+                  Width: =310
+                  X: =100
+            - lbl_Time1:
+                Control: Label@2.5.1
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =Parent.TemplateHeight - Self.Y
+                  LineHeight: =1
+                  OnSelect: =Select(btn_View1)
+                  PaddingBottom: =0
+                  PaddingLeft: =10
+                  PaddingRight: =10
+                  PaddingTop: =0
+                  Size: =12
+                  Text: |-
+                    =Text(ThisItem.'Check Out From Text') & " to " & Text(ThisItem.'Check Out To Text') & " (Central)"
+                    & "
+                    " & ThisItem.reservationRoom_text & " - " & ThisItem.reservationBuilding_text
+                  Width: =289
+                  X: =lbl_Year1.X
+                  Y: =lbl_Year1.Y + lbl_Year1.Height
+            - lbl_Year1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =20
+                  LineHeight: =1
+                  OnSelect: =Select(btn_View1)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.reservationStart_datetime),"[$-en-US]yyyy"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Visible: =lbl_Month1.Visible
+                  Width: =lbl_Month1.Width + lbl_Day1.Width
+                  X: =lbl_Month1.X
+                  Y: |+
+                    =lbl_Month1.Y + lbl_Month1.Height - 5
+            - lbl_Day1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  OnSelect: =Select(btn_View1)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]dd"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =40
+                  X: =lbl_Month1.X + lbl_Month1.Width
+                  Y: =lbl_Month1.Y
+            - lbl_Month1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(0, 0, 0, 1)
+                  Font: =Font.'Segoe UI'
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  OnSelect: =Select(btn_View1)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =16
+                  Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]mmm"))
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =60
+                  Y: =2
+      - lblNoRes:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            Text: ="No upcoming reservations"
+            Visible: =If(CountRows(gallUpcoming.AllItems) >=1, false, true)
+            Width: =640
+            X: =238
+            Y: =388
+      - Image2_5:
+          Control: Image@2.2.3
+          Properties:
+            Height: =Tabs_2.Height + 25
+            Image: =abstractBackground
+            ImagePosition: =ImagePosition.Fill
+            Width: =Parent.Width
+      - lblMyAppointments:
+          Control: Label@2.5.1
+          Properties:
+            Color: =RGBA(255, 255, 255, 1)
+            Font: =Font.'Segoe UI'
+            FontWeight: =FontWeight.Bold
+            Height: =60
+            PaddingLeft: =200
+            Size: =32
+            Text: ="My Reservations"
+            Width: =1136
+      - Tabs_2:
+          Control: CanvasComponent
+          ComponentName: Tabs
+          Properties:
+            Height: =117
+            HomePage: =App.ActiveScreen
+            Items: |-
+              =colMenu
+              /*Table(
+                  {
+                      Name: "Home",
+                      Icon: Icon.DetailList,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  },
+                  {
+                      Name: "Items",
+                      Icon: Icon.Bookmark,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  },
+                  {
+                      Name: "Desks",
+                      Icon: Icon.ComputerDesktop,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  },
+                  {
+                      Name: "Users",
+                      Icon: Icon.People,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  },
+                  {
+                      Name: "New",
+                      Icon: Icon.Add,
+                      Page: App.ActiveScreen,
+                      Visible:true
+                  }
+              )*/
+            Width: =484
+            X: =650
+      - Container5:
+          Control: GroupContainer@1.5.0
+          Variant: ManualLayout
+          Properties:
+            Height: =471
+            Visible: =varConfirmCancel
+            Width: =1136
+            Y: =169
+          Children:
+            - Rectangle6:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(214, 221, 224, 0.75)
+                  Height: =Parent.Height
+                  Width: =Parent.Width
+                  X: =
+            - bgRounded_10:
+                Control: HtmlViewer@2.1.0
+                Properties:
+                  DisabledBorderColor: =RGBA(56, 56, 56, 1)
+                  Font: =Font.'Open Sans'
+                  Height: =232
+                  HtmlText: |-
+                    =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+                    "<div style='border:1px gray;border-radius:25%;height:200px;width:100%;background-color:#FCFCFC'></div>"
+                    /*Concat(
+                        "<div style='border:1px gray;border-radius:10%;height:",
+                        "239",
+                        "px;width:",
+                        "100",
+                        "%;background-color:#FCFCFC'></div>"
+                    )*/
+                  Size: =24
+                  Visible: =varConfirmCancel
+                  Width: =Label1_1.Width
+                  X: =289
+                  Y: =71
+            - Label1_1:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  FontWeight: =FontWeight.Semibold
+                  Height: =94
+                  Size: =24
+                  Text: |-
+                    ="Are you sure you 
+                    want to cancel this?"
+                  Visible: =varConfirmCancel
+                  Width: =557
+                  X: =289
+                  Y: =86
+            - Rectangle3_3:
+                Control: Rectangle@2.3.0
+                Properties:
+                  Fill: =RGBA(116, 116, 116, 0.85)
+                  Height: =btnConfirmCancel_1.Height + 10
+                  Visible: |-
+                    =//varConfirmCancel
+                    false
+                  Width: =bgRounded_10.Width - 20
+                  X: =299
+                  Y: =274
+            - btnConfirmCancel_1:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(9, 33, 98, 1)
+                  BorderThickness: =5
+                  Fill: =RGBA(106, 122, 127, 1)
+                  Height: =66
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: =UpdateContext({varConfirmCancel:false})
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =14
+                  Text: |-
+                    ="Nevermind,
+                    Don't Cancel"
+                  Visible: =varConfirmCancel
+                  Width: =160
+                  X: =387
+                  Y: =180
+            - btnConfirmDelete_1:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =RGBA(9, 33, 98, 1)
+                  BorderThickness: =5
+                  Fill: =RGBA(184, 0, 0, 1)
+                  Height: =66
+                  HoverFill: =ColorFade(Self.Fill, -20%)
+                  OnSelect: |-
+                    =Patch(
+                        'Desk Reservations',
+                        varReservationToCancel,
+                        {
+                            Active_choice: {Value: false},
+                            reservationComments_multilinetext: "Canceled by student @ " & Now()
+                        }
+                    );
+                    UpdateContext({varConfirmCancel: false});
+                    Refresh('Desk Reservations');
+                    //Remove('Desk Reservations',varReservationToCancel);UpdateContext({varConfirmCancel:false})
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =14
+                  Text: |-
+                    ="Confirm
+                    & Cancel"
+                  Visible: =varConfirmCancel
+                  Width: =160
+                  X: =587
+                  Y: =180
+      - lblPrev:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: |-
+              =If(
+                  prevSelected = true,
+                  ColorFade(Self.Fill, -50%),
+                  ColorFade(Self.Fill, -20%)
+              )
+            BorderThickness: |-
+              =If(
+                  upSelected = true,
+                  3,
+                  1
+              )
+            Fill: |-
+              =If(
+                  prevSelected = true,
+                  ColorFade(Parent.Fill, -20%),
+                  Parent.Fill
+              )
+            FocusedBorderThickness: =.5
+            FontWeight: |-
+              =If(
+                  prevSelected = true,
+                  FontWeight.Bold,
+                  FontWeight.Lighter
+              )
+            Height: =lblUpcoming.Height
+            OnSelect: =UpdateContext({prevSelected:!prevSelected});UpdateContext({upSelected:!upSelected});
+            Size: =18
+            TabIndex: =2
+            Text: ="PREVIOUS (" & CountRows(gallPast.AllItems) &")"
+            Visible: =true // false
+            Width: =lblUpcoming.Width
+            X: =lblUpcoming.X + lblUpcoming.Width + 25
+            Y: =lblUpcoming.Y
+      - lblUpcoming:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: |-
+              =If(
+                  upSelected = true,
+                  ColorFade(Self.Fill, -50%),
+                  ColorFade(Self.Fill, -20%)
+              )
+            BorderThickness: |-
+              =If(
+                  upSelected = true,
+                  3,
+                  1
+              )
+            Fill: |-
+              =If(
+                  upSelected = true,
+                  ColorFade(Parent.Fill, -20%),
+                  Parent.Fill
+              )
+            FocusedBorderThickness: =.5
+            FontWeight: |-
+              =If(
+                  upSelected = true,
+                  FontWeight.Bold,
+                  FontWeight.Lighter
+              )
+            Height: =55
+            OnSelect: |-
+              =UpdateContext({upSelected:!upSelected});
+              UpdateContext({prevSelected:!prevSelected})
+            Size: =18
+            TabIndex: =1
+            Text: ="UPCOMING (" & CountRows(gallUpcoming.AllItems) & ")"
+            Width: =220
+            X: =18
+            Y: =144
+      - rectSeperator:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(204, 204, 204, 1)
+            Height: =3
+            Width: =lblPrev.X + lblPrev.Width + lblUpcoming.X
+            X: =1
+            Y: |+
+              =rectUpSel.Y + rectUpSel.Height - 1
+      - rectPrevSel:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(135, 78, 181, 1)
+            Height: =5
+            Visible: =prevSelected
+            Width: =lblPrev.Width
+            X: =lblPrev.X
+            Y: =lblPrev.Y + lblPrev.Height - Self.Height
+      - rectUpSel:
+          Control: Rectangle@2.3.0
+          Properties:
+            Fill: =RGBA(135, 78, 181, 1)
+            Height: =5
+            Visible: =upSelected
+            Width: =lblUpcoming.Width
+            X: =lblUpcoming.X
+            Y: =lblUpcoming.Y + lblUpcoming.Height - Self.Height
