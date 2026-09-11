@@ -32,7 +32,6 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 - **Canvas app `DebuggingScreen.Height`** — changed the screen formula from `App.Height` to `App.Height + 1` as a controlled live-coauthoring proof of concept.
 - **Canvas app `App.OnStart`** — advanced the active `varRepoVersion` assignment from `"1.2.4"` to `"1.2.6"` to match the latest project version selected during the release.
 - **`VERSION`** — advanced the project release version from `1.1.20` to `1.2.6` to align repository release documentation with the connected Canvas app.
-- **`README.md`** — updated the release badge and current-version summary to v1.2.6.
 - **Autonomous Canvas release protocol** — now verifies a live change through `sync_canvas` → YAML edit → `compile_canvas` → fresh `sync_canvas`, then delegates branch, commit, PR, merge, tag, release, archival, and mirror operations to the existing enterprise release script.
 
 ### Notes
