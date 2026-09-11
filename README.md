@@ -1,6 +1,6 @@
 # 578 EHRM Training App (Station 578)
 
-[![Release](https://img.shields.io/badge/release-v1.1.20-blue)](CHANGELOG.md)
+[![Release](https://img.shields.io/badge/release-v1.2.6-blue)](CHANGELOG.md)
 
 ![578 EHRM Training App banner](assets/images/graphics/illustrations/sessionSchedulerBanner.png)
 
@@ -24,8 +24,8 @@ This repository contains the **unpacked (source-controlled)** Microsoft Power Pl
 
 ## Current versions
 
-- **Project release (repo)**: v1.1.20 (2026-09-11) — Canvas-app reliability & usability update — see [CHANGELOG.md](CHANGELOG.md)
-- **Canvas app (component)**: v1.1.20 *(public)* — v1.0.12 → v1.1.20: re-architected `Confirm` booking-commit (orchestrator + verification timer + both-lists fallback cascade), rebuilt in-app Help (end-user Quick-Start guide + admin changelog), class picker re-pointed to Hines-scoped collections with a new `sessionActive_text` active-session filter, `btnOutlook_*`/`btnPatch_*`/`timer_*` control renames — see [src/powerApps/README.md](src/powerApps/README.md) and the `v1.1.20_*` analysis docs ([diff](src/powerApps/v1.1.20_diffAnalysis.md), [summary](src/powerApps/v1.1.20_changeSummary.md), [known issues](src/powerApps/v1.1.20_knownIssues.md), [roadmap](src/powerApps/v1.1.20_recommendations.md)).
+- **Project release (repo)**: v1.2.6 (2026-09-11) — Canvas coauthoring automation proof of concept — see [CHANGELOG.md](CHANGELOG.md)
+- **Canvas app (component)**: v1.2.6 *(coauthoring session)* — `DebuggingScreen.Height` changed to `App.Height + 1`, with the active `App.OnStart` `varRepoVersion` aligned to v1.2.6; the broader v1.1.20 feature baseline remains documented in [src/powerApps/README.md](src/powerApps/README.md) and the `v1.1.20_*` analysis docs ([diff](src/powerApps/v1.1.20_diffAnalysis.md), [summary](src/powerApps/v1.1.20_changeSummary.md), [known issues](src/powerApps/v1.1.20_knownIssues.md), [roadmap](src/powerApps/v1.1.20_recommendations.md)).
 - **Power Automate (component)**: `AppUserList` + `SendReminders` (email **+ Teams card**) + **`CreateBackups`** (email-triggered backup-reservation flow) — *unchanged since v1.0.12* — see [src/powerAutomate/README.md](src/powerAutomate/README.md)
 - **SharePoint**: app lists + national EHRM **Sandbox Resource Center** reference lists/library — *unchanged this cycle; the app now references a new `MasterScheduleList.sessionActive_text` flag whose SharePoint list-schema extraction is deferred to a future patch* — see [src/sharePoint/README.md](src/sharePoint/README.md)
 - **Analytics**: Power BI `Signup Tool` + `SuperUserDashboard-Final` (WIP) + `tms/` data staging — *unchanged since v1.0.12* — see [src/analytics/README.md](src/analytics/README.md)
