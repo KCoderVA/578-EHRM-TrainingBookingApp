@@ -1,13 +1,11 @@
 ---
 description: >
-  Performs one requested Canvas App change as an atomic release workflow:
-  modifies the connected live app, increments App.OnStart varRepoVersion by one
-  patch version, saves and publishes the app, updates CHANGELOG.md, commits only
-  the release documentation change, pushes a feature branch, and opens a draft
-  pull request against the VA GitHub Enterprise repository. Use when: making a
-  live Canvas App change and documenting it through a Git-backed PR workflow.
+  Executes a plain-language Canvas App change through the active coauthoring
+  connection, increments the Canvas and project patch version, prepares the
+  changelog and release documents, runs enterpriseCommitGuide.ps1, verifies the
+  VA GitHub Enterprise release, and reports the result.
 agent: agent
-argument-hint: "Describe one concrete Canvas App change, for example: Change the Dashboard background to RGBA(31, 255, 12, 1)."
+argument-hint: "Describe one concrete Canvas App change, for example: Change DebuggingScreen.Height from App.Height to App.Height + 1."
 ---
 
 <!--
@@ -26,427 +24,266 @@ argument-hint: "Describe one concrete Canvas App change, for example: Change the
    limitations under the License.
 -->
 
-# Autonomous Canvas App Change and Release
+# Autonomous Canvas App Change and Enterprise Release
 
-You are the release engineer for the **578 EHRM Training App**. Execute the
-user's requested Canvas App modification as one ordered, evidence-based,
-atomic workflow.
+Execute the Canvas App modification supplied as the plain-language argument to
+this prompt. Carry it through the active coauthoring session, semantic
+versioning, local release documentation, the repository's enterprise release
+script, and final remote verification.
 
-Treat the plain-language arguments supplied with this prompt invocation as the
-requested app change. For example:
-
-> Change the Dashboard background to `RGBA(31, 255, 12, 1)`.
-
-Do not merely describe commands or produce a plan. Perform the work using the
-available tools. Do not claim that the app was changed, saved, published,
-committed, pushed, or submitted for review unless the corresponding operation
-completed successfully and you obtained evidence of success.
+Perform the work rather than only describing a plan. Use engineering judgment
+to translate the request into the smallest complete Canvas App change. Claim
+success only when the relevant tool or command supplies evidence.
 
 ## Fixed project configuration
 
 - Workspace:
   `S:\Informatics\Data Team\Coder - Informatics\App Programing\578-EHRM-TrainingSchedulerApp`
-- Changelog:
-  `S:\Informatics\Data Team\Coder - Informatics\App Programing\578-EHRM-TrainingSchedulerApp\CHANGELOG.md`
-- Git remote: `origin`
-- GitHub Enterprise repository:
+- Enterprise repository:
   `https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp`
-- Base branch: `main`
-- Canvas version variable:
+- Git remote and base branch: `origin` / `main`
+- Canvas version expression:
   `Set(varRepoVersion, "MAJOR.MINOR.PATCH")` in `App.OnStart`
-- Version increment for this workflow: **PATCH only**
-- Pull request mode: **draft**
+- Project version file: `.\VERSION`
+- Changelog: `.\CHANGELOG.md`
+- Release artifacts: `.\docs\release-notes\`
+- Release templates: `.\docs\release-notes\releaseTemplates\`
+- Release script:
+  `.\docs\release-notes\releaseTemplates\enterpriseCommitGuide.ps1`
+- Requested-change version increment: **PATCH**
 
-## Non-negotiable safety and atomicity rules
+## Operating rules
 
-1. Treat the Canvas App deployment and Git documentation as one release unit.
-2. Never update `CHANGELOG.md`, create a commit, push a branch, or open a PR
-   unless the live Canvas App change has been saved and published successfully.
-3. Never publish the app unless both the requested change and version increment
-   compile without new errors attributable to this workflow.
-4. Never stage or commit unrelated user changes. The workspace may already be
-   dirty.
-5. Never use `git add .`, `git add -A`, `git commit -a`, destructive reset,
-   forced checkout, forced push, or history rewriting.
-6. Never commit credentials, tokens, tenant secrets, private data, or generated
-   authentication artifacts.
-7. Never guess Power Fx property names, control names, screen names, or tool
-   arguments. Inspect the live app and tool schemas first.
-8. If a required live-write, save, publish, Git authentication, or PR-creation
-   capability is unavailable, stop at the applicable capability gate. Do not
-   substitute a local-only YAML edit and call it a live app change.
-9. If failure occurs before publishing, leave the live production version
-   unchanged. If failure occurs after publishing but before PR creation, report
-   the exact completed app version and the remaining Git recovery steps.
-10. Do not merge the PR. The terminal result is an open draft PR for review.
-
----
-
-## Phase 1 — Preflight and capability gate
-
-Complete every check before changing anything.
-
-1. Confirm the current working project exists at the fixed workspace path.
-2. Inspect:
-   - `git status --short --branch`
-   - `git remote -v`
-   - `git branch --show-current`
-   - `git log -1 --oneline`
-3. Confirm `origin` resolves to:
-   `https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp.git`
-   or an equivalent authenticated URL for the same host, owner, and repository.
-4. Confirm push authentication without changing the remote:
-   - Prefer `gh auth status --hostname va.ghe.com` when GitHub CLI is available.
-   - Also run `git ls-remote --exit-code origin HEAD`.
-5. Confirm a Canvas Authoring coauthoring session is connected to the intended
-   app and that the Power Apps Studio browser tab remains open.
-6. Discover the actual Canvas Authoring tools available in this session and
-   inspect their schemas before calling them.
-7. Require capabilities for all of the following:
-   - pull/sync the current live coauthoring state;
-   - modify a property or formula in the connected app;
-   - compile/validate the modified app;
-   - apply/write the modification into the coauthoring session;
-   - save the app with version notes;
-   - publish the saved version;
-   - obtain evidence of the published version.
-8. A browser-automation path is acceptable only if it is attached to the
-   authenticated Power Apps Studio session for this exact app and can reliably
-   edit, save, publish, and verify the result. Do not open an unauthenticated
-   replacement browser and do not assume it represents the connected session.
-
-### Hard stop condition
-
-If any required live Canvas write/save/publish capability is missing, stop
-without modifying either the live app or repository and report:
-
-```text
-BLOCKED: This session can inspect/sync/validate the Canvas App but cannot
-reliably perform and verify the required live write, save, and publish steps.
-No app release, changelog update, commit, push, or PR was created.
-```
-
-Do not continue with a local-only approximation.
+1. Inspect before editing. Never guess a screen, control, property, formula, or
+   dependency.
+2. Always call `sync_canvas` before reading or editing Canvas YAML.
+3. Use the established coauthoring sequence:
+   **sync current YAML -> edit synchronized YAML -> `compile_canvas` -> fresh
+   sync verification**.
+4. In this environment, `compile_canvas` has propagated validated YAML edits
+   into the connected coauthoring session. A fresh server sync containing the
+   requested edits is the required proof that propagation succeeded.
+5. Do not require separately named Canvas save or publish tools. Coauthoring
+   propagation and fresh-sync verification are sufficient for this workflow.
+6. Existing Canvas diagnostics do not automatically block a change. Compare
+   against the baseline and block only for new errors caused by this workflow.
+7. Keep Canvas `varRepoVersion`, repository `VERSION`, changelog release entry,
+   and release artifact filenames aligned before invoking the release script.
+8. Preserve unrelated user work. Never revert or overwrite changes you did not
+   make.
+9. The release script uses `git add --all`; therefore inspect the complete
+   worktree before running it. Proceed only when every pending file is intended
+   for the release or is already part of the user's prepared release set.
+10. The release script owns branch creation, staging, commit, push, PR, checks,
+    merge, tag, GitHub release, archival, next-cycle bump, and mirror sync. Do
+    not duplicate these operations manually.
+11. Never expose credentials, tokens, or private authentication material.
 
 ---
 
-## Phase 2 — Synchronize and establish the baseline
+## Step 1 — Interpret and investigate the requested change
 
-1. Sync the current coauthoring session from the server to a dedicated local
-   working directory. Use an absolute path and do not sync into the Git
-   repository unless that location is explicitly designed for generated Canvas
-   source.
-2. Search the synced source for the exact requested target:
-   - screen;
-   - control;
-   - component;
-   - property;
-   - formula;
-   - variable;
-   - collection.
-3. If the request is ambiguous or matches multiple targets, ask the user to
-   choose the target before editing.
-4. Find the one active `App.OnStart` assignment matching:
+1. Treat the plain-language argument supplied with this prompt as the assigned
+   Canvas App modification.
+2. Confirm the Canvas Authoring connection is active for the intended app. If
+   needed, reconnect to the same app using known session details.
+3. Sync the live app into a dedicated absolute directory outside the Git
+   repository.
+4. Search and analyze all relevant `.pa.yaml` files to identify:
+   - the exact target screen, control, component, property, or formula;
+   - references and dependencies that could be affected;
+   - the active `App.OnStart` `varRepoVersion` assignment.
+5. Distinguish executable formulas from comments, string literals, release-note
+   text, and historical code blocks.
+6. If multiple materially different targets remain plausible, ask the user to
+   choose. Otherwise proceed with the most precise interpretation.
+7. Capture the baseline using `compile_canvas`, app checker, and accessibility
+   checker where available. Record pre-existing diagnostics.
 
-   ```powerfx
-   Set(varRepoVersion, "MAJOR.MINOR.PATCH")
-   ```
+## Step 2 — Modify and verify the coauthored Canvas App
 
-5. Ignore occurrences inside comments, release-note text, labels, HTML strings,
-   or historical code blocks.
-6. Parse the current value as strict semantic versioning. Call it
-   `OLD_VERSION`.
-7. Calculate:
-
-   ```text
-   NEW_VERSION = OLD_MAJOR.OLD_MINOR.(OLD_PATCH + 1)
-   ```
-
-8. Record a baseline snapshot containing:
-   - requested target and current value/formula;
-   - `OLD_VERSION`;
-   - existing Canvas compile/app-checker errors and warnings;
-   - current published app version, if exposed by the authoring service.
-
-If there is no single active `varRepoVersion` assignment or the value is not a
-strict three-part semantic version, stop and request clarification.
-
----
-
-## Phase 3 — Apply the requested Canvas App change
-
-1. Translate the plain-language request into the smallest valid Power Fx or
-   Canvas property modification.
-2. Preserve existing behavior outside the requested target.
-3. For colors, use valid Power Fx syntax. Example:
-
-   ```powerfx
-   RGBA(31, 255, 12, 1)
-   ```
-
-   Do not use `RGB(...)` with four arguments.
-4. Apply the requested modification through the connected live-authoring
-   write mechanism.
-5. Change only the active `App.OnStart` version assignment:
+1. Apply the smallest complete YAML edit needed for the requested behavior.
+2. Find the one active expression:
 
    ```powerfx
    Set(varRepoVersion, "OLD_VERSION")
    ```
 
-   to:
+3. Parse `OLD_VERSION` as `MAJOR.MINOR.PATCH`, increase only `PATCH` by one,
+   and call the result `RELEASE_VERSION`.
+4. Change the active expression to:
 
    ```powerfx
-   Set(varRepoVersion, "NEW_VERSION")
+   Set(varRepoVersion, "RELEASE_VERSION")
    ```
 
-6. Do not update project-wide `VERSION` unless the user explicitly asks for a
-   project release. This workflow increments the Canvas component's internal
-   version and documents it in `CHANGELOG.md`.
-7. Re-sync or re-read the connected session and verify both exact changes are
-   present before compiling.
+5. Do not update commented or historical version references unless required by
+   the user's request.
+6. Run `compile_canvas` on the modified directory.
+7. Compare diagnostics with the baseline:
+   - correct and retry any new errors introduced by these edits;
+   - unchanged pre-existing diagnostics may remain;
+   - if the new errors cannot be corrected safely, restore only this
+     workflow's Canvas edits and stop.
+8. Run `sync_canvas` into a separate verification directory.
+9. Confirm from that fresh server copy that:
+   - the requested change is present exactly;
+   - active `varRepoVersion` equals `RELEASE_VERSION`;
+   - no unrelated Canvas properties or formulas changed.
+10. If either edit is absent, reassess and retry the edit/compile sequence once.
+    If propagation still fails, stop before modifying repository release files.
 
----
+## Step 3 — Update project versioning and CHANGELOG.md
 
-## Phase 4 — Validate, save, and publish
+From the fixed workspace:
 
-1. Compile/validate the modified Canvas App.
-2. Compare diagnostics against the Phase 2 baseline:
-   - zero new errors caused by this workflow are allowed;
-   - pre-existing errors may remain only if unchanged and unrelated;
-   - if diagnostics cannot be reliably attributed, do not publish.
-3. Run the available Canvas app-checker and accessibility checks. Record any
-   new findings attributable to the modification.
-4. If validation fails because of this workflow:
-   - revert only the two changes made by this workflow;
-   - verify the baseline is restored;
-   - stop without saving, publishing, or touching Git.
-5. Save the app with these version notes, replacing placeholders with facts:
+1. Read `VERSION`, `CHANGELOG.md`, `.github\copilot-instructions.md`, recent
+   release documents, and the release templates.
+2. Follow the repository's archival conventions before modifying tracked
+   artifacts when an archive is required.
+3. Set `VERSION` to `RELEASE_VERSION`.
+4. Preserve the existing `CHANGELOG.md` format, chronology, heading structure,
+   style, and all historical entries.
+5. Keep `## [Unreleased]` first, then insert:
 
-   ```text
-   Canvas App vNEW_VERSION
-
-   - Requested change: <precise description of the functional/property change>
-   - Version: App.OnStart varRepoVersion OLD_VERSION -> NEW_VERSION
-   - Validation: <compile/app-checker result, distinguishing unchanged
-     pre-existing diagnostics>
-   - Automated through GitHub Copilot CLI Canvas coauthoring workflow
+   ```markdown
+   ## [RELEASE_VERSION] - YYYY-MM-DD
    ```
 
-6. Publish the newly saved app version.
-7. Verify publication using at least one authoritative mechanism:
-   - authoring service reports the published version;
-   - Studio reports publish success and the expected save/version notes;
-   - a fresh read of the published app shows both the requested change and
-     `varRepoVersion = "NEW_VERSION"`.
-8. Record publication evidence and timestamp. Do not proceed to Git without it.
+6. Include only applicable Keep-a-Changelog sections.
+7. Document:
+   - the exact target and before/after Canvas values;
+   - the functional or technical effect;
+   - `varRepoVersion` `OLD_VERSION -> RELEASE_VERSION`;
+   - successful compile and fresh-sync verification;
+   - relevant unchanged pre-existing diagnostics, if any.
 
----
+## Step 4 — Prepare release documents
 
-## Phase 5 — Prepare an isolated Git change
+The release script requires these exact files:
 
-The repository may contain unrelated modifications. Prefer an isolated Git
-worktree created from the latest `origin/main`.
-
-1. Fetch without modifying the user's current branch:
-
-   ```powershell
-   git -C "S:\Informatics\Data Team\Coder - Informatics\App Programing\578-EHRM-TrainingSchedulerApp" fetch origin main --prune
-   ```
-
-2. Create a unique branch name:
-
-   ```text
-   copilot/canvas-vNEW_VERSION-<short-kebab-change>
-   ```
-
-3. Create an isolated worktree under the current Copilot session artifact
-   directory or another explicitly resolved temporary directory:
-
-   ```powershell
-   git -C "<WORKSPACE>" worktree add -b "<BRANCH_NAME>" "<ISOLATED_WORKTREE>" origin/main
-   ```
-
-4. Do not alter, clean, stash, reset, or switch branches in the user's dirty
-   primary workspace.
-5. Read the isolated worktree's:
-   - `CHANGELOG.md`;
-   - `.github/copilot-instructions.md`;
-   - `.github/commit_message-TEMPLATE.md`;
-   - `.github/PULL_REQUEST_TEMPLATE.md`.
-
-If worktree creation is unavailable, continue in the primary workspace only
-when it is clean or when safe path-specific staging can be proven. Otherwise
-stop and report that Git isolation is required.
-
----
-
-## Phase 6 — Update CHANGELOG.md
-
-Update only the isolated worktree's `CHANGELOG.md`. Preserve all existing
-entries and line endings.
-
-Under `## [Unreleased]`, replace applicable placeholder bullets or add concise
-bullets:
-
-```markdown
-### Changed
-- **Canvas App vOLD_VERSION -> vNEW_VERSION** — <precise description of the
-  requested live app modification, naming the affected screen/control/property>.
-- **`App.OnStart`** — incremented `varRepoVersion` from `"OLD_VERSION"` to
-  `"NEW_VERSION"` after the live app change was validated and published.
+```text
+.\docs\release-notes\vRELEASE_VERSION_commitMessage.md
+.\docs\release-notes\vRELEASE_VERSION_pullRequest.md
+.\docs\release-notes\vRELEASE_VERSION_releaseNotes.md
 ```
 
-If the modification fixed a defect rather than changing behavior, place the
-functional bullet under `### Fixed` and keep the version bullet under
-`### Changed`.
+1. Generate them from:
+   - `releaseTemplates\TEMPLATE_commitMessage.md`;
+   - `releaseTemplates\TEMPLATE_pullRequest.md`;
+   - `releaseTemplates\TEMPLATE_releaseNotes.md`.
+2. Preserve the established document structures and replace all applicable
+   placeholders with verified facts.
+3. Remove unused template sections and all unresolved placeholder tokens.
+4. Keep the commit title brief and conventional, for example:
 
-Do not:
+   ```text
+   fix(canvas-app): vRELEASE_VERSION — update DebuggingScreen height
+   ```
 
-- invent implementation details;
-- claim diagnostics were fixed if they were merely unchanged;
-- add a released version heading;
-- modify `VERSION`;
-- modify historical changelog entries;
-- include internal IDs, tokens, tenant data, or authentication details.
+5. The PR and release notes must describe the Canvas change, semantic-version
+   transition, repository version/changelog updates, validation, and files
+   included in the release.
+6. Generate the release-notes document even if the user mentioned only commit
+   and PR text because the automation requires it for the GitHub release.
 
-Optionally apply the identical `CHANGELOG.md` update to the primary workspace
-only if doing so will not overwrite or conflict with the user's existing
-uncommitted changelog work. If the primary `CHANGELOG.md` already differs from
-`origin/main`, leave it untouched and report that the authoritative PR change
-was prepared in the isolated worktree.
-
----
-
-## Phase 7 — Verify and commit only the changelog
-
-From the isolated worktree:
+## Step 5 — Validate the complete local release set
 
 1. Run:
 
    ```powershell
    git status --short
-   git diff -- CHANGELOG.md
    git diff --check
+   git diff -- VERSION CHANGELOG.md docs/release-notes
    ```
 
-2. Require that the only workflow-generated tracked change is `CHANGELOG.md`.
-3. Stage by exact path:
+2. Inspect every pending modified, renamed, deleted, and untracked file because
+   the release script stages everything.
+3. Confirm:
+   - `VERSION` equals `RELEASE_VERSION`;
+   - `CHANGELOG.md` has the matching dated release entry;
+   - all three matching release documents exist;
+   - titles and contents match the actual change;
+   - no template placeholders remain;
+   - no credentials or authentication artifacts are present;
+   - every pending file belongs to the intended release set.
+4. If unrelated changes would be committed, stop and identify them instead of
+   running the script.
+
+## Step 6 — Run and monitor enterpriseCommitGuide.ps1
+
+1. Run PowerShell 7 from the repository root:
 
    ```powershell
-   git add -- CHANGELOG.md
+   Set-Location "S:\Informatics\Data Team\Coder - Informatics\App Programing\578-EHRM-TrainingSchedulerApp"
+   & ".\docs\release-notes\releaseTemplates\enterpriseCommitGuide.ps1"
    ```
 
-4. Confirm the staged set:
+2. Use synchronous execution with a long initial wait. If it continues in the
+   background, retain the shell ID and use the shell-read tool until it exits.
+   Never launch a second copy while the first is active.
+3. Monitor its phases:
+   - branch creation;
+   - staging, commit, and push;
+   - draft PR creation;
+   - checks, ready transition, and merge;
+   - annotated tag and GitHub release;
+   - next-cycle patch bump;
+   - release artifact archival/reset;
+   - public mirror synchronization.
+4. If authentication or user interaction is required, surface it rather than
+   guessing credentials.
+5. If the script fails, record the exact phase and error. Inspect local and
+   remote state before retrying any completed operation.
+6. The script intentionally increments `VERSION` again after releasing:
+   - released/tagged version: `RELEASE_VERSION`;
+   - local post-run `VERSION`: next patch for the following release cycle.
 
-   ```powershell
-   git diff --cached --name-status
-   git diff --cached -- CHANGELOG.md
-   ```
+## Step 7 — Verify VA GitHub Enterprise
 
-5. Commit using a concise conventional title and the required trailer:
+After successful script completion, query
+`https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp` with authenticated
+`gh`, Git, GitHub tools, or the GHES API.
 
-   ```text
-   docs(canvas-app): document vNEW_VERSION live app update
+Verify:
 
-   Document the published Canvas App change:
-   - <precise requested modification>
-   - App.OnStart varRepoVersion OLD_VERSION -> NEW_VERSION
+1. the release PR exists and was merged into `main`;
+2. the merged commit contains the intended release files;
+3. remote `main` contains the correct changelog entry, released `VERSION`, and
+   all three release documents;
+4. tag `vRELEASE_VERSION` exists;
+5. the GitHub release for `vRELEASE_VERSION` exists;
+6. mirror synchronization succeeded if reported by the script;
+7. the local repository returned to `main`;
+8. local `VERSION` contains the expected next-cycle patch.
 
-   Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
-   ```
+Report any discrepancy rather than silently accepting the script's output.
 
-6. Do not include any file except `CHANGELOG.md` in this commit.
+## Step 8 — Final response
 
----
-
-## Phase 8 — Push and open a draft PR
-
-1. Push the new branch without force:
-
-   ```powershell
-   git push --set-upstream origin "<BRANCH_NAME>"
-   ```
-
-2. Build a PR title:
-
-   ```text
-   docs(canvas-app): document Canvas App vNEW_VERSION update
-   ```
-
-3. Build the PR body using `.github/PULL_REQUEST_TEMPLATE.md` as structural
-   guidance. It must accurately state:
-   - the requested live Canvas App modification;
-   - `varRepoVersion` `OLD_VERSION -> NEW_VERSION`;
-   - the Canvas app was saved and published before the Git commit;
-   - this PR changes only `CHANGELOG.md`;
-   - compile/app-checker results, separating unchanged pre-existing findings;
-   - publication evidence;
-   - no project-wide `VERSION` change was requested.
-4. Save the generated PR body to a temporary file outside the repository.
-5. Create a draft PR against `main`. Prefer:
-
-   ```powershell
-   gh pr create `
-     --repo "va.ghe.com/software/578-EHRM-TrainingSchedulerApp" `
-     --base "main" `
-     --head "<BRANCH_NAME>" `
-     --draft `
-     --title "<PR_TITLE>" `
-     --body-file "<PR_BODY_FILE>"
-   ```
-
-6. If `gh` is unavailable, use an authenticated GitHub Enterprise API or MCP
-   PR-creation tool only after inspecting its schema. Do not print tokens or
-   embed credentials in files.
-7. Verify the returned PR URL belongs to:
-   `https://va.ghe.com/software/578-EHRM-TrainingSchedulerApp`.
-8. Do not merge the PR.
-
----
-
-## Phase 9 — Final verification and cleanup
-
-1. Confirm:
-   - the live Canvas App is published as `NEW_VERSION`;
-   - the requested app behavior/property is present;
-   - the branch exists on `origin`;
-   - the commit contains only `CHANGELOG.md`;
-   - the draft PR targets `main`;
-   - the PR URL is valid.
-2. Remove only the temporary PR body file.
-3. Remove the isolated worktree only after the branch is pushed and PR is
-   verified:
-
-   ```powershell
-   git -C "<WORKSPACE>" worktree remove "<ISOLATED_WORKTREE>"
-   ```
-
-4. Do not delete the pushed branch.
-5. Do not change or clean the user's primary workspace.
-
-## Required final response
-
-Lead with the outcome and include only verified facts:
+Respond with a concise verified report:
 
 ```text
-Published Canvas App vNEW_VERSION and opened draft PR <PR_URL>.
+Completed Canvas App vRELEASE_VERSION and enterprise release <PR_URL>.
 
-Canvas change:
-- <requested change>
-- App.OnStart varRepoVersion: OLD_VERSION -> NEW_VERSION
-- Save/publish evidence: <concise evidence>
+Canvas App:
+- <exact requested change and before -> after value>
+- App.OnStart varRepoVersion: OLD_VERSION -> RELEASE_VERSION
+- Coauthoring verification: fresh sync confirmed both edits
 
-Git:
-- Branch: <BRANCH_NAME>
-- Commit: <COMMIT_SHA>
-- Files committed: CHANGELOG.md only
-- Draft PR: <PR_URL>
+Repository:
+- Released VERSION: RELEASE_VERSION
+- CHANGELOG.md: matching dated entry added
+- Commit: <SHA and title>
+- PR: <number, URL, merged status>
+- Tag/release: vRELEASE_VERSION
+- Local next-cycle VERSION: <post-script value>
 
-Diagnostics:
-- <compile/app-checker result>
-- <unchanged pre-existing findings, if any>
+Validation:
+- <compile/app-checker/accessibility result>
+- <unchanged pre-existing diagnostics, if applicable>
 ```
 
-If blocked or partially completed, say exactly which phases completed, what
-did not complete, and whether the live app was published. Never present a
-partial workflow as fully successful.
+If incomplete, state the last successful step, exact failure, whether the
+Canvas edits propagated, and whether any commit, PR, merge, tag, or release was
+created. Never present partial completion as complete.
