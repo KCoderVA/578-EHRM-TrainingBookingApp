@@ -1,4 +1,4 @@
-﻿# ============================================================================
+# ============================================================================
 # WORKFLOW: Power Platform CI
 # ============================================================================
 #
@@ -92,7 +92,7 @@ jobs:
     steps:
       # ---- STEP 1: Get the code ----
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # ---- STEP 2: Install PAC CLI ----
       # The microsoft/powerplatform-actions suite provides pac commands

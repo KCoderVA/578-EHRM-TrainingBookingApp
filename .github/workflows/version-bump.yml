@@ -99,7 +99,7 @@ jobs:
       REL_TYPE: ${{ inputs.release_type }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # ---- STEP 1: Read the current version from VERSION file ----
       - name: Read current version
