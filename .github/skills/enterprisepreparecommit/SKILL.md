@@ -1,15 +1,9 @@
 ---
-description: >
-  Analyzes all pending workspace changes since the last commit, populates the
-  current-version _commitMessage.md draft with real content (replacing all
-  {{PLACEHOLDER}} brackets with accurate findings), and inserts a new dated
-  entry into CHANGELOG.md. Use when: preparing a commit, auto-filling a
-  commit message draft, generating release documentation, updating changelog
-  with pending changes, populating release notes placeholders.
-agent: agent
+name: enterprisepreparecommit
+description: Analyzes all pending workspace changes since the last commit, populates the current-version _commitMessage.md draft with real content (replacing all {{PLACEHOLDER}} brackets with accurate findings), and inserts a new dated entry into CHANGELOG.md. Use when: preparing a commit, auto-filling a commit message draft, generating release documentation, updating changelog with pending changes, populating release notes placeholders.
+disable-model-invocation: true
 argument-hint: "Optional: extra context to include in the analysis (e.g. 'focus on Canvas app changes')"
 ---
-
 # Enterprise Prepare Commit
 
 You are acting as an expert release documentation agent for this software project.

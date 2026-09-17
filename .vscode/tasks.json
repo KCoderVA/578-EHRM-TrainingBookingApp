@@ -2,6 +2,21 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Setup: Ensure dev profile & tool shims",
+      "type": "shell",
+      "command": "& \"${workspaceFolder}/src/scripts/pwsh/Ensure-DevProfile.ps1\"",
+      "inAgents": true,
+      "runOptions": { "runOn": "worktreeCreated" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Power Apps: Status overview",
+      "type": "shell",
+      "command": "& \"${workspaceFolder}/src/scripts/pwsh/powerapps-web.ps1\" -Action status",
+      "inAgents": true,
+      "problemMatcher": []
+    },
+    {
       "label": "Canvas: Unpack .msapp to src",
       "type": "shell",
       "command": "pac canvas unpack --msapp \"${workspaceFolder}/dist/release/578EHRMTrainingApp.msapp\" --source \"${workspaceFolder}/src/powerApps/.unpacked\" --force",

@@ -1,15 +1,9 @@
 ---
-description: >
-  Analyzes all pending workspace changes since the last commit, populates the
-  current-version _releaseNotes.md draft with real content (replacing all
-  {{PLACEHOLDER}} brackets with accurate findings). Use when: preparing a
-  release, auto-filling release notes, generating release documentation from
-  git changes, populating release notes template placeholders, documenting a
-  GitHub release, writing release announcement content.
-agent: agent
+name: enterprisepreparerelease
+description: Analyzes all pending workspace changes since the last commit, populates the current-version _releaseNotes.md draft with real content (replacing all {{PLACEHOLDER}} brackets with accurate findings). Use when: preparing a release, auto-filling release notes, generating release documentation from git changes, populating release notes template placeholders, documenting a GitHub release, writing release announcement content.
+disable-model-invocation: true
 argument-hint: "Optional: extra context to include in the analysis (e.g. 'focus on Canvas app changes')"
 ---
-
 # Enterprise Prepare Release Notes
 
 You are acting as an expert release documentation agent for this software project.

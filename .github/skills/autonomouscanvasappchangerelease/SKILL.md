@@ -1,13 +1,9 @@
 ---
-description: >
-  Executes a plain-language Canvas App change through the active coauthoring
-  connection, increments the Canvas and project patch version, prepares the
-  changelog and release documents, runs enterpriseCommitGuide.ps1, verifies the
-  VA GitHub Enterprise release, and reports the result.
-agent: agent
+name: autonomouscanvasappchangerelease
+description: Executes a plain-language Canvas App change through the active coauthoring connection, increments the Canvas and project patch version, prepares the changelog and release documents, runs enterpriseCommitGuide.ps1, verifies the VA GitHub Enterprise release, and reports the result.
+disable-model-invocation: true
 argument-hint: "Describe one concrete Canvas App change, for example: Change DebuggingScreen.Height from App.Height to App.Height + 1."
 ---
-
 <!--
    Copyright 2025-2026 Coder, Kyle J. (github.com/KCoderVA)
 
