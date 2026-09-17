@@ -2,21 +2,23 @@
 
 This document describes the current public state of the 578 EHRM Training App repository and what is included/excluded as of the latest release.
 
-## Status summary (v1.1.20)
+## Status summary (v1.2.7)
 
-- **Release type (v1.1.20)**: Feature / Minor — a significant Canvas-app reliability & usability update; the Canvas app advances **v1.0.12 → v1.1.20** (internally consistent — `varRepoVersion`, `AppDescription`, and the `.zip` all read `1.1.20`). Project `VERSION` advances `1.0.13 → 1.1.20` to match the Canvas app. The app is live to ~100–150 hospital staff.
-- **Highlights**: re-architected `Confirm` booking-commit (thin orchestrator + verification timer + both-lists fallback cascade); rebuilt in-app Help (end-user Quick-Start guide + admin changelog); class picker re-pointed to Hines-scoped collections with a new `MasterScheduleList.sessionActive_text` active-session filter; `btnOutlook_*`/`btnPatch_*`/`timer_*` control renames; confirmation-email `Cc` typo fixed. **Follow-ups**: `BindingErrorCount` regressed `0 → 24` on the `Success` screen (KI-02, next patch); the **Microsoft Teams** connector is an intentional placeholder (KI-03) — see [src/powerApps/v1.1.20_knownIssues.md](../src/powerApps/v1.1.20_knownIssues.md).
-- **Project release**: v1.1.20 (2026-09-11)
+- **Release type (v1.2.7)**: Feature / Minor — introduces an automated TMS-to-SharePoint reporting pipeline for the internal Power BI report used by Hines management and executives. The Canvas app remains on its v1.2.6 coauthoring baseline.
+- **Highlights**: new `parseTMSReportsToSharePoint` flow monitors TMS report emails, retrieves lowercase `.csv` attachments, overwrites the canonical secured SharePoint CSV, and attempts to create a dated archive copy. The flow documents a preliminary row-inspection branch, but the production output remains the original attachment bytes and Power BI refresh remains separately scheduled.
+- **Project release**: v1.2.7 (2026-09-16)
 - **Component versions**:
-  - Canvas app: **v1.1.20** (unpacked source under `src/powerApps/.unpacked/layoutDefault/`; package at `src/powerApps/.msapp/v1.1.20_578EHRMTrainingApp.msapp`, tracked via `.gitignore` `!*.msapp`). See [src/powerApps/README.md](../src/powerApps/README.md) and the `v1.1.20_*` analysis docs ([diff](../src/powerApps/v1.1.20_diffAnalysis.md), [summary](../src/powerApps/v1.1.20_changeSummary.md), [known issues](../src/powerApps/v1.1.20_knownIssues.md), [roadmap](../src/powerApps/v1.1.20_recommendations.md)).
-  - Power Automate: `AppUserList` (unchanged) + `SendReminders` (updated — email + Teams card) + **`CreateBackups`** *(new — email-triggered backup-reservation flow)*. See [src/powerAutomate/README.md](../src/powerAutomate/README.md) and [src/powerAutomate/v1.0.12_differenceAnalysis.md](../src/powerAutomate/v1.0.12_differenceAnalysis.md).
+  - Canvas app: **v1.2.6** coauthoring baseline; no Canvas source change in v1.2.7. See [src/powerApps/README.md](../src/powerApps/README.md).
+  - Power Automate: four flows — `AppUserList`, `SendReminders`, `CreateBackups`, and new **`parseTMSReportsToSharePoint` v1.0.0**. See [src/powerAutomate/README.md](../src/powerAutomate/README.md) and the new flow's [README](../src/powerAutomate/parseTMSReportsToSharePoint/README.md) and [deep-dive analysis](../src/powerAutomate/parseTMSReportsToSharePoint/v1.2.7_flowAnalysis.md).
   - SharePoint: app lists + national EHRM **Sandbox** reference lists (`.url` shortcuts) + Learning Labs Library; `local/` data git-ignored. See [src/sharePoint/README.md](../src/sharePoint/README.md) and [src/sharePoint/v1.0.12_differenceAnalysis.md](../src/sharePoint/v1.0.12_differenceAnalysis.md).
-  - Analytics: Power BI `Signup Tool` (`.pbit` tracked) + `SuperUserDashboard-Final` (WIP) + `tms/` staging. See [src/analytics/README.md](../src/analytics/README.md) and [src/analytics/v1.0.12_differenceAnalysis.md](../src/analytics/v1.0.12_differenceAnalysis.md).
+  - Analytics: Power BI `Signup Tool` (`.pbit` tracked) + `SuperUserDashboard-Final` (WIP) + TMS reporting. The internal `578 EHRM Training Details Reports.pbix` uses the canonical SharePoint CSV maintained by the new flow. See [src/analytics/README.md](../src/analytics/README.md) and [src/analytics/tms/README.md](../src/analytics/tms/README.md).
 
 ## Release history
 
 | Version | Date | Type |
 |---------|------|------|
+| v1.2.7 | 2026-09-16 | Minor (Power Automate / analytics) — added recurring TMS report email ingestion, canonical SharePoint CSV replacement, archive copies, Power BI lineage documentation, and source-level flow analysis/hardening guidance |
+| v1.2.6 | 2026-09-11 | Patch (Canvas coauthoring proof of concept) — updated `DebuggingScreen.Height`, aligned the live app version, and validated coauthoring propagation |
 | v1.1.20 | 2026-09-11 | Minor (Canvas app) — v1.0.12 → v1.1.20: re-architected `Confirm` booking-commit (orchestrator + verification timer + both-lists fallback cascade); rebuilt Help screen (Quick-Start guide + admin changelog); class picker re-pointed to Hines-scoped collections with new `MasterScheduleList.sessionActive_text` filter; `btnOutlook_*`/`btnPatch_*`/`timer_*` renames. Follow-ups: BindingErrorCount 0 → 24 on `Success` (KI-02, next patch); Teams connector intentional placeholder (KI-03) |
 | v1.0.12 | 2026-08-25 | Major / production go-live — Canvas app v0.12.2 → v1.0.12: removed impersonation backdoor, hardened RBAC (default-to-`User`), single-student proxy registration, Learning Labs Library class picker, printable Power BI screen, series-vs-single cancellation, bulk SuperUser autosync; removed dead `CreateMeeting`/`Screen3` (21 → 20 screens); binding errors 120 → 0; partial modern-control migration. New `CreateBackups` flow + Teams reminders; national EHRM Sandbox reference lists; new `SuperUserDashboard-Final` PBI report + `tms/` staging |
 | v0.12.3 | 2026-08-20 | Patch (Power Automate) — added `SendReminders` ("Send Email Reminder") flow; re-exported `AppUserList`; no Canvas app changes |
@@ -47,7 +49,7 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
 - **VS Code workspace configuration**: task definitions for common PAC CLI operations (canvas pack/unpack, solution export/unpack), recommended extensions, editor settings.
 - **Scripts & hooks**: PowerShell dev-profile bootstrap (`Ensure-DevProfile.ps1`), Power Apps web helper (`powerapps-web.ps1`), workspace backup (`backupProject.ps1`), pre-commit/pre-push hooks.
 - **SharePoint list data & search config**: raw list exports under `src/sharePoint/list/<listName>/local/` (local-only) and a tracked search configuration export at `src/sharePoint/searchConfig/SearchConfiguration.xml`. See [src/sharePoint/README.md](../src/sharePoint/README.md).
-- **Analytics**: an early-stage Power BI report template under `src/analytics/powerBI/.pbit/` and scaffolded SQL folders under `src/analytics/sql/`. See [src/analytics/README.md](../src/analytics/README.md).
+- **Analytics**: Power BI reports/templates, SQL assets, and the TMS reporting area. Local TMS PBIX/data files are git-ignored; the flow source and data-lineage documentation are tracked. See [src/analytics/README.md](../src/analytics/README.md).
 - **GitHub community files**: PR template, issue templates (including `commit_message-TEMPLATE.md` added in v0.3.4), security policy, contributing guide, Copilot instructions.
 
 ## What is intentionally NOT in this repository
@@ -87,8 +89,9 @@ The RBAC logic (introduced in v0.8.14 and matured through v1.0.12) is resolved o
 
 ### Connectors & data sources
 
-- **Connectors**: Office 365 Outlook, Office 365 Users, SharePoint *(connector set unchanged; actions expanded in v0.12.2)*
+- **Connectors**: Office 365 Outlook, Office 365 Users, SharePoint, and Microsoft Teams. The new v1.2.7 TMS flow uses Outlook and SharePoint embedded connections.
 - **Data sources**: SharePoint lists (`Desk Reservations`, `DeskAccessControl`, `Desks`, `MasterScheduleList`, `SuperUserList`, `backupList_DeskReservations`, `Learning Lab Sessions`), Outlook actions, O365 Users search/profile/photo actions.
+- **Reporting file source**: secured SharePoint `TMS_Reports/TMSProgramCompletion_DetailedReport.csv`, replaced from incoming TMS attachment bytes and consumed by the internal 578 EHRM Training Details Power BI report.
 
 ## Release readiness checklist
 
@@ -107,6 +110,8 @@ Before tagging/publishing a release:
 
 ## Next steps / roadmap (high level)
 
+- **Harden the new TMS ingestion flow** — validate the exact report filename/subject, move attachment-dependent parsing inside the CSV branch, format archive timestamps safely, add explicit failure notifications, and decide whether to complete or remove the currently unused parsing branch.
+- **Validate reporting operations** — run edge-case attachment tests, reconcile SharePoint row/header counts to TMS, confirm archive creation/retention, and verify the separately scheduled Power BI refresh.
 - Populate `DeskAccessControl` list with correct `AccessLevel_Text` values for all intended users, and decide the unknown-user default (currently `User`, ideally `AccessDenied`) to fully activate the RBAC system.
 - **Build/validate trainer-approval and reminder Power Automate flows** — the reminder flow (`SendReminders`) was **added in v0.12.3**; validate its end-to-end wiring to the reservation/schedule lifecycle. The trainer-approval flow is still pending.
 - **Burn down remaining App Checker findings** — `BindingErrorCount` improved to `120` in v0.12.2 but should be reduced further before broad production load.

@@ -19,6 +19,32 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [1.2.7] - 2026-09-16
+
+> **Automated TMS reporting integration.** Adds an Outlook-triggered Power Automate flow that publishes the recurring TMS Program Completion Detail CSV to a stable SharePoint path used by the internal 578 EHRM Training Details Power BI report, while retaining dated archive copies.
+
+### Added
+
+- **`src/powerAutomate/parseTMSReportsToSharePoint/`** — new `578EHRMTrainingApp_parseTMSReport-updateSharePointCSV` cloud-flow export (component v1.0.0; runtime flow `0ca17aa8-4878-4862-8791-49361c71719b`).
+- **TMS email ingestion** — watches for attachment-bearing messages from the configured TMS reporting sender, retrieves lowercase `.csv` attachments, overwrites `TMSProgramCompletion_DetailedReport.csv` in the secured SharePoint document library, and attempts to create a dated archive copy.
+- **Flow documentation** — added a component `README.md` and `v1.2.7_flowAnalysis.md` covering the trigger, connectors, action tree, SharePoint/Power BI contract, security, deployment, tests, and prioritized hardening findings.
+
+### Changed
+
+- **`VERSION`** — advanced `1.2.6 → 1.2.7`.
+- **Power Automate inventory** — expanded from three to four flows and documented the new reporting data path.
+- **Analytics documentation** — documented `578 EHRM Training Details Reports.pbix` and its canonical SharePoint CSV source.
+- **`src/solution.xml`** — advanced to v1.2.7 and added the reporting integration to the solution description; the flow root component remains pending a solution-aware export because the legacy package does not expose its Dataverse `schemaName`.
+- **Project documentation and release artifacts** — updated `README.md`, `docs/PROJECT_STATUS.md`, and all three v1.2.7 commit/PR/release documents.
+
+### Notes
+
+- The canonical SharePoint file is a byte-for-byte copy of the attachment. The exported Compose/Select branch inspects rows and extracts `Program ID`, but its outputs are not persisted and do not feed Power BI.
+- Power BI refresh remains separately scheduled; the flow does not invoke dataset refresh.
+- Pre-production hardening should add exact report-name/subject validation, move attachment-dependent parsing inside the CSV branch, use a SharePoint-safe archive timestamp, and add explicit failure alerts.
+
+---
+
 ## [1.2.6] - 2026-09-11
 
 > **Canvas coauthoring automation proof-of-concept release.** The live `DebuggingScreen` height formula was updated through the connected Canvas Authoring session, the active app version advanced from v1.2.4 to v1.2.6 to align with the latest concurrent project version, and the repository's autonomous Canvas release prompt was revised to use verified coauthoring propagation rather than requiring separate save/publish tools.

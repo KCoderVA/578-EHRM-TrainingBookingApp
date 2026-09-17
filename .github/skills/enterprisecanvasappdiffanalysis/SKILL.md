@@ -1,18 +1,7 @@
 ---
-description: >
-  Single-run agent that performs a deep, comprehensive difference analysis between the
-  previously-published (archived) version of the Power Apps Canvas app's unpacked source
-  and the newest unpublished (freshly unpacked) version, then generates a SET of verbose
-  Canvas-app documentation files (diff analysis, change summary, known issues, and future
-  recommendations), updates all core project/repo documentation and release-draft
-  artifacts, performs a recursive repo-wide correction sweep, updates CHANGELOG.md, and
-  finishes with a full workspace health check + report. It self-discovers all version
-  numbers and source paths at run time and never commits/pushes. Use when: documenting a
-  new Canvas app version, diffing old vs new unpacked .msapp sources, generating canvas
-  app change/diff/known-issues/recommendations docs, preparing a Canvas-app release's
-  documentation, refreshing README/PROJECT_STATUS/solution.xml/release-notes for a new
-  app version, auditing the repo before a commit/PR/push/release.
-agent: agent
+name: enterprisecanvasappdiffanalysis
+description: Single-run agent that performs a deep, comprehensive difference analysis between the previously-published (archived) version of the Power Apps Canvas app's unpacked source and the newest unpublished (freshly unpacked) version, then generates a SET of verbose Canvas-app documentation files (diff analysis, change summary, known issues, and future recommendations), updates all core project/repo documentation and release-draft artifacts, performs a recursive repo-wide correction sweep, updates CHANGELOG.md, and finishes with a full workspace health check + report. It self-discovers all version numbers and source paths at run time and never commits/pushes. Use when: documenting a new Canvas app version, diffing old vs new unpacked .msapp sources, generating canvas app change/diff/known-issues/recommendations docs, preparing a Canvas-app release's documentation, refreshing README/PROJECT_STATUS/solution.xml/release-notes for a new app version, auditing the repo before a commit/PR/push/release.
+disable-model-invocation: true
 argument-hint: "Optional: extra focus or context (e.g. 'focus on SharePoint schema + Confirm screen', or 'old=v0.8.14 new=v0.9.26')"
 ---
 # Enterprise Canvas App Difference Analysis & Documentation

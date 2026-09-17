@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 Copyright 2025-2026 Kyle J. Coder
 
@@ -13,7 +14,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<?xml version="1.0" encoding="utf-8"?>
 <ImportExportXml version="9.2.0000.0000" SolutionPackageVersion="9.2.0000.0000"
     languagecode="1033" generatedBy="EHRMTrainingBooking">
     <SolutionManifest>
@@ -23,10 +23,10 @@ limitations under the License.
         </LocalizedNames>
         <Descriptions>
             <Description
-                description="v1.1.20: 578 EHRM Training App for VA facility 578. Canvas app v1.0.12 to v1.1.20: re-architected the Confirm booking-commit flow (a thin orchestrator that chains dedicated Outlook-calendar, list-patch, SuperUser-sync, and email buttons, then a verification timer that confirms every step before navigating to Success), a tiered fallback cascade that always writes reservations to both the primary and backup SharePoint lists, a rebuilt in-app Help screen (end-user Quick-Start guide plus an admin full-changelog view), a class/scenario picker re-pointed to Hines-scoped in-memory collections with a new MasterScheduleList sessionActive_text active-session filter, and consistent btnOutlook_/btnPatch_/timer_ control naming. Prior v0.12.2 to v1.0.12 line: removed the hard-coded impersonation backdoor, hardened role-based access control to default-to-User with self-provisioning, added single-student proxy registration, a Learning Labs Library class/scenario picker (read-only national EHRM Sandbox document library), a printable Power BI screen, series-vs-single cancellation, and bulk SuperUser autosync; removed two dead template screens; drove binding errors 120 to 0. Power Automate: AppUserList (user provisioning + chatbot cards), SendEmailReminder (email + Teams reminders), and the CreateBackupReservation flow. Integrates Office 365 Outlook/Users and SharePoint (own lists plus read-only national EHRM Sandbox reference lists). Note: regenerate this manifest via pac solution export whenever root components or connection references change."
+                description="v1.2.7: 578 EHRM Training App for VA facility 578. Adds the parseTMSReport-updateSharePointCSV Power Automate flow, which receives recurring TMS Program Completion Detail CSV attachments through Office 365 Outlook, overwrites the canonical secured SharePoint CSV used by the internal 578 EHRM Training Details Power BI report, and creates archive copies. Retains the v1.1.20 Canvas booking reliability and Help improvements plus AppUserList, SendEmailReminder, and CreateBackupReservation flows. Integrates Office 365 Outlook/Users and SharePoint. Note: regenerate this manifest via pac solution export whenever root components or connection references change."
                 languagecode="1033" />
         </Descriptions>
-        <Version>1.1.20</Version>
+        <Version>1.2.7</Version>
         <Managed>1</Managed>
         <Publisher>
             <UniqueName>VAHealthcare</UniqueName>
@@ -57,6 +57,7 @@ limitations under the License.
             <RootComponent type="29" schemaName="vah_AppUserList" behavior="0" />
             <RootComponent type="29" schemaName="vah_SendEmailReminder" behavior="0" />
             <RootComponent type="29" schemaName="vah_CreateBackupReservation" behavior="0" />
+            <!-- Add the new TMS flow here from a solution-aware pac export; the legacy package does not expose its Dataverse schemaName. -->
             <!-- Connection References -->
             <RootComponent type="35" schemaName="vah_SharePointConnection" behavior="0" />
             <RootComponent type="35" schemaName="vah_OutlookConnection" behavior="0" />

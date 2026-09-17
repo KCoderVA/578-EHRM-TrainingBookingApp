@@ -1,15 +1,9 @@
 ---
-description: >
-  Single-run agent that populates ALL THREE current-version release artifact
-  files in one pass: _commitMessage.md, _pullRequest.md, and _releaseNotes.md.
-  Also inserts a new dated entry into CHANGELOG.md. Use when: preparing a
-  full release package, auto-filling all release documentation at once,
-  generating commit message + PR description + release notes from git changes,
-  populating all release template placeholders in one click.
-agent: agent
+name: enterpriseprepareall
+description: Single-run agent that populates ALL THREE current-version release artifact files in one pass: _commitMessage.md, _pullRequest.md, and _releaseNotes.md. Also inserts a new dated entry into CHANGELOG.md. Use when: preparing a full release package, auto-filling all release documentation at once, generating commit message + PR description + release notes from git changes, populating all release template placeholders in one click.
+disable-model-invocation: true
 argument-hint: "Optional: extra context to include in the analysis (e.g. 'focus on Canvas app changes')"
 ---
-
 # Enterprise Prepare All Release Artifacts
 
 You are acting as an expert release documentation agent for this software project.
