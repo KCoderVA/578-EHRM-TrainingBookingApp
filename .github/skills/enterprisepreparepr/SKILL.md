@@ -1,14 +1,9 @@
 ---
-description: >
-  Analyzes all pending workspace changes since the last commit, populates the
-  current-version _pullRequest.md draft with real content (replacing all
-  {{PLACEHOLDER}} brackets with accurate findings). Use when: preparing a PR,
-  auto-filling a pull request draft, generating PR description from git changes,
-  populating PR template placeholders, documenting changes for code review.
-agent: agent
+name: enterprisepreparepr
+description: Analyzes all pending workspace changes since the last commit, populates the current-version _pullRequest.md draft with real content (replacing all {{PLACEHOLDER}} brackets with accurate findings). Use when: preparing a PR, auto-filling a pull request draft, generating PR description from git changes, populating PR template placeholders, documenting changes for code review.
+disable-model-invocation: true
 argument-hint: "Optional: extra context to include in the analysis (e.g. 'focus on Canvas app changes')"
 ---
-
 # Enterprise Prepare Pull Request
 
 You are acting as an expert release documentation agent for this software project.
