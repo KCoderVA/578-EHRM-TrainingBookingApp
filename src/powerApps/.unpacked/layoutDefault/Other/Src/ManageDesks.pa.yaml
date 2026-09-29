@@ -16,7 +16,6 @@ Screens:
     Children:
       - Rectangle5:
           Control: Rectangle@2.3.0
-          Group: grpConfirmDelete
           Properties:
             Height: =263
             Visible: =varShowConfirmDelete
@@ -251,7 +250,7 @@ Screens:
                   RadiusTopRight: =20
                   Size: =14
                   Text: ="⏻  ACTIVATE"
-                  Width: |+
+                  Width: |
                     =130
                   X: =Parent.TemplateWidth - Self.Width - 15
                   Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
@@ -503,7 +502,6 @@ Screens:
                   X: =2
       - Rectangle3_2:
           Control: Rectangle@2.3.0
-          Group: grpConfirmDelete
           Properties:
             Fill: =RGBA(116, 116, 116, 0.85)
             Height: =640
@@ -511,7 +509,6 @@ Screens:
             Width: =1136
       - bgRounded_9:
           Control: HtmlViewer@2.1.0
-          Group: grpConfirmDelete
           Properties:
             DisabledBorderColor: =RGBA(56, 56, 56, 1)
             Font: =Font.'Open Sans'
@@ -526,7 +523,6 @@ Screens:
             Y: =84
       - Label1:
           Control: Label@2.5.1
-          Group: grpConfirmDelete
           Properties:
             Align: =Align.Center
             FontWeight: =FontWeight.Semibold
@@ -539,7 +535,6 @@ Screens:
             Y: =113
       - btnConfirmCancel:
           Control: Classic/Button@2.2.0
-          Group: grpConfirmDelete
           Properties:
             BorderThickness: =0
             Color: =RGBA(255, 255, 255, 1)
@@ -559,7 +554,6 @@ Screens:
             Y: =257
       - btnConfirmDelete:
           Control: Classic/Button@2.2.0
-          Group: grpConfirmDelete
           Properties:
             BorderThickness: =0
             Fill: =RGBA(184, 0, 0, 1)

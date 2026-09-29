@@ -11,7 +11,7 @@ Screens:
     Properties:
       Fill: =RGBA(236, 236, 236, 1)
       Height: =Max(App.Height, App.DesignHeight)
-      OnVisible: |+
+      OnVisible: |
         =UpdateContext({showMap:false});
       Width: =Max(App.Width, App.DesignWidth)
     Children:
@@ -76,7 +76,7 @@ Screens:
                 Control: Classic/CheckBox@2.1.0
                 Properties:
                   CheckboxBorderColor: =RGBA(39, 113, 194, 1)
-                  Default: |+
+                  Default: |
                     =//CheckCheckbox
                     ThisItem.ItemID_title in colSelectedDesks.ItemID_title Or ThisItem.RoomName_choice.Value in colSelectedDesks.ItemID_title 
                     //ThisItem.ID = gv_item.ID 
@@ -435,7 +435,6 @@ Screens:
             Y: =154
       - Label5:
           Control: Label@2.5.1
-          Group: grpNoResults
           Properties:
             Align: =Align.Center
             Height: =46
@@ -446,7 +445,6 @@ Screens:
             Y: =381
       - Label5_1:
           Control: Label@2.5.1
-          Group: grpNoResults
           Properties:
             Align: =Align.Center
             Height: =46
@@ -457,7 +455,6 @@ Screens:
             Y: =420
       - Rectangle3:
           Control: Rectangle@2.3.0
-          Group: grpMap
           Properties:
             AccessibleLabel: ="Close Map"
             Fill: =RGBA(116, 116, 116, 0.85)
@@ -469,7 +466,6 @@ Screens:
             Y: =77
       - Image5:
           Control: Image@2.2.3
-          Group: grpMap
           Properties:
             AccessibleLabel: ="Close Map"
             Fill: =RGBA(180, 214, 250, 1)
@@ -482,7 +478,6 @@ Screens:
             Y: =221
       - Icon1:
           Control: Classic/Icon@2.5.0
-          Group: grpMap
           Properties:
             AccessibleLabel: ="Close Map"
             Color: =RGBA(0, 0, 0, 1)
@@ -495,7 +490,6 @@ Screens:
             Y: =221
       - Rectangle3_11:
           Control: Rectangle@2.3.0
-          Group: grpMap_6
           Properties:
             AccessibleLabel: ="Close Map"
             Fill: =RGBA(116, 116, 116, 0.85)
@@ -506,7 +500,6 @@ Screens:
             Y: =80
       - Image5_8:
           Control: Image@2.2.3
-          Group: grpMap_6
           Properties:
             AccessibleLabel: ="Close Map"
             Height: =560
@@ -518,7 +511,6 @@ Screens:
             Y: =80
       - Rectangle3_12:
           Control: Rectangle@2.3.0
-          Group: grpMap_7
           Properties:
             AccessibleLabel: ="Close Map"
             Fill: =RGBA(116, 116, 116, 0.85)
@@ -528,7 +520,6 @@ Screens:
             Y: =150
       - Image5_9:
           Control: Image@2.2.3
-          Group: grpMap_7
           Properties:
             AccessibleLabel: ="Close Map"
             Height: =370
@@ -540,7 +531,6 @@ Screens:
             Y: =221
       - Icon1_8:
           Control: Classic/Icon@2.5.0
-          Group: grpMap_6
           Properties:
             AccessibleLabel: ="Close Map"
             Color: =RGBA(0, 0, 0, 1)
@@ -614,7 +604,7 @@ Screens:
             Fill: =RGBA(15, 108, 189, 1)
             Height: =45
             HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |+
+            OnSelect: |
               =Set(varAccept3, true);
               Set(varAccept4, false);
               Set(varSelectedDesk, First(colSelectedDesks));
@@ -693,11 +683,10 @@ Screens:
             Text: ="There are a total of " & galleryAvailDesk.AllItemsCount & " desks available to reserve, based on your current filters!"
             Width: =250
             X: =Parent.Width - Self.Width - 5
-            Y: |+
+            Y: |
               =5
       - Icon1_9:
           Control: Classic/Icon@2.5.0
-          Group: grpMap_7
           Properties:
             AccessibleLabel: ="Close Map"
             Color: =RGBA(0, 0, 0, 1)

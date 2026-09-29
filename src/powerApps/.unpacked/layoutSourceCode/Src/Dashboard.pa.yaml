@@ -270,7 +270,7 @@ Screens:
               Refresh(MasterScheduleList);
               Refresh(SuperUserList);
               Refresh(backupList_DeskReservations);
-              Refresh('Learning Lab Sessions');
+              //REMOVED depreciated SP List:  //Refresh('Learning Lab Sessions');
 
               ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
 
@@ -851,21 +851,21 @@ Screens:
             BorderThickness: =5
             Color: =RGBA(255, 255, 255, 1)
             Fill: =RGBA(0, 131, 190, 1)
-            Height: |+
+            Height: |
               =38
             OnSelect: =Navigate(scrn_MoCalendar)
             Text: ="View calendars!"
             Visible: =false
             Width: =333
             X: =Label4.X + (Label4.Width / 2) - (Self.Width / 2)
-            Y: |+
+            Y: |
               =Parent.Height - Self.Height - 10
       - Label4:
           Control: Label@2.5.1
           Properties:
             Align: =Align.Center
             Color: =RGBA(255, 255, 255, 1)
-            Height: |+
+            Height: |
               =38
             Size: =18
             Text: ="See daily/weekly/monthly reservation calendars:"
@@ -1100,7 +1100,7 @@ Screens:
               */
             Width: =gallMyReservationsPreview.Width + 10
             X: =gallMyReservationsPreview.X - 5
-            Y: |+
+            Y: |
               =lblMyUpcomingRes.Y - 5
       - gallMyReservationsPreview:
           Control: Gallery@2.15.0
@@ -1310,7 +1310,7 @@ Screens:
                     )
                   Width: =lblMonth.Width + lblDay.Width
                   X: =lblMonth.X
-                  Y: |+
+                  Y: |
                     =lblMonth.Y + lblMonth.Height - 10
             - lblDay:
                 Control: Label@2.5.1
@@ -1664,7 +1664,7 @@ Screens:
                         Text: ="VHAHINInformaticsTrainingAndSupport@va.gov"
                         Underline: =true
                         Width: =Parent.Width
-                        Y: |+
+                        Y: |
                           =lblDashboard_Denied_body_3a.Y + lblDashboard_Denied_body_3a.Height - 10
                   - lblDashboard_Denied_body_3a:
                       Control: ModernText@1.0.0
@@ -2148,7 +2148,7 @@ Screens:
                               Text: ="Team Hines EHRM SharePoint"
                               Underline: =true
                               Width: =Parent.Width
-                              Y: |+
+                              Y: |
                                 =lblDashboard_Admin_1b.Y + lblDashboard_Admin_1b.Height - 20
                         - lblDashboard_Admin_1b:
                             Control: ModernText@1.0.0

@@ -37,9 +37,7 @@ Screens:
           Properties:
             DisabledBorderColor: =RGBA(56, 56, 56, 1)
             Font: =Font.'Open Sans'
-            Height: |-
-              =//640
-              Parent.Height - Image2_10.Y - Image2_10.Height - 25
+            Height: =495
             HtmlText: |-
               ="<div style='font-family:Segoe UI, Arial, sans-serif; color:#1b1b1b; padding:10px; font-size:14px; line-height:1.45;'>
 
@@ -135,7 +133,6 @@ Screens:
               Image2_10.Y + Image2_10.Height + 20
       - Image2_10:
           Control: Image@2.2.3
-          Group: grpHeader_9
           Properties:
             Height: =Tabs_11.Height
             Image: =abstractBackground
@@ -143,7 +140,6 @@ Screens:
             Width: =Parent.Width
       - Rectangle2_9:
           Control: Rectangle@2.3.0
-          Group: grpHeader_9
           Properties:
             Fill: =RGBA(135, 78, 181, 0.65)
             Height: =Image2_10.Height
@@ -205,9 +201,7 @@ Screens:
           Properties:
             DisabledBorderColor: =RGBA(56, 56, 56, 1)
             Font: =Font.'Open Sans'
-            Height: |-
-              =//640
-              Parent.Height - Image2_10.Y - Image2_10.Height - 25
+            Height: =490
             HtmlText: |
               =/*
               # ============================================================================

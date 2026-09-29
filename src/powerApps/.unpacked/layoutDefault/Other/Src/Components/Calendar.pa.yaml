@@ -174,7 +174,7 @@ ComponentDefinitions:
             ShowScrollbar: =false
             TabIndex: =6
             TemplateFill: =
-            TemplatePadding: |+
+            TemplatePadding: |
               =0
             TemplateSize: =60
             Width: =Calendar.Width
@@ -481,7 +481,7 @@ ComponentDefinitions:
             BorderColor: =RGBA(130, 144, 156, 1)
             BorderStyle: =BorderStyle.None
             DelayItemLoading: =false
-            Height: |+
+            Height: |
               =40
             Items: =["S","M","T","W","T","F","S",]
             LoadingSpinner: =LoadingSpinner.None
@@ -519,7 +519,7 @@ ComponentDefinitions:
                   PressedBorderColor: =RGBA(0,0,0,0)
                   PressedColor: =ColorValue("#A7A7A7")
                   PressedFill: =RGBA(0,0,0,0)
-                  Role: =%TextRole.RESERVED%.Default
+                  Role: =//%TextRole.RESERVED%.Default
                   Size: =24
                   TabIndex: =5
                   Text: =ThisItem.Value
@@ -653,7 +653,7 @@ ComponentDefinitions:
               =Set(_firstDayOfMonth,DateAdd(_firstDayOfMonth,1,TimeUnit.Months));
               Set(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days));
               Reset(ddMonth)
-            PaddingBottom: |+
+            PaddingBottom: |
               =7
             PaddingTop: =7
             PressedBorderColor: =RGBA(0, 0, 0, 0)
@@ -681,7 +681,7 @@ ComponentDefinitions:
             OnSelect: |-
               =Set(_firstDayOfMonth,DateAdd(_firstDayOfMonth,-1,TimeUnit.Months));
               Set(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days))
-            PaddingBottom: |+
+            PaddingBottom: |
               =7
             PaddingTop: '=7 '
             PressedBorderColor: =RGBA(0, 0, 0, 0)

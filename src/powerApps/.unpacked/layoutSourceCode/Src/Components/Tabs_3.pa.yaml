@@ -47,7 +47,7 @@ ComponentDefinitions:
         DataType: Number
         Default: =Tabs_3.Width / CountRows(Tabs_3.Items)
     Properties:
-      Height: |+
+      Height: |
         =120
       Width: =660
     Children:

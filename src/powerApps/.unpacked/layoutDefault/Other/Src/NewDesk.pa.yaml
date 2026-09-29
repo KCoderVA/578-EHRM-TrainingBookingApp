@@ -16,7 +16,6 @@ Screens:
     Children:
       - Image2_7:
           Control: Image@2.2.3
-          Group: grpHeader_6
           Properties:
             Height: =150
             Image: =abstractBackground
@@ -24,7 +23,6 @@ Screens:
             Width: =Parent.Width
       - Rectangle2_6:
           Control: Rectangle@2.3.0
-          Group: grpHeader_6
           Properties:
             Fill: =RGBA(135, 78, 181, 0.65)
             Height: =150
@@ -373,7 +371,6 @@ Screens:
             Y: =484
       - Rectangle3_1:
           Control: Rectangle@2.3.0
-          Group: grpMap_1
           Properties:
             Fill: =RGBA(116, 116, 116, 0.85)
             Height: =546
@@ -382,7 +379,6 @@ Screens:
             Y: =94
       - Image5_1:
           Control: Image@2.2.3
-          Group: grpMap_1
           Properties:
             Height: =546
             Image: =varManageSelectedDesk.LocationMap_picture
@@ -393,7 +389,6 @@ Screens:
             Y: =94
       - Icon1_1:
           Control: Classic/Icon@2.5.0
-          Group: grpMap_1
           Properties:
             AccessibleLabel: ="Close Map"
             Color: =RGBA(0, 0, 0, 1)
@@ -407,7 +402,6 @@ Screens:
             Y: =94
       - Rectangle3_7:
           Control: Rectangle@2.3.0
-          Group: grpDeskLocation
           Properties:
             Fill: =RGBA(116, 116, 116, 0.85)
             Height: =546
@@ -417,7 +411,6 @@ Screens:
             Y: =94
       - Image5_4:
           Control: Image@2.2.3
-          Group: grpDeskLocation
           Properties:
             Height: =546
             Image: =//varManageSelectedDesk.DeskPhoto_image.Full
@@ -427,7 +420,6 @@ Screens:
             Y: =94
       - Icon1_4:
           Control: Classic/Icon@2.5.0
-          Group: grpDeskLocation
           Properties:
             AccessibleLabel: ="Close Map"
             Color: =RGBA(0, 0, 0, 1)
@@ -453,7 +445,6 @@ Screens:
             Y: =556
       - Rectangle3_8:
           Control: Rectangle@2.3.0
-          Group: grpRoomPicture
           Properties:
             Fill: =RGBA(116, 116, 116, 0.85)
             Height: =546
@@ -463,7 +454,6 @@ Screens:
             Y: =94
       - Image5_5:
           Control: Image@2.2.3
-          Group: grpRoomPicture
           Properties:
             Height: =546
             Image: =//varManageSelectedDesk.RoomPhoto_image.Full
@@ -473,7 +463,6 @@ Screens:
             Y: =94
       - Icon1_5:
           Control: Classic/Icon@2.5.0
-          Group: grpRoomPicture
           Properties:
             AccessibleLabel: ="Close Map"
             Color: =RGBA(0, 0, 0, 1)
@@ -488,7 +477,7 @@ Screens:
       - SmarBoardckb:
           Control: Classic/CheckBox@2.1.0
           Properties:
-            Default: |+
+            Default: |
               =
             Height: =58
             OnCheck: =Set(varsmartboardck,EncodeUrl("https://dvagov.sharepoint.com/sites/vhaaugroom/Assets/images/smartboard.png"))
@@ -517,7 +506,7 @@ Screens:
       - Ptvckb:
           Control: Classic/CheckBox@2.1.0
           Properties:
-            Default: |+
+            Default: |
               =If(
                   varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.ProjectorEquipped_boolean),
                   true,

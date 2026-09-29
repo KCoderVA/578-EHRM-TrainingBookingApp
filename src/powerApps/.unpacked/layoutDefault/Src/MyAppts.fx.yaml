@@ -1,4 +1,5 @@
 MyAppts As screen:
+    ContentLanguage: =""
     Fill: =RGBA(236, 236, 236, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
@@ -109,7 +110,7 @@ MyAppts As screen:
             OnSelect: =Select(Parent)
             Width: =Parent.TemplateWidth
             Y: =Parent.TemplateHeight - 1
-            ZIndex: =2
+            ZIndex: =1
 
         icon_View2 As icon:
             BorderColor: =App.Theme.Colors.Darker40
@@ -123,7 +124,7 @@ MyAppts As screen:
             Width: =Self.Height
             X: =btn_View2.X - Self.Width
             Y: =btn_View2.Y
-            ZIndex: =3
+            ZIndex: =2
 
         btn_View2 As button:
             BorderColor: =RGBA(109, 49, 162, 1)
@@ -152,7 +153,7 @@ MyAppts As screen:
             Width: =142
             X: =Parent.Width - Self.Width - 10
             Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
-            ZIndex: =4
+            ZIndex: =3
 
         lbl_Description2 As label:
             Align: =Align.Center
@@ -177,7 +178,7 @@ MyAppts As screen:
             Width: =493
             X: =lbl_MeetingCategory2.X + lbl_MeetingCategory2.Width
             Y: =lbl_MeetingCategory2.Y
-            ZIndex: =5
+            ZIndex: =4
 
         lbl_MeetingCategory2 As label:
             Align: =Align.Right
@@ -197,7 +198,7 @@ MyAppts As screen:
             Width: =310
             X: =lbl_Day2.X + lbl_Day2.Width
             Y: =lbl_Day2.Y
-            ZIndex: =7
+            ZIndex: =5
 
         lbl_Time2 As label:
             Color: =RGBA(0, 0, 0, 1)
@@ -219,7 +220,7 @@ MyAppts As screen:
             Width: =289
             X: =lbl_Year2.X
             Y: =lbl_Year2.Y + lbl_Year2.Height
-            ZIndex: =8
+            ZIndex: =6
 
         lbl_Year2 As label:
             Align: =Align.Center
@@ -236,7 +237,7 @@ MyAppts As screen:
             X: =lbl_Month2.X
             Y: |
                 =lbl_Month2.Y + lbl_Month2.Height - 5
-            ZIndex: =9
+            ZIndex: =7
 
         lbl_Day2 As label:
             Align: =Align.Center
@@ -256,7 +257,7 @@ MyAppts As screen:
             Width: =40
             X: =lbl_Month2.X + lbl_Month2.Width
             Y: =lbl_Month2.Y
-            ZIndex: =10
+            ZIndex: =8
 
         lbl_Month2 As label:
             Align: =Align.Center
@@ -274,7 +275,7 @@ MyAppts As screen:
             Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]mmm"))
             VerticalAlign: =VerticalAlign.Top
             Width: =60
-            ZIndex: =11
+            ZIndex: =9
 
     "gallUpcoming As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
         '#CopilotOverlayLabel': ="Filtered"
@@ -369,7 +370,7 @@ MyAppts As screen:
             OnSelect: =Select(btn_View1)
             Width: =Parent.TemplateWidth
             Y: =Parent.TemplateHeight - 1
-            ZIndex: =2
+            ZIndex: =1
 
         icon_Cancel1 As icon:
             BorderColor: =App.Theme.Colors.Darker40
@@ -392,7 +393,7 @@ MyAppts As screen:
             Width: =46
             X: =860
             Y: =Parent.TemplateHeight - Self.Height - 3
-            ZIndex: =3
+            ZIndex: =2
 
         btn_Cancel1 As button:
             BorderColor: =RGBA(109, 49, 162, 1)
@@ -435,9 +436,9 @@ MyAppts As screen:
             Width: =142
             X: =Parent.Width - Self.Width - 10
             Y: =Parent.TemplateHeight - Self.Height - 10
-            ZIndex: =4
+            ZIndex: =3
 
-        icon_View1 As icon.OpenInNewWindow:
+        icon_View1 As icon:
             BorderColor: =App.Theme.Colors.Darker40
             Color: =RGBA(109, 49, 162, 1)
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -456,7 +457,7 @@ MyAppts As screen:
             Width: =46
             X: =860
             Y: =3
-            ZIndex: =5
+            ZIndex: =4
 
         btn_View1 As button:
             BorderColor: =RGBA(109, 49, 162, 1)
@@ -485,7 +486,7 @@ MyAppts As screen:
             Width: =142
             X: =Parent.Width - Self.Width - 10
             Y: =10
-            ZIndex: =6
+            ZIndex: =5
 
         lbl_Description1 As label:
             Align: =Align.Center
@@ -506,7 +507,7 @@ MyAppts As screen:
                 Role:   " & ThisItem.reservationRole_text
             Width: =496
             X: =410
-            ZIndex: =7
+            ZIndex: =6
 
         lbl_MeetingCategory1 As label:
             Align: =Align.Right
@@ -525,7 +526,7 @@ MyAppts As screen:
             Underline: =true
             Width: =310
             X: =100
-            ZIndex: =8
+            ZIndex: =7
 
         lbl_Time1 As label:
             Color: =RGBA(0, 0, 0, 1)
@@ -547,7 +548,7 @@ MyAppts As screen:
             Width: =289
             X: =lbl_Year1.X
             Y: =lbl_Year1.Y + lbl_Year1.Height
-            ZIndex: =9
+            ZIndex: =8
 
         lbl_Year1 As label:
             Align: =Align.Center
@@ -570,7 +571,7 @@ MyAppts As screen:
             X: =lbl_Month1.X
             Y: |
                 =lbl_Month1.Y + lbl_Month1.Height - 5
-            ZIndex: =10
+            ZIndex: =9
 
         lbl_Day1 As label:
             Align: =Align.Center
@@ -590,7 +591,7 @@ MyAppts As screen:
             Width: =40
             X: =lbl_Month1.X + lbl_Month1.Width
             Y: =lbl_Month1.Y
-            ZIndex: =11
+            ZIndex: =10
 
         lbl_Month1 As label:
             Align: =Align.Center
@@ -609,7 +610,7 @@ MyAppts As screen:
             VerticalAlign: =VerticalAlign.Top
             Width: =60
             Y: =2
-            ZIndex: =12
+            ZIndex: =11
 
     lblNoRes As label:
         Align: =Align.Center
@@ -663,6 +664,8 @@ MyAppts As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
@@ -692,6 +695,7 @@ MyAppts As screen:
                     "100",
                     "%;background-color:#FCFCFC'></div>"
                 )*/
+            Size: =24
             Visible: =varConfirmCancel
             Width: =Label1_1.Width
             X: =289

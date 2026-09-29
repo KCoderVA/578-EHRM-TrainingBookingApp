@@ -59,7 +59,7 @@ Screens:
                   VerticalAlign: =VerticalAlign.Top
                   Visible: =Parent.Visible
                   Width: =text_Key7.Width
-                  X: |+
+                  X: |
                     =textKey_Date.X + 5
                   Y: =text_Key7.Y + text_Key7.Height
             - text_Key7:
@@ -120,7 +120,7 @@ Screens:
                   VerticalAlign: =VerticalAlign.Top
                   Visible: =Parent.Visible
                   Width: =text_Key6.Width
-                  X: |+
+                  X: |
                     =textKey_Date.X + 5
                   Y: =text_Key6.Y + text_Key6.Height
             - text_Key6:
@@ -195,7 +195,7 @@ Screens:
                   VerticalAlign: =VerticalAlign.Top
                   Visible: =Parent.Visible
                   Width: =text_Key4.Width
-                  X: |+
+                  X: |
                     =textKey_Date.X + 5
                   Y: =text_Key4.Y + text_Key4.Height
             - text_Key5:
@@ -324,7 +324,7 @@ Screens:
                   VerticalAlign: =VerticalAlign.Top
                   Visible: =Parent.Visible
                   Width: =text_Key2.Width
-                  X: |+
+                  X: |
                     =text_Value1.X + text_Value1.Width + 5
                   Y: =text_Key2.Y + text_Key2.Height
             - text_Value1:
@@ -346,7 +346,7 @@ Screens:
                   VerticalAlign: =VerticalAlign.Top
                   Visible: =Parent.Visible
                   Width: =textKey_Date.Width
-                  X: |+
+                  X: |
                     =textKey_Date.X + 5
                   Y: =textKey_Date.Y + textKey_Date.Height
             - text_Key3:
@@ -2371,7 +2371,7 @@ Screens:
 
                     */
                   Size: =13
-                  Width: |+
+                  Width: |
                     =Parent.Width - 10
                   X: =5
             - ButtonCanvas2:
@@ -4996,7 +4996,7 @@ Screens:
                             )
                         );
                   Size: =10
-                  Text: |+
+                  Text: |
                     ="Patch(superUserList)"
                   Width: =(Parent.Width / 7) - (Parent.PaddingLeft * 2)
                   X: =btnOldSubmit.X + btnOldSubmit.Width + 5

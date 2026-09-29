@@ -1,22 +1,4 @@
 {
-  "33696c3a-c5cf-4c10-8e4f-4b517728ccf1": {
-    "appActions": [],
-    "connectionRef": {
-      "apiTier": "Standard",
-      "displayName": "Microsoft Teams",
-      "iconUri": "https://gov.static.powerapps.us/resource/ppcr/releases/v1.0.1826/1.0.1826.4868/teams/icon.png",
-      "id": "/providers/microsoft.powerapps/apis/shared_teams",
-      "parameterHints": {},
-      "parameterHintsV2": {}
-    },
-    "datasets": {},
-    "dataSources": [
-      "MicrosoftTeams"
-    ],
-    "dependencies": {},
-    "dependents": [],
-    "id": "33696c3a-c5cf-4c10-8e4f-4b517728ccf1"
-  },
   "53a5fcc1-732a-4b48-86ac-e8017ff78b5e": {
     "appActions": [
       "SendEmailV2",
@@ -107,15 +89,11 @@
       },
       "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox": {
         "dataSources": {
-          "Learning Labs Library": {
-            "tableName": "de84b5ea-e330-4cc4-bbb3-ca5e987a69b2"
-          }
-        }
-      },
-      "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/": {
-        "dataSources": {
           "Learning Lab Sessions": {
             "tableName": "894222d5-e954-4fcb-8461-a38da348cbe6"
+          },
+          "Learning Labs Library": {
+            "tableName": "de84b5ea-e330-4cc4-bbb3-ca5e987a69b2"
           }
         }
       }
@@ -127,8 +105,8 @@
       "MasterScheduleList",
       "SuperUserList",
       "backupList_DeskReservations",
-      "Learning Lab Sessions",
-      "Learning Labs Library"
+      "Learning Labs Library",
+      "Learning Lab Sessions"
     ],
     "dependencies": {},
     "dependents": [],

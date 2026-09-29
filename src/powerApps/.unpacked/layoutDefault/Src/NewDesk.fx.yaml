@@ -1,10 +1,28 @@
 NewDesk As screen:
+    ContentLanguage: =""
     Fill: =RGBA(236, 236, 236, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
     OnVisible: |-
         =UpdateContext({prevSelected:false});UpdateContext({upSelected:true});
     Width: =Max(App.Width, App.DesignWidth)
+
+    Image2_7 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =150
+        Image: =abstractBackground
+        ImagePosition: =ImagePosition.Fill
+        Width: =Parent.Width
+        ZIndex: =5
+
+    Rectangle2_6 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(135, 78, 181, 0.65)
+        Height: =150
+        Width: =Parent.Width
+        ZIndex: =6
 
     lblMyAppointments_2 As label:
         Align: =Align.Center
@@ -19,21 +37,22 @@ NewDesk As screen:
         Width: =352
         X: =392
         Y: =101
-        ZIndex: =3
+        ZIndex: =7
 
     bgRounded_7 As htmlViewer:
         DisplayMode: =DisplayMode.View
         Height: =Parent.Height - Self.Y
         HtmlText: |-
             ="<div style='border:1px gray;border-radius:10%;height:870px;width:100%;background-color:#FCFCFC'></div>"
+        Size: =24
         Width: =1136
         Y: =150
-        ZIndex: =4
+        ZIndex: =8
 
     Tabs_8 As Tabs:
         Height: =114
         X: =272
-        ZIndex: =5
+        ZIndex: =9
 
     lblNameDesk As label:
         BorderColor: =App.Theme.Colors.Darker40
@@ -46,7 +65,7 @@ NewDesk As screen:
         Text: ="Name"
         Width: =114
         Y: =182
-        ZIndex: =6
+        ZIndex: =10
 
     tbNameDesk As text:
         AccessibleLabel: ="Desk Name Input"
@@ -83,7 +102,7 @@ NewDesk As screen:
         Width: =460
         X: =114
         Y: =191
-        ZIndex: =7
+        ZIndex: =11
 
     lblFloorDesk As label:
         BorderColor: =App.Theme.Colors.Darker40
@@ -96,7 +115,7 @@ NewDesk As screen:
         Text: ="Room/Item"
         Width: =215
         Y: =234
-        ZIndex: =8
+        ZIndex: =12
 
     tbFloorDesk As text:
         AccessibleLabel: ="Floor Input"
@@ -122,7 +141,7 @@ NewDesk As screen:
         Width: =293
         X: =179
         Y: =240
-        ZIndex: =9
+        ZIndex: =13
 
     lblMapDesk As label:
         BorderColor: =App.Theme.Colors.Darker40
@@ -135,7 +154,7 @@ NewDesk As screen:
         Text: ="Map Link"
         Width: =293
         Y: =451
-        ZIndex: =10
+        ZIndex: =14
 
     tbMapDesk As text:
         AccessibleLabel: ="Map Link Input"
@@ -160,7 +179,7 @@ NewDesk As screen:
         Size: =18
         Width: =585
         Y: =495
-        ZIndex: =11
+        ZIndex: =15
 
     lblDescrDesk As label:
         BorderColor: =App.Theme.Colors.Darker40
@@ -174,7 +193,7 @@ NewDesk As screen:
         Width: =446
         X: =626
         Y: =181
-        ZIndex: =12
+        ZIndex: =16
 
     tbDescrDesk As text:
         AccessibleLabel: ="Desk Description Input"
@@ -201,7 +220,7 @@ NewDesk As screen:
         Width: =460
         X: =630
         Y: =225
-        ZIndex: =13
+        ZIndex: =17
 
     btnUpdate As button:
         BorderColor: =App.Theme.Colors.Primary
@@ -286,9 +305,9 @@ NewDesk As screen:
         Width: =224
         X: =912
         Y: =69
-        ZIndex: =14
+        ZIndex: =18
 
-    iconViewMap As icon.View:
+    iconViewMap As icon:
         AccessibleLabel: ="View Map"
         BorderColor: =App.Theme.Colors.Darker40
         Color: =RGBA(128, 128, 128, 1)
@@ -302,7 +321,7 @@ NewDesk As screen:
         Width: =40
         X: =272
         Y: =450
-        ZIndex: =15
+        ZIndex: =19
 
     toggleActive As toggleSwitch:
         AccessibleLabel: ="Active or Inactive Toggle"
@@ -320,7 +339,7 @@ NewDesk As screen:
         Width: =250
         X: =836
         Y: =149
-        ZIndex: =16
+        ZIndex: =20
 
     ddAsset As dropdown:
         BorderColor: =App.Theme.Colors.Darker40
@@ -347,7 +366,7 @@ NewDesk As screen:
         Width: =176
         X: =421
         Y: =150
-        ZIndex: =17
+        ZIndex: =21
 
     Label14 As label:
         BorderColor: =App.Theme.Colors.Darker40
@@ -359,31 +378,7 @@ NewDesk As screen:
         Text: ="Is this a Room, Desk or Item?"
         Width: =421
         Y: =149
-        ZIndex: =18
-
-    grpHeader_6 As group:
-        Height: =5
-        Width: =5
-        X: =40
-        Y: =20
-        ZIndex: =18
-
-        Image2_7 As image:
-            BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =150
-            Image: =abstractBackground
-            ImagePosition: =ImagePosition.Fill
-            Width: =Parent.Width
-            ZIndex: =1
-
-        Rectangle2_6 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(135, 78, 181, 0.65)
-            Height: =150
-            Width: =Parent.Width
-            ZIndex: =2
+        ZIndex: =22
 
     lblMapDesk_3 As label:
         BorderColor: =App.Theme.Colors.Darker40
@@ -396,7 +391,7 @@ NewDesk As screen:
         Text: ="Room Photo Link"
         Width: =293
         Y: =558
-        ZIndex: =19
+        ZIndex: =23
 
     tbRoomPhoto As text:
         AccessibleLabel: ="Map Link Input"
@@ -421,7 +416,7 @@ NewDesk As screen:
         Size: =18
         Width: =585
         Y: =596
-        ZIndex: =20
+        ZIndex: =24
 
     Label15 As label:
         BorderColor: =App.Theme.Colors.Darker40
@@ -435,99 +430,85 @@ NewDesk As screen:
         Width: =460
         X: =630
         Y: =484
-        ZIndex: =23
+        ZIndex: =25
 
-    grpMap_1 As group:
-        Height: =5
-        Width: =5
-        X: =60
-        Y: =60
+    Rectangle3_1 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(116, 116, 116, 0.85)
+        Height: =546
+        Visible: =showMap
+        Width: =640
+        Y: =94
+        ZIndex: =26
+
+    Image5_1 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =546
+        Image: =varManageSelectedDesk.LocationMap_picture
+        ImagePosition: =ImagePosition.Fill
+        Visible: =showMap
+        Width: =609
+        X: =21
+        Y: =94
+        ZIndex: =27
+
+    Icon1_1 As icon:
+        AccessibleLabel: ="Close Map"
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(244, 244, 244, 1)
+        Height: =45
+        Icon: =Icon.Cancel
+        OnSelect: |-
+            =UpdateContext({showMap:!showMap})
+        TabIndex: =11
+        Visible: =showMap
+        Width: =50
+        X: =577
+        Y: =94
         ZIndex: =28
 
-        Rectangle3_1 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =546
-            Visible: =showMap
-            Width: =640
-            Y: =94
-            ZIndex: =24
-
-        Image5_1 As image:
-            BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =546
-            Image: =varManageSelectedDesk.LocationMap_picture
-            ImagePosition: =ImagePosition.Fill
-            Visible: =showMap
-            Width: =609
-            X: =21
-            Y: =94
-            ZIndex: =25
-
-        Icon1_1 As icon.Cancel:
-            AccessibleLabel: ="Close Map"
-            BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(244, 244, 244, 1)
-            Height: =45
-            Icon: =Icon.Cancel
-            OnSelect: |-
-                =UpdateContext({showMap:!showMap})
-            TabIndex: =11
-            Visible: =showMap
-            Width: =50
-            X: =577
-            Y: =94
-            ZIndex: =26
-
-    grpDeskLocation As group:
-        Height: =5
-        Width: =5
+    Rectangle3_7 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(116, 116, 116, 0.85)
+        Height: =546
+        Visible: =showDesk
+        Width: =640
         X: =20
-        Y: =60
+        Y: =94
+        ZIndex: =29
+
+    Image5_4 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =546
+        Image: =//varManageSelectedDesk.DeskPhoto_image.Full
+        Visible: =showDesk
+        Width: =609
+        X: =41
+        Y: =94
         ZIndex: =30
 
-        Rectangle3_7 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =546
-            Visible: =showDesk
-            Width: =640
-            X: =20
-            Y: =94
-            ZIndex: =27
+    Icon1_4 As icon:
+        AccessibleLabel: ="Close Map"
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(244, 244, 244, 1)
+        Height: =45
+        Icon: =Icon.Cancel
+        OnSelect: |-
+            =UpdateContext({showDesk:!showDesk})
+        TabIndex: =11
+        Visible: =showDesk
+        Width: =50
+        X: =597
+        Y: =94
+        ZIndex: =31
 
-        Image5_4 As image:
-            BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =546
-            Image: =//varManageSelectedDesk.DeskPhoto_image.Full
-            Visible: =showDesk
-            Width: =609
-            X: =41
-            Y: =94
-            ZIndex: =28
-
-        Icon1_4 As icon.Cancel:
-            AccessibleLabel: ="Close Map"
-            BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(244, 244, 244, 1)
-            Height: =45
-            Icon: =Icon.Cancel
-            OnSelect: |-
-                =UpdateContext({showDesk:!showDesk})
-            TabIndex: =11
-            Visible: =showDesk
-            Width: =50
-            X: =597
-            Y: =94
-            ZIndex: =29
-
-    iconViewMap_4 As icon.View:
+    iconViewMap_4 As icon:
         AccessibleLabel: ="View Map"
         BorderColor: =App.Theme.Colors.Darker40
         Color: =RGBA(128, 128, 128, 1)
@@ -541,7 +522,45 @@ NewDesk As screen:
         Width: =40
         X: =272
         Y: =556
-        ZIndex: =31
+        ZIndex: =32
+
+    Rectangle3_8 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(116, 116, 116, 0.85)
+        Height: =546
+        Visible: =showRoom
+        Width: =640
+        X: =40
+        Y: =94
+        ZIndex: =33
+
+    Image5_5 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =546
+        Image: =//varManageSelectedDesk.RoomPhoto_image.Full
+        Visible: =showRoom
+        Width: =609
+        X: =61
+        Y: =94
+        ZIndex: =34
+
+    Icon1_5 As icon:
+        AccessibleLabel: ="Close Map"
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(244, 244, 244, 1)
+        Height: =45
+        Icon: =Icon.Cancel
+        OnSelect: |-
+            =UpdateContext({showRoom:!showRoom})
+        TabIndex: =11
+        Visible: =showRoom
+        Width: =50
+        X: =617
+        Y: =94
+        ZIndex: =35
 
     SmarBoardckb As checkbox:
         BorderColor: =App.Theme.Colors.Darker40
@@ -562,52 +581,7 @@ NewDesk As screen:
         Text: ="Smart Board"
         Width: =248
         Y: =277
-        ZIndex: =35
-
-    grpRoomPicture As group:
-        Height: =5
-        Width: =5
-        X: =20
-        Y: =60
-        ZIndex: =35
-
-        Rectangle3_8 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =546
-            Visible: =showRoom
-            Width: =640
-            X: =40
-            Y: =94
-            ZIndex: =32
-
-        Image5_5 As image:
-            BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =546
-            Image: =//varManageSelectedDesk.RoomPhoto_image.Full
-            Visible: =showRoom
-            Width: =609
-            X: =61
-            Y: =94
-            ZIndex: =33
-
-        Icon1_5 As icon.Cancel:
-            AccessibleLabel: ="Close Map"
-            BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(244, 244, 244, 1)
-            Height: =45
-            Icon: =Icon.Cancel
-            OnSelect: |-
-                =UpdateContext({showRoom:!showRoom})
-            TabIndex: =11
-            Visible: =showRoom
-            Width: =50
-            X: =617
-            Y: =94
-            ZIndex: =34
+        ZIndex: =36
 
     Vtelckb As checkbox:
         BorderColor: =App.Theme.Colors.Darker40
@@ -632,7 +606,7 @@ NewDesk As screen:
         Width: =155
         X: =248
         Y: =273
-        ZIndex: =36
+        ZIndex: =37
 
     Ptvckb As checkbox:
         BorderColor: =App.Theme.Colors.Darker40
@@ -656,7 +630,7 @@ NewDesk As screen:
         Width: =196
         X: =428
         Y: =276
-        ZIndex: =37
+        ZIndex: =38
 
     ddCapacity As dropdown:
         BorderColor: =App.Theme.Colors.Darker40
@@ -697,7 +671,7 @@ NewDesk As screen:
         Width: =176
         X: =215
         Y: =366
-        ZIndex: =38
+        ZIndex: =39
 
     lblFloorDesk_6 As label:
         BorderColor: =App.Theme.Colors.Darker40
@@ -714,5 +688,5 @@ NewDesk As screen:
             )
         Width: =215
         Y: =359
-        ZIndex: =39
+        ZIndex: =40
 

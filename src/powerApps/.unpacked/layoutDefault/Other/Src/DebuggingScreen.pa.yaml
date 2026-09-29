@@ -2005,7 +2005,7 @@ Screens:
                   BorderThickness: =1
                   DataSource: =Desks
                   Height: =Parent.Height - Self.Y
-                  Visible: |+
+                  Visible: |
                     =If(
                         var_DebuggingScreen = true,
                         true,
@@ -2158,8 +2158,8 @@ Screens:
                       Properties:
                         DataField: ="Description_multilineText"
                         Default: =ThisItem.Description_multilinePlainText
-                        DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Description_multilineText)
-                        MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Description_multilineText)
+                        DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Description_multilinePlainText)
+                        MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Description_multilinePlainText)
                         Required: =false
                         Update: =DataCardValue5.Text
                         Width: =377

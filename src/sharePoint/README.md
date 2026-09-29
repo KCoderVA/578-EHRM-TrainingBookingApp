@@ -10,12 +10,13 @@ This folder documents the SharePoint back-end for the 578 EHRM Training App. The
    "Sandbox Resource Center" lists and the **Learning Labs Library**, which supply the scenario / role /
    session / service-line reference data surfaced in the app's pickers and the Power BI reports.
 
-> **Current release:** `v1.0.12` (SharePoint schema unchanged this cycle; project is now v1.1.20). See [`v1.0.12_differenceAnalysis.md`](v1.0.12_differenceAnalysis.md).
+> **Current release:** `v1.0.12` (SharePoint schema unchanged this cycle; project is now v1.3.5). See [`v1.0.12_differenceAnalysis.md`](v1.0.12_differenceAnalysis.md).
 >
-> **Deferred follow-up (v1.1.20 → next patch):** the v1.1.20 Canvas app references a new
-> `MasterScheduleList.sessionActive_text` column (its class-picker active-session filter). That column is
-> **not yet added to this SharePoint extraction** — the updated list schema will be downloaded and committed
-> in a future patch. See `src/powerApps/v1.1.20_knownIssues.md` (KI-04).
+> **Deferred follow-up (v1.3.5 → next patch):** the Canvas app references a new
+> `MasterScheduleList.scenarioDescription_multitext` column (v1.3.5, back-filled by a supervisor button) and the
+> existing `MasterScheduleList.sessionActive_text` active-session filter. Neither is **yet added to this SharePoint
+> extraction** — the updated list schema will be downloaded and committed in a future patch. See
+> `src/powerApps/v1.3.5_knownIssues.md` (KI-08).
 
 ## Structure (current — reorganized at v1.0.12)
 

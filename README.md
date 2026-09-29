@@ -1,6 +1,6 @@
 # 578 EHRM Training App (Station 578)
 
-[![Release](https://img.shields.io/badge/release-v1.2.7-blue)](CHANGELOG.md)
+[![Release](https://img.shields.io/badge/release-v1.3.5-blue)](CHANGELOG.md)
 
 
 This repository contains the **unpacked (source-controlled)** Microsoft Power Platform assets, documentation, and ALM helpers for the 578 EHRM Training App used at Edward Hines Jr. VA Hospital (Station #578), VISN12.
@@ -26,10 +26,10 @@ This repository contains the **unpacked (source-controlled)** Microsoft Power Pl
 
 ## Current versions
 
-- **Project release (repo)**: v1.2.7 (2026-09-16) — automated TMS report ingestion for the SharePoint/Power BI reporting pipeline — see [CHANGELOG.md](CHANGELOG.md)
-- **Canvas app (component)**: v1.2.6 *(coauthoring session)* — `DebuggingScreen.Height` changed to `App.Height + 1`, with the active `App.OnStart` `varRepoVersion` aligned to v1.2.6; the broader v1.1.20 feature baseline remains documented in [src/powerApps/README.md](src/powerApps/README.md) and the `v1.1.20_*` analysis docs ([diff](src/powerApps/v1.1.20_diffAnalysis.md), [summary](src/powerApps/v1.1.20_changeSummary.md), [known issues](src/powerApps/v1.1.20_knownIssues.md), [roadmap](src/powerApps/v1.1.20_recommendations.md)).
-- **Power Automate (component)**: `AppUserList` + `SendReminders` + `CreateBackups` + new **`parseTMSReportsToSharePoint`** flow, which replaces the canonical SharePoint TMS CSV from recurring report-email attachments and archives each delivery — see [src/powerAutomate/README.md](src/powerAutomate/README.md)
-- **SharePoint**: app lists + national EHRM **Sandbox Resource Center** reference lists/library — *unchanged this cycle; the app now references a new `MasterScheduleList.sessionActive_text` flag whose SharePoint list-schema extraction is deferred to a future patch* — see [src/sharePoint/README.md](src/sharePoint/README.md)
+- **Project release (repo)**: v1.3.5 (2026-09-29) — Canvas app data-source modernization + reliability release (supervisor scheduling re-based on `MasterScheduleList`, `Success` binding errors 24 → 3, richer user capture, Microsoft Teams connector removed) — see [CHANGELOG.md](CHANGELOG.md)
+- **Canvas app (component)**: v1.3.5 — v1.1.20 → v1.3.5; documented in [src/powerApps/README.md](src/powerApps/README.md) and the `v1.3.5_*` analysis docs ([diff](src/powerApps/v1.3.5_diffAnalysis.md), [summary](src/powerApps/v1.3.5_changeSummary.md), [known issues](src/powerApps/v1.3.5_knownIssues.md), [roadmap](src/powerApps/v1.3.5_recommendations.md)).
+- **Power Automate (component)**: `AppUserList` + `SendReminders` + `CreateBackups` + `parseTMSReportsToSharePoint` — *unchanged this cycle* — see [src/powerAutomate/README.md](src/powerAutomate/README.md)
+- **SharePoint**: app lists + national EHRM **Sandbox Resource Center** reference lists/library — *the app now uses a new `MasterScheduleList.scenarioDescription_multitext` column (plus the existing `sessionActive_text` flag); the SharePoint list-schema extraction under `src/sharePoint/` is deferred to a future patch* — see [src/sharePoint/README.md](src/sharePoint/README.md)
 - **Analytics**: Power BI `Signup Tool` + `SuperUserDashboard-Final` (WIP) + TMS reporting, including the internal `578 EHRM Training Details Reports.pbix` fed by the flow-managed SharePoint CSV — see [src/analytics/README.md](src/analytics/README.md)
 
 ## Repository layout

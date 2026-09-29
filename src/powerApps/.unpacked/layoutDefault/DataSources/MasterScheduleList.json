@@ -15,7 +15,7 @@
       "{FullPath}": "Full Path",
       "{HasAttachments}": "Has attachments",
       "{Identifier}": "Identifier",
-      "{IsFolder}": "IsFolder",
+      "{IsFolder}": "Is folder",
       "{Link}": "Link to item",
       "{ModerationComment}": "Comments associated with the content approval of this list item",
       "{ModerationStatus}": "Content approval status",
@@ -67,6 +67,7 @@
       "ID": "ID",
       "Modified": "Modified",
       "OData__ColorTag": "Color Tag",
+      "scenarioDescription_multitext": "scenarioDescription_multitext",
       "sessionActive_text": "sessionActive_text",
       "Title": "Title"
     },

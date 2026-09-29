@@ -15,7 +15,7 @@
       "{FullPath}": "Full Path",
       "{HasAttachments}": "Has attachments",
       "{Identifier}": "Identifier",
-      "{IsFolder}": "IsFolder",
+      "{IsFolder}": "Is folder",
       "{Link}": "Link to item",
       "{ModerationComment}": "Comments associated with the content approval of this list item",
       "{ModerationStatus}": "Content approval status",

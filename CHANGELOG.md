@@ -19,6 +19,47 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [1.3.5] - 2026-09-29
+
+> **Canvas-app data-source-modernization & reliability release.** Canvas app v1.1.20 → v1.3.5: supervisor scheduling re-based from the national `Learning Lab Sessions` list onto the app-owned `MasterScheduleList` (new `scenarioDescription_multitext` column + in-app back-fill); the `Success`-screen binding errors were fixed (`BindingErrorCount` 24 → 3, closing v1.1.20 KI-02); `ManageUsers` gained rich Entra/Graph profile + manager-chain capture; the unused Microsoft Teams connector was removed (KI-03); the `Screen1` Power BI dashboard was re-pointed & re-enabled; and the classic → modern control migration completed app-wide. Project `VERSION` advances `1.2.8 → 1.3.5` to align with the Canvas component (the interim 1.2.8 bump was never released).
+
+### Added
+
+- **`src/powerApps/README.md`** — created; Canvas-app v1.3.5 component overview + import guide.
+- **`src/powerApps/v1.3.5_diffAnalysis.md`, `v1.3.5_changeSummary.md`, `v1.3.5_knownIssues.md`, `v1.3.5_recommendations.md`** — full v1.1.20 → v1.3.5 Canvas-app analysis set (with v1.1.20 known-issue reconciliation).
+- **`MasterScheduleList.scenarioDescription_multitext`** — new multi-line SharePoint column, populated in-app by the new `POCSUPERVISOR` `btn_patchMasterScheduleList_scenarioDescription_multitext` button.
+- **`ManageUsers` Entra/Graph capture** — department, job title, hire date, network account, full address, and manager chain + photo via `Office365Users.UserProfileV2` / `ManagerV2`, plus approver identity (writes existing `DeskAccessControl` columns).
+
+### Changed
+
+- **`VERSION`** — advanced `1.2.8 → 1.3.5`.
+- **Canvas app `POCSUPERVISOR`** — role/scenario/date-time pickers re-based from `Learning Lab Sessions` onto `MasterScheduleList` (`RoleName_text` / `ScenarioName_text` / `TrainingCombinedDateTime_text` / `LocationCombined_text` + `sessionActive_text` filter); people-picker moved to live `Office365Users` Graph search.
+- **Canvas app `App.OnStart`** — `varRepoVersion` `"1.1.20" → "1.3.5"`; impersonation gate hardened to `Lower(User().Email) = "kyle.coder@va.gov"`.
+- **Canvas app `Screen1`** — Power BI embed re-pointed (new workspace/dashboard/tile IDs) and re-enabled.
+- **Canvas app `chkWeekDays`** — recurrence `maxOccurrence` cap logic refined.
+- **App-wide modernization** — classic glyph icons → modern `icon`; printable/phone screen layout templates flattened; legacy `group` control retired; modern-control default-property serialization; `ZIndex` renumbering.
+- **`src/solution.xml`** — `<Version>` `1.2.7 → 1.3.5` and description updated for v1.3.5.
+- **Project documentation** — updated root `README.md`, `docs/PROJECT_STATUS.md` (status, component versions, release history, connector list), and `src/sharePoint/README.md` (deferred-schema follow-up → KI-08). Release drafts repurposed `v1.2.8_* → v1.3.5_*`.
+
+### Fixed
+
+- **Canvas app `Success` screen** — status-summary rewritten to the tier-flag model (`varDetailedListPatchOK` / `varFallbackOK` / `varSimpleListPatchOK` / `varEmailOK`; SuperUser line gated by `user_IsSuperUser`); `CanvasManifest.BindingErrorCount` **24 → 3**, clearing the App-Checker type-equality error class (closes v1.1.20 KI-02).
+- **Canvas app `DebuggingScreen`** — two cards re-pointed `Description_multilineText → Description_multilinePlainText` (binding correction).
+- **Canvas app `Dashboard`** — removed a `Refresh('Learning Lab Sessions')` call for the deprecated list.
+
+### Removed
+
+- **Microsoft Teams connector** — removed the unused connection, `DataSources/MicrosoftTeams.json`, and `pkgs/Wadl/MicrosoftTeams.xml` (never wired; closes v1.1.20 KI-03).
+
+### Notes
+
+- Release type: Feature / Minor (Canvas app).
+- Canvas app component: v1.1.20 → v1.3.5; Power Platform solution `src/solution.xml` → v1.3.5.
+- **Admin prerequisites:** ensure the live `MasterScheduleList` has `scenarioDescription_multitext` + the `_text` scheduling columns; ensure the new `Screen1` Power BI report is shared with app users; re-extract the SharePoint schema into `src/sharePoint/` (KI-08).
+- **Carried/open items:** 3 residual binding errors (KI-01); accessibility App-Checker findings grew from the modern-control migration (KI-02); debug tier still writes `"DEBUG …"` rows to production (KI-09); `Screen1` still unlinked from the menu (KI-11); `MyAppts` self-cancellation still not implemented (KI-12); remove the commented impersonation-test email from `App.OnStart` before publishing (KI-03).
+
+---
+
 ## [1.2.7] - 2026-09-16
 
 > **Automated TMS reporting integration.** Adds an Outlook-triggered Power Automate flow that publishes the recurring TMS Program Completion Detail CSV to a stable SharePoint path used by the internal 578 EHRM Training Details Power BI report, while retaining dated archive copies.

@@ -1,4 +1,5 @@
 scrn_DailyCal As screen:
+    ContentLanguage: =""
     Fill: =Color.White
     LoadingSpinnerColor: =App.Theme.Colors.Primary
     OnVisible: |
@@ -71,15 +72,139 @@ scrn_DailyCal As screen:
             )
         );
 
+    Rectangle3_15 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(116, 116, 116, 0.85)
+        Height: =292
+        Visible: =varConfirmCancel
+        Width: =804
+        Y: =118
+        ZIndex: =2
+
+    bgRounded_17 As htmlViewer:
+        Height: =490
+        HtmlText: |-
+            ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+        Size: =24
+        Visible: =varConfirmCancel
+        Width: =720
+        X: =236
+        Y: =150
+        ZIndex: =3
+
+    Label1_4 As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =93
+        Size: =24
+        Text: ="Confirm Cancellation"
+        Visible: =varConfirmCancel
+        Width: =688
+        X: =242
+        Y: =262
+        ZIndex: =4
+
     RadioGroupCanvas1_1 As Radio.pcfdataset:
+        AccessibleLabel: =""
+        ContentLanguage: =""
         DisplayMode: =DisplayMode.Edit
+        Font: =""
+        FontItalic: =false
+        FontSize: =0
+        FontStrikethrough: =false
+        FontUnderline: =false
+        FontWeight: =""
         Height: =80
         Items: =["This Reservation", "Series"]
+        Layout: ="Vertical"
+        OnChange: =false
+        RadioSize: =16
+        Required: =false
+        TabIndex: =0
+        Tooltip: =""
         Visible: =varConfirmCancel
         Width: =320
         X: =436
         Y: =343
-        ZIndex: =4
+        ZIndex: =5
+
+    btnConfirmCancel_4 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(128, 128, 128, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =72
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =UpdateContext({varConfirmCancel:false})
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        RadiusBottomLeft: =20
+        RadiusBottomRight: =20
+        RadiusTopLeft: =20
+        RadiusTopRight: =20
+        Size: =14
+        Text: ="NEVERMIND"
+        Visible: =varConfirmCancel
+        Width: =234
+        X: =305
+        Y: =505
+        ZIndex: =6
+
+    btnConfirmDelete_4 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(184, 0, 0, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =72
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |
+            =//Remove('Desk Reservations',varSelectedReservation);UpdateContext({varConfirmCancel:false});Back()
+            // OnSelect property for the Confirm button
+            If(
+                RadioGroupCanvas1_1.Selected.Value = "Series",
+                RemoveIf(
+                    'Desk Reservations',
+                    RecurrenceID = varSelectedReservation.RecurrenceID
+                ),
+                Remove(
+                    'Desk Reservations',
+                    varSelectedReservation
+                )
+            );
+            UpdateContext({varConfirmCancel: false});
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        RadiusBottomLeft: =20
+        RadiusBottomRight: =20
+        RadiusTopLeft: =20
+        RadiusTopRight: =20
+        Size: =14
+        Text: ="CONFIRM"
+        Visible: =varConfirmCancel
+        Width: =258
+        X: =672
+        Y: =505
+        ZIndex: =7
 
     Rectangle18 As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
@@ -89,7 +214,7 @@ scrn_DailyCal As screen:
         Width: =982
         X: =95
         Y: =137
-        ZIndex: =7
+        ZIndex: =8
 
     Rectangle19 As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
@@ -99,123 +224,7 @@ scrn_DailyCal As screen:
         Width: =982
         X: =95
         Y: =137
-        ZIndex: =8
-
-    grpConfirmCancel_3 As group:
-        Height: =5
-        Width: =5
-        X: =40
-        Y: =40
-        ZIndex: =8
-
-        Rectangle3_15 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =292
-            Visible: =varConfirmCancel
-            Width: =804
-            Y: =118
-            ZIndex: =1
-
-        bgRounded_17 As htmlViewer:
-            Height: =490
-            HtmlText: |-
-                ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
-            Visible: =varConfirmCancel
-            Width: =720
-            X: =236
-            Y: =150
-            ZIndex: =2
-
-        Label1_4 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =93
-            Size: =24
-            Text: ="Confirm Cancellation"
-            Visible: =varConfirmCancel
-            Width: =688
-            X: =242
-            Y: =262
-            ZIndex: =3
-
-        btnConfirmCancel_4 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(128, 128, 128, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =72
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =UpdateContext({varConfirmCancel:false})
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="NEVERMIND"
-            Visible: =varConfirmCancel
-            Width: =234
-            X: =305
-            Y: =505
-            ZIndex: =5
-
-        btnConfirmDelete_4 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(184, 0, 0, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =72
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |
-                =//Remove('Desk Reservations',varSelectedReservation);UpdateContext({varConfirmCancel:false});Back()
-                // OnSelect property for the Confirm button
-                If(
-                    RadioGroupCanvas1_1.Selected.Value = "Series",
-                    RemoveIf(
-                        'Desk Reservations',
-                        RecurrenceID = varSelectedReservation.RecurrenceID
-                    ),
-                    Remove(
-                        'Desk Reservations',
-                        varSelectedReservation
-                    )
-                );
-                UpdateContext({varConfirmCancel: false});
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="CONFIRM"
-            Visible: =varConfirmCancel
-            Width: =258
-            X: =672
-            Y: =505
-            ZIndex: =6
+        ZIndex: =9
 
     Rectangle20 As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
@@ -225,7 +234,7 @@ scrn_DailyCal As screen:
         Width: =982
         X: =95
         Y: =132
-        ZIndex: =9
+        ZIndex: =10
 
     ctn_DailyCal_body As groupContainer.manualLayoutContainer:
         DropShadow: =DropShadow.Light
@@ -234,6 +243,8 @@ scrn_DailyCal As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
@@ -241,9 +252,10 @@ scrn_DailyCal As screen:
         Width: =Parent.Width - Self.X
         X: =ctn_DailyCal_toolbar.X + ctn_DailyCal_toolbar.Width
         Y: =ctn_DailyCal_header.Y + ctn_DailyCal_header.Height
-        ZIndex: =10
+        ZIndex: =11
 
         "gal_DailyCal_body As gallery.'BrowseLayout_Vertical_TwoTextOneImageVariant_ver5.0'":
+            '#CopilotOverlayLabel': ="Filtered"
             BorderColor: =App.Theme.Colors.Darker40
             DelayItemLoading: =true
             DisplayMode: |-
@@ -433,7 +445,7 @@ scrn_DailyCal As screen:
                 Width: =Parent.Width
                 ZIndex: =5
 
-            icon_inspectItem As icon.ChevronRight:
+            icon_inspectItem As icon:
                 AccessibleLabel: =Self.Tooltip
                 BorderColor: =RGBA(0, 0, 0, 0)
                 BorderThickness: =5
@@ -469,6 +481,8 @@ scrn_DailyCal As screen:
             LayoutGridColumns: =6
             LayoutGridRowMinHeight: =0
             LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
             RadiusBottomLeft: =4
             RadiusBottomRight: =4
             RadiusTopLeft: =4
@@ -476,7 +490,7 @@ scrn_DailyCal As screen:
             Width: =Parent.Width
             ZIndex: =3
 
-            Icon8 As icon.HorizontalLine:
+            Icon8 As icon:
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderThickness: =2
                 Color: =App.Theme.Colors.Darker30
@@ -552,10 +566,17 @@ scrn_DailyCal As screen:
 
             lbl_DailyCal_body_header_ID As Text:
                 Align: ='TextCanvas.Align'.Center
+                AutoHeight: =false
                 BorderColor: =
+                BorderStyle: =""
+                ContentLanguage: =""
                 DisplayMode: =DisplayMode.Edit
                 Fill: =
+                Font: =""
                 FontColor: =
+                FontItalic: =false
+                FontStrikethrough: =false
+                FontUnderline: =false
                 Height: |
                     =Parent.Height
                 PaddingBottom: =0
@@ -563,11 +584,15 @@ scrn_DailyCal As screen:
                 PaddingRight: =0
                 PaddingTop: =0
                 Size: =18
+                TabIndex: =0
                 Text: |-
                     ="ID#"
+                Tooltip: =""
                 VerticalAlign: =VerticalAlign.Middle
+                Visible: =true
                 Weight: ='TextCanvas.Weight'.Bold
                 Width: =60
+                Wrap: =true
                 X: =0
                 Y: =Parent.Height - Self.Height
                 ZIndex: =5
@@ -579,10 +604,12 @@ scrn_DailyCal As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         Width: =Parent.Width - Self.X
         X: =ctn_DailyCal_toolbar.X + ctn_DailyCal_toolbar.Width
         Y: =ctn_DailyCal_toolbar.Y
-        ZIndex: =11
+        ZIndex: =12
 
         lbl_DailyCal_header_title As label:
             Align: =Align.Center
@@ -604,6 +631,8 @@ scrn_DailyCal As screen:
             LayoutGridColumns: =6
             LayoutGridRowMinHeight: =0
             LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
             Width: =255
             X: =808
             ZIndex: =2
@@ -685,7 +714,7 @@ scrn_DailyCal As screen:
                 Y: =lbl_DailyCal_header_ctnView_title.Y + lbl_DailyCal_header_ctnView_title.Height
                 ZIndex: =3
 
-        icon_DailyCal_body_header_next As icon.ChevronRight:
+        icon_DailyCal_body_header_next As icon:
             BorderColor: =icon_DailyCal_body_header_previous.BorderColor
             BorderStyle: =icon_DailyCal_body_header_previous.BorderStyle
             BorderThickness: =icon_DailyCal_body_header_previous.BorderThickness
@@ -752,7 +781,7 @@ scrn_DailyCal As screen:
             Y: =Parent.Height - Self.Height - 10 //(Parent.Height / 2) - (Self.Height / 2)
             ZIndex: =4
 
-        icon_DailyCal_body_header_previous As icon.ChevronLeft:
+        icon_DailyCal_body_header_previous As icon:
             BorderColor: =App.Theme.Colors.Darker40
             Color: =Color.White
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -799,10 +828,12 @@ scrn_DailyCal As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         Width: =70
-        ZIndex: =12
+        ZIndex: =13
 
-        Icon4_1 As icon.Print:
+        Icon4_1 As icon:
             BorderColor: =icon_Home.BorderColor
             BorderStyle: =icon_Home.BorderStyle
             BorderThickness: =icon_Home.BorderThickness
@@ -840,7 +871,7 @@ scrn_DailyCal As screen:
             Y: =icon_Home.Y + icon_Home.Height + (icon_Home.Y * 2)
             ZIndex: =1
 
-        icon_Home As icon.Home:
+        icon_Home As icon:
             BorderColor: =RGBA(255, 255, 255, 1)
             BorderThickness: =5
             Color: =RGBA(255, 255, 255, 1)
@@ -887,9 +918,11 @@ scrn_DailyCal As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         Visible: =varCancelContainer
         Width: =Parent.Width
-        ZIndex: =13
+        ZIndex: =14
 
         ctn_DailyCal_popUp_foreground As groupContainer.manualLayoutContainer:
             BorderColor: =RGBA(180, 214, 250, 1)
@@ -901,6 +934,8 @@ scrn_DailyCal As screen:
             LayoutGridColumns: =6
             LayoutGridRowMinHeight: =0
             LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
             RadiusBottomLeft: =25
             RadiusBottomRight: =25
             RadiusTopLeft: =25
@@ -926,6 +961,7 @@ scrn_DailyCal As screen:
                 Font: =Font.'Segoe UI'
                 FontWeight: =FontWeight.Bold
                 Height: =lbl_DailyCal_popUp_foreground_Description.Height
+                HintText: =""
                 HoverBorderColor: =App.Theme.Colors.Darker40
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
@@ -970,6 +1006,7 @@ scrn_DailyCal As screen:
                 Font: =Font.'Segoe UI'
                 FontWeight: =FontWeight.Bold
                 Height: =lbl_DailyCal_popUp_foreground_Location.Height
+                HintText: =""
                 HoverBorderColor: =App.Theme.Colors.Darker40
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
@@ -1014,6 +1051,7 @@ scrn_DailyCal As screen:
                 Font: =Font.'Segoe UI'
                 FontWeight: =FontWeight.Bold
                 Height: =lbl_DailyCal_popUp_foreground_EndDatetime.Height
+                HintText: =""
                 HoverBorderColor: =App.Theme.Colors.Darker40
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
@@ -1058,6 +1096,7 @@ scrn_DailyCal As screen:
                 Font: =Font.'Segoe UI'
                 FontWeight: =FontWeight.Bold
                 Height: =lbl_DailyCal_popUp_foreground_startDatetime.Height
+                HintText: =""
                 HoverBorderColor: =App.Theme.Colors.Darker40
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
@@ -1236,6 +1275,7 @@ scrn_DailyCal As screen:
                 Font: =Font.'Segoe UI'
                 FontWeight: =FontWeight.Bold
                 Height: =lbl_DailyCal_popUp_foreground_Submitted.Height
+                HintText: =""
                 HoverBorderColor: =App.Theme.Colors.Darker40
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
@@ -1278,6 +1318,7 @@ scrn_DailyCal As screen:
                 Font: =Font.'Segoe UI'
                 FontWeight: =FontWeight.Bold
                 Height: =lbl_DailyCal_popUp_foreground_ID.Height
+                HintText: =""
                 HoverBorderColor: =App.Theme.Colors.Darker40
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
