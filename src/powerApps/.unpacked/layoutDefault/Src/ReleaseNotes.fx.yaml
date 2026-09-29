@@ -1,4 +1,5 @@
-"ReleaseNotes As screen.'phoneLayout_Success_ver3.0'":
+ReleaseNotes As screen:
+    ContentLanguage: =""
     Fill: =RGBA(236, 236, 236, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
@@ -11,6 +12,7 @@
         HtmlText: |-
             =//"<div style='border-radius:10%;height:800px;width:100%;background-color:#FCFCFC'></div>"
             "<div style='border-radius:10%;height:590px;width:100%;background-color:#FCFCFC'></div>"
+        Size: =24
         Width: |-
             =//610
             htmlText_userGuide.Width + 20
@@ -18,12 +20,10 @@
             =//15
             htmlText_userGuide.X - 20
         Y: =htmlText_userGuide.Y - 15
-        ZIndex: =1
+        ZIndex: =2
 
     htmlText_userGuide As htmlViewer:
-        Height: |-
-            =//640
-            Parent.Height - Image2_10.Y - Image2_10.Height - 25
+        Height: =495
         HtmlText: |-
             ="<div style='font-family:Segoe UI, Arial, sans-serif; color:#1b1b1b; padding:10px; font-size:14px; line-height:1.45;'>
             
@@ -117,7 +117,25 @@
         Y: |-
             =//0
             Image2_10.Y + Image2_10.Height + 20
-        ZIndex: =2
+        ZIndex: =3
+
+    Image2_10 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =Tabs_11.Height
+        Image: =abstractBackground
+        ImagePosition: =ImagePosition.Fill
+        Width: =Parent.Width
+        ZIndex: =4
+
+    Rectangle2_9 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(135, 78, 181, 0.65)
+        Height: =Image2_10.Height
+        Width: =600
+        X: =536
+        ZIndex: =5
 
     lblSuccess_2 As label:
         BorderColor: =App.Theme.Colors.Darker40
@@ -129,17 +147,15 @@
         Size: =32
         Text: ="   Release Notes"
         Width: =Image2_10.Width
-        ZIndex: =5
+        ZIndex: =6
 
     Tabs_11 As Tabs:
         Width: =600
         X: =536
-        ZIndex: =6
+        ZIndex: =7
 
     htmlText_releaseNotes As htmlViewer:
-        Height: |-
-            =//640
-            Parent.Height - Image2_10.Y - Image2_10.Height - 25
+        Height: =490
         HtmlText: |
             =/*
             # ============================================================================
@@ -957,30 +973,5 @@
         Y: |-
             =//0
             Image2_10.Y + Image2_10.Height + 20
-        ZIndex: =7
-
-    grpHeader_9 As group:
-        Height: =5
-        Width: =5
-        X: =40
-        Y: =20
-        ZIndex: =10
-
-        Image2_10 As image:
-            BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =Tabs_11.Height
-            Image: =abstractBackground
-            ImagePosition: =ImagePosition.Fill
-            Width: =Parent.Width
-            ZIndex: =3
-
-        Rectangle2_9 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(135, 78, 181, 0.65)
-            Height: =Image2_10.Height
-            Width: =600
-            X: =536
-            ZIndex: =4
+        ZIndex: =8
 

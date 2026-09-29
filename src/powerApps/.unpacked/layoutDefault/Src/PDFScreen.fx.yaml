@@ -1,10 +1,11 @@
-"PDFScreen As screen.'printableLayout_A4Landscape_ver1.0'":
+PDFScreen As screen:
+    ContentLanguage: =""
     Fill: =Color.White
     Height: =794
     LoadingSpinnerColor: =App.Theme.Colors.Primary
     Width: =1123
 
-    Icon9 As icon.BackArrow:
+    Icon9 As icon:
         BorderColor: =App.Theme.Colors.Darker40
         Color: =App.Theme.Colors.Darker30
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -19,7 +20,11 @@
 
     PdfViewer1 As pdfViewer:
         Document: =PDFPrint
+        FindText: =""
         Height: =794
+        maximumHeight: =1136
+        maximumWidth: =640
+        Password: =""
         ShowControls: =true
         Width: =1123
         ZIndex: =2
@@ -29,6 +34,7 @@
         BorderStyle: =BorderStyle.Solid
         BorderThickness: =3
         Color: =Color.White
+        Font: =""
         FontWeight: =FontWeight.Bold
         Height: =50
         Icon: ="ArrowCircleLeft"
@@ -37,6 +43,7 @@
         RadiusBottomRight: =10
         RadiusTopLeft: =10
         RadiusTopRight: =10
+        Size: =24
         Text: ="Go Back"
         Width: =280
         X: =(App.ActiveScreen.Width / 2) - (Self.Width / 2)

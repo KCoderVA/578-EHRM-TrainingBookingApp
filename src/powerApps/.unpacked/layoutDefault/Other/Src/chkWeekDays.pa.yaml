@@ -64,7 +64,6 @@ Screens:
     Children:
       - Rectangle2:
           Control: Rectangle@2.3.0
-          Group: grpHeader
           Properties:
             Fill: =RGBA(135, 78, 181, 0.65)
             Height: =150
@@ -72,7 +71,6 @@ Screens:
       - Gallery3:
           Control: Gallery@2.15.0
           Variant: Vertical
-          Group: Group3
           Properties:
             Fill: =RGBA(255, 255, 255, 1)
             Height: =120
@@ -111,7 +109,6 @@ Screens:
                   Width: =120
       - SelectTimeSlotlb_1:
           Control: Label@2.5.1
-          Group: Group3
           Properties:
             Align: =Align.Center
             Height: =30
@@ -128,7 +125,6 @@ Screens:
       - Calendar_1:
           Control: CanvasComponent
           ComponentName: Calendar
-          Group: Group3
           Properties:
             BorderRadius: =1
             Color: =RGBA(50,50,50,1)
@@ -165,7 +161,6 @@ Screens:
             Y: =155
       - Image2_1:
           Control: Image@2.2.3
-          Group: grpHeader
           Properties:
             Height: =150
             Image: =abstractBackground
@@ -382,7 +377,6 @@ Screens:
 
 
               /*
-              Set(varInterval2, Text(ddRecurrenceFrequency.Selected.Value));
               Set(varFirstDayName, Text(Min(CollectionRecurrence, StartDateTime), "dddd"));
               Set(varRecurringtimes, RecurringWeekdd.Selected.Value);
               Set(varStartDate,Text(Min(CollectionRecurrence, StartDateTime), "[$-en-US]yyyy-mm-ddTHH:mm:ss"));
@@ -423,7 +417,6 @@ Screens:
             X: =(Parent.Width - Self.Width) / 2
       - TextCanvas8_1:
           Control: Text@0.0.51
-          Group: Group3
           Properties:
             Align: =Align.Left
             Fill: =RGBA(180, 214, 250, 1)
@@ -441,7 +434,6 @@ Screens:
             Y: =TextCanvas8.Y
       - TextCanvas8:
           Control: Text@0.0.51
-          Group: Group3
           Properties:
             Align: =Align.Left
             Fill: =RGBA(180, 214, 250, 1)
@@ -459,7 +451,6 @@ Screens:
             Y: =SelectTimeSlotlb_1.Y + SelectTimeSlotlb_1.Height
       - SelectTimeSlotlb_3:
           Control: Label@2.5.1
-          Group: Group3
           Properties:
             Align: =Align.Center
             Height: =20
@@ -476,7 +467,6 @@ Screens:
             Y: =Gallery3.Y + Gallery3.Height
       - shape_hiddenUnlessAdmin:
           Control: Rectangle@2.3.0
-          Group: Group3
           Properties:
             Fill: =RGBA(236, 236, 236, 1)
             Height: =ctn_ReservationsAlreadyBooked.Height + 1
@@ -486,7 +476,6 @@ Screens:
             Y: =ctn_ReservationsAlreadyBooked.Y - 1
       - calClickBtn:
           Control: Classic/Button@2.2.0
-          Group: Group3
           Properties:
             FontWeight: =FontWeight.Bold
             Height: =25
@@ -680,7 +669,6 @@ Screens:
             Y: =609
       - nthWeekdayBtn:
           Control: Classic/Button@2.2.0
-          Group: Group3
           Properties:
             FontWeight: =FontWeight.Bold
             Height: =25
@@ -721,7 +709,6 @@ Screens:
             Y: =609
       - weeklyBtn:
           Control: Classic/Button@2.2.0
-          Group: Group3
           Properties:
             FontWeight: =FontWeight.Bold
             Height: =25
@@ -807,7 +794,6 @@ Screens:
       - ctn_SelectTimeSlot:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
-          Group: Group3
           Properties:
             Height: =ddImportance.Y + ddImportance.Height + 5
             Width: =(Parent.Width - Self.X) / 2
@@ -889,7 +875,7 @@ Screens:
                     )
                   Height: =30
                   HoverFill: =Color.LightGray
-                  Items: |+
+                  Items: |
                     =With(
                         {Interval: 30},
                         ForAll(
@@ -1004,7 +990,6 @@ Screens:
       - ctn_ReservationsAlreadyBooked:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
-          Group: Group3
           Properties:
             Height: =118
             Visible: =user_isAdmin
@@ -1040,7 +1025,7 @@ Screens:
                         Fill: =ColorFade(Color.Gray, .5)
                         Height: =2
                         OnSelect: =Select(Parent)
-                        Width: |+
+                        Width: |
                           =Parent.Width - 10
                   - lbl_valueReservationPOCdepartment:
                       Control: Text@0.0.51
@@ -1214,7 +1199,6 @@ Screens:
       - ctn_Recurrance:
           Control: GroupContainer@1.5.0
           Variant: ManualLayout
-          Group: Group3
           Properties:
             BorderColor: |-
               =If(
@@ -1723,7 +1707,7 @@ Screens:
                   Items: =["End by:", "End after:", "No end date (max 180 days)"]
                   Items.Value: =Value
                   LineHeight: =1.5
-                  OnChange: |+
+                  OnChange: |
                     =
                     Reset(recurPeriodTxt_1);
                     Select(calClickBtn)

@@ -532,7 +532,6 @@ Screens:
                   Y: =70
             - Rectangle3_13:
                 Control: Rectangle@2.3.0
-                Group: grpMap_8
                 Properties:
                   Fill: =RGBA(116, 116, 116, 0.85)
                   Height: =415
@@ -540,7 +539,6 @@ Screens:
                   Width: =1022
             - Image5_10:
                 Control: Image@2.2.3
-                Group: grpMap_8
                 Properties:
                   Height: =415
                   Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomName_choice.Value
@@ -549,7 +547,6 @@ Screens:
                   Width: =1022
             - Icon1_10:
                 Control: Classic/Icon@2.5.0
-                Group: grpMap_8
                 Properties:
                   AccessibleLabel: ="Close Map"
                   Color: =RGBA(255, 255, 255, 1)
@@ -562,7 +559,6 @@ Screens:
                   X: =962
       - Rectangle3_14:
           Control: Rectangle@2.3.0
-          Group: grpConfirmCancel_2
           Properties:
             Fill: =RGBA(116, 116, 116, 0.85)
             Height: =292
@@ -571,7 +567,6 @@ Screens:
             Y: =118
       - bgRounded_16:
           Control: HtmlViewer@2.1.0
-          Group: grpConfirmCancel_2
           Properties:
             DisabledBorderColor: =RGBA(56, 56, 56, 1)
             Font: =Font.'Open Sans'
@@ -584,7 +579,6 @@ Screens:
             Y: =150
       - Label1_3:
           Control: Label@2.5.1
-          Group: grpConfirmCancel_2
           Properties:
             Align: =Align.Center
             FontWeight: =FontWeight.Semibold
@@ -597,7 +591,6 @@ Screens:
             Y: =262
       - btnConfirmCancel_3:
           Control: Classic/Button@2.2.0
-          Group: grpConfirmCancel_2
           Properties:
             BorderThickness: =0
             Color: =RGBA(255, 255, 255, 1)
@@ -617,13 +610,12 @@ Screens:
             Y: =505
       - btnConfirmDelete_3:
           Control: Classic/Button@2.2.0
-          Group: grpConfirmCancel_2
           Properties:
             BorderThickness: =0
             Fill: =RGBA(184, 0, 0, 1)
             Height: =72
             HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |+
+            OnSelect: |
               =//Remove('Desk Reservations',varSelectedReservation);UpdateContext({varConfirmCancel:false});Back()
               // OnSelect property for the Confirm button
               If(

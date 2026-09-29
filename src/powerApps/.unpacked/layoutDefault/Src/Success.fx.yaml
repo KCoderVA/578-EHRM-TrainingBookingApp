@@ -1,4 +1,5 @@
-"Success As screen.'phoneLayout_Success_ver3.0'":
+Success As screen:
+    ContentLanguage: =""
     Fill: =RGBA(236, 236, 236, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
@@ -19,9 +20,14 @@
         
         
         If(
-            (varCalendarOK = true && (varMainOK = true || varMainSimpleOK = true) && (varBackupOK = true || varBackupSimpleOK = true)),
+            varCalendarOK = true
+                && (varDetailedOK = true || varMainSimpleOK = true)
+                && (varFallbackOK = true || varSimpleListPatchOK = true),
             Set(varAllOK, true) && Set(varShowRedirect, varAllOK),
-            (varCalendarOK <> true && (varMainOK <> true || varMainSimpleOK <> true) && (varBackupOK <> true || varBackupSimpleOK <> true)),
+            
+            varCalendarOK <> true
+                && (varDetailedOK <> true || varMainSimpleOK <> true)
+                && (varFallbackOK <> true || varSimpleListPatchOK <> true),
             Set(varAllOK, false) && Set(varShowRedirect, varAllOK)
         )
     Width: =Max(App.Width, App.DesignWidth)
@@ -36,7 +42,7 @@
         Width: =Parent.Width
         ZIndex: =1
 
-    iconCircle1 As circle.Circle:
+    iconCircle1 As circle:
         BorderColor: =App.Theme.Colors.Darker40
         Fill: |-
             =If(
@@ -48,7 +54,7 @@
         Y: =iconCheck1.Y
         ZIndex: =4
 
-    iconCheck1 As icon.Check:
+    iconCheck1 As icon:
         BorderColor: =App.Theme.Colors.Darker40
         Color: =RGBA(255, 255, 255, 1)
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -707,9 +713,11 @@
                 "You now have a Outlook calendar invite for the date/time you selected, which contains more important details about your upcoming training event/class!"
                     & Char(10) &
                     If(varDetailedOK = true, "• Main (detailed) reservation list = SUCCESS" & Char(10), varDetailedOK = false, "• Main (detailed) reservation list = FAILED" & Char(10)) &
-                    If(varFallbackOK = true, "• Fallback (simple) reservation list = SUCCESS" & Char(10), varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10)) &
+                    //If(varFallbackOK = true, "• Fallback (simple) reservation list = SUCCESS" & Char(10), varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10)) &
+                    If(varDetailedOK = false, If(varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10), Blank()), Char(10), Blank()) &
                     If(varEmailOK = true, "• Email Sent = SUCCESS" & Char(10), varEmailOK = false, "• Email sent = FAILED" & Char(10)) &
-                    If(varPatchSuperUsersOK = true, "• SuperUser list patched = SUCCESS" & Char(10), varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10)) &
+                    //If(varPatchSuperUsersOK = true, "• SuperUser list patched = SUCCESS" & Char(10), varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10)) &
+                    If(user_IsSuperUser = true, If(varPatchSuperUsersOK = true, "• SuperUser list patched = SUCCESS" & Char(10), varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10), Blank()), Char(10), Blank()) &
                     If(varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10), varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10)),
                 varAllOK = true && user_isAdmin = false,
                     "You now have a Outlook calendar invite for the date/time you selected, which contains more important details about your upcoming training event/class!"
@@ -722,10 +730,11 @@
                     //If(varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10), varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10)),
                 varAllOK = false && user_isAdmin = true,
                 "The following did NOT complete successfully:" & Char(10) &
-                    If(varMainOK = false, "• Main reservation list = FAILED" & Char(10), varMainOK = true, "• Main reservation list = SUCCESS" & Char(10)) &
+                    If(varDetailedListPatchOK = false, "• Main reservation list = FAILED" & Char(10), varDetailedListPatchOK = true, "• Main reservation list = SUCCESS" & Char(10)) &
                     If(varMainSimpleOK = false, "• Main (simple) reservation list = FAILED" & Char(10), varMainSimpleOK = true, "• Main (simple) reservation list = SUCCESS" & Char(10)) &
-                    If(varBackupOK = false, "• Backup reservation list = FAILED" & Char(10), varBackupOK = true, "• Backup reservation list = SUCCESS" & Char(10)) &
-                    If(varBackupSimpleOK = false, "• Backup (simple) reservation list = FAILED" & Char(10), varBackupSimpleOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10)) &
+                    If(varFallbackOK = false, "• Backup reservation list = FAILED" & Char(10), varFallbackOK = true, "• Backup reservation list = SUCCESS" & Char(10)) &
+                    If(varSimpleListPatchOK = false, "• Backup (simple) reservation list = FAILED" & Char(10), varSimpleListPatchOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10)) &
+                    If(varEmailOK = false, "• Email notification sent = FAILED" & Char(10), varSimpleListPatchOK = true, "• Email notification sent  = SUCCESS" & Char(10)) &
                     If(varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10), varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10))
                     & "
                     Please refresh the app's webpage & submit again. If this error message continues to appear after refreshing, please contact the app admins via:
@@ -733,9 +742,10 @@
                 varAllOK = false && user_isAdmin = false,
                 "The following did NOT complete successfully:" & Char(10) &
                     If(varDetailedOK = false, "• Main (detailed) reservation list = FAILED" & Char(10), Blank()) &
-                    If(varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10), Blank()) &
+                    If(varDetailedOK = false, If(varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10), Blank()), Char(10), Blank()) & 
+                    //If(varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10), Blank()) &
                     If(varEmailOK = false, "• Email sent = FAILED" & Char(10), Blank()) &
-                    If(varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10), Blank()) &
+                    If(user_IsSuperUser = true, If(varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10), Blank()), Char(10), Blank()) &
                     If(varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10), Blank())
                     & Char(10) & "
                     Please refresh the app's webpage & submit again. If this error message continues to appear after refreshing, please contact the app admins via:

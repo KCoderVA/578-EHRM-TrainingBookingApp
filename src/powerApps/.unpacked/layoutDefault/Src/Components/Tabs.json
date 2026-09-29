@@ -1,6 +1,6 @@
 {
   "ComponentAllowCustomization": true,
-  "ComponentChangedSinceFileImport": false,
+  "ComponentChangedSinceFileImport": true,
   "ComponentDefinitionInfo": {
     "AllowAccessToGlobals": false,
     "Children": [
@@ -58,7 +58,17 @@
             "NameMapSourceSchema": "?"
           },
           "FocusedBorderThickness",
-          "ContentLanguage"
+          "ContentLanguage",
+          "minimumWidth",
+          "minimumHeight",
+          "OnSelect",
+          "Visible",
+          "Tooltip",
+          "maximumWidth",
+          "TabIndex",
+          "PreserveAspectRatio",
+          "AccessibleLabel",
+          "maximumHeight"
         ],
         "ControlUniqueId": "10",
         "HasDynamicProperties": false,
@@ -74,12 +84,24 @@
         "OptimizeForDevices": "Off",
         "Parent": "Tabs",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 954,
+        "PublishOrderIndex": 933,
         "Rules": [
           {
             "Category": "Data",
             "InvariantScript": "\"\"",
             "Property": "ContentLanguage",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "\"\"",
+            "Property": "Tooltip",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "\"\"",
+            "Property": "AccessibleLabel",
             "RuleProviderType": "Unknown"
           },
           {
@@ -171,6 +193,54 @@
             "InvariantScript": "2",
             "Property": "FocusedBorderThickness",
             "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "Visible",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "-1",
+            "Property": "TabIndex",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "PreserveAspectRatio",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "768",
+            "Property": "maximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Behavior",
+            "InvariantScript": "false",
+            "Property": "OnSelect",
+            "RuleProviderType": "Unknown"
           }
         ],
         "StyleName": "defaultRectangleStyle",
@@ -196,15 +266,7 @@
             "AllowAccessToGlobals": true,
             "Children": [],
             "ControlPropertyState": [
-              "TemplateFill",
-              {
-                "AFDDataSourceName": "",
-                "AutoRuleBindingEnabled": false,
-                "AutoRuleBindingString": "false",
-                "InvariantPropertyName": "OnSelect",
-                "IsLockable": false,
-                "NameMapSourceSchema": "?"
-              }
+              "OnSelect"
             ],
             "ControlUniqueId": "12",
             "HasDynamicProperties": false,
@@ -216,18 +278,12 @@
             "IsLocked": false,
             "LayoutName": "",
             "MetaDataIDKey": "",
-            "Name": "galleryTemplate5",
+            "Name": "ee8e40e3-85fa-4c5e-ac69-571c06029ad0",
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 956,
+            "PublishOrderIndex": 935,
             "Rules": [
-              {
-                "Category": "Design",
-                "InvariantScript": "RGBA(0, 0, 0, 0)",
-                "Property": "TemplateFill",
-                "RuleProviderType": "User"
-              },
               {
                 "Category": "Behavior",
                 "InvariantScript": "Navigate(ThisItem.Page)",
@@ -336,7 +392,21 @@
                 "IsLockable": false,
                 "NameMapSourceSchema": "?"
               },
-              "ContentLanguage"
+              "ContentLanguage",
+              "PaddingTop",
+              "minimumWidth",
+              "Rotation",
+              "minimumHeight",
+              "Tooltip",
+              "AutoDisableOnSelect",
+              "PaddingRight",
+              "maximumWidth",
+              "TabIndex",
+              "PreserveAspectRatio",
+              "PaddingLeft",
+              "AccessibleLabel",
+              "maximumHeight",
+              "PaddingBottom"
             ],
             "ControlUniqueId": "13",
             "HasDynamicProperties": false,
@@ -352,12 +422,24 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 957,
+            "PublishOrderIndex": 936,
             "Rules": [
               {
                 "Category": "Data",
                 "InvariantScript": "\"\"",
                 "Property": "ContentLanguage",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Data",
+                "InvariantScript": "\"\"",
+                "Property": "Tooltip",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Data",
+                "InvariantScript": "\"\"",
+                "Property": "AccessibleLabel",
                 "RuleProviderType": "Unknown"
               },
               {
@@ -368,9 +450,9 @@
               },
               {
                 "Category": "Design",
-                "InvariantScript": "//RGBA(0, 0, 0, 1)\r\nIf(\r\n    App.ActiveScreen.Name = \"Dashboard\",\r\n    RGBA(255, 255, 255, 1),\r\n    RGBA(0, 0, 0, 1)\r\n)",
+                "InvariantScript": "//RGBA(0, 0, 0, 1)\nIf(\n    App.ActiveScreen.Name = \"Dashboard\",\n    RGBA(255, 255, 255, 1),\n    RGBA(0, 0, 0, 1)\n)",
                 "Property": "Color",
-                "RuleProviderType": "User"
+                "RuleProviderType": "Unknown"
               },
               {
                 "Category": "Design",
@@ -505,6 +587,78 @@
                 "RuleProviderType": "Unknown"
               },
               {
+                "Category": "Design",
+                "InvariantScript": "0",
+                "Property": "PaddingTop",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1",
+                "Property": "minimumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "0",
+                "Property": "Rotation",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "20",
+                "Property": "minimumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "true",
+                "Property": "AutoDisableOnSelect",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "0",
+                "Property": "PaddingRight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1366",
+                "Property": "maximumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "-1",
+                "Property": "TabIndex",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "true",
+                "Property": "PreserveAspectRatio",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "0",
+                "Property": "PaddingLeft",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "768",
+                "Property": "maximumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "0",
+                "Property": "PaddingBottom",
+                "RuleProviderType": "Unknown"
+              },
+              {
                 "Category": "Behavior",
                 "InvariantScript": "Select(Parent);Navigate(ThisItem.Page)",
                 "Property": "OnSelect",
@@ -525,7 +679,7 @@
               "Version": "2.5.0"
             },
             "Type": "ControlInfo",
-            "VariantName": "Search"
+            "VariantName": ""
           },
           {
             "AllowAccessToGlobals": true,
@@ -719,7 +873,14 @@
                 "InvariantPropertyName": "Visible",
                 "IsLockable": false,
                 "NameMapSourceSchema": "?"
-              }
+              },
+              "minimumWidth",
+              "minimumHeight",
+              "Tooltip",
+              "maximumWidth",
+              "TabIndex",
+              "maximumHeight",
+              "ContentLanguage"
             ],
             "ControlUniqueId": "14",
             "HasDynamicProperties": false,
@@ -735,12 +896,24 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 958,
+            "PublishOrderIndex": 937,
             "Rules": [
               {
                 "Category": "Data",
                 "InvariantScript": "",
                 "Property": "Text",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Data",
+                "InvariantScript": "\"\"",
+                "Property": "Tooltip",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Data",
+                "InvariantScript": "\"\"",
+                "Property": "ContentLanguage",
                 "RuleProviderType": "Unknown"
               },
               {
@@ -763,9 +936,9 @@
               },
               {
                 "Category": "Design",
-                "InvariantScript": "If(\r\n    App.ActiveScreen.Name = \"Dashboard\",\r\n    Color.White,\r\n    App.ActiveScreen.Name <> \"Dashboard\",\r\n    RGBA(9, 33, 98, 1)\r\n)",
+                "InvariantScript": "If(\n    App.ActiveScreen.Name = \"Dashboard\",\n    Color.White,\n    App.ActiveScreen.Name <> \"Dashboard\",\n    RGBA(9, 33, 98, 1)\n)",
                 "Property": "HoverBorderColor",
-                "RuleProviderType": "User"
+                "RuleProviderType": "Unknown"
               },
               {
                 "Category": "Design",
@@ -829,9 +1002,9 @@
               },
               {
                 "Category": "Design",
-                "InvariantScript": "If(\r\n    App.ActiveScreen.Name = \"Dashboard\",\r\n    ColorFade(RGBA(0, 131, 190, .8),50%),\r\n    App.ActiveScreen.Name <> \"Dashboard\",\r\n    RGBA(255, 255, 255, .5)\r\n)",
+                "InvariantScript": "If(\n    App.ActiveScreen.Name = \"Dashboard\",\n    ColorFade(RGBA(0, 131, 190, .8),50%),\n    App.ActiveScreen.Name <> \"Dashboard\",\n    RGBA(255, 255, 255, .5)\n)",
                 "Property": "HoverFill",
-                "RuleProviderType": "User"
+                "RuleProviderType": "Unknown"
               },
               {
                 "Category": "Design",
@@ -883,7 +1056,7 @@
               },
               {
                 "Category": "Design",
-                "InvariantScript": "5",
+                "InvariantScript": "3",
                 "Property": "ZIndex",
                 "RuleProviderType": "Unknown"
               },
@@ -979,9 +1152,39 @@
               },
               {
                 "Category": "Design",
-                "InvariantScript": "true\r\n/*\r\nIf(\r\n    App.ActiveScreen.Name = \"Dashboard\",\r\n    true,\r\n    false\r\n)\r\n*/",
+                "InvariantScript": "true\n/*\nIf(\n    App.ActiveScreen.Name = \"Dashboard\",\n    true,\n    false\n)\n*/",
                 "Property": "Visible",
-                "RuleProviderType": "User"
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "5",
+                "Property": "minimumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "5",
+                "Property": "minimumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1366",
+                "Property": "maximumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "0",
+                "Property": "TabIndex",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "768",
+                "Property": "maximumHeight",
+                "RuleProviderType": "Unknown"
               },
               {
                 "Category": "Behavior",
@@ -1122,7 +1325,15 @@
                 "NameMapSourceSchema": "?"
               },
               "ContentLanguage",
-              "AutoHeight"
+              "AutoHeight",
+              "minimumWidth",
+              "minimumHeight",
+              "IsErrorMessage",
+              "Tooltip",
+              "maximumWidth",
+              "Wrap",
+              "TabIndex",
+              "maximumHeight"
             ],
             "ControlUniqueId": "15",
             "HasDynamicProperties": false,
@@ -1138,7 +1349,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "Gallery4",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 959,
+            "PublishOrderIndex": 938,
             "Rules": [
               {
                 "Category": "Data",
@@ -1165,6 +1376,12 @@
                 "RuleProviderType": "Unknown"
               },
               {
+                "Category": "Data",
+                "InvariantScript": "\"\"",
+                "Property": "Tooltip",
+                "RuleProviderType": "Unknown"
+              },
+              {
                 "Category": "Design",
                 "InvariantScript": "Overflow.Hidden",
                 "Property": "Overflow",
@@ -1172,9 +1389,9 @@
               },
               {
                 "Category": "Design",
-                "InvariantScript": "//RGBA(0, 0, 0, 1)\r\nIf(\r\n    App.ActiveScreen.Name = \"Dashboard\",\r\n    RGBA(255, 255, 255, 1),\r\n    RGBA(0, 0, 0, 1)\r\n)",
+                "InvariantScript": "//RGBA(0, 0, 0, 1)\nIf(\n    App.ActiveScreen.Name = \"Dashboard\",\n    RGBA(255, 255, 255, 1),\n    RGBA(0, 0, 0, 1)\n)",
                 "Property": "Color",
-                "RuleProviderType": "User"
+                "RuleProviderType": "Unknown"
               },
               {
                 "Category": "Design",
@@ -1393,6 +1610,48 @@
                 "RuleProviderType": "Unknown"
               },
               {
+                "Category": "Design",
+                "InvariantScript": "1",
+                "Property": "minimumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1",
+                "Property": "minimumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "IsErrorMessage",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1366",
+                "Property": "maximumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "true",
+                "Property": "Wrap",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "-1",
+                "Property": "TabIndex",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "7680",
+                "Property": "maximumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
                 "Category": "Behavior",
                 "InvariantScript": "Select(Parent);Navigate(ThisItem.Page)",
                 "Property": "OnSelect",
@@ -1532,7 +1791,21 @@
             "InvariantPropertyName": "ShowScrollbar",
             "IsLockable": false,
             "NameMapSourceSchema": "?"
-          }
+          },
+          "SelectionTracksMove",
+          "minimumWidth",
+          "Reset",
+          "Selectable",
+          "minimumHeight",
+          "Visible",
+          "BorderThickness",
+          "TemplateMaximumWidth",
+          "NavigationStep",
+          "maximumWidth",
+          "ShowNavigation",
+          "maximumHeight",
+          "WrapCount",
+          "AutoHeight"
         ],
         "ControlUniqueId": "11",
         "HasDynamicProperties": false,
@@ -1548,7 +1821,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Tabs",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 955,
+        "PublishOrderIndex": 934,
         "Rules": [
           {
             "Category": "Data",
@@ -1569,10 +1842,28 @@
             "RuleProviderType": "Unknown"
           },
           {
+            "Category": "Data",
+            "InvariantScript": "false",
+            "Property": "Reset",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "true",
+            "Property": "Selectable",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "1",
+            "Property": "WrapCount",
+            "RuleProviderType": "Unknown"
+          },
+          {
             "Category": "Design",
-            "InvariantScript": "If(\r\n    !IsBlankOrError(CountRows(Tabs.Items)),\r\n        Tabs.Width / CountRows(Tabs.Items),\r\n    IsBlankOrError(CountRows(Tabs.Items)),\r\n        Parent.Width / 6,\r\n    101\r\n)\r\n/*\r\nIf(\r\n    !IsBlankOrError(CountRows(Tabs.Items)),\r\n        Tabs.Width / CountRows(Tabs.Items),\r\n    IsBlankOrError(CountRows(Tabs.Items)),\r\n        Parent.Width / 6,\r\n    //!IsBlankOrError(CountRows(colMenu),\r\n    //    Tabs.Width / CountRows(colMenu)),\r\n    101\r\n)\r\n*/",
+            "InvariantScript": "If(\n    !IsBlankOrError(CountRows(Tabs.Items)),\n        Tabs.Width / CountRows(Tabs.Items),\n    IsBlankOrError(CountRows(Tabs.Items)),\n        Parent.Width / 6,\n    101\n)\n/*\nIf(\n    !IsBlankOrError(CountRows(Tabs.Items)),\n        Tabs.Width / CountRows(Tabs.Items),\n    IsBlankOrError(CountRows(Tabs.Items)),\n        Parent.Width / 6,\n    //!IsBlankOrError(CountRows(colMenu),\n    //    Tabs.Width / CountRows(colMenu)),\n    101\n)\n*/",
             "Property": "TemplateSize",
-            "RuleProviderType": "User"
+            "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
@@ -1606,19 +1897,19 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "Gallery4.BorderColor",
+            "InvariantScript": "Self.BorderColor",
             "Property": "DisabledBorderColor",
             "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "Gallery4.BorderColor",
+            "InvariantScript": "Self.BorderColor",
             "Property": "PressedBorderColor",
             "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "Gallery4.BorderColor",
+            "InvariantScript": "Self.BorderColor",
             "Property": "HoverBorderColor",
             "RuleProviderType": "Unknown"
           },
@@ -1630,25 +1921,25 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "If(\r\n    App.ActiveScreen.Name = \"Dashboard\",\r\n    RGBA(0, 63, 114, 0.7),\r\n    App.ActiveScreen.Name <> \"Dashboard\",\r\n    RGBA(0, 0, 0, 0)\r\n)",
+            "InvariantScript": "If(\n    App.ActiveScreen.Name = \"Dashboard\",\n    RGBA(0, 63, 114, 0.7),\n    App.ActiveScreen.Name <> \"Dashboard\",\n    RGBA(0, 0, 0, 0)\n)",
             "Property": "Fill",
-            "RuleProviderType": "User"
+            "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "Gallery4.Fill",
+            "InvariantScript": "Self.Fill",
             "Property": "DisabledFill",
             "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "Gallery4.Fill",
+            "InvariantScript": "Self.Fill",
             "Property": "PressedFill",
             "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "Gallery4.Fill",
+            "InvariantScript": "Self.Fill",
             "Property": "HoverFill",
             "RuleProviderType": "Unknown"
           },
@@ -1741,6 +2032,72 @@
             "InvariantScript": "false",
             "Property": "ShowScrollbar",
             "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "SelectionTracksMove",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "20",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "20",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "Visible",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "BorderThickness",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "TemplateMaximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1",
+            "Property": "NavigationStep",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "ShowNavigation",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "768",
+            "Property": "maximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "AutoHeight",
+            "RuleProviderType": "Unknown"
           }
         ],
         "StyleName": "defaultGalleryStyle",
@@ -1789,9 +2146,13 @@
         "IsLockable": false,
         "NameMapSourceSchema": "?"
       },
-      "HomePage"
+      "HomePage",
+      "EnableChildFocus",
+      "Visible",
+      "ChildTabPriority",
+      "ContentLanguage"
     ],
-    "LastModifiedTimestamp": "639238747824938513",
+    "LastModifiedTimestamp": "639258729090696175",
     "Name": "Tabs",
     "Rules": [
       {
@@ -1805,6 +2166,12 @@
         "Category": "Data",
         "InvariantScript": "App.ActiveScreen",
         "Property": "HomePage",
+        "RuleProviderType": "System"
+      },
+      {
+        "Category": "Data",
+        "InvariantScript": "\"\"",
+        "Property": "ContentLanguage",
         "RuleProviderType": "System"
       },
       {
@@ -1841,6 +2208,24 @@
         "Category": "Design",
         "InvariantScript": "RGBA(0, 0, 0, 0)",
         "Property": "Fill",
+        "RuleProviderType": "System"
+      },
+      {
+        "Category": "Design",
+        "InvariantScript": "true",
+        "Property": "EnableChildFocus",
+        "RuleProviderType": "System"
+      },
+      {
+        "Category": "Design",
+        "InvariantScript": "true",
+        "Property": "Visible",
+        "RuleProviderType": "System"
+      },
+      {
+        "Category": "Design",
+        "InvariantScript": "true",
+        "Property": "ChildTabPriority",
         "RuleProviderType": "System"
       }
     ]
@@ -1883,9 +2268,9 @@
   "IsPcfControl": false,
   "IsPremiumPcfControl": false,
   "IsWidgetTemplate": false,
-  "LastModifiedTimestamp": "639238747824938513",
+  "LastModifiedTimestamp": "639258729090696175",
   "Name": "9ac8466133f3416a8cb020a4ca8549de",
   "OverridableProperties": {},
   "TemplateOriginalName": "6eadfe97a9d744baa7654bf7e19d679f",
-  "Version": "637581033184532044"
+  "Version": "1.0"
 }

@@ -4,9 +4,9 @@ This folder contains the four Power Automate cloud flows that support the 578 EH
 The canvas app does **not** call these flows directly; they run independently on SharePoint/Outlook
 triggers and are linked to the app and reporting stack by **data and email** (see the trigger table below).
 
-> **Current project release:** `v1.2.7`. See
+> **Current project release:** `v1.3.5` (Power Automate flows unchanged since v1.2.7). See
 > [`parseTMSReportsToSharePoint/v1.2.7_flowAnalysis.md`](parseTMSReportsToSharePoint/v1.2.7_flowAnalysis.md)
-> for the new flow's source-level analysis.
+> for that flow's source-level analysis.
 
 ## Flows at a glance
 

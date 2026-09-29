@@ -15,7 +15,6 @@ Screens:
     Children:
       - Image2_8:
           Control: Image@2.2.3
-          Group: grpHeader_7
           Properties:
             Height: =150
             Image: =abstractBackground
@@ -23,7 +22,6 @@ Screens:
             Width: =1136
       - Rectangle2_7:
           Control: Rectangle@2.3.0
-          Group: grpHeader_7
           Properties:
             Fill: =RGBA(135, 78, 181, 0.65)
             Height: =150

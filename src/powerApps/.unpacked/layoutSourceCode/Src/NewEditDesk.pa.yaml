@@ -83,7 +83,7 @@ Screens:
             - chkbox_Projector:
                 Control: Classic/CheckBox@2.1.0
                 Properties:
-                  Default: |+
+                  Default: |
                     =If(
                         varDeskMode = "Edit" && !IsBlank(varManageSelectedDesk.ProjectorEquipped_boolean),
                         varManageSelectedDesk.ProjectorEquipped_boolean,
@@ -148,7 +148,7 @@ Screens:
                         Desks,
                         ItemType_choice.Value)
                   Items.Value: =Value
-                  Width: |+
+                  Width: |
                     =Parent.Width - Self.X - 10
                   X: =lbl_ItemType.X + lbl_ItemType.Width
                   Y: =lbl_ItemType.Y
@@ -563,7 +563,7 @@ Screens:
                   PaddingTop: =10
                   TabIndex: =11
                   Visible: =true //showLocation
-                  Width: |+
+                  Width: |
                     =75
                   X: =Parent.Width - Self.Width - 10
                   Y: =10
@@ -607,7 +607,7 @@ Screens:
                   Size: =28
                   Text: ="Editing '" & varManageSelectedDesk.Description_multilinePlainText & "'"
                   Width: =rectBackground_header.Width
-                  X: |+
+                  X: |
                     =0
             - ctnHeaderButtons:
                 Control: GroupContainer@1.5.0

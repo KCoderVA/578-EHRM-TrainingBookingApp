@@ -1,4 +1,6 @@
 Tabs_3 As CanvasComponent:
+    ChildTabPriority: =true
+    ContentLanguage: =""
     darkMode: |-
         =If(
             App.ActiveScreen.Name = "Dashboard",
@@ -6,6 +8,7 @@ Tabs_3 As CanvasComponent:
             App.ActiveScreen.Name <> "Dashboard",
             false
         )
+    EnableChildFocus: =true
     Fill: =RGBA(0, 0, 0, 0)
     Height: |
         =120
@@ -13,6 +16,7 @@ Tabs_3 As CanvasComponent:
     Items: =colMenu
     templateHeight: =Tabs_3.Height - 20
     templateWidth: =Tabs_3.Width / CountRows(Tabs_3.Items)
+    Visible: =true
     Width: =660
     X: =0
     Y: =0
@@ -37,8 +41,6 @@ Tabs_3 As CanvasComponent:
         '#CopilotOverlayLabel': ="Filtered"
         AccessibleLabel: ="Footer tabs"
         BorderColor: =RGBA(9, 33, 98, 1)
-        DisabledBorderColor: =Gallery4_1.BorderColor
-        DisabledFill: =Gallery4_1.Fill
         Fill: |-
             =If(
                 App.ActiveScreen.Name = "Dashboard" || Tabs_3.darkMode = true,
@@ -48,13 +50,9 @@ Tabs_3 As CanvasComponent:
             )
         FocusedBorderThickness: =0
         Height: =Parent.Height - Rectangle1_1.Height
-        HoverBorderColor: =Gallery4_1.BorderColor
-        HoverFill: =Gallery4_1.Fill
         Items: =Tabs_3.Items
         LoadingSpinnerColor: =Gallery4_1.BorderColor
         OnSelect: =Navigate(ThisItem.Page)
-        PressedBorderColor: =Gallery4_1.BorderColor
-        PressedFill: =Gallery4_1.Fill
         ShowScrollbar: =false
         TabIndex: =1
         TemplatePadding: =1
@@ -84,7 +82,7 @@ Tabs_3 As CanvasComponent:
         Y: =Rectangle1_1.Height + Rectangle1_1.Y
         ZIndex: =2
 
-        Icon10_1 As icon.Search:
+        Icon10_1 As icon:
             BorderColor: =RGBA(32, 54, 71, 1)
             Color: =RGBA(255, 255, 255, 1)
             DisabledBorderColor: =RGBA(166, 166, 166, 1)

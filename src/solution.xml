@@ -23,10 +23,10 @@ limitations under the License.
         </LocalizedNames>
         <Descriptions>
             <Description
-                description="v1.2.7: 578 EHRM Training App for VA facility 578. Adds the parseTMSReport-updateSharePointCSV Power Automate flow, which receives recurring TMS Program Completion Detail CSV attachments through Office 365 Outlook, overwrites the canonical secured SharePoint CSV used by the internal 578 EHRM Training Details Power BI report, and creates archive copies. Retains the v1.1.20 Canvas booking reliability and Help improvements plus AppUserList, SendEmailReminder, and CreateBackupReservation flows. Integrates Office 365 Outlook/Users and SharePoint. Note: regenerate this manifest via pac solution export whenever root components or connection references change."
+                description="v1.3.5: 578 EHRM Training App for VA facility 578. Canvas app advanced v1.1.20 -> v1.3.5: supervisor scheduling re-based from the 'Learning Lab Sessions' SharePoint list onto MasterScheduleList (new scenarioDescription_multitext column plus an in-app back-fill), Success-screen binding errors corrected (BindingErrorCount 24 -> 3), richer Entra/Graph user and manager capture on ManageUsers, live Graph people-pickers, the unused Microsoft Teams connector removed, the Screen1 Power BI dashboard re-pointed and re-enabled, and an app-wide classic -> modern control migration. Retains the parseTMSReport-updateSharePointCSV, AppUserList, SendEmailReminder, and CreateBackupReservation Power Automate flows. Integrates Office 365 Outlook/Users and SharePoint. Note: regenerate this manifest via pac solution export whenever root components or connection references change."
                 languagecode="1033" />
         </Descriptions>
-        <Version>1.2.7</Version>
+        <Version>1.3.5</Version>
         <Managed>1</Managed>
         <Publisher>
             <UniqueName>VAHealthcare</UniqueName>

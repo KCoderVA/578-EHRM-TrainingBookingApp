@@ -1,4 +1,5 @@
 ManageUsers As screen:
+    ContentLanguage: =""
     Fill: =RGBA(236, 236, 236, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
@@ -14,7 +15,7 @@ ManageUsers As screen:
         Visible: =false
         X: =252
         Y: =52
-        ZIndex: =1
+        ZIndex: =3
 
     lblNoRes_2 As label:
         Align: =Align.Center
@@ -50,7 +51,7 @@ ManageUsers As screen:
         Width: =galActive_1.Width
         X: =galActive_1.X
         Y: =galActive_1.Y
-        ZIndex: =2
+        ZIndex: =4
 
     "galNonActive_1 As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
         '#CopilotOverlayLabel': ="Filtered"
@@ -118,7 +119,7 @@ ManageUsers As screen:
         Width: =galActive_1.Width
         X: =galActive_1.X
         Y: =galActive_1.Y
-        ZIndex: =3
+        ZIndex: =5
 
         lblType_2 As label:
             Color: =RGBA(0, 0, 0, 1)
@@ -429,7 +430,7 @@ ManageUsers As screen:
         Width: =Parent.Width - (Self.X * 2)
         X: =5
         Y: =ctn_Header.Y + ctn_Header.Height
-        ZIndex: =4
+        ZIndex: =6
 
         lblType_3 As label:
             Color: =RGBA(0, 0, 0, 1)
@@ -447,7 +448,7 @@ ManageUsers As screen:
             Text: =ThisItem.AccessLevel_Choice.Value
             Width: =250
             X: =2
-            ZIndex: =8
+            ZIndex: =1
 
         lblLastModified_3 As label:
             Color: =RGBA(0, 0, 0, 1)
@@ -467,7 +468,7 @@ ManageUsers As screen:
             Width: =btnDelete_3.X - Self.X - 5
             X: =lblType_3.X + lblType_3.Width
             Y: =lblType_3.Y
-            ZIndex: =9
+            ZIndex: =2
 
         btnRenew_3 As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -567,7 +568,7 @@ ManageUsers As screen:
                 =130
             X: =Parent.TemplateWidth - Self.Width - 15
             Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
-            ZIndex: =9
+            ZIndex: =3
 
         btnDelete_3 As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -599,7 +600,7 @@ ManageUsers As screen:
             Width: =btnEdit_3.Width
             X: =btnEdit_3.X - btnEdit_3.Width - 5
             Y: =btnEdit_3.Y
-            ZIndex: =10
+            ZIndex: =4
 
         btnEdit_3 As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -630,7 +631,7 @@ ManageUsers As screen:
             Width: =btnRenew_3.Width
             X: =btnRenew_3.X - btnRenew_3.Width - 5
             Y: =btnRenew_3.Y
-            ZIndex: =11
+            ZIndex: =5
 
         lblName_3 As label:
             Color: =RGBA(0, 0, 0, 1)
@@ -671,7 +672,7 @@ ManageUsers As screen:
             Width: =btnDelete_3.X - 5
             X: =lblType_3.X
             Y: =lblType_3.Y + lblType_3.Height
-            ZIndex: =13
+            ZIndex: =6
 
         Separator2_4 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
@@ -680,7 +681,7 @@ ManageUsers As screen:
             OnSelect: =Select(Parent)
             Width: =Parent.TemplateWidth
             Y: =Parent.TemplateHeight - 1
-            ZIndex: =14
+            ZIndex: =7
 
     ctn_Header As groupContainer.manualLayoutContainer:
         DropShadow: =DropShadow.Light
@@ -689,8 +690,10 @@ ManageUsers As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         Width: =Parent.Width
-        ZIndex: =5
+        ZIndex: =7
 
         Image2_11 As image:
             BorderColor: =App.Theme.Colors.Darker40
@@ -708,6 +711,8 @@ ManageUsers As screen:
             LayoutGridColumns: =6
             LayoutGridRowMinHeight: =0
             LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
             Width: =Parent.Width + 20
             X: =Image2_11.X - 10
             Y: =Image2_11.Y + Image2_11.Height
@@ -844,7 +849,7 @@ ManageUsers As screen:
                 Y: =iconAddDesk_1.Y
                 ZIndex: =2
 
-            iconAddDesk_1 As icon.Add:
+            iconAddDesk_1 As icon:
                 AccessibleLabel: ="Add Desk"
                 BorderColor: =RGBA(255, 255, 255, 0)
                 BorderThickness: =5
@@ -1207,192 +1212,412 @@ ManageUsers As screen:
             X: =701
             ZIndex: =5
 
-    grpConfirmDelete_1 As group:
-        Height: =5
-        Width: =5
-        X: =40
-        Y: =40
+    Rectangle3_9 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(116, 116, 116, 0.85)
+        Height: =541
+        Visible: =varShowConfirmEdit
+        Width: =1136
+        Y: =98
+        ZIndex: =8
+
+    bgRounded_19 As htmlViewer:
+        Height: =293
+        HtmlText: |-
+            =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+            "<div style='border:1px gray;border-radius:10%;height:275px;width:100%;background-color:#FCFCFC'></div>"
+        Size: =24
+        Visible: =varShowConfirmEdit
+        Width: =722
+        X: =195
+        Y: =246
+        ZIndex: =9
+
+    Label1_7 As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =75
+        Overflow: |-
+            =If(
+                Len(Self.Text) > 40,
+                Overflow.Scroll,
+                Overflow.Hidden
+            )
+        Size: =24
+        Text: ="Change " & varUserToEdit.GivenName_Text & "'s access to which?"
+        Visible: =varShowConfirmEdit
+        Width: =695
+        X: =208
+        Y: =bgRounded_19.Y + 10
+        ZIndex: =10
+
+    btnConfirmCancel_7 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(128, 128, 128, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =60
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =UpdateContext({varShowConfirmEdit:false});
+            Reset(Dropdown4);
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        RadiusBottomLeft: =20
+        RadiusBottomRight: =20
+        RadiusTopLeft: =20
+        RadiusTopRight: =20
+        Size: =14
+        Text: ="CANCEL"
+        Visible: =varShowConfirmEdit
+        Width: =293
+        X: =227
+        Y: =Dropdown4.Y + Dropdown4.Height + 25
+        ZIndex: =11
+
+    btnConfirmDelete_7 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(184, 0, 0, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =60
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =Set(var_loading, true);
+            Patch(
+                DeskAccessControl,
+                varUserToEdit,
+                {
+                    AccessLevel_Choice: { Value: Dropdown4.Selected.Value },
+                    AccessLevel_Text: Text(Dropdown4.SelectedText.Value),
+                    AccessStart_dateTime: Now(),
+                    AccessStop_dateTime: DateAdd(Now(), 180, TimeUnit.Days),
+                    modificationAutoTriggered_Choice: { Value: "false" },
+                    AccessReviewOverdue_Choice: { Value: "false" },
+                    AboutMe_Text: "AccessLevel changed from '" & varUserToEdit.AccessLevel_Choice.Value & "', changed to '" & Dropdown4.Selected.Value & "', changed by '" & varRealEmail & "', modified on '" & Now() & "';",
+                    NetworkAccount_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).mailNickname,
+                    Email_Person: varUserToEdit.Email_Person,
+                    AccessStart_Text: Text(Now()),
+                    AccessStop_Text: Text(DateAdd(Now(), 180, TimeUnit.Days)),
+                    'addMinutes(utcNow(),10)': DateAdd(Now(),10,TimeUnit.Minutes),
+                    Approver_DisplayName_Text: Office365Users.MyProfileV2().displayName,
+                    Approver_Email_Text: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).UserPrincipalName,
+                    Department_Text : Office365Users.UserProfileV2(varUserToEdit.Id_Text).department,
+                    DisplayName_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).displayName,
+                    Email_Text: Lower(Office365Users.UserProfileV2(varUserToEdit.Id_Text).userPrincipalName),
+                    FullAddress_Text:
+                        Concatenate(
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).department, ", ",
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).companyName, ", ",
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).streetAddress, ", ",
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).city, ", ",
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).state, ", ",
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).postalCode
+                        ),
+                    GivenName_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).givenName,
+                    HireDate_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).hireDate,
+                    ID: varUserToEdit.ID,
+                    MailNickname_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).mailNickname,
+                    Manager_Email_Text: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).mail,
+                    Manager_DisplayName_Text: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
+                    Manager_Email_Person:
+                        {
+                            '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+                            Claims:  "i:0#.f|membership|" & Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
+                            Department: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).department,
+                            DisplayName: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
+                            Email: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).userPrincipalName,
+                            JobTitle: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).jobTitle,
+                            Picture: Office365Users.UserPhotoV2(Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).id)
+                        },
+                    Approver_Email_Person:
+                        {
+                            '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+                            Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).DisplayName,
+                            Department: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).Department,
+                            Picture: Office365Users.UserPhotoV2(varRealEntraID),
+                            DisplayName: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).DisplayName,
+                            Email: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).UserPrincipalName,
+                            JobTitle: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).JobTitle
+                        }
+                }
+            );
+            Patch(
+                DeskAccessControl,
+                varUserToEdit,
+                {
+                    Id_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).id
+                }
+            );
+            UpdateContext({varShowConfirmEdit:false});
+            Reset(Dropdown4);
+            UpdateContext({varUserToEdit: Blank()});
+            Refresh(DeskAccessControl);
+            ClearCollect(colDeskAccess, DeskAccessControl);
+            
+            Select(Icon2);
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        RadiusBottomLeft: =20
+        RadiusBottomRight: =20
+        RadiusTopLeft: =20
+        RadiusTopRight: =20
+        Size: =14
+        Text: ="SUBMIT CHANGES" //" 🗑️   SUBMIT CHANGE"
+        Visible: =varShowConfirmEdit
+        Width: =293
+        X: =592
+        Y: =Dropdown4.Y + Dropdown4.Height + 25
+        ZIndex: =12
+
+    Dropdown4 As dropdown:
+        BorderColor: =App.Theme.Colors.Darker40
+        ChevronBackground: =App.Theme.Colors.Primary
+        ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+        ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+        ChevronFill: =App.Theme.Colors.PrimaryForeground
+        ChevronHoverBackground: =App.Theme.Colors.Darker10
+        ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+        Default: =varUserToEdit.AccessLevel_Choice.Value
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Font: =App.Theme.Font
+        Height: =70
+        HoverColor: =RGBA(0, 0, 0, 1)
+        HoverFill: =App.Theme.Colors.Lighter70
+        Items: |-
+            =[
+                "AccessDenied",
+                "View-Only",
+                "User",
+                "SuperUser",
+                "ProjectLeader",
+                "Manager",
+                "ServiceChief",
+                "AppAdmin"
+            ]
+            
+            
+            /*Ungroup(
+                Table(
+                    { Value: "All" },
+                    Distinct(
+                        DeskAccessControl,
+                        AccessLevel_Choice.Value)
+                    ),
+                    Value
+            )*/
+        PressedColor: =App.Theme.Colors.PrimaryForeground
+        PressedFill: =App.Theme.Colors.Darker30
+        SelectionColor: =App.Theme.Colors.PrimaryForeground
+        SelectionFill: =App.Theme.Colors.Primary
+        Size: =21
+        Visible: =varShowConfirmEdit
+        Width: =Label1_7.Width / 2.5
+        X: =393
+        Y: =Label1_7.Y + Label1_7.Height + 10
+        ZIndex: =13
+
+    Rectangle3_6 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(116, 116, 116, 0.85)
+        Height: =542
+        Visible: =varShowConfirmDelete
+        Width: =1136
+        Y: =98
         ZIndex: =14
 
-        Rectangle3_6 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =542
-            Visible: =varShowConfirmDelete
-            Width: =1136
-            Y: =98
-            ZIndex: =12
+    bgRounded_14 As htmlViewer:
+        Height: =289
+        HtmlText: |-
+            =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+            "<div style='border:1px gray;border-radius:10%;height:275px;width:100%;background-color:#FCFCFC'></div>"
+        Size: =24
+        Visible: =varShowConfirmDelete
+        Width: =653
+        X: =207
+        Y: =169
+        ZIndex: =15
 
-        bgRounded_14 As htmlViewer:
-            Height: =289
-            HtmlText: |-
-                =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
-                "<div style='border:1px gray;border-radius:10%;height:275px;width:100%;background-color:#FCFCFC'></div>"
-            Visible: =varShowConfirmDelete
-            Width: =653
-            X: =207
-            Y: =169
-            ZIndex: =13
+    Label1_6 As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =125
+        Size: =24
+        Text: ="Are you sure that you want to permanently remove " & varUserToEdit.GivenName_Text & "'s access?"
+        Visible: =varShowConfirmDelete
+        Width: =391
+        X: =336
+        Y: =194
+        ZIndex: =16
 
-        Label1_6 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =125
-            Size: =24
-            Text: ="Are you sure that you want to permanently remove " & varUserToEdit.GivenName_Text & "'s access?"
-            Visible: =varShowConfirmDelete
-            Width: =391
-            X: =336
-            Y: =194
-            ZIndex: =14
+    btnConfirmCancel_5 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(128, 128, 128, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =51
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =UpdateContext({varShowConfirmDelete:false})
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        RadiusBottomLeft: =20
+        RadiusBottomRight: =20
+        RadiusTopLeft: =20
+        RadiusTopRight: =20
+        Size: =14
+        Text: ="CANCEL"
+        Visible: =varShowConfirmDelete
+        Width: =293
+        X: =220
+        Y: =343
+        ZIndex: =17
 
-        btnConfirmCancel_5 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(128, 128, 128, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =51
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =UpdateContext({varShowConfirmDelete:false})
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="CANCEL"
-            Visible: =varShowConfirmDelete
-            Width: =293
-            X: =220
-            Y: =343
-            ZIndex: =15
-
-        btnConfirmDelete_5 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(184, 0, 0, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =51
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =Patch(
-                    DeskAccessControl,
-                    varUserToDelete,
-                    {
-                        AccessLevel_Choice: { Value: "AccessDenied" },
-                        //AccessLevel_Choice: { Value: varUserToEdit.AccessLevel_Choice.Value },
-                        AccessLevel_Text: Text("AccessDenied"),
-                        //AccessLevel_Text: Text(varUserToEdit.AccessLevel_Choice.Value),
-                        AboutMe_Text: "AccessLevel manually revoked to level 'AccessDenied', by '" & varRealEmail & "', modified on '" & Now() & "';",
-                        //AboutMe_Text: "AccessLevel renewed at level '" & varUserToEdit.AccessLevel_Choice.Value & "', by '" & varRealEmail & "', modified on '" & Now() & "';",
-                        //AccessStart_dateTime: Now(),
-                        //AccessStart_Text: Text(Now()),
-                        AccessStop_dateTime: Now(),
-                        //AccessStop_dateTime: DateAdd(Now(), 180, TimeUnit.Days),
-                        AccessStop_Text: Text(Now()),
-                        //AccessStop_Text: Text(DateAdd(Now(), 180, TimeUnit.Days)),
-                        modificationAutoTriggered_Choice: { Value: "false" },
-                        AccessReviewOverdue_Choice: { Value: "false" },
-                        NetworkAccount_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).mailNickname,
-                        Email_Person: varUserToEdit.Email_Person,
-                        'addMinutes(utcNow(),10)': DateAdd(Now(),10,TimeUnit.Minutes),
-                        Approver_DisplayName_Text: Office365Users.MyProfileV2().displayName,
-                        Approver_Email_Text: varRealEmail,
-                        Department_Text : Office365Users.UserProfileV2(varUserToEdit.Id_Text).department,
-                        DisplayName_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).displayName,
-                        Email_Text: Lower(Office365Users.UserProfileV2(varUserToEdit.Id_Text).userPrincipalName),
-                        FullAddress_Text:
-                            Concatenate(
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).department, ", ",
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).companyName, ", ",
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).streetAddress, ", ",
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).city, ", ",
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).state, ", ",
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).postalCode
-                            ),
-                        GivenName_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).givenName,
-                        HireDate_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).hireDate,
-                        ID: varUserToEdit.ID,
-                        MailNickname_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).mailNickname,
-                        Manager_Email_Text: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).mail,
-                        Manager_DisplayName_Text: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
-                        Manager_Email_Person:
-                            {
-                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
-                                Claims:  "i:0#.f|membership|" & Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
-                                Department: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).department,
-                                DisplayName: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
-                                Email: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).userPrincipalName,
-                                JobTitle: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).jobTitle,
-                                Picture: Office365Users.UserPhotoV2(Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).id)
-                            },
-                        Approver_Email_Person:
-                            {
-                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
-                                Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).DisplayName,
-                                Department: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).Department,
-                                Picture: Office365Users.UserPhotoV2(varRealEntraID), //User().Image,
-                                DisplayName: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).DisplayName,
-                                Email: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).UserPrincipalName,
-                                JobTitle: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).JobTitle
-                            }
-                    }
-                );
-                Patch(
-                    DeskAccessControl,
-                    varUserToDelete,
-                    {
-                        Id_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).id
-                    }
-                );
-                UpdateContext({varShowConfirmDelete:false});
-                UpdateContext({varUserToDelete: Blank()});
-                Refresh(DeskAccessControl);
-                ClearCollect(colDeskAccess, DeskAccessControl);
-                
-                Select(Icon2)
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="SUBMIT CHANGES"
-            Visible: =varShowConfirmDelete
-            Width: =293
-            X: =553
-            Y: =343
-            ZIndex: =16
+    btnConfirmDelete_5 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(184, 0, 0, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =51
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =Patch(
+                DeskAccessControl,
+                varUserToDelete,
+                {
+                    AccessLevel_Choice: { Value: "AccessDenied" },
+                    //AccessLevel_Choice: { Value: varUserToEdit.AccessLevel_Choice.Value },
+                    AccessLevel_Text: Text("AccessDenied"),
+                    //AccessLevel_Text: Text(varUserToEdit.AccessLevel_Choice.Value),
+                    AboutMe_Text: "AccessLevel manually revoked to level 'AccessDenied', by '" & varRealEmail & "', modified on '" & Now() & "';",
+                    //AboutMe_Text: "AccessLevel renewed at level '" & varUserToEdit.AccessLevel_Choice.Value & "', by '" & varRealEmail & "', modified on '" & Now() & "';",
+                    //AccessStart_dateTime: Now(),
+                    //AccessStart_Text: Text(Now()),
+                    AccessStop_dateTime: Now(),
+                    //AccessStop_dateTime: DateAdd(Now(), 180, TimeUnit.Days),
+                    AccessStop_Text: Text(Now()),
+                    //AccessStop_Text: Text(DateAdd(Now(), 180, TimeUnit.Days)),
+                    modificationAutoTriggered_Choice: { Value: "false" },
+                    AccessReviewOverdue_Choice: { Value: "false" },
+                    NetworkAccount_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).mailNickname,
+                    Email_Person: varUserToEdit.Email_Person,
+                    'addMinutes(utcNow(),10)': DateAdd(Now(),10,TimeUnit.Minutes),
+                    Approver_DisplayName_Text: Office365Users.MyProfileV2().displayName,
+                    Approver_Email_Text: varRealEmail,
+                    Department_Text : Office365Users.UserProfileV2(varUserToEdit.Id_Text).department,
+                    DisplayName_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).displayName,
+                    Email_Text: Lower(Office365Users.UserProfileV2(varUserToEdit.Id_Text).userPrincipalName),
+                    FullAddress_Text:
+                        Concatenate(
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).department, ", ",
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).companyName, ", ",
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).streetAddress, ", ",
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).city, ", ",
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).state, ", ",
+                            Office365Users.UserProfileV2(varUserToEdit.Id_Text).postalCode
+                        ),
+                    GivenName_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).givenName,
+                    HireDate_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).hireDate,
+                    ID: varUserToEdit.ID,
+                    MailNickname_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).mailNickname,
+                    Manager_Email_Text: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).mail,
+                    Manager_DisplayName_Text: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
+                    Manager_Email_Person:
+                        {
+                            '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+                            Claims:  "i:0#.f|membership|" & Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
+                            Department: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).department,
+                            DisplayName: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
+                            Email: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).userPrincipalName,
+                            JobTitle: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).jobTitle,
+                            Picture: Office365Users.UserPhotoV2(Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).id)
+                        },
+                    Approver_Email_Person:
+                        {
+                            '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+                            Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).DisplayName,
+                            Department: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).Department,
+                            Picture: Office365Users.UserPhotoV2(varRealEntraID), //User().Image,
+                            DisplayName: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).DisplayName,
+                            Email: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).UserPrincipalName,
+                            JobTitle: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).JobTitle
+                        }
+                }
+            );
+            Patch(
+                DeskAccessControl,
+                varUserToDelete,
+                {
+                    Id_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).id
+                }
+            );
+            UpdateContext({varShowConfirmDelete:false});
+            UpdateContext({varUserToDelete: Blank()});
+            Refresh(DeskAccessControl);
+            ClearCollect(colDeskAccess, DeskAccessControl);
+            
+            Select(Icon2)
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        RadiusBottomLeft: =20
+        RadiusBottomRight: =20
+        RadiusTopLeft: =20
+        RadiusTopRight: =20
+        Size: =14
+        Text: ="SUBMIT CHANGES"
+        Visible: =varShowConfirmDelete
+        Width: =293
+        X: =553
+        Y: =343
+        ZIndex: =18
 
     Preloader_4 As Preloader:
         Height: =640
         Visible: =var_loading
         Width: =1136
-        ZIndex: =17
+        ZIndex: =19
 
-    Icon2 As icon.GlobeRefresh:
+    Icon2 As icon:
         BorderColor: =App.Theme.Colors.Darker40
         Color: =RGBA(255, 255, 255, 1)
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -1793,7 +2018,7 @@ ManageUsers As screen:
             Navigate(Dashboard);
             Set(var_loading, false);
         Width: =25
-        ZIndex: =18
+        ZIndex: =20
 
     Container12 As groupContainer.manualLayoutContainer:
         DropShadow: =DropShadow.Light
@@ -1803,6 +2028,8 @@ ManageUsers As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
@@ -1814,7 +2041,7 @@ ManageUsers As screen:
                 false
             )
         Width: =Parent.Width
-        ZIndex: =19
+        ZIndex: =21
 
         Container13 As groupContainer.manualLayoutContainer:
             BorderColor: =RGBA(180, 214, 250, 1)
@@ -1836,6 +2063,8 @@ ManageUsers As screen:
             LayoutGridColumns: =6
             LayoutGridRowMinHeight: =0
             LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
             RadiusBottomLeft: =25
             RadiusBottomRight: =25
             RadiusTopLeft: =25
@@ -1857,6 +2086,8 @@ ManageUsers As screen:
                 LayoutGridColumns: =6
                 LayoutGridRowMinHeight: =0
                 LayoutGridRows: =6
+                maximumHeight: =11360
+                maximumWidth: =640
                 RadiusBottomLeft: =4
                 RadiusBottomRight: =4
                 RadiusTopLeft: =4
@@ -1868,12 +2099,15 @@ ManageUsers As screen:
 
                 btnNewUser_cancel As modernButton:
                     BasePaletteColor: =RGBA(189, 178, 176, 1)
+                    BorderStyle: =""
+                    Font: =""
                     Height: =50
                     OnSelect: |-
                         =Set(varNewEmailToAdd, Blank());
                         Set(varNewAccessLevelToAdd, Blank());
                         ResetForm(Form3);
                         Set(var_PopUp_AddNewUser, false);
+                    Size: =24
                     Text: ="Cancel"
                     Width: =280
                     X: =(Parent.Width / 2) - (Self.Width / 2) - (Self.Width / 2) - 20
@@ -1943,6 +2177,8 @@ ManageUsers As screen:
                 LayoutGridColumns: =6
                 LayoutGridRowMinHeight: =0
                 LayoutGridRows: =6
+                maximumHeight: =11360
+                maximumWidth: =640
                 RadiusBottomLeft: =4
                 RadiusBottomRight: =4
                 RadiusTopLeft: =4
@@ -1953,6 +2189,7 @@ ManageUsers As screen:
                 ZIndex: =3
 
                 Form3 As form.ModernForm:
+                    AcceptsFocus: =false
                     BorderColor: =App.Theme.Colors.Darker40
                     DataSource: =DeskAccessControl
                     DefaultMode: =FormMode.New
@@ -1961,12 +2198,16 @@ ManageUsers As screen:
                             Email_Text_DataCard3.Height + AccessLevel_Choice_DataCard4.Height + 20,
                             125
                         )
+                    NumberOfColumns: =1
                     Width: =Parent.Width
                     ZIndex: =1
 
                     Email_Text_DataCard3 As typedDataCard.modernTextualEditCard:
+                        AutoHeight: =true
                         BorderColor: =App.Theme.Colors.Darker40
                         BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =0
+                        ContentLanguage: =""
                         DataField: ="Email_Text"
                         Default: |-
                             =If(
@@ -1978,15 +2219,27 @@ ManageUsers As screen:
                         DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,Email_Text)
                         Fill: =RGBA(0, 0, 0, 0)
                         Height: =70
+                        LayoutHeight: =0
+                        LayoutWidth: =0
+                        LayoutX: =0
+                        LayoutY: =0
+                        maximumHeight: =11360
+                        maximumWidth: =640
                         MaxLength: =DataSourceInfo([@DeskAccessControl], DataSourceInfo.MaxLength, Email_Text)
+                        minimumHeight: =20
+                        minimumWidth: =20
                         Required: =true
                         Update: =DataCardValue35.Text
+                        Visible: =true
                         Width: =640
+                        WidthFit: =false
                         X: =0
                         Y: =0
                         ZIndex: =1
 
                         DataCardKey42 As modernText:
+                            BorderStyle: =""
+                            Font: =""
                             FontWeight: =FontWeight.Bold
                             Height: =40
                             Italic: =true
@@ -2003,12 +2256,15 @@ ManageUsers As screen:
                         DataCardValue35 As modernTextInput:
                             AccessibleLabel: =Parent.DisplayName
                             Appearance: =Appearance.FilledDarker
+                            BorderStyle: =""
                             Default: =varNewEmailToAdd //Parent.Default
                             DisplayMode: =Parent.DisplayMode
+                            Font: =""
                             Height: =0
                             MaxLength: =Parent.MaxLength
                             Placeholder: ="Enter email address..."
                             Required: =Parent.Required
+                            Size: =24
                             TriggerOutput: =TriggerOutput.Keypress
                             ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
                             Width: =Parent.Width - 48
@@ -2017,6 +2273,8 @@ ManageUsers As screen:
                             ZIndex: =2
 
                         ErrorMessage41 As modernText:
+                            BorderStyle: =""
+                            Font: =""
                             Height: =30
                             Size: =14
                             Text: =Parent.Error
@@ -2028,10 +2286,13 @@ ManageUsers As screen:
 
                         StarVisible41 As modernText:
                             Align: =Align.Center
+                            BorderStyle: =""
                             Color: =Color.Red
+                            Font: =""
                             Height: =DataCardKey42.Height
                             PaddingBottom: =0
                             PaddingTop: =0
+                            Size: =26
                             Text: ="*"
                             Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                             Width: =30
@@ -2068,12 +2329,13 @@ ManageUsers As screen:
                                 ).value
                             OnChange: =Set(varNewEmailToAdd, Self.Selected.Mail);
                             OnSelect: =Set(varNewEmailToAdd, Self.Selected.Mail);
+                            PaddingBottom: =10
+                            PaddingLeft: =10
+                            PaddingRight: =10
+                            PaddingTop: =10
                             PressedColor: =App.Theme.Colors.PrimaryForeground
                             PressedFill: =App.Theme.Colors.Darker30
-                            SearchFields: |
-                                =["DisplayName","Mail", "Surname", "GivenName"]
-                            SearchItems: |-
-                                =Search(Office365Users.SearchUserV2({searchTerm:Self.SearchText,top:15}).value,ComboBox1.SearchText,DisplayName,Mail,Surname,GivenName)
+                            SearchFields: =["DisplayName","Mail","Surname","GivenName"]
                             SelectionColor: =App.Theme.Colors.PrimaryForeground
                             SelectionFill: =App.Theme.Colors.Primary
                             SelectMultiple: =false
@@ -2084,8 +2346,11 @@ ManageUsers As screen:
                             ZIndex: =6
 
                     AccessLevel_Choice_DataCard4 As typedDataCard.modernComboBoxEditCard:
+                        AutoHeight: =true
                         BorderColor: =App.Theme.Colors.Darker40
                         BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =0
+                        ContentLanguage: =""
                         DataField: ="AccessLevel_Choice"
                         Default: =ThisItem.AccessLevel_Choice
                         DisplayMode: =Parent.DisplayMode
@@ -2097,15 +2362,26 @@ ManageUsers As screen:
                                 0,
                                 125
                             )
+                        LayoutHeight: =0
+                        LayoutWidth: =0
+                        LayoutX: =0
+                        LayoutY: =0
+                        maximumHeight: =11360
+                        maximumWidth: =640
+                        minimumHeight: =20
+                        minimumWidth: =20
                         Required: =true
                         Update: =DataCardValue36.Selected
                         Visible: =true
                         Width: =640
+                        WidthFit: =false
                         X: =0
                         Y: =1
                         ZIndex: =1
 
                         DataCardKey43 As modernText:
+                            BorderStyle: =""
+                            Font: =""
                             FontWeight: =FontWeight.Bold
                             Height: =40
                             Italic: =true
@@ -2124,12 +2400,17 @@ ManageUsers As screen:
                         DataCardValue36 As modernCombobox:
                             AccessibleLabel: =Parent.DisplayName
                             Appearance: =Appearance.FilledDarker
+                            BorderStyle: =""
                             DefaultSelectedItems: =[ComboBox1_1.Selected]  //[Parent.Default]
                             DisplayMode: =Parent.DisplayMode
+                            Font: =""
                             Height: =0
+                            InputTextPlaceholder: ="Find items"
                             ItemDisplayText: =ThisItem.Value
                             Items: =Choices([@DeskAccessControl].AccessLevel_Choice)
+                            Required: =false
                             SelectMultiple: =false
+                            Size: =24
                             ValidationState: =ValidationState.None
                             Width: =Parent.Width - 48
                             X: =24
@@ -2137,6 +2418,8 @@ ManageUsers As screen:
                             ZIndex: =2
 
                         ErrorMessage42 As modernText:
+                            BorderStyle: =""
+                            Font: =""
                             Height: =30
                             Size: =14
                             Text: =Parent.Error
@@ -2148,10 +2431,13 @@ ManageUsers As screen:
 
                         StarVisible42 As modernText:
                             Align: =Align.Center
+                            BorderStyle: =""
                             Color: =Color.Red
+                            Font: =""
                             Height: =DataCardKey43.Height
                             PaddingBottom: =0
                             PaddingTop: =0
+                            Size: =26
                             Text: ="*"
                             Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                             Width: =30
@@ -2189,7 +2475,6 @@ ManageUsers As screen:
                             PressedColor: =App.Theme.Colors.PrimaryForeground
                             PressedFill: =App.Theme.Colors.Darker30
                             SearchFields: =["Value"]
-                            SearchItems: =Choices(DeskAccessControl.AccessLevel_Choice,ComboBox1_1.SearchText)
                             SelectionColor: =App.Theme.Colors.PrimaryForeground
                             SelectionFill: =App.Theme.Colors.Primary
                             SelectMultiple: =false
@@ -2206,6 +2491,8 @@ ManageUsers As screen:
                 LayoutGridColumns: =6
                 LayoutGridRowMinHeight: =0
                 LayoutGridRows: =6
+                maximumHeight: =11360
+                maximumWidth: =640
                 RadiusBottomLeft: =4
                 RadiusBottomRight: =4
                 RadiusTopLeft: =4
@@ -2251,237 +2538,4 @@ ManageUsers As screen:
                     X: =Parent.Width - Self.Width - 5
                     Y: =5
                     ZIndex: =15
-
-    Group2 As group:
-        Height: =5
-        Width: =5
-        X: =60
-        Y: =60
-        ZIndex: =20
-
-        Rectangle3_9 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =541
-            Visible: =varShowConfirmEdit
-            Width: =1136
-            Y: =98
-            ZIndex: =6
-
-        bgRounded_19 As htmlViewer:
-            Height: =293
-            HtmlText: |-
-                =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
-                "<div style='border:1px gray;border-radius:10%;height:275px;width:100%;background-color:#FCFCFC'></div>"
-            Size: =24
-            Visible: =varShowConfirmEdit
-            Width: =722
-            X: =195
-            Y: =246
-            ZIndex: =7
-
-        Label1_7 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =75
-            Overflow: |-
-                =If(
-                    Len(Self.Text) > 40,
-                    Overflow.Scroll,
-                    Overflow.Hidden
-                )
-            Size: =24
-            Text: ="Change " & varUserToEdit.GivenName_Text & "'s access to which?"
-            Visible: =varShowConfirmEdit
-            Width: =695
-            X: =208
-            Y: =bgRounded_19.Y + 10
-            ZIndex: =8
-
-        btnConfirmCancel_7 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(128, 128, 128, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =60
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =UpdateContext({varShowConfirmEdit:false});
-                Reset(Dropdown4);
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="CANCEL"
-            Visible: =varShowConfirmEdit
-            Width: =293
-            X: =227
-            Y: =Dropdown4.Y + Dropdown4.Height + 25
-            ZIndex: =9
-
-        btnConfirmDelete_7 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(184, 0, 0, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =60
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =Set(var_loading, true);
-                Patch(
-                    DeskAccessControl,
-                    varUserToEdit,
-                    {
-                        AccessLevel_Choice: { Value: Dropdown4.Selected.Value },
-                        AccessLevel_Text: Text(Dropdown4.SelectedText.Value),
-                        AccessStart_dateTime: Now(),
-                        AccessStop_dateTime: DateAdd(Now(), 180, TimeUnit.Days),
-                        modificationAutoTriggered_Choice: { Value: "false" },
-                        AccessReviewOverdue_Choice: { Value: "false" },
-                        AboutMe_Text: "AccessLevel changed from '" & varUserToEdit.AccessLevel_Choice.Value & "', changed to '" & Dropdown4.Selected.Value & "', changed by '" & varRealEmail & "', modified on '" & Now() & "';",
-                        NetworkAccount_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).mailNickname,
-                        Email_Person: varUserToEdit.Email_Person,
-                        AccessStart_Text: Text(Now()),
-                        AccessStop_Text: Text(DateAdd(Now(), 180, TimeUnit.Days)),
-                        'addMinutes(utcNow(),10)': DateAdd(Now(),10,TimeUnit.Minutes),
-                        Approver_DisplayName_Text: Office365Users.MyProfileV2().displayName,
-                        Approver_Email_Text: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).UserPrincipalName,
-                        Department_Text : Office365Users.UserProfileV2(varUserToEdit.Id_Text).department,
-                        DisplayName_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).displayName,
-                        Email_Text: Lower(Office365Users.UserProfileV2(varUserToEdit.Id_Text).userPrincipalName),
-                        FullAddress_Text:
-                            Concatenate(
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).department, ", ",
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).companyName, ", ",
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).streetAddress, ", ",
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).city, ", ",
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).state, ", ",
-                                Office365Users.UserProfileV2(varUserToEdit.Id_Text).postalCode
-                            ),
-                        GivenName_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).givenName,
-                        HireDate_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).hireDate,
-                        ID: varUserToEdit.ID,
-                        MailNickname_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).mailNickname,
-                        Manager_Email_Text: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).mail,
-                        Manager_DisplayName_Text: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
-                        Manager_Email_Person:
-                            {
-                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
-                                Claims:  "i:0#.f|membership|" & Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
-                                Department: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).department,
-                                DisplayName: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).displayName,
-                                Email: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).userPrincipalName,
-                                JobTitle: Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).jobTitle,
-                                Picture: Office365Users.UserPhotoV2(Office365Users.ManagerV2(Office365Users.UserProfileV2(varUserToEdit.Id_Text).id).id)
-                            },
-                        Approver_Email_Person:
-                            {
-                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
-                                Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).DisplayName,
-                                Department: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).Department,
-                                Picture: Office365Users.UserPhotoV2(varRealEntraID),
-                                DisplayName: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).DisplayName,
-                                Email: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).UserPrincipalName,
-                                JobTitle: First(Office365Users.SearchUserV2({searchTerm:(varRealEmail), top:(1)}).value).JobTitle
-                            }
-                    }
-                );
-                Patch(
-                    DeskAccessControl,
-                    varUserToEdit,
-                    {
-                        Id_Text: Office365Users.UserProfileV2(varUserToEdit.Id_Text).id
-                    }
-                );
-                UpdateContext({varShowConfirmEdit:false});
-                Reset(Dropdown4);
-                UpdateContext({varUserToEdit: Blank()});
-                Refresh(DeskAccessControl);
-                ClearCollect(colDeskAccess, DeskAccessControl);
-                
-                Select(Icon2);
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="SUBMIT CHANGES" //" 🗑️   SUBMIT CHANGE"
-            Visible: =varShowConfirmEdit
-            Width: =293
-            X: =592
-            Y: =Dropdown4.Y + Dropdown4.Height + 25
-            ZIndex: =10
-
-        Dropdown4 As dropdown:
-            BorderColor: =App.Theme.Colors.Darker40
-            ChevronBackground: =App.Theme.Colors.Primary
-            ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
-            ChevronDisabledFill: =RGBA(244, 244, 244, 1)
-            ChevronFill: =App.Theme.Colors.PrimaryForeground
-            ChevronHoverBackground: =App.Theme.Colors.Darker10
-            ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
-            Default: =varUserToEdit.AccessLevel_Choice.Value
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Font: =App.Theme.Font
-            Height: =70
-            HoverColor: =RGBA(0, 0, 0, 1)
-            HoverFill: =App.Theme.Colors.Lighter70
-            Items: |-
-                =[
-                    "AccessDenied",
-                    "View-Only",
-                    "User",
-                    "SuperUser",
-                    "ProjectLeader",
-                    "Manager",
-                    "ServiceChief",
-                    "AppAdmin"
-                ]
-                
-                
-                /*Ungroup(
-                    Table(
-                        { Value: "All" },
-                        Distinct(
-                            DeskAccessControl,
-                            AccessLevel_Choice.Value)
-                        ),
-                        Value
-                )*/
-            PressedColor: =App.Theme.Colors.PrimaryForeground
-            PressedFill: =App.Theme.Colors.Darker30
-            SelectionColor: =App.Theme.Colors.PrimaryForeground
-            SelectionFill: =App.Theme.Colors.Primary
-            Size: =21
-            Visible: =varShowConfirmEdit
-            Width: =Label1_7.Width / 2.5
-            X: =393
-            Y: =Label1_7.Y + Label1_7.Height + 10
-            ZIndex: =11
 

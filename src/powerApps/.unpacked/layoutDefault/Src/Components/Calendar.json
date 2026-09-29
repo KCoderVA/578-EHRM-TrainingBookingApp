@@ -1,6 +1,6 @@
 {
   "ComponentAllowCustomization": true,
-  "ComponentChangedSinceFileImport": false,
+  "ComponentChangedSinceFileImport": true,
   "ComponentDefinitionInfo": {
     "AllowAccessToGlobals": false,
     "Children": [
@@ -83,7 +83,17 @@
             "IsLockable": false,
             "NameMapSourceSchema": "?"
           },
-          "ContentLanguage"
+          "ContentLanguage",
+          "minimumWidth",
+          "minimumHeight",
+          "IsErrorMessage",
+          "OnSelect",
+          "Visible",
+          "Tooltip",
+          "maximumWidth",
+          "Wrap",
+          "maximumHeight",
+          "AutoHeight"
         ],
         "ControlUniqueId": "17",
         "HasDynamicProperties": false,
@@ -99,7 +109,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 967,
+        "PublishOrderIndex": 946,
         "Rules": [
           {
             "Category": "Data",
@@ -123,6 +133,12 @@
             "Category": "Data",
             "InvariantScript": "\"\"",
             "Property": "ContentLanguage",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "\"\"",
+            "Property": "Tooltip",
             "RuleProviderType": "Unknown"
           },
           {
@@ -346,6 +362,60 @@
             "InvariantScript": "3",
             "Property": "TabIndex",
             "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "IsErrorMessage",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "Visible",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "Wrap",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "7680",
+            "Property": "maximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "AutoHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Behavior",
+            "InvariantScript": "false",
+            "Property": "OnSelect",
+            "RuleProviderType": "Unknown"
           }
         ],
         "StyleName": "defaultLabelStyle",
@@ -446,7 +516,17 @@
             "IsLockable": false,
             "NameMapSourceSchema": "?"
           },
-          "ContentLanguage"
+          "ContentLanguage",
+          "minimumWidth",
+          "minimumHeight",
+          "Visible",
+          "Tooltip",
+          "AutoDisableOnSelect",
+          "PaddingRight",
+          "maximumWidth",
+          "PreserveAspectRatio",
+          "PaddingLeft",
+          "maximumHeight"
         ],
         "ControlUniqueId": "18",
         "HasDynamicProperties": false,
@@ -462,7 +542,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 968,
+        "PublishOrderIndex": 947,
         "Rules": [
           {
             "Category": "Data",
@@ -477,6 +557,12 @@
             "RuleProviderType": "Unknown"
           },
           {
+            "Category": "Data",
+            "InvariantScript": "\"\"",
+            "Property": "Tooltip",
+            "RuleProviderType": "Unknown"
+          },
+          {
             "Category": "Design",
             "InvariantScript": "Icon.ChevronLeft",
             "Property": "Icon",
@@ -484,7 +570,7 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "7\r\n",
+            "InvariantScript": "7\n",
             "Property": "PaddingBottom",
             "RuleProviderType": "Unknown"
           },
@@ -639,8 +725,62 @@
             "RuleProviderType": "Unknown"
           },
           {
+            "Category": "Design",
+            "InvariantScript": "1",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "20",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "Visible",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "AutoDisableOnSelect",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "PaddingRight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "PreserveAspectRatio",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "PaddingLeft",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "768",
+            "Property": "maximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
             "Category": "Behavior",
-            "InvariantScript": "Set(_firstDayOfMonth,DateAdd(_firstDayOfMonth,-1,TimeUnit.Months));\r\nSet(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days))",
+            "InvariantScript": "Set(_firstDayOfMonth,DateAdd(_firstDayOfMonth,-1,TimeUnit.Months));\nSet(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days))",
             "Property": "OnSelect",
             "RuleProviderType": "Unknown"
           }
@@ -659,7 +799,7 @@
           "Version": "2.5.0"
         },
         "Type": "ControlInfo",
-        "VariantName": "ChevronLeft"
+        "VariantName": ""
       },
       {
         "AllowAccessToGlobals": true,
@@ -898,7 +1038,19 @@
             "IsLockable": false,
             "NameMapSourceSchema": "?"
           },
-          "ContentLanguage"
+          "ContentLanguage",
+          "minimumWidth",
+          "Underline",
+          "Italic",
+          "Reset",
+          "minimumHeight",
+          "Tooltip",
+          "ChevronWidth",
+          "Strikethrough",
+          "FlyoutMaximumHeight",
+          "maximumWidth",
+          "TabIndex",
+          "maximumHeight"
         ],
         "ControlUniqueId": "19",
         "HasDynamicProperties": false,
@@ -914,7 +1066,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 969,
+        "PublishOrderIndex": 948,
         "Rules": [
           {
             "Category": "Data",
@@ -945,6 +1097,18 @@
             "Category": "Data",
             "InvariantScript": "\"\"",
             "Property": "ContentLanguage",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "false",
+            "Property": "Reset",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "\"\"",
+            "Property": "Tooltip",
             "RuleProviderType": "Unknown"
           },
           {
@@ -1176,8 +1340,68 @@
             "RuleProviderType": "Unknown"
           },
           {
+            "Category": "Design",
+            "InvariantScript": "80",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "Underline",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "Italic",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "35",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "50",
+            "Property": "ChevronWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "Strikethrough",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "700",
+            "Property": "FlyoutMaximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "TabIndex",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "768",
+            "Property": "maximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
             "Category": "Behavior",
-            "InvariantScript": "//Set(_selectedDate, Date(Value(ddYear.Selected.Value),ddMonth.Selected.Number,1));\r\nSet(_firstDayOfMonth, _selectedDate );\r\nSet(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days) )",
+            "InvariantScript": "//Set(_selectedDate, Date(Value(ddYear.Selected.Value),ddMonth.Selected.Number,1));\nSet(_firstDayOfMonth, _selectedDate );\nSet(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days) )",
             "Property": "OnChange",
             "RuleProviderType": "Unknown"
           },
@@ -1433,7 +1657,20 @@
             "IsLockable": false,
             "NameMapSourceSchema": "?"
           },
-          "ContentLanguage"
+          "ContentLanguage",
+          "minimumWidth",
+          "Underline",
+          "Italic",
+          "Reset",
+          "minimumHeight",
+          "OnSelect",
+          "Tooltip",
+          "ChevronWidth",
+          "Strikethrough",
+          "FlyoutMaximumHeight",
+          "maximumWidth",
+          "TabIndex",
+          "maximumHeight"
         ],
         "ControlUniqueId": "20",
         "HasDynamicProperties": false,
@@ -1449,7 +1686,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 970,
+        "PublishOrderIndex": 949,
         "Rules": [
           {
             "Category": "Data",
@@ -1480,6 +1717,18 @@
             "Category": "Data",
             "InvariantScript": "\"\"",
             "Property": "ContentLanguage",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "false",
+            "Property": "Reset",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "\"\"",
+            "Property": "Tooltip",
             "RuleProviderType": "Unknown"
           },
           {
@@ -1711,9 +1960,75 @@
             "RuleProviderType": "Unknown"
           },
           {
+            "Category": "Design",
+            "InvariantScript": "80",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "Underline",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "Italic",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "35",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "50",
+            "Property": "ChevronWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "Strikethrough",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "700",
+            "Property": "FlyoutMaximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "TabIndex",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "768",
+            "Property": "maximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
             "Category": "Behavior",
-            "InvariantScript": "//Set(_selectedDate, Date(Value(ddYear.Selected.Value),ddMonth.Selected.Number,1));\r\nSet(_firstDayOfMonth, _selectedDate );\r\nSet(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days) )",
+            "InvariantScript": "//Set(_selectedDate, Date(Value(ddYear.Selected.Value),ddMonth.Selected.Number,1));\nSet(_firstDayOfMonth, _selectedDate );\nSet(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days) )",
             "Property": "OnChange",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Behavior",
+            "InvariantScript": "false",
+            "Property": "OnSelect",
             "RuleProviderType": "Unknown"
           }
         ],
@@ -1822,7 +2137,17 @@
             "IsLockable": false,
             "NameMapSourceSchema": "?"
           },
-          "ContentLanguage"
+          "ContentLanguage",
+          "minimumWidth",
+          "minimumHeight",
+          "Visible",
+          "Tooltip",
+          "AutoDisableOnSelect",
+          "PaddingRight",
+          "maximumWidth",
+          "PreserveAspectRatio",
+          "PaddingLeft",
+          "maximumHeight"
         ],
         "ControlUniqueId": "21",
         "HasDynamicProperties": false,
@@ -1838,7 +2163,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 971,
+        "PublishOrderIndex": 950,
         "Rules": [
           {
             "Category": "Data",
@@ -1850,6 +2175,12 @@
             "Category": "Data",
             "InvariantScript": "\"\"",
             "Property": "ContentLanguage",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "\"\"",
+            "Property": "Tooltip",
             "RuleProviderType": "Unknown"
           },
           {
@@ -1998,7 +2329,7 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "7\r\n",
+            "InvariantScript": "7\n",
             "Property": "PaddingBottom",
             "RuleProviderType": "Unknown"
           },
@@ -2015,8 +2346,62 @@
             "RuleProviderType": "Unknown"
           },
           {
+            "Category": "Design",
+            "InvariantScript": "1",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "20",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "Visible",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "AutoDisableOnSelect",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "PaddingRight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "PreserveAspectRatio",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "PaddingLeft",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "768",
+            "Property": "maximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
             "Category": "Behavior",
-            "InvariantScript": "Set(_firstDayOfMonth,DateAdd(_firstDayOfMonth,1,TimeUnit.Months));\r\nSet(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days));\r\nReset(ddMonth)",
+            "InvariantScript": "Set(_firstDayOfMonth,DateAdd(_firstDayOfMonth,1,TimeUnit.Months));\nSet(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days));\nReset(ddMonth)",
             "Property": "OnSelect",
             "RuleProviderType": "Unknown"
           }
@@ -2035,63 +2420,11 @@
           "Version": "2.5.0"
         },
         "Type": "ControlInfo",
-        "VariantName": "ChevronRight"
+        "VariantName": ""
       },
       {
         "AllowAccessToGlobals": true,
         "Children": [
-          {
-            "AllowAccessToGlobals": true,
-            "Children": [],
-            "ControlPropertyState": [
-              "TemplateFill",
-              "ItemAccessibleLabel"
-            ],
-            "ControlUniqueId": "23",
-            "HasDynamicProperties": false,
-            "Index": 0,
-            "IsAutoGenerated": false,
-            "IsDataControl": true,
-            "IsFromScreenLayout": false,
-            "IsGroupControl": false,
-            "IsLocked": false,
-            "LayoutName": "",
-            "MetaDataIDKey": "",
-            "Name": "galleryTemplate4_3",
-            "OptimizeForDevices": "Off",
-            "Parent": "galWeekdays",
-            "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 973,
-            "Rules": [
-              {
-                "Category": "Data",
-                "InvariantScript": "\"\"",
-                "Property": "ItemAccessibleLabel",
-                "RuleProviderType": "Unknown"
-              },
-              {
-                "Category": "Design",
-                "InvariantScript": "RGBA(0, 0, 0, 0)",
-                "Property": "TemplateFill",
-                "RuleProviderType": "Unknown"
-              }
-            ],
-            "StyleName": "",
-            "Template": {
-              "CustomGroupControlTemplateName": "",
-              "FirstParty": true,
-              "Id": "http://microsoft.com/appmagic/galleryTemplate",
-              "IsComponentDefinition": false,
-              "IsCustomGroupControlTemplate": false,
-              "IsPremiumPcfControl": false,
-              "LastModifiedTimestamp": "0",
-              "Name": "galleryTemplate",
-              "OverridableProperties": {},
-              "Version": "1.0"
-            },
-            "Type": "ControlInfo",
-            "VariantName": ""
-          },
           {
             "AllowAccessToGlobals": true,
             "Children": [],
@@ -2173,9 +2506,31 @@
                 "IsLockable": false,
                 "NameMapSourceSchema": "?"
               },
-              "ContentLanguage"
+              "ContentLanguage",
+              "minimumWidth",
+              "LineHeight",
+              "Underline",
+              "Italic",
+              "minimumHeight",
+              "IsErrorMessage",
+              "Visible",
+              "Tooltip",
+              {
+                "AFDDataSourceName": "",
+                "AutoRuleBindingEnabled": false,
+                "AutoRuleBindingString": "%TextRole.RESERVED%.Default",
+                "InvariantPropertyName": "Role",
+                "IsLockable": false,
+                "NameMapSourceSchema": "?"
+              },
+              "BorderThickness",
+              "Strikethrough",
+              "maximumWidth",
+              "Wrap",
+              "maximumHeight",
+              "AutoHeight"
             ],
-            "ControlUniqueId": "24",
+            "ControlUniqueId": "23",
             "HasDynamicProperties": false,
             "Index": 0,
             "IsAutoGenerated": false,
@@ -2189,7 +2544,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galWeekdays",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 974,
+            "PublishOrderIndex": 952,
             "Rules": [
               {
                 "Category": "Data",
@@ -2208,6 +2563,18 @@
                 "InvariantScript": "\"\"",
                 "Property": "ContentLanguage",
                 "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Data",
+                "InvariantScript": "\"\"",
+                "Property": "Tooltip",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Data",
+                "InvariantScript": "//%TextRole.RESERVED%.Default",
+                "Property": "Role",
+                "RuleProviderType": "User"
               },
               {
                 "Category": "Design",
@@ -2402,6 +2769,84 @@
                 "RuleProviderType": "Unknown"
               },
               {
+                "Category": "Design",
+                "InvariantScript": "1",
+                "Property": "minimumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1.2",
+                "Property": "LineHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "Underline",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "Italic",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1",
+                "Property": "minimumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "IsErrorMessage",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "true",
+                "Property": "Visible",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "0",
+                "Property": "BorderThickness",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "Strikethrough",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1366",
+                "Property": "maximumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "true",
+                "Property": "Wrap",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "7680",
+                "Property": "maximumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "AutoHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
                 "Category": "Behavior",
                 "InvariantScript": "Select(Parent)",
                 "Property": "OnSelect",
@@ -2420,6 +2865,42 @@
               "Name": "label",
               "OverridableProperties": {},
               "Version": "2.5.1"
+            },
+            "Type": "ControlInfo",
+            "VariantName": ""
+          },
+          {
+            "AllowAccessToGlobals": true,
+            "Children": [],
+            "ControlPropertyState": [],
+            "ControlUniqueId": "24",
+            "HasDynamicProperties": false,
+            "Index": 0,
+            "IsAutoGenerated": false,
+            "IsDataControl": true,
+            "IsFromScreenLayout": false,
+            "IsGroupControl": false,
+            "IsLocked": false,
+            "LayoutName": "",
+            "MetaDataIDKey": "",
+            "Name": "b929e56c-185d-42c9-9851-d9567ddc70a3",
+            "OptimizeForDevices": "Off",
+            "Parent": "galWeekdays",
+            "PersistMetaDataIDKey": false,
+            "PublishOrderIndex": 953,
+            "Rules": [],
+            "StyleName": "",
+            "Template": {
+              "CustomGroupControlTemplateName": "",
+              "FirstParty": true,
+              "Id": "http://microsoft.com/appmagic/galleryTemplate",
+              "IsComponentDefinition": false,
+              "IsCustomGroupControlTemplate": false,
+              "IsPremiumPcfControl": false,
+              "LastModifiedTimestamp": "0",
+              "Name": "galleryTemplate",
+              "OverridableProperties": {},
+              "Version": "1.0"
             },
             "Type": "ControlInfo",
             "VariantName": ""
@@ -2490,7 +2971,16 @@
           "ContentLanguage",
           "MaxTemplateSize",
           "#CopilotOverlayLabel",
-          "#CopilotOverlayVisible"
+          "#CopilotOverlayVisible",
+          "SelectionTracksMove",
+          "minimumWidth",
+          "minimumHeight",
+          "BorderThickness",
+          "NavigationStep",
+          "maximumWidth",
+          "ShowNavigation",
+          "maximumHeight",
+          "WrapCount"
         ],
         "ControlUniqueId": "22",
         "HasDynamicProperties": false,
@@ -2506,7 +2996,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 972,
+        "PublishOrderIndex": 951,
         "Rules": [
           {
             "Category": "Data",
@@ -2539,6 +3029,12 @@
             "RuleProviderType": "Unknown"
           },
           {
+            "Category": "Data",
+            "InvariantScript": "1",
+            "Property": "WrapCount",
+            "RuleProviderType": "Unknown"
+          },
+          {
             "Category": "Design",
             "InvariantScript": "Layout.Horizontal",
             "Property": "Layout",
@@ -2546,7 +3042,7 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "galWeekdays.Fill",
+            "InvariantScript": "Self.Fill",
             "Property": "DisabledFill",
             "RuleProviderType": "Unknown"
           },
@@ -2564,13 +3060,13 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "40\r\n",
+            "InvariantScript": "40\n",
             "Property": "Height",
-            "RuleProviderType": "User"
+            "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "galWeekdays.Fill",
+            "InvariantScript": "Self.Fill",
             "Property": "PressedFill",
             "RuleProviderType": "Unknown"
           },
@@ -2582,13 +3078,13 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "galWeekdays.Fill",
+            "InvariantScript": "Self.Fill",
             "Property": "HoverFill",
             "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "galWeekdays.BorderColor",
+            "InvariantScript": "Self.BorderColor",
             "Property": "DisabledBorderColor",
             "RuleProviderType": "Unknown"
           },
@@ -2660,13 +3156,13 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "galWeekdays.BorderColor",
+            "InvariantScript": "Self.BorderColor",
             "Property": "PressedBorderColor",
             "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "galWeekdays.BorderColor",
+            "InvariantScript": "Self.BorderColor",
             "Property": "HoverBorderColor",
             "RuleProviderType": "Unknown"
           },
@@ -2729,6 +3225,54 @@
             "InvariantScript": "false",
             "Property": "#CopilotOverlayVisible",
             "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "SelectionTracksMove",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "20",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "20",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "BorderThickness",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1",
+            "Property": "NavigationStep",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "ShowNavigation",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "768",
+            "Property": "maximumHeight",
+            "RuleProviderType": "Unknown"
           }
         ],
         "StyleName": "defaultGalleryStyle",
@@ -2750,72 +3294,6 @@
       {
         "AllowAccessToGlobals": true,
         "Children": [
-          {
-            "AllowAccessToGlobals": true,
-            "Children": [],
-            "ControlPropertyState": [
-              {
-                "AFDDataSourceName": "",
-                "AutoRuleBindingEnabled": false,
-                "AutoRuleBindingString": "RGBA(0, 0, 0, 0)",
-                "InvariantPropertyName": "TemplateFill",
-                "IsLockable": false,
-                "NameMapSourceSchema": "?"
-              },
-              "ItemAccessibleLabel",
-              "OnSelect"
-            ],
-            "ControlUniqueId": "26",
-            "HasDynamicProperties": false,
-            "Index": 0,
-            "IsAutoGenerated": false,
-            "IsDataControl": true,
-            "IsFromScreenLayout": false,
-            "IsGroupControl": false,
-            "IsLocked": false,
-            "LayoutName": "",
-            "MetaDataIDKey": "",
-            "Name": "galleryTemplate3_3",
-            "OptimizeForDevices": "Off",
-            "Parent": "galCalendar",
-            "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 976,
-            "Rules": [
-              {
-                "Category": "Data",
-                "InvariantScript": "\"\"",
-                "Property": "ItemAccessibleLabel",
-                "RuleProviderType": "Unknown"
-              },
-              {
-                "Category": "Design",
-                "InvariantScript": "",
-                "Property": "TemplateFill",
-                "RuleProviderType": "Unknown"
-              },
-              {
-                "Category": "Behavior",
-                "InvariantScript": "false",
-                "Property": "OnSelect",
-                "RuleProviderType": "Unknown"
-              }
-            ],
-            "StyleName": "",
-            "Template": {
-              "CustomGroupControlTemplateName": "",
-              "FirstParty": true,
-              "Id": "http://microsoft.com/appmagic/galleryTemplate",
-              "IsComponentDefinition": false,
-              "IsCustomGroupControlTemplate": false,
-              "IsPremiumPcfControl": false,
-              "LastModifiedTimestamp": "0",
-              "Name": "galleryTemplate",
-              "OverridableProperties": {},
-              "Version": "1.0"
-            },
-            "Type": "ControlInfo",
-            "VariantName": ""
-          },
           {
             "AllowAccessToGlobals": true,
             "Children": [],
@@ -2942,9 +3420,19 @@
               },
               "RadiusBottomLeft",
               "PaddingRight",
-              "ContentLanguage"
+              "ContentLanguage",
+              "minimumWidth",
+              "Underline",
+              "Italic",
+              "minimumHeight",
+              "Tooltip",
+              "AutoDisableOnSelect",
+              "Strikethrough",
+              "maximumWidth",
+              "TabIndex",
+              "maximumHeight"
             ],
-            "ControlUniqueId": "27",
+            "ControlUniqueId": "26",
             "HasDynamicProperties": false,
             "Index": 0,
             "IsAutoGenerated": false,
@@ -2958,7 +3446,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 977,
+            "PublishOrderIndex": 955,
             "Rules": [
               {
                 "Category": "Data",
@@ -2970,6 +3458,12 @@
                 "Category": "Data",
                 "InvariantScript": "\"\"",
                 "Property": "ContentLanguage",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Data",
+                "InvariantScript": "\"\"",
+                "Property": "Tooltip",
                 "RuleProviderType": "Unknown"
               },
               {
@@ -3088,7 +3582,7 @@
               },
               {
                 "Category": "Design",
-                "InvariantScript": "If(DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)=_selectedStart || DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)=_selectedEnd,\r\n        Calendar.SelectedDateColor,\r\n    DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)=_today || Month(DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days))=Month(_firstDayOfMonth),\r\n        Color.Black,\r\n    ColorFade(Color.Black,60%))",
+                "InvariantScript": "If(DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)=_selectedStart || DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)=_selectedEnd,\n        Calendar.SelectedDateColor,\n    DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)=_today || Month(DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days))=Month(_firstDayOfMonth),\n        Color.Black,\n    ColorFade(Color.Black,60%))",
                 "Property": "Color",
                 "RuleProviderType": "Unknown"
               },
@@ -3189,8 +3683,62 @@
                 "RuleProviderType": "Unknown"
               },
               {
+                "Category": "Design",
+                "InvariantScript": "5",
+                "Property": "minimumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "Underline",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "Italic",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "5",
+                "Property": "minimumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "true",
+                "Property": "AutoDisableOnSelect",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "Strikethrough",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1366",
+                "Property": "maximumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "0",
+                "Property": "TabIndex",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "768",
+                "Property": "maximumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
                 "Category": "Behavior",
-                "InvariantScript": "/*Set(_selectedDate, DateAdd(_firstDayInView,ThisItem.Value,Days));\r\n// choose end\r\nIf(!IsBlank(_selectedStart) && IsBlank(_selectedEnd) && _selectedDate >= _selectedStart, \r\n    Set(_selectedEnd, _selectedDate)\r\n,\r\n// default: set start if empty or resetting\r\n    Set(_selectedStart, _selectedDate);\r\n    Set(_selectedEnd, Blank()))*/\r\n    \"\"",
+                "InvariantScript": "/*Set(_selectedDate, DateAdd(_firstDayInView,ThisItem.Value,Days));\n// choose end\nIf(!IsBlank(_selectedStart) && IsBlank(_selectedEnd) && _selectedDate >= _selectedStart, \n    Set(_selectedEnd, _selectedDate)\n,\n// default: set start if empty or resetting\n    Set(_selectedStart, _selectedDate);\n    Set(_selectedEnd, Blank()))*/\n    \"\"",
                 "Property": "OnSelect",
                 "RuleProviderType": "Unknown"
               }
@@ -3372,9 +3920,19 @@
               "HoverColor",
               "DisabledBorderColor",
               "HoverBorderColor",
-              "ContentLanguage"
+              "ContentLanguage",
+              "minimumWidth",
+              "Underline",
+              "Italic",
+              "minimumHeight",
+              "Tooltip",
+              "AutoDisableOnSelect",
+              "Strikethrough",
+              "maximumWidth",
+              "TabIndex",
+              "maximumHeight"
             ],
-            "ControlUniqueId": "28",
+            "ControlUniqueId": "27",
             "HasDynamicProperties": false,
             "Index": 0,
             "IsAutoGenerated": false,
@@ -3388,7 +3946,7 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 978,
+            "PublishOrderIndex": 956,
             "Rules": [
               {
                 "Category": "Data",
@@ -3400,6 +3958,12 @@
                 "Category": "Data",
                 "InvariantScript": "\"\"",
                 "Property": "ContentLanguage",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Data",
+                "InvariantScript": "\"\"",
+                "Property": "Tooltip",
                 "RuleProviderType": "Unknown"
               },
               {
@@ -3446,7 +4010,7 @@
               },
               {
                 "Category": "Design",
-                "InvariantScript": "If(\r\n    /* transparent before initialized */\r\n    IsBlank(_today), \r\n        RGBA(0,0,0,1),\r\n    /* range enabled and date is start or end */\r\n    DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)=_selectedStart ||\r\n    (Calendar.SelectRange && (DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) > _selectedStart && DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) <= _selectedEnd)),\r\n        Calendar.SelectedDateColor,\r\n    /* color of dates that share the same month*/\r\n    Month(DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)) = Month(_firstDayOfMonth),\r\n        Calendar.Color,\r\n    /* default text color */\r\n    Color.Gray\r\n)",
+                "InvariantScript": "If(\n    /* transparent before initialized */\n    IsBlank(_today), \n        RGBA(0,0,0,1),\n    /* range enabled and date is start or end */\n    DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)=_selectedStart ||\n    (Calendar.SelectRange && (DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) > _selectedStart && DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) <= _selectedEnd)),\n        Calendar.SelectedDateColor,\n    /* color of dates that share the same month*/\n    Month(DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days)) = Month(_firstDayOfMonth),\n        Calendar.Color,\n    /* default text color */\n    Color.Gray\n)",
                 "Property": "Color",
                 "RuleProviderType": "Unknown"
               },
@@ -3500,7 +4064,7 @@
               },
               {
                 "Category": "Design",
-                "InvariantScript": "If(\r\n    /* transparent before initialized */\r\n    IsBlank(_today),\r\n        RGBA(0,0,0,0),\r\n\r\n    /* when range off, only show start date */\r\n    DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) = _selectedStart \r\n    || (Calendar.SelectRange && (DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) >= _selectedStart && DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) <=_selectedEnd)),\r\n        If(\r\n            /* get value from styles */\r\n            !IsBlank(LookUp(Calendar.Styles,Key=\"Selected Date Fill\")),\r\n                ColorValue(LookUp(Calendar.Styles,Key=\"Selected Date Fill\").Value),\r\n            /* get from input */\r\n            !IsBlank(Calendar.SelectedDateFill),\r\n                Calendar.SelectedDateFill,\r\n            /* default to theme fill */\r\n                tmrInitialize.Fill\r\n        )\r\n\r\n    /* transparent by default */\r\n    ,RGBA(0,0,0,0)\r\n)",
+                "InvariantScript": "If(\n    /* transparent before initialized */\n    IsBlank(_today),\n        RGBA(0,0,0,0),\n\n    /* when range off, only show start date */\n    DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) = _selectedStart \n    || (Calendar.SelectRange && (DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) >= _selectedStart && DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) <=_selectedEnd)),\n        If(\n            /* get value from styles */\n            !IsBlank(LookUp(Calendar.Styles,Key=\"Selected Date Fill\")),\n                ColorValue(LookUp(Calendar.Styles,Key=\"Selected Date Fill\").Value),\n            /* get from input */\n            !IsBlank(Calendar.SelectedDateFill),\n                Calendar.SelectedDateFill,\n            /* default to theme fill */\n                tmrInitialize.Fill\n        )\n\n    /* transparent by default */\n    ,RGBA(0,0,0,0)\n)",
                 "Property": "Fill",
                 "RuleProviderType": "Unknown"
               },
@@ -3518,7 +4082,7 @@
               },
               {
                 "Category": "Design",
-                "InvariantScript": "If(\r\n    /* input radius if dates are the same */\r\n    _selectedStart = _selectedEnd || DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) = _selectedStart, \r\n        Calendar.BorderRadius,\r\n    /* square if end date or between start and end*/\r\n    Calendar.SelectRange && (DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) > _selectedStart && DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) <= _selectedEnd), \r\n        0,\r\n    /* default radius */\r\n    Calendar.BorderRadius\r\n)",
+                "InvariantScript": "If(\n    /* input radius if dates are the same */\n    _selectedStart = _selectedEnd || DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) = _selectedStart, \n        Calendar.BorderRadius,\n    /* square if end date or between start and end*/\n    Calendar.SelectRange && (DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) > _selectedStart && DateAdd(_firstDayInView,ThisItem.Value,TimeUnit.Days) <= _selectedEnd), \n        0,\n    /* default radius */\n    Calendar.BorderRadius\n)",
                 "Property": "RadiusTopLeft",
                 "RuleProviderType": "Unknown"
               },
@@ -3619,6 +4183,60 @@
                 "RuleProviderType": "Unknown"
               },
               {
+                "Category": "Design",
+                "InvariantScript": "5",
+                "Property": "minimumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "Underline",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "Italic",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "5",
+                "Property": "minimumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "true",
+                "Property": "AutoDisableOnSelect",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "false",
+                "Property": "Strikethrough",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1366",
+                "Property": "maximumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "0",
+                "Property": "TabIndex",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "768",
+                "Property": "maximumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
                 "Category": "Behavior",
                 "InvariantScript": "Set(\n    _selectedDate,\n    DateAdd(\n        _firstDayInView,\n        ThisItem.Value,\n        TimeUnit.Days\n    )\n);\nIf(\n    Calendar.SelectRange,\n// choose end\n    If(\n        !IsBlank(_selectedStart) && IsBlank(_selectedEnd) && _selectedDate >= _selectedStart,\n        Set(\n            _selectedEnd,\n            _selectedDate\n        ),\n// default: set start if empty or resetting\n        Set(\n            _selectedStart,\n            _selectedDate\n        );\n        Set(\n            _selectedEnd,\n            Blank()\n        )\n    ),\n    Set(\n        _selectedStart,\n        _selectedDate\n    );\n    Set(\n        _selectedEnd,\n        Blank()\n    )\n);\nCalendar.OnChangeCal()",
                 "Property": "OnSelect",
@@ -3637,6 +4255,51 @@
               "Name": "button",
               "OverridableProperties": {},
               "Version": "2.2.0"
+            },
+            "Type": "ControlInfo",
+            "VariantName": ""
+          },
+          {
+            "AllowAccessToGlobals": true,
+            "Children": [],
+            "ControlPropertyState": [
+              "TemplateFill"
+            ],
+            "ControlUniqueId": "28",
+            "HasDynamicProperties": false,
+            "Index": 0,
+            "IsAutoGenerated": false,
+            "IsDataControl": true,
+            "IsFromScreenLayout": false,
+            "IsGroupControl": false,
+            "IsLocked": false,
+            "LayoutName": "",
+            "MetaDataIDKey": "",
+            "Name": "61717cad-a79c-41db-b705-02f639302212",
+            "OptimizeForDevices": "Off",
+            "Parent": "galCalendar",
+            "PersistMetaDataIDKey": false,
+            "PublishOrderIndex": 957,
+            "Rules": [
+              {
+                "Category": "Design",
+                "InvariantScript": "",
+                "Property": "TemplateFill",
+                "RuleProviderType": "Unknown"
+              }
+            ],
+            "StyleName": "",
+            "Template": {
+              "CustomGroupControlTemplateName": "",
+              "FirstParty": true,
+              "Id": "http://microsoft.com/appmagic/galleryTemplate",
+              "IsComponentDefinition": false,
+              "IsCustomGroupControlTemplate": false,
+              "IsPremiumPcfControl": false,
+              "LastModifiedTimestamp": "0",
+              "Name": "galleryTemplate",
+              "OverridableProperties": {},
+              "Version": "1.0"
             },
             "Type": "ControlInfo",
             "VariantName": ""
@@ -3682,7 +4345,16 @@
               "FocusedBorderColor",
               "DisabledFill",
               "PressedFill",
-              "ContentLanguage"
+              "ContentLanguage",
+              "minimumWidth",
+              "minimumHeight",
+              "Tooltip",
+              "BorderThickness",
+              "maximumWidth",
+              "TabIndex",
+              "PreserveAspectRatio",
+              "AccessibleLabel",
+              "maximumHeight"
             ],
             "ControlUniqueId": "29",
             "HasDynamicProperties": false,
@@ -3698,12 +4370,24 @@
             "OptimizeForDevices": "Off",
             "Parent": "galCalendar",
             "PersistMetaDataIDKey": false,
-            "PublishOrderIndex": 979,
+            "PublishOrderIndex": 958,
             "Rules": [
               {
                 "Category": "Data",
                 "InvariantScript": "\"\"",
                 "Property": "ContentLanguage",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Data",
+                "InvariantScript": "\"\"",
+                "Property": "Tooltip",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Data",
+                "InvariantScript": "\"\"",
+                "Property": "AccessibleLabel",
                 "RuleProviderType": "Unknown"
               },
               {
@@ -3794,6 +4478,48 @@
                 "Category": "Design",
                 "InvariantScript": "icnEvent.Fill",
                 "Property": "HoverFill",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1",
+                "Property": "minimumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "20",
+                "Property": "minimumHeight",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "0",
+                "Property": "BorderThickness",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "1366",
+                "Property": "maximumWidth",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "-1",
+                "Property": "TabIndex",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "true",
+                "Property": "PreserveAspectRatio",
+                "RuleProviderType": "Unknown"
+              },
+              {
+                "Category": "Design",
+                "InvariantScript": "768",
+                "Property": "maximumHeight",
                 "RuleProviderType": "Unknown"
               },
               {
@@ -3914,7 +4640,15 @@
           "ContentLanguage",
           "MaxTemplateSize",
           "#CopilotOverlayLabel",
-          "#CopilotOverlayVisible"
+          "#CopilotOverlayVisible",
+          "SelectionTracksMove",
+          "minimumWidth",
+          "minimumHeight",
+          "BorderThickness",
+          "NavigationStep",
+          "maximumWidth",
+          "ShowNavigation",
+          "maximumHeight"
         ],
         "ControlUniqueId": "25",
         "HasDynamicProperties": false,
@@ -3930,7 +4664,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 975,
+        "PublishOrderIndex": 954,
         "Rules": [
           {
             "Category": "Data",
@@ -3982,7 +4716,7 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "galCalendar.Fill",
+            "InvariantScript": "Self.Fill",
             "Property": "DisabledFill",
             "RuleProviderType": "Unknown"
           },
@@ -4006,13 +4740,13 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "galCalendar.Fill",
+            "InvariantScript": "Self.Fill",
             "Property": "PressedFill",
             "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "galCalendar.Fill",
+            "InvariantScript": "Self.Fill",
             "Property": "HoverFill",
             "RuleProviderType": "Unknown"
           },
@@ -4060,7 +4794,7 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "0\r\n",
+            "InvariantScript": "0\n",
             "Property": "TemplatePadding",
             "RuleProviderType": "Unknown"
           },
@@ -4084,19 +4818,19 @@
           },
           {
             "Category": "Design",
-            "InvariantScript": "galCalendar.BorderColor",
+            "InvariantScript": "Self.BorderColor",
             "Property": "DisabledBorderColor",
             "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "galCalendar.BorderColor",
+            "InvariantScript": "Self.BorderColor",
             "Property": "PressedBorderColor",
             "RuleProviderType": "Unknown"
           },
           {
             "Category": "Design",
-            "InvariantScript": "galCalendar.BorderColor",
+            "InvariantScript": "Self.BorderColor",
             "Property": "HoverBorderColor",
             "RuleProviderType": "Unknown"
           },
@@ -4158,6 +4892,54 @@
             "Category": "Design",
             "InvariantScript": "false",
             "Property": "#CopilotOverlayVisible",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "SelectionTracksMove",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "20",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "20",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "BorderThickness",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1",
+            "Property": "NavigationStep",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "ShowNavigation",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "768",
+            "Property": "maximumHeight",
             "RuleProviderType": "Unknown"
           }
         ],
@@ -4226,7 +5008,31 @@
             "IsLockable": false,
             "NameMapSourceSchema": "?"
           },
-          "ContentLanguage"
+          "ContentLanguage",
+          "AutoPause",
+          "RadiusBottomRight",
+          "PaddingTop",
+          "minimumWidth",
+          "Underline",
+          "RadiusBottomLeft",
+          "Italic",
+          "Reset",
+          "minimumHeight",
+          "RadiusTopRight",
+          "OnSelect",
+          "Tooltip",
+          "Duration",
+          "Repeat",
+          "Start",
+          "Strikethrough",
+          "PaddingRight",
+          "maximumWidth",
+          "TabIndex",
+          "RadiusTopLeft",
+          "PaddingLeft",
+          "OnTimerEnd",
+          "maximumHeight",
+          "PaddingBottom"
         ],
         "ControlUniqueId": "30",
         "HasDynamicProperties": false,
@@ -4242,7 +5048,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 980,
+        "PublishOrderIndex": 959,
         "Rules": [
           {
             "Category": "Data",
@@ -4260,6 +5066,42 @@
             "Category": "Data",
             "InvariantScript": "\"\"",
             "Property": "ContentLanguage",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "true",
+            "Property": "AutoPause",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "false",
+            "Property": "Reset",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "\"\"",
+            "Property": "Tooltip",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "60000",
+            "Property": "Duration",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "false",
+            "Property": "Repeat",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "false",
+            "Property": "Start",
             "RuleProviderType": "Unknown"
           },
           {
@@ -4431,9 +5273,117 @@
             "RuleProviderType": "Unknown"
           },
           {
+            "Category": "Design",
+            "InvariantScript": "10",
+            "Property": "RadiusBottomRight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "PaddingTop",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "Underline",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "10",
+            "Property": "RadiusBottomLeft",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "Italic",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "10",
+            "Property": "RadiusTopRight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "false",
+            "Property": "Strikethrough",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "PaddingRight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "TabIndex",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "10",
+            "Property": "RadiusTopLeft",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "PaddingLeft",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "768",
+            "Property": "maximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "PaddingBottom",
+            "RuleProviderType": "Unknown"
+          },
+          {
             "Category": "Behavior",
             "InvariantScript": "Set(\n    _today,\n    Today()\n);\n/* if default dates are provided, set to inputs, otherwise set to today */\nSet(\n    _selectedStart,\n    If(\n        !IsBlank(Calendar.DefaultStartDate),\n        Calendar.DefaultStartDate,\n        _today\n    )\n);\nSet(\n    _selectedEnd,\n    If(\n        !IsBlank(Calendar.DefaultEndDate) && Calendar.DefaultEndDate > _selectedStart,\n        Calendar.DefaultEndDate,\n        Blank()\n    )\n);\nSet(\n    _firstDayOfMonth,\n    DateAdd(\n        _selectedStart,\n        1 - Day(_selectedStart),\n        TimeUnit.Days\n    )\n);\nSet(\n    _firstDayInView,\n    DateAdd(\n        _firstDayOfMonth,\n        -(Mod(\n            Weekday(_firstDayOfMonth) - 2,\n            7\n        ) + 1),\n        TimeUnit.Days\n    )\n)",
             "Property": "OnTimerStart",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Behavior",
+            "InvariantScript": "false",
+            "Property": "OnSelect",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Behavior",
+            "InvariantScript": "false",
+            "Property": "OnTimerEnd",
             "RuleProviderType": "Unknown"
           }
         ],
@@ -4501,7 +5451,18 @@
           "PressedFill",
           "FocusedBorderColor",
           "HoverBorderColor",
-          "ContentLanguage"
+          "ContentLanguage",
+          "PaddingTop",
+          "minimumWidth",
+          "minimumHeight",
+          "Tooltip",
+          "AutoDisableOnSelect",
+          "PaddingRight",
+          "maximumWidth",
+          "TabIndex",
+          "PaddingLeft",
+          "maximumHeight",
+          "PaddingBottom"
         ],
         "ControlUniqueId": "31",
         "HasDynamicProperties": false,
@@ -4517,7 +5478,7 @@
         "OptimizeForDevices": "Off",
         "Parent": "Calendar",
         "PersistMetaDataIDKey": false,
-        "PublishOrderIndex": 981,
+        "PublishOrderIndex": 960,
         "Rules": [
           {
             "Category": "Data",
@@ -4529,6 +5490,12 @@
             "Category": "Data",
             "InvariantScript": "\"\"",
             "Property": "ContentLanguage",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Data",
+            "InvariantScript": "\"\"",
+            "Property": "Tooltip",
             "RuleProviderType": "Unknown"
           },
           {
@@ -4742,8 +5709,68 @@
             "RuleProviderType": "Unknown"
           },
           {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "PaddingTop",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "minimumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "minimumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "true",
+            "Property": "AutoDisableOnSelect",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "PaddingRight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "1366",
+            "Property": "maximumWidth",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "0",
+            "Property": "TabIndex",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "PaddingLeft",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "768",
+            "Property": "maximumHeight",
+            "RuleProviderType": "Unknown"
+          },
+          {
+            "Category": "Design",
+            "InvariantScript": "5",
+            "Property": "PaddingBottom",
+            "RuleProviderType": "Unknown"
+          },
+          {
             "Category": "Behavior",
-            "InvariantScript": "Set(_today,Today());\r\nSet(_firstDayOfMonth,DateAdd(_today,1-Day(_today),TimeUnit.Days));\r\nSet(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days));\r\nSet(_selectedStart,Blank()); Set(_selectedEnd, Blank())",
+            "InvariantScript": "Set(_today,Today());\nSet(_firstDayOfMonth,DateAdd(_today,1-Day(_today),TimeUnit.Days));\nSet(_firstDayInView,DateAdd(_firstDayOfMonth,-(Mod(Weekday(_firstDayOfMonth)-2,7)+1),TimeUnit.Days));\nSet(_selectedStart,Blank()); Set(_selectedEnd, Blank())",
             "Property": "OnSelect",
             "RuleProviderType": "Unknown"
           }
@@ -4862,14 +5889,19 @@
         "IsLockable": false,
         "NameMapSourceSchema": "?"
       },
-      "OnChangeCal"
+      "OnChangeCal",
+      "EnableChildFocus",
+      "Visible",
+      "ChildTabPriority",
+      "ContentLanguage",
+      "OnSelectCal"
     ],
-    "LastModifiedTimestamp": "639238747824975797",
+    "LastModifiedTimestamp": "639258729090726776",
     "Name": "Calendar",
     "Rules": [
       {
         "Category": "Data",
-        "InvariantScript": "If(\r\n    !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Now(),\r\n    varPopUp_ClassPicker_scenarioDate,\r\n    Now()\r\n)",
+        "InvariantScript": "If(\n    !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Now(),\n    varPopUp_ClassPicker_scenarioDate,\n    Now()\n)",
         "Property": "DefaultStartDate",
         "RuleProviderType": "System"
       },
@@ -4923,7 +5955,7 @@
       },
       {
         "Category": "Data",
-        "InvariantScript": "If(\r\n    !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Now(),\r\n    varPopUp_ClassPicker_scenarioDate,\r\n    Now()\r\n)",
+        "InvariantScript": "If(\n    !IsBlankOrError(varPopUp_ClassPicker_scenarioDate) || varPopUp_ClassPicker_scenarioDate <> Now(),\n    varPopUp_ClassPicker_scenarioDate,\n    Now()\n)",
         "Property": "DefaultEndDate",
         "RuleProviderType": "System"
       },
@@ -4935,14 +5967,19 @@
       },
       {
         "Category": "Data",
-        "InvariantScript": "If(\r\n    Self.StartDate = Self.DefaultStartDate,\r\n    Table({DateValue: Self.DefaultStartDate}),\r\n    Self.StartDate = Today(),\r\n    Table({DateValue: Today()})\r\n)",
-        "NameMap": "{\"DateValue\":\"DateValue\"}",
+        "InvariantScript": "If(\n    Self.StartDate = Self.DefaultStartDate,\n    Table({DateValue: Self.DefaultStartDate}),\n    Self.StartDate = Today(),\n    Table({DateValue: Today()})\n)",
         "Property": "SelectedDates",
         "RuleProviderType": "System"
       },
       {
+        "Category": "Data",
+        "InvariantScript": "\"\"",
+        "Property": "ContentLanguage",
+        "RuleProviderType": "System"
+      },
+      {
         "Category": "Design",
-        "InvariantScript": "40",
+        "InvariantScript": "0",
         "Property": "Y",
         "RuleProviderType": "Unknown"
       },
@@ -4954,7 +5991,7 @@
       },
       {
         "Category": "Design",
-        "InvariantScript": "40",
+        "InvariantScript": "0",
         "Property": "X",
         "RuleProviderType": "Unknown"
       },
@@ -4977,6 +6014,24 @@
         "RuleProviderType": "System"
       },
       {
+        "Category": "Design",
+        "InvariantScript": "true",
+        "Property": "EnableChildFocus",
+        "RuleProviderType": "System"
+      },
+      {
+        "Category": "Design",
+        "InvariantScript": "true",
+        "Property": "Visible",
+        "RuleProviderType": "System"
+      },
+      {
+        "Category": "Design",
+        "InvariantScript": "true",
+        "Property": "ChildTabPriority",
+        "RuleProviderType": "System"
+      },
+      {
         "Category": "Behavior",
         "InvariantScript": "",
         "Property": "OnReset",
@@ -4986,6 +6041,12 @@
         "Category": "Behavior",
         "InvariantScript": "",
         "Property": "OnChangeCal",
+        "RuleProviderType": "System"
+      },
+      {
+        "Category": "Behavior",
+        "InvariantScript": "",
+        "Property": "OnSelectCal",
         "RuleProviderType": "System"
       }
     ]
@@ -5146,9 +6207,9 @@
   "IsPcfControl": false,
   "IsPremiumPcfControl": false,
   "IsWidgetTemplate": false,
-  "LastModifiedTimestamp": "639238747824975797",
+  "LastModifiedTimestamp": "639258729090726776",
   "Name": "0c469c74dd37480dbc0b81f64833370c",
   "OverridableProperties": {},
   "TemplateOriginalName": "fe29d6eb8ed24c219f22b476f07be944",
-  "Version": "637581033184540094"
+  "Version": "1.0"
 }

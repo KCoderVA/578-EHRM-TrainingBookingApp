@@ -1,4 +1,5 @@
 POCSUPERVISOR As screen:
+    ContentLanguage: =""
     Fill: =RGBA(236, 236, 236, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
@@ -85,6 +86,23 @@ POCSUPERVISOR As screen:
         Set(varStudentMgrProfile, IfError(Office365Users.ManagerV2(varTargetEntraID), Blank()));
     Width: =Max(App.Width, App.DesignWidth)
 
+    Rectangle2_11 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(135, 78, 181, 0.65)
+        Height: =ctn_PopUp_ClassPicker_Header.Height
+        Width: =Parent.Width
+        ZIndex: =2
+
+    Image2_12 As image:
+        BorderColor: =App.Theme.Colors.Darker40
+        DisabledBorderColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Height: =ctn_PopUp_ClassPicker_Header.Height
+        Image: =abstractBackground
+        ImagePosition: =ImagePosition.Fill
+        Width: =Parent.Width
+        ZIndex: =3
+
     rectButtonsBackground As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
         Fill: =RGBA(180, 214, 250, 1)
@@ -92,7 +110,7 @@ POCSUPERVISOR As screen:
         Width: =Parent.Width
         X: =(Parent.Width / 2) - (Self.Width / 2)
         Y: =Parent.Height - Self.Height
-        ZIndex: =3
+        ZIndex: =4
 
     lblPOCSUPER_missingRequired As label:
         Align: =Align.Center
@@ -115,7 +133,7 @@ POCSUPERVISOR As screen:
             )
         Width: =1136
         Y: =rectButtonsBackground.Y - Self.Height
-        ZIndex: =4
+        ZIndex: =5
 
     btnPOCSUPER_continue As button:
         BorderColor: =RGBA(9, 33, 98, 1)
@@ -165,7 +183,7 @@ POCSUPERVISOR As screen:
         Width: =200
         X: =btnPOCSUPER_back.X + btnPOCSUPER_back.Width + 20
         Y: =btnPOCSUPER_back.Y
-        ZIndex: =5
+        ZIndex: =6
 
     btnPOCSUPER_back As button:
         BorderColor: =RGBA(9, 33, 98, 1)
@@ -202,9 +220,10 @@ POCSUPERVISOR As screen:
         Width: =200
         X: =(Parent.Width - (Self.Width + 20 + btnPOCSUPER_continue.Width)) / 2
         Y: =rectButtonsBackground.Y + (Self.Height / 3)
-        ZIndex: =6
+        ZIndex: =7
 
     Form1 As form:
+        AcceptsFocus: =false
         BorderColor: =App.Theme.Colors.Darker40
         DataSource: ='Desk Reservations'
         DefaultMode: =FormMode.New
@@ -220,23 +239,387 @@ POCSUPERVISOR As screen:
         NumberOfColumns: =2
         Width: =1136
         Y: =Image2_12.Y + Image2_12.Height
-        ZIndex: =7
+        ZIndex: =8
 
-        Manager_DataCard1 As typedDataCard.comboBoxEditCard:
+        "'Reserved By_DataCard1' As typedDataCard.comboBoxEditCard":
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
+            DataField: ="ReservedBy"
+            Default: =DataCardValue3.Selected
+            DisplayMode: =Parent.DisplayMode
+            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Reserved By')
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =95
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
+            minimumHeight: =20
+            minimumWidth: =20
+            Required: =true
+            Update: =DataCardValue3.Selected
+            Visible: =true
+            Width: =568
+            WidthFit: =false
+            X: =0
+            Y: =0
+            ZIndex: =1
+
+            DataCardKey3 As label:
+                AutoHeight: =true
+                Color: =App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                Height: =48
+                Italic: =true
+                Size: =16
+                Text: |-
+                    ="The EMPLOYEE I am creating a reservation for is:"
+                Width: =Parent.Width - 60
+                Wrap: =false
+                X: |-
+                    =If(
+                        And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, IsBlank(DataCardValue3)),
+                        StarVisible3.Width,
+                        10
+                    )
+                ZIndex: =1
+
+            ErrorMessage3 As label:
+                AutoHeight: =true
+                Color: =RGBA(168, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =10
+                Live: =Live.Assertive
+                PaddingBottom: =0
+                PaddingLeft: =0
+                PaddingRight: =0
+                PaddingTop: =0
+                Size: =24
+                Text: =Parent.Error
+                Visible: =Parent.DisplayMode=DisplayMode.Edit
+                Width: =Parent.Width - 60
+                X: =30
+                Y: =DataCardValue3.Y + DataCardValue3.Height
+                ZIndex: =3
+
+            StarVisible3 As label:
+                Align: =Align.Center
+                Color: =Color.Red // App.Theme.Colors.Darker30
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =DataCardKey3.Height
+                Size: =30
+                Text: ="*"
+                Visible: |-
+                    =If(
+                        !Parent.Valid,
+                        true,
+                        false
+                    )
+                Width: =30
+                Wrap: =false
+                Y: =DataCardKey3.Y
+                ZIndex: =4
+
+            DataCardValue3 As combobox:
+                BorderColor: =App.Theme.Colors.Darker40
+                ChevronBackground: =App.Theme.Colors.Primary
+                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
+                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
+                ChevronFill: =App.Theme.Colors.PrimaryForeground
+                ChevronHoverBackground: =App.Theme.Colors.Darker10
+                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
+                DefaultSelectedItems: |-
+                    =With(
+                        {
+                            // Step 1: Get the manager profile based on the email of the user selected in the first dropdown.
+                            targetProfile: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value)
+                        },
+                        // Step 2: If a manager is found, build the record in the format your combobox expects.
+                        If(
+                            !IsBlank(targetProfile),
+                            {
+                                Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).UserPrincipalName,
+                                DisplayName: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).DisplayName,
+                                Email: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).Mail,
+                                Department: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).Department,
+                                JobTitle: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).JobTitle,
+                                Picture: Blank()
+                            },
+                            IsBlank(targetProfile),
+                            {
+                                Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText), top:(25)}).value).UserPrincipalName,
+                                DisplayName: First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText), top:(25)}).value).DisplayName,
+                                Email: First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText), top:(25)}).value).Mail,
+                                Department: First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText), top:(25)}).value).Department,
+                                JobTitle: First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText), top:(25)}).value).JobTitle,
+                                Picture: Blank()
+                            }
+                            )
+                        )
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                DisabledFill: =RGBA(244, 244, 244, 1)
+                DisplayFields: =["Email","DisplayName","Picture"]
+                DisplayMode: =Parent.DisplayMode
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Bold
+                Height: =45
+                HoverColor: =RGBA(0, 0, 0, 1)
+                HoverFill: =App.Theme.Colors.Lighter70
+                InputTextPlaceholder: ="Find people..."
+                IsSearchable: =false
+                Items: |-
+                    =//Office365Users.SearchUser({searchTerm: Self.SearchText, top: 25}),
+                    //////ATTN KYLE!  AS OF 09/23/2026:  Testing alternative formula
+                    /*  
+                    If(
+                        IsBlank(Trim(Self.SelectedItems)),
+                        Office365Users.SearchUser(
+                            {
+                                searchTerm: Trim(Self.SearchText),
+                                top: 40
+                            }
+                        )
+                    )
+                    */
+                    ////////////////
+                    With(
+                        {
+                            // Step 1: Get the manager profile based on the email of the user selected in the first dropdown.
+                            targetProfile: If(
+                                IsBlankOrError(Self.SearchText) || Self.SearchText = "" || Self.SearchText = Blank(),
+                                Office365Users.MyProfile(),
+                                Blank()
+                                //Office365Users.SearchUserV2(
+                                //    {
+                                //        searchTerm: ( Self.SearchText ),
+                                //        top: (100)
+                                //    }
+                                //)
+                            )
+                                //If(!IsBlank(varTargetEmail), First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value), Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(50)}))
+                        },
+                        // Step 2: If a manager is found, build the record in the format your combobox expects.
+                        If(
+                            !IsBlank(targetProfile),
+                            {
+                                Claims: "i:0#.f|membership|" & First(
+                                    Office365Users.SearchUserV2(
+                                        {
+                                            searchTerm: varTargetEmail,
+                                            top: (1)
+                                        }
+                                    ).value
+                                ).UserPrincipalName,
+                                DisplayName: First(
+                                    Office365Users.SearchUserV2(
+                                        {
+                                            searchTerm: varTargetEmail,
+                                            top: (1)
+                                        }
+                                    ).value
+                                ).DisplayName,
+                                Email: First(
+                                    Office365Users.SearchUserV2(
+                                        {
+                                            searchTerm: varTargetEmail,
+                                            top: (1)
+                                        }
+                                    ).value
+                                ).Mail,
+                                Department: First(
+                                    Office365Users.SearchUserV2(
+                                        {
+                                            searchTerm: varTargetEmail,
+                                            top: (1)
+                                        }
+                                    ).value
+                                ).Department,
+                                JobTitle: First(
+                                    Office365Users.SearchUserV2(
+                                        {
+                                            searchTerm: varTargetEmail,
+                                            top: (1)
+                                        }
+                                    ).value
+                                ).JobTitle,
+                                Picture: If(
+                                    Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto = true,
+                                    Office365Users.UserPhoto(varTargetEntraID),
+                                    Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto = false,
+                                    icon_silhouetteExecutives,
+                                    Blank()
+                                )
+                            },
+                            IsBlank(targetProfile),
+                            {
+                                Claims: "i:0#.f|membership|" & First(
+                                    Office365Users.SearchUserV2(
+                                        {
+                                            searchTerm: (DataCardValue3.SearchText),
+                                            top: (50)
+                                        }
+                                    ).value
+                                ).UserPrincipalName,
+                                DisplayName: First(
+                                    Office365Users.SearchUserV2(
+                                        {
+                                            searchTerm: (DataCardValue3.SearchText),
+                                            top: (50)
+                                        }
+                                    ).value
+                                ).DisplayName,
+                                Email: First(
+                                    Office365Users.SearchUserV2(
+                                        {
+                                            searchTerm: (DataCardValue3.SearchText),
+                                            top: (50)
+                                        }
+                                    ).value
+                                ).Mail,
+                                Department: First(
+                                    Office365Users.SearchUserV2(
+                                        {
+                                            searchTerm: (DataCardValue3.SearchText),
+                                            top: (50)
+                                        }
+                                    ).value
+                                ).Department,
+                                JobTitle: First(
+                                    Office365Users.SearchUserV2(
+                                        {
+                                            searchTerm: (DataCardValue3.SearchText),
+                                            top: (50)
+                                        }
+                                    ).value
+                                ).JobTitle,
+                                Picture: If(
+                                    Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto = true,
+                                    Office365Users.UserPhoto(varTargetEntraID),
+                                    Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto = false,
+                                    icon_silhouetteExecutives,
+                                    Blank()
+                                )
+                            }
+                        )
+                    )
+                OnChange: |-
+                    =Set(var_Attendees, Self.Selected.Email);
+                    Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
+                    Set(varStudentProfile, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
+                    Set(varStudentMgrMail, Office365Users.ManagerV2(varStudentProfile.Id).userPrincipalName);
+                    //Set(varStudentMgrProfile, First(Office365Users.SearchUserV2({searchTerm: varStudentMgrMail}).value));
+                    Set(varStudentMgrProfile, IfError(Office365Users.ManagerV2(varStudentProfile.Id), Blank()));
+                    
+                    Reset(DataCardValue7);
+                    Reset(DataCardValue8);
+                    Reset(DropdownCanvas1);
+                    Set(varTargetEmail, Self.Selected.Email);
+                    Set(varTargetEntraID, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value).Id);
+                    {
+                        Claims: "i:0#.f|membership|" & Office365Users.UserProfileV2(varTargetEntraID).displayName,
+                        DisplayName: Office365Users.UserProfileV2(varTargetEntraID).displayName,
+                        Email: Office365Users.UserProfileV2(varTargetEntraID).mail,
+                        ID: Office365Users.UserProfileV2(varTargetEntraID).id
+                    };
+                    Set(varUser_details, Office365Users.UserProfileV2(varTargetEmail));
+                    ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+                    If(
+                        LookUp(
+                            SuperUserList,
+                            Lower(DataCardValue3.Selected.Email) = Lower('Enter Super User VA email address'),
+                            true
+                        ) = true,
+                        Set(user_IsSuperUser, true),
+                        Set(user_IsSuperUser, false)
+                    );
+                    Set(var_Service, DataCardValue8.Text);
+                    Set(var_ManagerEmail, DataCardValue7.Selected.Email);
+                OnSelect: |-
+                    =Set(var_Attendees, Self.Selected.Email);
+                    Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
+                    Set(varStudentProfile, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
+                    Set(varStudentMgrMail, Office365Users.ManagerV2(varStudentProfile.Id).userPrincipalName);
+                    Set(varStudentMgrProfile, First(Office365Users.SearchUserV2({searchTerm: varStudentMgrMail}).value));
+                    Reset(DataCardValue7);
+                    Reset(DataCardValue8);
+                    Reset(DropdownCanvas1);
+                    Set(varTargetEmail, Self.Selected.Email);
+                    Set(varTargetEntraID, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value).Id);
+                    {
+                        Claims: "i:0#.f|membership|" & Office365Users.UserProfileV2(varTargetEntraID).displayName,
+                        DisplayName: Office365Users.UserProfileV2(varTargetEntraID).displayName,
+                        Email: Office365Users.UserProfileV2(varTargetEntraID).mail,
+                        ID: Office365Users.UserProfileV2(varTargetEntraID).id
+                    };
+                    Set(varUser_details, Office365Users.UserProfileV2(varTargetEmail));
+                    ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
+                    If(
+                        LookUp(
+                            SuperUserList,
+                            Lower(DataCardValue3.Selected.Email) = Lower('Enter Super User VA email address'),
+                            true
+                        ) = true,
+                        Set(user_IsSuperUser, true),
+                        Set(user_IsSuperUser, false)
+                    );
+                    Set(var_Service, DataCardValue8.Text);
+                    Set(var_ManagerEmail, DataCardValue7.Selected.Email);
+                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                PressedColor: =App.Theme.Colors.PrimaryForeground
+                PressedFill: =App.Theme.Colors.Darker30
+                SearchFields: =["Email"]
+                SearchItems: |-
+                    =Search(With({targetProfile:If(IsBlankOrError(Self.SearchText)||Self.SearchText=""||Self.SearchText=Blank(),Office365Users.MyProfile(),Blank())},If(!IsBlank(targetProfile),{Claims:"i:0#.f|membership|"&First(Office365Users.SearchUserV2({searchTerm:varTargetEmail,top:(1)}).value).UserPrincipalName,DisplayName:First(Office365Users.SearchUserV2({searchTerm:varTargetEmail,top:(1)}).value).DisplayName,Email:First(Office365Users.SearchUserV2({searchTerm:varTargetEmail,top:(1)}).value).Mail,Department:First(Office365Users.SearchUserV2({searchTerm:varTargetEmail,top:(1)}).value).Department,JobTitle:First(Office365Users.SearchUserV2({searchTerm:varTargetEmail,top:(1)}).value).JobTitle,Picture:If(Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto= true ,Office365Users.UserPhoto(varTargetEntraID),Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto= false ,icon_silhouetteExecutives,Blank())},IsBlank(targetProfile),{Claims:"i:0#.f|membership|"&First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText),top:(50)}).value).UserPrincipalName,DisplayName:First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText),top:(50)}).value).DisplayName,Email:First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText),top:(50)}).value).Mail,Department:First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText),top:(50)}).value).Department,JobTitle:First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText),top:(50)}).value).JobTitle,Picture:If(Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto= true ,Office365Users.UserPhoto(varTargetEntraID),Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto= false ,icon_silhouetteExecutives,Blank())})),DataCardValue3.SearchText,Email)
+                SelectionColor: =App.Theme.Colors.PrimaryForeground
+                SelectionFill: =App.Theme.Colors.Primary
+                SelectMultiple: =false
+                Size: =14
+                Template: =ListItemTemplate.Person
+                Tooltip: =Parent.DisplayName
+                Width: =508
+                X: =35
+                Y: =DataCardKey3.Y + DataCardKey3.Height + 5
+                ZIndex: =5
+
+        Manager_DataCard1 As typedDataCard.comboBoxEditCard:
+            AutoHeight: =true
+            BorderColor: =App.Theme.Colors.Darker40
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="Manager"
             Default: =ThisItem.Manager
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Manager)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =95
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =true
             Update: =DataCardValue7.Selected
+            Visible: =true
             Width: =568
+            WidthFit: =false
             X: =1
             Y: =0
-            ZIndex: =1
+            ZIndex: =2
 
             DataCardKey9 As label:
                 AutoHeight: =true
@@ -285,7 +668,7 @@ POCSUPERVISOR As screen:
                 DisabledBorderColor: =RGBA(166, 166, 166, 1)
                 DisabledColor: =RGBA(166, 166, 166, 1)
                 DisabledFill: =RGBA(244, 244, 244, 1)
-                DisplayFields: =["DisplayName","Email","Picture"]
+                DisplayFields: =["Email"]
                 DisplayMode: =Parent.DisplayMode
                 Font: =App.Theme.Font
                 FontWeight: =FontWeight.Bold
@@ -293,17 +676,26 @@ POCSUPERVISOR As screen:
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
                 InputTextPlaceholder: ="Last Name, First Name "
-                Items: =Choices([@'Desk Reservations'].Manager)
+                Items: |-
+                    =ForAll(
+                        Office365Users.SearchUserV2({searchTerm: DataCardValue3.SearchText, top: 25}).value,
+                        {
+                            //Claims: "i:0#.f|membership|" & UserPrincipalName,
+                            //DisplayName: DisplayName,
+                            Email: UserPrincipalName
+                            //ID: Id
+                        }
+                    )
                 PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                 PressedColor: =App.Theme.Colors.PrimaryForeground
                 PressedFill: =App.Theme.Colors.Darker30
-                SearchFields: =["DisplayName"]
-                SearchItems: =Choices('Desk Reservations'.Manager,DataCardValue7.SearchText)
+                SearchFields: =["Email"]
+                SearchItems: |-
+                    =Search(ForAll(Office365Users.SearchUserV2({searchTerm:DataCardValue3.SearchText,top:25}).value,{Email:UserPrincipalName}),DataCardValue7.SearchText,Email)
                 SelectionColor: =App.Theme.Colors.PrimaryForeground
                 SelectionFill: =App.Theme.Colors.Primary
                 SelectMultiple: =false
                 Size: =14
-                Template: =ListItemTemplate.Person
                 Tooltip: =Parent.DisplayName
                 Width: =DataCardValue3.Width
                 X: =35
@@ -351,21 +743,34 @@ POCSUPERVISOR As screen:
                 ZIndex: =4
 
         Service_DataCard1 As typedDataCard.textualEditCard:
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="Service"
             Default: =ThisItem.Service
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Service)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =93
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
             MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Service)
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =true
             Update: =DataCardValue8.Text
+            Visible: =true
             Width: =568
+            WidthFit: =false
             X: =0
             Y: =1
-            ZIndex: =1
+            ZIndex: =3
 
             DataCardKey10 As label:
                 AutoHeight: =true
@@ -489,20 +894,35 @@ POCSUPERVISOR As screen:
                 ZIndex: =4
 
         "'Meeting Catagory_DataCard1' As typedDataCard.comboBoxEditCard":
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="MeetingCatagory"
-            Default: =
+            Default: |-
+                =DropdownCanvas1.Selected
+                //%QUALIFIED_DATACARD_FIELD_VALUE.ID%
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =85
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =true
             Update: =DropdownCanvas1.Selected
+            Visible: =true
             Width: =568
+            WidthFit: =false
             X: =1
             Y: =1
-            ZIndex: =1
+            ZIndex: =4
 
             DataCardKey13 As label:
                 AutoHeight: =true
@@ -767,7 +1187,6 @@ POCSUPERVISOR As screen:
                 PressedColor: =App.Theme.Colors.PrimaryForeground
                 PressedFill: =App.Theme.Colors.Darker30
                 SearchFields: =["Value"]
-                SearchItems: =Search(["","Super User Learning Lab"],DropdownCanvas1.SearchText,Value)
                 SelectionColor: =App.Theme.Colors.PrimaryForeground
                 SelectionFill: =App.Theme.Colors.Primary
                 SelectMultiple: =false
@@ -778,8 +1197,11 @@ POCSUPERVISOR As screen:
                 ZIndex: =6
 
         Description_DataCard2 As typedDataCard.textualEditCard:
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="reservationDescription_multilinetext" // "Description"
             Default: =ThisItem.reservationDescription_multilinetext //ThisItem.Description
             DisplayMode: =Parent.DisplayMode
@@ -787,7 +1209,15 @@ POCSUPERVISOR As screen:
             Fill: =RGBA(0, 0, 0, 0)
             Height: |
                 =DataCardKey14.Height + HtmlText4.Height + 10 //247 // 303
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
             MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, reservationDescription_multilinetext) //DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Description)
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =false
             Update: =DataCardValue13.Text
             Visible: |-
@@ -797,9 +1227,10 @@ POCSUPERVISOR As screen:
                     false
                 )
             Width: =Parent.Width
+            WidthFit: =false
             X: =0
             Y: =2
-            ZIndex: =1
+            ZIndex: =5
 
             DataCardKey14 As label:
                 AutoHeight: =true
@@ -841,6 +1272,7 @@ POCSUPERVISOR As screen:
                 FocusedBorderThickness: =4
                 Font: =App.Theme.Font
                 Height: =70
+                HintText: =""
                 HoverBorderColor: =App.Theme.Colors.Darker40
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
@@ -971,21 +1403,33 @@ POCSUPERVISOR As screen:
                 ZIndex: =5
 
         OptionalAttendees_DataCard1 As typedDataCard.comboBoxEditCard:
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="OptionalAttendees"
             Default: =ThisItem.OptionalAttendees
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,OptionalAttendees)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =50
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =false
             Update: =DataCardValue16.Selected
             Visible: =false
             Width: =568
+            WidthFit: =false
             X: =0
             Y: =4
-            ZIndex: =1
+            ZIndex: =6
 
             DataCardKey17 As label:
                 AutoHeight: =true
@@ -1025,12 +1469,12 @@ POCSUPERVISOR As screen:
                 Height: =70
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
+                InputTextPlaceholder: ="Find items"
                 Items: =Choices([@'Desk Reservations'].OptionalAttendees)
                 PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                 PressedColor: =App.Theme.Colors.PrimaryForeground
                 PressedFill: =App.Theme.Colors.Darker30
                 SearchFields: =["Claims"]
-                SearchItems: =Choices('Desk Reservations'.OptionalAttendees,DataCardValue16.SearchText)
                 SelectionColor: =App.Theme.Colors.PrimaryForeground
                 SelectionFill: =App.Theme.Colors.Primary
                 SelectMultiple: =false
@@ -1076,22 +1520,34 @@ POCSUPERVISOR As screen:
                 ZIndex: =4
 
         Title_DataCard2 As typedDataCard.textualEditCard:
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="Title"
             Default: =ThisItem.Title
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Title)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =50
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
             MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Title)
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =true
             Update: =DataCardValue19.Text
             Visible: =false
             Width: =568
+            WidthFit: =false
             X: =1
             Y: =4
-            ZIndex: =1
+            ZIndex: =7
 
             DataCardKey20 As label:
                 AutoHeight: =true
@@ -1126,6 +1582,7 @@ POCSUPERVISOR As screen:
                 FocusedBorderThickness: =4
                 Font: =App.Theme.Font
                 Height: =70
+                HintText: =""
                 HoverBorderColor: =App.Theme.Colors.Darker40
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
@@ -1177,21 +1634,33 @@ POCSUPERVISOR As screen:
                 ZIndex: =4
 
         "'Check Out To_DataCard1' As typedDataCard.dateTimeEditCard":
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="CheckOutTo"
             Default: =ThisItem.'Check Out To'
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Check Out To')
             Fill: =RGBA(0, 0, 0, 0)
             Height: =50
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =false
             Update: =If(Not IsBlank(DateValue2.SelectedDate), DateTime(Year(DateValue2.SelectedDate), Month(DateValue2.SelectedDate), Day(DateValue2.SelectedDate), Value(HourValue2.Selected.Value), Value(MinuteValue2.Selected.Value), 0))
             Visible: =false
             Width: =568
+            WidthFit: =false
             X: =0
             Y: =5
-            ZIndex: =1
+            ZIndex: =8
 
             DataCardKey22 As label:
                 AutoHeight: =true
@@ -1229,6 +1698,8 @@ POCSUPERVISOR As screen:
                 IconBackground: =App.Theme.Colors.Primary
                 IconFill: =App.Theme.Colors.PrimaryForeground
                 IsEditable: =true
+                maximumHeight: =1136
+                maximumWidth: =640
                 PaddingBottom: =0
                 PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                 SelectedDateFill: =App.Theme.Colors.Primary
@@ -1362,21 +1833,33 @@ POCSUPERVISOR As screen:
                 ZIndex: =7
 
         Asset_DataCard2 As typedDataCard.comboBoxEditCard:
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="Asset"
             Default: =ThisItem.Asset
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Asset)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =50
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =false
             Update: =DataCardValue23.Selected
             Visible: =false
             Width: =568
+            WidthFit: =false
             X: =1
             Y: =5
-            ZIndex: =1
+            ZIndex: =9
 
             DataCardKey26 As label:
                 AutoHeight: =true
@@ -1416,12 +1899,12 @@ POCSUPERVISOR As screen:
                 Height: =70
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
+                InputTextPlaceholder: ="Find items"
                 Items: =Choices([@'Desk Reservations'].Asset)
                 PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                 PressedColor: =App.Theme.Colors.PrimaryForeground
                 PressedFill: =App.Theme.Colors.Darker30
                 SearchFields: =["Value"]
-                SearchItems: =Choices('Desk Reservations'.Asset,DataCardValue23.SearchText)
                 SelectionColor: =App.Theme.Colors.PrimaryForeground
                 SelectionFill: =App.Theme.Colors.Primary
                 SelectMultiple: =false
@@ -1467,21 +1950,33 @@ POCSUPERVISOR As screen:
                 ZIndex: =4
 
         Active_choice_DataCard1 As typedDataCard.comboBoxEditCard:
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="Active_choice"
             Default: =ThisItem.Active_choice
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Active_choice)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =50
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =false
             Update: =DataCardValue17.Selected
             Visible: =false
             Width: =568
+            WidthFit: =false
             X: =0
             Y: =6
-            ZIndex: =1
+            ZIndex: =10
 
             DataCardKey18 As label:
                 AutoHeight: =true
@@ -1521,12 +2016,12 @@ POCSUPERVISOR As screen:
                 Height: =70
                 HoverColor: =RGBA(0, 0, 0, 1)
                 HoverFill: =App.Theme.Colors.Lighter70
+                InputTextPlaceholder: ="Find items"
                 Items: =Choices([@'Desk Reservations'].Active_choice)
                 PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                 PressedColor: =App.Theme.Colors.PrimaryForeground
                 PressedFill: =App.Theme.Colors.Darker30
                 SearchFields: =["Value"]
-                SearchItems: =Choices('Desk Reservations'.Active_choice,DataCardValue17.SearchText)
                 SelectionColor: =App.Theme.Colors.PrimaryForeground
                 SelectionFill: =App.Theme.Colors.Primary
                 SelectMultiple: =false
@@ -1572,21 +2067,33 @@ POCSUPERVISOR As screen:
                 ZIndex: =4
 
         "'Check Out From_DataCard1' As typedDataCard.dateTimeEditCard":
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="CheckOutFrom"
             Default: =ThisItem.'Check Out From'
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Check Out From')
             Fill: =RGBA(0, 0, 0, 0)
             Height: =50
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =false
             Update: =If(Not IsBlank(DateValue1.SelectedDate), DateTime(Year(DateValue1.SelectedDate), Month(DateValue1.SelectedDate), Day(DateValue1.SelectedDate), Value(HourValue1.Selected.Value), Value(MinuteValue1.Selected.Value), 0))
             Visible: =false
             Width: =568
+            WidthFit: =false
             X: =1
             Y: =6
-            ZIndex: =1
+            ZIndex: =11
 
             DataCardKey21 As label:
                 AutoHeight: =true
@@ -1624,6 +2131,8 @@ POCSUPERVISOR As screen:
                 IconBackground: =App.Theme.Colors.Primary
                 IconFill: =App.Theme.Colors.PrimaryForeground
                 IsEditable: =true
+                maximumHeight: =1136
+                maximumWidth: =640
                 PaddingBottom: =0
                 PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                 SelectedDateFill: =App.Theme.Colors.Primary
@@ -1757,21 +2266,33 @@ POCSUPERVISOR As screen:
                 ZIndex: =7
 
         RoomReservation_DataCard1 As typedDataCard.toggleEditCard:
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="RoomReservation"
             Default: =ThisItem.RoomReservation
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,RoomReservation)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =50
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =false
             Update: =DataCardValue21.Value
             Visible: =false
             Width: =568
+            WidthFit: =false
             X: =0
             Y: =7
-            ZIndex: =1
+            ZIndex: =12
 
             DataCardKey24 As label:
                 AutoHeight: =true
@@ -1799,12 +2320,14 @@ POCSUPERVISOR As screen:
                 Default: =Parent.Default
                 DisplayMode: =Parent.DisplayMode
                 FalseFill: =RGBA(128, 130, 133, 1)
+                FalseText: ="Off"
                 Font: =App.Theme.Font
                 HandleFill: =RGBA(255, 255, 255, 1)
                 Height: =49
                 Size: =21
                 Tooltip: =Parent.DisplayName
                 TrueFill: =App.Theme.Colors.Primary
+                TrueText: ="On"
                 Width: =154
                 X: =30
                 Y: =DataCardKey24.Y + DataCardKey24.Height + 5
@@ -1845,24 +2368,36 @@ POCSUPERVISOR As screen:
                 ZIndex: =4
 
         "'Reason for desk reservation_DataCard1' As typedDataCard.textualEditCard":
+            AutoHeight: =true
             BorderColor: =App.Theme.Colors.Darker40
             BorderStyle: =BorderStyle.Solid
+            BorderThickness: =0
+            ContentLanguage: =""
             DataField: ="reservationJustification_multilinetext"
             Default: =ThisItem.reservationJustification_multilinetext
             DisplayMode: =Parent.DisplayMode
             DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,reservationJustification_multilinetext) //DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Reasonfordeskreservation)
             Fill: =RGBA(0, 0, 0, 0)
             Height: =132
+            LayoutHeight: =0
+            LayoutWidth: =0
+            LayoutX: =0
+            LayoutY: =0
+            maximumHeight: =11360
+            maximumWidth: =640
             MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Description)
+            minimumHeight: =20
+            minimumWidth: =20
             Required: =false
             Update: =DataCardValue1.Text
             Visible: =false
             Width: |-
                 =Parent.Width
                 // 568
+            WidthFit: =false
             X: =0
             Y: =150
-            ZIndex: =1
+            ZIndex: =13
 
             DataCardKey1 As label:
                 Color: =App.Theme.Colors.Darker30
@@ -1955,187 +2490,6 @@ POCSUPERVISOR As screen:
                 Y: =DataCardKey1.Y
                 ZIndex: =4
 
-        "'Reserved By_DataCard1' As typedDataCard.comboBoxEditCard":
-            BorderColor: =App.Theme.Colors.Darker40
-            BorderStyle: =BorderStyle.Solid
-            DataField: ="ReservedBy"
-            Default: =ThisItem.'Reserved By'
-            DisplayMode: =Parent.DisplayMode
-            DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Reserved By')
-            Fill: =RGBA(0, 0, 0, 0)
-            Height: =95
-            Required: =true
-            Update: =DataCardValue3.Selected
-            Width: =568
-            X: =0
-            Y: =0
-            ZIndex: =14
-
-            DataCardKey3 As label:
-                AutoHeight: =true
-                Color: =App.Theme.Colors.Darker30
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                Height: =48
-                Italic: =true
-                Size: =16
-                Text: |-
-                    ="The EMPLOYEE I am creating a reservation for is:"
-                Width: =Parent.Width - 60
-                Wrap: =false
-                X: |-
-                    =If(
-                        And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit, IsBlank(DataCardValue3)),
-                        StarVisible3.Width,
-                        10
-                    )
-                ZIndex: =1
-
-            ErrorMessage3 As label:
-                AutoHeight: =true
-                Color: =RGBA(168, 0, 0, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Semibold
-                Height: =10
-                Live: =Live.Assertive
-                PaddingBottom: =0
-                PaddingLeft: =0
-                PaddingRight: =0
-                PaddingTop: =0
-                Size: =24
-                Text: =Parent.Error
-                Visible: =Parent.DisplayMode=DisplayMode.Edit
-                Width: =Parent.Width - 60
-                X: =30
-                Y: =DataCardValue3.Y + DataCardValue3.Height
-                ZIndex: =3
-
-            StarVisible3 As label:
-                Align: =Align.Center
-                Color: =Color.Red // App.Theme.Colors.Darker30
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Bold
-                Height: =DataCardKey3.Height
-                Size: =30
-                Text: ="*"
-                Visible: |-
-                    =If(
-                        !Parent.Valid,
-                        true,
-                        false
-                    )
-                Width: =30
-                Wrap: =false
-                Y: =DataCardKey3.Y
-                ZIndex: =4
-
-            DataCardValue3 As combobox:
-                BorderColor: =App.Theme.Colors.Darker40
-                ChevronBackground: =App.Theme.Colors.Primary
-                ChevronDisabledBackground: =RGBA(166, 166, 166, 1)
-                ChevronDisabledFill: =RGBA(244, 244, 244, 1)
-                ChevronFill: =App.Theme.Colors.PrimaryForeground
-                ChevronHoverBackground: =App.Theme.Colors.Darker10
-                ChevronHoverFill: =App.Theme.Colors.PrimaryForeground
-                DefaultSelectedItems: |-
-                    ={
-                        Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).UserPrincipalName, //Office365Users.MyProfileV2().userPrincipalName,
-                        DisplayName: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).DisplayName,
-                        Email: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).Mail,
-                        ID: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).Id
-                    }
-                DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                DisabledFill: =RGBA(244, 244, 244, 1)
-                DisplayFields: =["DisplayName","Email","Picture","ID"]
-                DisplayMode: =Parent.DisplayMode
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Bold
-                Height: =45
-                HoverColor: =RGBA(0, 0, 0, 1)
-                HoverFill: =App.Theme.Colors.Lighter70
-                InputTextPlaceholder: ="Find people..."
-                Items: =Choices([@'Desk Reservations'].'Reserved By')
-                OnChange: |-
-                    =Set(var_Attendees, Self.Selected.Email);
-                    Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
-                    Set(varStudentProfile, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
-                    Set(varStudentMgrMail, Office365Users.ManagerV2(varStudentProfile.Id).userPrincipalName);
-                    //Set(varStudentMgrProfile, First(Office365Users.SearchUserV2({searchTerm: varStudentMgrMail}).value));
-                    Set(varStudentMgrProfile, IfError(Office365Users.ManagerV2(varStudentProfile.Id), Blank()));
-                    
-                    Reset(DataCardValue7);
-                    Reset(DataCardValue8);
-                    Reset(DropdownCanvas1);
-                    Set(varTargetEmail, Self.Selected.Email);
-                    Set(varTargetEntraID, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value).Id);
-                    {
-                        Claims: "i:0#.f|membership|" & Office365Users.UserProfileV2(varTargetEntraID).displayName,
-                        DisplayName: Office365Users.UserProfileV2(varTargetEntraID).displayName,
-                        Email: Office365Users.UserProfileV2(varTargetEntraID).mail,
-                        ID: Office365Users.UserProfileV2(varTargetEntraID).id
-                    };
-                    Set(varUser_details, Office365Users.UserProfileV2(varTargetEmail));
-                    ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
-                    If(
-                        LookUp(
-                            SuperUserList,
-                            Lower(DataCardValue3.Selected.Email) = Lower('Enter Super User VA email address'),
-                            true
-                        ) = true,
-                        Set(user_IsSuperUser, true),
-                        Set(user_IsSuperUser, false)
-                    );
-                    Set(var_Service, DataCardValue8.Text);
-                    Set(var_ManagerEmail, DataCardValue7.Selected.Email);
-                OnSelect: |-
-                    =Set(var_Attendees, Self.Selected.Email);
-                    Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
-                    Set(varStudentProfile, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
-                    Set(varStudentMgrMail, Office365Users.ManagerV2(varStudentProfile.Id).userPrincipalName);
-                    Set(varStudentMgrProfile, First(Office365Users.SearchUserV2({searchTerm: varStudentMgrMail}).value));
-                    Reset(DataCardValue7);
-                    Reset(DataCardValue8);
-                    Reset(DropdownCanvas1);
-                    Set(varTargetEmail, Self.Selected.Email);
-                    Set(varTargetEntraID, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value).Id);
-                    {
-                        Claims: "i:0#.f|membership|" & Office365Users.UserProfileV2(varTargetEntraID).displayName,
-                        DisplayName: Office365Users.UserProfileV2(varTargetEntraID).displayName,
-                        Email: Office365Users.UserProfileV2(varTargetEntraID).mail,
-                        ID: Office365Users.UserProfileV2(varTargetEntraID).id
-                    };
-                    Set(varUser_details, Office365Users.UserProfileV2(varTargetEmail));
-                    ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
-                    If(
-                        LookUp(
-                            SuperUserList,
-                            Lower(DataCardValue3.Selected.Email) = Lower('Enter Super User VA email address'),
-                            true
-                        ) = true,
-                        Set(user_IsSuperUser, true),
-                        Set(user_IsSuperUser, false)
-                    );
-                    Set(var_Service, DataCardValue8.Text);
-                    Set(var_ManagerEmail, DataCardValue7.Selected.Email);
-                PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
-                PressedColor: =App.Theme.Colors.PrimaryForeground
-                PressedFill: =App.Theme.Colors.Darker30
-                SearchFields: =["Claims"]
-                SearchItems: =Choices('Desk Reservations'.'Reserved By',DataCardValue3.SearchText)
-                SelectionColor: =App.Theme.Colors.PrimaryForeground
-                SelectionFill: =App.Theme.Colors.Primary
-                SelectMultiple: =false
-                Size: =14
-                Template: =ListItemTemplate.Person
-                Tooltip: =Parent.DisplayName
-                Width: =508
-                X: =35
-                Y: =DataCardKey3.Y + DataCardKey3.Height + 5
-                ZIndex: =5
-
     lblPOCSUPER_title As label:
         Align: =Align.Center
         BorderColor: =App.Theme.Colors.Darker40
@@ -2147,9 +2501,11 @@ POCSUPERVISOR As screen:
         Size: =32
         Text: ="Create a new reservation..."
         Width: =Parent.Width
-        ZIndex: =8
+        ZIndex: =9
 
     btnPOCSUPER_AdminReset As modernButton:
+        BorderStyle: =""
+        Font: =""
         Height: =50
         OnSelect: |-
             =Reset(dropdown_RolePicker);
@@ -2158,6 +2514,7 @@ POCSUPERVISOR As screen:
             Reset(dropdown_LocationPicker);
             
             Navigate(DebuggingScreen);
+        Size: =24
         Text: ="RESET"
         Visible: |
             =//false
@@ -2168,7 +2525,7 @@ POCSUPERVISOR As screen:
             )
         Width: =176
         Y: =590
-        ZIndex: =9
+        ZIndex: =10
 
     ctn_NonSuperUser As groupContainer.manualLayoutContainer:
         DropShadow: =DropShadow.Light
@@ -2177,6 +2534,8 @@ POCSUPERVISOR As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
@@ -2188,7 +2547,7 @@ POCSUPERVISOR As screen:
                 false
             )
         Width: =Parent.Width
-        ZIndex: =10
+        ZIndex: =11
 
         rectBackground As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
@@ -2206,6 +2565,8 @@ POCSUPERVISOR As screen:
             LayoutGridColumns: =6
             LayoutGridRowMinHeight: =0
             LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
             RadiusBottomLeft: =4
             RadiusBottomRight: =4
             RadiusTopLeft: =4
@@ -2220,12 +2581,14 @@ POCSUPERVISOR As screen:
                 BorderColor: =RGBA(9, 33, 98, 1)
                 BorderStyle: =BorderStyle.Solid
                 BorderThickness: =10
+                Font: =""
                 Height: =Parent.Height
                 IconStyle: =IconStyle.Filled
                 RadiusBottomLeft: =50
                 RadiusBottomRight: =50
                 RadiusTopLeft: =50
                 RadiusTopRight: =50
+                Size: =24
                 Text: =
                 Width: =Parent.Width
                 ZIndex: =1
@@ -2236,6 +2599,8 @@ POCSUPERVISOR As screen:
                 LayoutGridColumns: =6
                 LayoutGridRowMinHeight: =0
                 LayoutGridRows: =6
+                maximumHeight: =11360
+                maximumWidth: =640
                 RadiusBottomLeft: =4
                 RadiusBottomRight: =4
                 RadiusTopLeft: =4
@@ -2305,7 +2670,10 @@ POCSUPERVISOR As screen:
             lbl_NonSuperUser_body As modernText:
                 Align: =Align.Center
                 AutoHeight: =true
+                BorderStyle: =""
+                Font: =""
                 Height: =50
+                Size: =26
                 Text: |-
                     ="The selection you have chosen is specifically reserved only for EHRM Super Users, and this training reservation may be canceled later...
                     
@@ -2318,6 +2686,8 @@ POCSUPERVISOR As screen:
             lbl_NonSuperUser_header As modernText:
                 Align: =Align.Center
                 AutoHeight: =true
+                BorderStyle: =""
+                Font: =""
                 FontWeight: =FontWeight.Bold
                 Height: =50
                 Size: =27
@@ -2335,13 +2705,15 @@ POCSUPERVISOR As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
         RadiusTopRight: =4
         Visible: =If(varPopUp_ClassPicker = 1, true, false)
         Width: =Parent.Width
-        ZIndex: =11
+        ZIndex: =12
 
         btnContinueDate_2 As button:
             BorderColor: =RGBA(9, 33, 98, 1)
@@ -2639,15 +3011,16 @@ POCSUPERVISOR As screen:
                             Sort(
                                 Distinct(
                                     Filter(
-                                        MasterScheduleList,
-                                        RoleName_text = dropdown_RolePicker.Selected.Value,
-                                        ScenarioName_text = dropdown_ScenarioPicker.Selected.Value,
-                                        TrainingCombinedDateTime_text = dropdown_DateTimePicker.Selected.Value
+                                        col_MasterSchedule,
+                                        ThisRecord.RoleName_text = dropdown_RolePicker.Selected.Value,
+                                        ThisRecord.ScenarioName_text = dropdown_ScenarioPicker.Selected.Value,
+                                        ThisRecord.TrainingCombinedDateTime_text = dropdown_DateTimePicker.Selected.Value,
+                                        (IsBlank(ThisRecord.sessionActive_text) || ThisRecord.sessionActive_text <> "false")
                     
                                     ),
-                                    LocationCombined_text
+                                    ThisRecord.LocationCombined_text
                                 ),
-                                Value
+                                ThisRecord.Value
                             )
                         )
                     )
@@ -2892,25 +3265,29 @@ POCSUPERVISOR As screen:
                 Items: |-
                     =If(
                         dropdown_ScenarioPicker.Selected.Value = "MY SCENARIO IS NOT LISTED!",
-                        Table(
-                            ["MY SCENARIO IS NOT LISTED!"]
-                        ),
+                            Table(
+                                ["MY SCENARIO IS NOT LISTED!"]
+                            ),
                         dropdown_ScenarioPicker.Selected.Value <> "MY SCENARIO IS NOT LISTED!",
-                        Table(
-                            Sort(
-                                Distinct(
-                                    Filter(
-                                        col_MasterSchedule, //col_nationalEHRMLearningLabSessions,
-                                        dropdown_RolePicker.Selected.Value = RoleName_text,
-                                        dropdown_ScenarioPicker.Selected.Value = ScenarioName_text,
-                                        (IsBlank(ThisRecord.sessionActive_text) || ThisRecord.sessionActive_text <> "false")
+                            Table(
+                                Sort(
+                                    Distinct(
+                                        Filter(
+                                            //'Learning Lab Sessions',
+                                            //col_nationalEHRMLearningLabSessions,
+                                            col_MasterSchedule,
+                                            ThisRecord.RoleName_text = dropdown_RolePicker.Selected.Value,
+                                            ThisRecord.ScenarioName_text = dropdown_ScenarioPicker.Selected.Value,
+                                            //Role.Value = dropdown_RolePicker.Selected.Value,
+                                            //Title = dropdown_ScenarioPicker.Selected.Value
+                                            (IsBlank(ThisRecord.sessionActive_text) || ThisRecord.sessionActive_text <> "false")
+                                        ),
+                                        //EndDate
+                                        ThisRecord.TrainingCombinedDateTime_text
                                     ),
-                                    TrainingCombinedDateTime_text
-                                    //StartDate
-                                ),
-                                ThisRecord.Value
+                                    ThisRecord.Value
+                                )
                             )
-                        )
                     )
                     
                     /*
@@ -3484,6 +3861,8 @@ POCSUPERVISOR As screen:
             LayoutGridColumns: =6
             LayoutGridRowMinHeight: =0
             LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
             RadiusBottomLeft: =4
             RadiusBottomRight: =4
             RadiusTopLeft: =4
@@ -3988,7 +4367,7 @@ POCSUPERVISOR As screen:
                 HoverColor: =RGBA(255, 255, 255, 1)
                 HoverFill: =RGBA(9, 33, 98, 1)
                 Italic: =true
-                OnSelect: =Select(HtmlText8_2)
+                OnSelect: =Select(HtmlText8_2);
                 PressedBorderColor: =
                 PressedColor: =Self.Color
                 PressedFill: =App.Theme.Colors.Darker40
@@ -4005,6 +4384,8 @@ POCSUPERVISOR As screen:
 
             dropdown_ScenarioPicker As modernDropdown:
                 Appearance: =Appearance.FilledDarker
+                BorderStyle: =""
+                Font: =""
                 FontWeight: =FontWeight.Bold
                 Height: =48
                 ItemDisplayText: =ThisItem.Value
@@ -4012,33 +4393,49 @@ POCSUPERVISOR As screen:
                     =If(
                         dropdown_RolePicker.Selected.Value = "MY ROLE IS NOT LISTED!",
                         Table(
-                            //Sort(
-                            //    Distinct(
-                            //        Filter(
-                            //            col_nationalEHRMLearningLabSessions,
-                            //            dropdown_RolePicker.Selected.Value = Role.Value
-                            //        ),
-                            //        Title
-                            //    ),
-                            //    ThisRecord.Value
-                            //),
                             ["MY SCENARIO IS NOT LISTED!"]
                         ),
-                        Table(
+                        //Table(
                             Sort(
                                 Distinct(
-                                    Filter(
-                                        col_nationalEHRMLearningLabSessions,
-                                        dropdown_RolePicker.Selected.Value = Role.Value
+                                    Filter(col_MasterSchedule,
+                                        ThisRecord.RoleName_text = dropdown_RolePicker.Selected.Value,
+                                        (IsBlank(ThisRecord.sessionActive_text) || ThisRecord.sessionActive_text <> "false")
+                                        //'Learning Lab Sessions',
+                                        //col_nationalEHRMLearningLabSessions,
+                                        //Role.Value = dropdown_RolePicker.Selected.Value
+                                        //dropdown_RolePicker.Selected.Value = Role.Value
                                     ),
-                                    Title
+                                    //Title
+                                    ThisRecord.ScenarioName_text
                                 ),
                                 ThisRecord.Value
-                            ),
-                            ["MY SCENARIO IS NOT LISTED!"]
-                        )
+                            )
+                        //    ,["MY SCENARIO IS NOT LISTED!"]
+                        //)
                     )
                     
+                    
+                    
+                    /*
+                    Table(
+                        Sort(  
+                            Distinct(
+                                Filter(
+                                    //'Learning Lab Sessions',
+                                    //col_nationalEHRMLearningLabSessions,
+                                    col_MasterSchedule,
+                                    //Facility.Value = "Hines"
+                                    ThisRecord.sessionActive_text <> "false"
+                                ),
+                                //ThisRecord.Role.Value
+                                ThisRecord.RoleName_text
+                            ),
+                            Value
+                        ),
+                        ["MY ROLE IS NOT LISTED!"]
+                    )
+                    */
                     
                     /*
                     If(
@@ -4081,29 +4478,100 @@ POCSUPERVISOR As screen:
                         Value
                     )
                     */
-                OnChange: |-
+                OnChange: |
                     =Set(
                         var_scenarioSession_record,
                         First(
                             Filter(
-                                'Learning Lab Sessions',
-                                ThisRecord.Facility.Value = "Hines"
-                                && dropdown_RolePicker.Selected.Value = ThisRecord.Role.Value
-                                && dropdown_ScenarioPicker.Selected.Value = ThisRecord.Title
-                                && Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(dropdown_ScenarioPicker.Selected.Value, " - Day 1", ""), " - Day 2", ""), " - Day 3", ""), "Scenario 1 - ", ""), "Scenario 2 - ", ""), "Scenario 3 - ", "") in ThisRecord.Title
+                                //'Learning Lab Sessions',
+                                MasterScheduleList,
+                                ThisRecord.RoleName_text = dropdown_RolePicker.Selected.Value 
+                                //&& ThisRecord.ScenarioName_text = dropdown_ScenarioPicker.Selected.Value
+                    //&& Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(dropdown_ScenarioPicker.Selected.Value, " - Day 1", ""), " - Day 2", ""), " - Day 3", ""), "Scenario 1 - ", ""), "Scenario 2 - ", ""), "Scenario 3 - ", "") in ThisRecord.ScenarioName_text
+                    && Substitute(
+                                    Substitute(
+                                        Substitute(
+                                            Substitute(
+                                                Substitute(
+                                                    Substitute(
+                                                        Substitute(
+                                                            Substitute(
+                                                                Substitute(
+                                                                    dropdown_ScenarioPicker.Selected.Value,
+                                                                    "Residential Rehabilitation Treatment Program Admission",
+                                                                    "RRTP Admission"
+                                                                ),
+                                                                "Revenue Utilization Review",
+                                                                "RUR"
+                                                            ),
+                                                            "  ",
+                                                            ""
+                                                        ),
+                                                        " - Day 1",
+                                                        ""
+                                                    ),
+                                                    " - Day 2",
+                                                    ""
+                                                ),
+                                                " - Day 3",
+                                                ""
+                                            ),
+                                            "Scenario 1 - ",
+                                            ""
+                                        ),
+                                        "Scenario 2 - ",
+                                        ""
+                                    ),
+                                    "Scenario 3 - ",
+                                    ""
+                                ) in ThisRecord.ScenarioName_text
                             )
-                        ) //.Name
+                        )//.Name
                     );
                     Set(
                         var_scenarioDocument_record,
                         First(
                             Filter(
                                 'Learning Labs Library',
-                                ThisRecord.'Type of Content'.Value = "Workbook"
-                                && "_Sandbox_WB.docx" in ThisRecord.'File name with extension'
-                                && Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(dropdown_ScenarioPicker.Selected.Value, "Residential Rehabilitation Treatment Program Admission", "RRTP Admission"), "Revenue Utilization Review", "RUR"), "  ", ""), " - Day 1", ""), " - Day 2", ""), " - Day 3", ""), "Scenario 1 - ", ""), "Scenario 2 - ", ""), "Scenario 3 - ", "") in ThisRecord.Scenario.Value
+                                ThisRecord.'Type of Content'.Value = "Workbook" && "_Sandbox_WB.docx" in ThisRecord.'File name with extension' && Substitute(
+                                    Substitute(
+                                        Substitute(
+                                            Substitute(
+                                                Substitute(
+                                                    Substitute(
+                                                        Substitute(
+                                                            Substitute(
+                                                                Substitute(
+                                                                    dropdown_ScenarioPicker.Selected.Value,
+                                                                    "Residential Rehabilitation Treatment Program Admission",
+                                                                    "RRTP Admission"
+                                                                ),
+                                                                "Revenue Utilization Review",
+                                                                "RUR"
+                                                            ),
+                                                            "  ",
+                                                            ""
+                                                        ),
+                                                        " - Day 1",
+                                                        ""
+                                                    ),
+                                                    " - Day 2",
+                                                    ""
+                                                ),
+                                                " - Day 3",
+                                                ""
+                                            ),
+                                            "Scenario 1 - ",
+                                            ""
+                                        ),
+                                        "Scenario 2 - ",
+                                        ""
+                                    ),
+                                    "Scenario 3 - ",
+                                    ""
+                                ) in ThisRecord.Scenario.Value
                             )
-                        ) //.'File name with extension'
+                        )//.'File name with extension'
                     );
                     Set(
                         var_scenarioDocumentName_text,
@@ -4113,22 +4581,44 @@ POCSUPERVISOR As screen:
                         var_scenarioDocumentLink_text,
                         var_scenarioDocument_record.'Link to item'
                     );
-                    Set(varPopUp_ClassPicker_scenarioName, Self.Selected.Value);
-                    Set(varPopUp_ClassPicker_scenarioSplit, Substitute(Text(Self.Selected.Value), " ", "%20"));
-                    Set(var_reservationScenario, Self.Selected.Value);
+                    Set(
+                        varPopUp_ClassPicker_scenarioName,
+                        Self.Selected.Value
+                    );
+                    Set(
+                        varPopUp_ClassPicker_scenarioSplit,
+                        Substitute(
+                            Text(Self.Selected.Value),
+                            " ",
+                            "%20"
+                        )
+                    );
+                    Set(
+                        var_reservationScenario,
+                        Self.Selected.Value
+                    );
                     If(
                         (IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank()),
-                            Set(var_scenarioTrainingMaterialsURL, "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"),
-                            Set(var_scenarioTrainingMaterialsURL, 
-                                Concatenate(
-                                    "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=",
-                                    var_reservationScenario,
-                                    "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603"
-                                )
+                        Set(
+                            var_scenarioTrainingMaterialsURL,
+                            "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"
+                        ),
+                        Set(
+                            var_scenarioTrainingMaterialsURL,
+                            Concatenate(
+                                "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=",
+                                var_reservationScenario,
+                                "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603"
                             )
+                        )
                     );
+                    
                     Reset(dropdown_LocationPicker);
                     Reset(dropdown_DateTimePicker);
+                    
+                    Select(btn_patchMasterScheduleList_scenarioDescription_multitext);
+                Required: =false
+                Size: =24
                 ValidationState: =ValidationState.None
                 Width: =Parent.Width - Self.X - 10
                 X: =HtmlText7.X + 10
@@ -4170,6 +4660,53 @@ POCSUPERVISOR As screen:
                     )
                 ZIndex: =7
 
+            btn_patchMasterScheduleList_scenarioDescription_multitext As modernButton:
+                BorderStyle: =""
+                Font: =""
+                Height: =64
+                OnSelect: |-
+                    =If(
+                        !IsBlank(dropdown_ScenarioPicker.Selected.Value) && dropdown_ScenarioPicker.Selected.Value <> "MY SCENARIO IS NOT LISTED!",
+                        With(
+                            {
+                                _desc: LookUp(
+                                    'Learning Lab Sessions',
+                                    ThisRecord.Title = dropdown_ScenarioPicker.Selected.Value
+                                ).Description
+                            },
+                            If(
+                                !IsBlank(_desc),
+                                ClearCollect(
+                                    col_scenarioRowsToPatch,
+                                    Filter(
+                                        MasterScheduleList,
+                                        ScenarioName_text = dropdown_ScenarioPicker.Selected.Value,
+                                        // only keep rows that are blank OR don't already match
+                                        Or(
+                                            IsBlank(scenarioDescription_multitext),
+                                            scenarioDescription_multitext <> _desc
+                                        )
+                                    )
+                                );
+                                ForAll(
+                                    col_scenarioRowsToPatch,
+                                    Patch(
+                                        MasterScheduleList,
+                                        ThisRecord,
+                                        {scenarioDescription_multitext: _desc}
+                                    )
+                                )
+                            )
+                        )
+                    )
+                Size: =24
+                Text: ="patch(MasterScheduleList_scenarioDescription_multitext)"
+                Visible: =false
+                Width: =280
+                X: =340
+                Y: =95
+                ZIndex: =8
+
         ctn_PopUp_ClassPicker_Role As groupContainer.manualLayoutContainer:
             DropShadow: =DropShadow.Light
             Height: |-
@@ -4207,19 +4744,23 @@ POCSUPERVISOR As screen:
                 Height: =48
                 ItemDisplayText: =ThisItem.Value
                 Items: |-
-                    =Table(
+                    =//Table(
                         Sort(  
                             Distinct(
                                 Filter(
-                                    col_nationalEHRMLearningLabSessions,
-                                    Facility.Value = "Hines"
+                                    //'Learning Lab Sessions',
+                                    //col_nationalEHRMLearningLabSessions,
+                                    col_MasterSchedule,
+                                    //Facility.Value = "Hines"
+                                    (IsBlank(ThisRecord.sessionActive_text) || ThisRecord.sessionActive_text <> "false")
                                 ),
-                                ThisRecord.Role.Value //ScenarioName_text
+                                //ThisRecord.Role.Value
+                                ThisRecord.RoleName_text
                             ),
-                            Value
-                        ),
-                        ["MY ROLE IS NOT LISTED!"]
-                    )
+                            ThisRecord.Value
+                        )
+                    //    ,["MY ROLE IS NOT LISTED!"]
+                    //)
                     
                     
                     /*
@@ -4471,6 +5012,8 @@ POCSUPERVISOR As screen:
             LayoutGridColumns: =6
             LayoutGridRowMinHeight: =0
             LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
             RadiusBottomLeft: =4
             RadiusBottomRight: =4
             RadiusTopLeft: =4
@@ -4565,6 +5108,8 @@ POCSUPERVISOR As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
@@ -4576,7 +5121,7 @@ POCSUPERVISOR As screen:
                 false
             )
         Width: =Parent.Width
-        ZIndex: =12
+        ZIndex: =13
 
         Button6 As button:
             BorderColor: =RGBA(9, 33, 98, 1)
@@ -4610,6 +5155,8 @@ POCSUPERVISOR As screen:
         Text1 As modernText:
             Align: =Align.Center
             AutoHeight: =true
+            BorderStyle: =""
+            Font: =""
             FontWeight: =FontWeight.Bold
             Height: =50
             Size: |-
@@ -4635,6 +5182,7 @@ POCSUPERVISOR As screen:
             BorderColor: =RGBA(9, 33, 98, 1)
             BorderStyle: =BorderStyle.Solid
             BorderThickness: =3
+            Font: =""
             Height: =Button6.Height - Icon3.Height - (Button6.PaddingBottom * 3)
             RadiusBottomLeft: =25
             RadiusBottomRight: =25
@@ -4643,8 +5191,11 @@ POCSUPERVISOR As screen:
             Size: =18
             Text: |-
                 =LookUp(
+                    //MasterScheduleList,
                     col_nationalEHRMLearningLabSessions,
-                    var_reservationScenario = ThisRecord.Title,
+                    ThisRecord.Title = var_reservationScenario,
+                    //ThisRecord.ScenarioName_text = var_reservationScenario,
+                    //ThisRecord.RoleName_text & " --- " & ThisRecord.ScenarioName_text & " --- " & ThisRecord.TrainingCombinedDateTime_text
                     ThisRecord.Description
                 )
             VerticalAlign: =VerticalAlign.Top
@@ -4653,7 +5204,7 @@ POCSUPERVISOR As screen:
             Y: =Icon3.Y + Icon3.Height
             ZIndex: =3
 
-        Icon3 As icon.CancelBadge:
+        Icon3 As icon:
             BorderColor: =RGBA(255, 255, 255, 0)
             BorderThickness: =3
             Color: =App.Theme.Colors.Darker30
@@ -4670,7 +5221,7 @@ POCSUPERVISOR As screen:
                     var_ViewScenarioDescription = true,
                     Set(var_ViewScenarioDescription, false),
                     Set(var_ViewScenarioDescription, true)
-                )
+                );
             PaddingBottom: =3
             PaddingLeft: =3
             PaddingRight: =3
@@ -4679,30 +5230,6 @@ POCSUPERVISOR As screen:
             X: =Text1.X + Text1.Width - Button6.PaddingRight - 10
             Y: =Text1.Y + 3
             ZIndex: =4
-
-    grpHeader_11 As group:
-        Height: =5
-        Width: =5
-        X: =40
-        Y: =40
-        ZIndex: =13
-
-        Rectangle2_11 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(135, 78, 181, 0.65)
-            Height: =ctn_PopUp_ClassPicker_Header.Height
-            Width: =Parent.Width
-            ZIndex: =1
-
-        Image2_12 As image:
-            BorderColor: =App.Theme.Colors.Darker40
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Height: =ctn_PopUp_ClassPicker_Header.Height
-            Image: =abstractBackground
-            ImagePosition: =ImagePosition.Fill
-            Width: =Parent.Width
-            ZIndex: =2
 
     ctn_PopUp_ScenarioPDF As groupContainer.manualLayoutContainer:
         DropShadow: =DropShadow.Light
@@ -4774,7 +5301,7 @@ POCSUPERVISOR As screen:
             Width: =280
             X: =398
             Y: =225
-            ZIndex: =1
+            ZIndex: =2
 
         Button6_2 As button:
             BorderColor: =RGBA(9, 33, 98, 1)
@@ -4803,7 +5330,7 @@ POCSUPERVISOR As screen:
             Width: =Parent.Width - 25
             X: =(Parent.Width / 2) - (Self.Width / 2)
             Y: =(Parent.Height / 2) - (Self.Height / 2)
-            ZIndex: =2
+            ZIndex: =3
 
         Image3 As image:
             BorderColor: =App.Theme.Colors.Darker40
@@ -4818,7 +5345,7 @@ POCSUPERVISOR As screen:
             Width: =300
             X: =(Parent.Width / 2) - (Self.Width / 2)
             Y: =271
-            ZIndex: =3
+            ZIndex: =4
 
         Text1_1 As modernText:
             Align: =Align.Center
@@ -4845,7 +5372,7 @@ POCSUPERVISOR As screen:
             Width: =Button6_2.Width - Button6_2.PaddingRight - Icon3_2.Width - Button6_2.PaddingRight - 10
             X: =Button6_2.X + Button6_2.PaddingLeft
             Y: =Button6_2.Y + Button6_2.PaddingTop
-            ZIndex: =4
+            ZIndex: =5
 
         Text3_1 As modernText:
             Align: =Align.Center
@@ -4873,9 +5400,10 @@ POCSUPERVISOR As screen:
             Width: =Button6_2.Width - 10
             X: =Text1_1.X
             Y: =Icon3_2.Y + Icon3_2.Height
-            ZIndex: =5
+            ZIndex: =6
 
         Gallery2 As gallery.galleryVertical:
+            '#CopilotOverlayLabel': ="Filtered"
             BorderColor: =App.Theme.Colors.Darker40
             DelayItemLoading: =true
             Fill: =RGBA(255, 255, 255, 1)
@@ -4910,9 +5438,11 @@ POCSUPERVISOR As screen:
             Width: =Button6_2.Width - Button6_2.BorderThickness - Button6_2.PaddingRight
             X: =Text3_1.X
             Y: =Text3_1.Y
-            ZIndex: =6
+            ZIndex: =7
 
             Text4 As modernText:
+                BorderStyle: =""
+                Font: =""
                 Height: =44
                 OnSelect: =Select(Parent)
                 Size: =16
@@ -4921,6 +5451,8 @@ POCSUPERVISOR As screen:
                 ZIndex: =1
 
             Text5 As modernText:
+                BorderStyle: =""
+                Font: =""
                 Height: =50
                 OnSelect: =Select(Parent)
                 Size: =16
@@ -4930,6 +5462,8 @@ POCSUPERVISOR As screen:
                 ZIndex: =2
 
             Text6 As modernText:
+                BorderStyle: =""
+                Font: =""
                 Height: =50
                 OnSelect: |-
                     =Launch(
@@ -4946,6 +5480,8 @@ POCSUPERVISOR As screen:
                 ZIndex: =3
 
             Text8 As modernText:
+                BorderStyle: =""
+                Font: =""
                 Height: =50
                 OnSelect: =Launch(Self.Text)
                 Size: =16
@@ -4983,45 +5519,40 @@ POCSUPERVISOR As screen:
             Width: =Icon3_2.Height
             X: =Text1_1.X + Text1_1.Width
             Y: =Text1_1.Y + 3
-            ZIndex: =7
+            ZIndex: =8
 
-        Group1 As group:
-            Height: =5
-            Width: =5
-            X: =40
-            Y: =40
+        Text10 As modernText:
+            Align: =Align.Center
+            BorderStyle: =""
+            Font: =""
+            FontWeight: =FontWeight.Semibold
+            Height: =50
+            Italic: =true
+            OnSelect: =Select(Icon7)
+            Size: =22
+            Text: |-
+                ="Tip: If file preview is slow to load or to print PDF, click the      " & "    toolbar button to open in a new window..."
+            Width: =Button6_2.Width - (Button6_2.PaddingRight * 4)
+            X: =Button6_2.X + (Button6_2.PaddingLeft * 2)
+            Y: =Button6_2.Height - Self.Height
+            ZIndex: =9
+
+        Icon7 As icon:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =App.Theme.Colors.Darker30
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =Text10.Height
+            Icon: =Icon.OpenInNewWindow
+            OnSelect: =Launch(var_scenarioDocumentLink_text)
+            PaddingBottom: =5
+            PaddingLeft: =5
+            PaddingRight: =5
+            PaddingTop: =5
+            Width: =Self.Height
+            X: =Text10.X + (Text10.Width / 1.82 )
+            Y: =Text10.Y
             ZIndex: =10
-
-            Text10 As modernText:
-                Align: =Align.Center
-                FontWeight: =FontWeight.Semibold
-                Height: =50
-                Italic: =true
-                OnSelect: =Select(Icon7)
-                Size: =22
-                Text: |-
-                    ="Tip: If file preview is slow to load or to print PDF, click the      " & "    toolbar button to open in a new window..."
-                Width: =Button6_2.Width - (Button6_2.PaddingRight * 4)
-                X: =Button6_2.X + (Button6_2.PaddingLeft * 2)
-                Y: =Button6_2.Height - Self.Height
-                ZIndex: =8
-
-            Icon7 As icon.OpenInNewWindow:
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =App.Theme.Colors.Darker30
-                DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                DisabledColor: =RGBA(244, 244, 244, 1)
-                Height: =Text10.Height
-                Icon: =Icon.OpenInNewWindow
-                OnSelect: =Launch(var_scenarioDocumentLink_text)
-                PaddingBottom: =5
-                PaddingLeft: =5
-                PaddingRight: =5
-                PaddingTop: =5
-                Width: =Self.Height
-                X: =Text10.X + (Text10.Width / 1.82 )
-                Y: =Text10.Y
-                ZIndex: =9
 
     PdfViewer2 As pdfViewer:
         Document: |-
@@ -5031,7 +5562,11 @@ POCSUPERVISOR As screen:
             )
             //Substitute(Gallery2.Selected.Thumbnail.Large, "/thumbnail", "/pdf")
         Fill: =RGBA(0, 0, 0, 0)
+        FindText: =""
         Height: =Gallery2.Height
+        maximumHeight: =1136
+        maximumWidth: =640
+        Password: =""
         ShowControls: =true
         Visible: |
             =If(
@@ -5044,7 +5579,7 @@ POCSUPERVISOR As screen:
         Y: =Gallery2.Y
         ZIndex: =15
 
-    Icon5 As icon.Print:
+    Icon5 As icon:
         BorderColor: =App.Theme.Colors.Darker40
         Color: =RGBA(255, 255, 255, 1)
         DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -5082,8 +5617,11 @@ POCSUPERVISOR As screen:
         ZIndex: =16
 
     Button12 As modernButton:
+        BorderStyle: =""
+        Font: =""
         Height: =64
         OnSelect: =Launch(var_scenarioDocument_record.'Link to item')
+        Size: =24
         Text: ="Button"
         Visible: =false
         Width: =280

@@ -474,7 +474,7 @@ Screens:
                 Control: Classic/Icon@2.5.0
                 Properties:
                   Color: =App.Theme.Colors.Lighter70
-                  Height: |+
+                  Height: |
                     =HtmlText6.Height / 1.5
                   Icon: =Icon.ChevronRight
                   OnSelect: |-
@@ -489,7 +489,7 @@ Screens:
                 Control: Classic/Icon@2.5.0
                 Properties:
                   Color: =App.Theme.Colors.Lighter70
-                  Height: |+
+                  Height: |
                     =HtmlText6.Height / 1.5
                   Icon: =Icon.Print
                   OnSelect: |-
@@ -514,7 +514,7 @@ Screens:
                 Control: Classic/Icon@2.5.0
                 Properties:
                   Color: =App.Theme.Colors.Lighter70
-                  Height: |+
+                  Height: |
                     =HtmlText6.Height / 1.5
                   Icon: =Icon.ChevronLeft
                   OnSelect: |-
@@ -548,7 +548,7 @@ Screens:
             Visible: =!hideForPDF
             Width: =Icon3_3.Width
             X: =Icon3_3.X
-            Y: |+
+            Y: |
               =Icon3_3.Y + Icon3_3.Height + (Self.X * 2)
       - Icon3_3:
           Control: Classic/Icon@2.5.0

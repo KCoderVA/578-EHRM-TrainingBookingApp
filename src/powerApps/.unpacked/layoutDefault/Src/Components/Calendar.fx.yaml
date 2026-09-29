@@ -2,8 +2,13 @@ Calendar As CanvasComponent:
     OnChangeCal():
         ThisProperty:
             Default: =
+    OnSelectCal():
+        ThisProperty:
+            Default: =
     BorderRadius: =0
+    ChildTabPriority: =true
     Color: =RGBA(50,50,50,1)
+    ContentLanguage: =""
     DaysAheadRestriction: =30
     DefaultEndDate: |-
         =If(
@@ -17,6 +22,7 @@ Calendar As CanvasComponent:
             varPopUp_ClassPicker_scenarioDate,
             Now()
         )
+    EnableChildFocus: =true
     EndDate: =If(Calendar.SelectRange, _selectedEnd, _selectedStart)
     Fill: =RGBA(0, 0, 0, 0)
     Height: =445
@@ -34,20 +40,17 @@ Calendar As CanvasComponent:
     StartDate: =_selectedStart
     Styles: |-
         =Table({Key:"",Value:"",Type:""})
+    Visible: =true
     Width: =400
-    X: =40
-    Y: =40
+    X: =0
+    Y: =0
     ZIndex: =6
 
     galCalendar As gallery.galleryVertical:
         '#CopilotOverlayLabel': ="Filtered"
         AccessibleLabel: ="Calendar"
         BorderColor: =RGBA(130, 144, 156, 1)
-        DisabledBorderColor: =galCalendar.BorderColor
-        DisabledFill: =galCalendar.Fill
         Height: =360
-        HoverBorderColor: =galCalendar.BorderColor
-        HoverFill: =galCalendar.Fill
         Items: |-
             =[
                 0,
@@ -95,8 +98,6 @@ Calendar As CanvasComponent:
             ]
         Layout: =Layout.Vertical
         LoadingSpinnerColor: =galCalendar.BorderColor
-        PressedBorderColor: =galCalendar.BorderColor
-        PressedFill: =galCalendar.Fill
         ShowScrollbar: =false
         TabIndex: =6
         TemplateFill: =
@@ -455,16 +456,10 @@ Calendar As CanvasComponent:
         AccessibleLabel: ="Weekdays"
         BorderColor: =RGBA(130, 144, 156, 1)
         BorderStyle: =BorderStyle.None
-        DisabledBorderColor: =galWeekdays.BorderColor
-        DisabledFill: =galWeekdays.Fill
         Height: |
             =40
-        HoverBorderColor: =galWeekdays.BorderColor
-        HoverFill: =galWeekdays.Fill
         Items: =["S","M","T","W","T","F","S",]
         LoadingSpinnerColor: =galWeekdays.BorderColor
-        PressedBorderColor: =galWeekdays.BorderColor
-        PressedFill: =galWeekdays.Fill
         ShowScrollbar: =false
         TabIndex: =4
         TemplatePadding: =0
@@ -501,6 +496,7 @@ Calendar As CanvasComponent:
             PressedColor: |-
                 =ColorValue("#A7A7A7")
             PressedFill: =RGBA(0,0,0,0)
+            Role: =//%TextRole.RESERVED%.Default
             Size: =24
             TabIndex: =5
             Text: =ThisItem.Value
@@ -618,7 +614,7 @@ Calendar As CanvasComponent:
         Width: =Parent.Width
         ZIndex: =7
 
-    btnNextMonth As icon.ChevronRight:
+    btnNextMonth As icon:
         AccessibleLabel: ="Next Month"
         BorderColor: =RGBA(166, 166, 166, 1)
         Color: =btnPrevMonth.Color
@@ -647,7 +643,7 @@ Calendar As CanvasComponent:
         X: =Parent.Width-btnNextMonth.Width
         ZIndex: =8
 
-    btnPrevMonth As icon.ChevronLeft:
+    btnPrevMonth As icon:
         AccessibleLabel: ="Go Back"
         BorderColor: =RGBA(166, 166, 166, 1)
         Color: =If(!IsBlank(Calendar.SelectedDateFill),Calendar.SelectedDateFill,tmrInitialize.Fill)

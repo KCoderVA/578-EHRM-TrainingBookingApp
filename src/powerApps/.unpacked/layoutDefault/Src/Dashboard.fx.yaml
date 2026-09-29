@@ -1,4 +1,5 @@
 Dashboard As screen:
+    ContentLanguage: =""
     Fill: =RGBA(0, 63, 114, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
@@ -19,6 +20,7 @@ Dashboard As screen:
         HtmlText: |-
             =//"<div style='border:1px gray;border-radius:10%;height:600px;width:100%;background-color:#FCFCFC'></div>"
             "<div style='border:5px solid #b4d6fa;border-radius:8px;height:" & (Parent.Height - Self.Y - 20) & "px;width:100%;background-color:#fcfcfc;'></div>"
+        Size: =24
         Visible: =false //gallMyReservationsPreview.Visible
         Width: =528
         X: =608
@@ -266,7 +268,7 @@ Dashboard As screen:
             Refresh(MasterScheduleList);
             Refresh(SuperUserList);
             Refresh(backupList_DeskReservations);
-            Refresh('Learning Lab Sessions');
+            //REMOVED depreciated SP List:  //Refresh('Learning Lab Sessions');
             
             ClearCollect(colUser_details, Office365Users.UserProfileV2(varTargetEntraID));
             
@@ -1201,9 +1203,9 @@ Dashboard As screen:
             Visible: =false
             Width: =Parent.TemplateWidth
             Y: =Parent.TemplateHeight - 1
-            ZIndex: =2
+            ZIndex: =1
 
-        iconOpenDetails As icon.View:
+        iconOpenDetails As icon:
             BorderColor: =App.Theme.Colors.Darker40
             Color: =RGBA(15, 108, 189, 1)
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -1216,7 +1218,7 @@ Dashboard As screen:
             Width: =Self.Height
             X: =Parent.TemplateWidth - Self.Width - 5
             Y: =(lblDeskFloor.Y + lblDeskFloor.Height / 2) - (Self.Height / 2) //(Parent.TemplateHeight / 2) - (Self.Height / 2)
-            ZIndex: =3
+            ZIndex: =2
 
         lblDescription As label:
             Align: =Align.Center
@@ -1251,7 +1253,7 @@ Dashboard As screen:
             Width: =Parent.Width
             X: =lblCheckOutToFrom.X
             Y: =lblCheckOutToFrom.Y + lblCheckOutToFrom.Height
-            ZIndex: =4
+            ZIndex: =3
 
         lblDeskFloor As label:
             Align: =Align.Center
@@ -1284,7 +1286,7 @@ Dashboard As screen:
             Width: =lblDeskText.Width
             X: =lblDeskText.X
             Y: =lblDeskText.Y + lblDeskText.Height
-            ZIndex: =5
+            ZIndex: =4
 
         lblDeskText As label:
             Align: =Align.Center
@@ -1301,7 +1303,7 @@ Dashboard As screen:
             Width: =Parent.Width - (lblMonth.Width + lblDay.Width ) - iconOpenDetails.Width
             X: =Parent.Width - Self.Width - iconOpenDetails.Width
             Y: =lblMonth.Y
-            ZIndex: =6
+            ZIndex: =5
 
         lblCheckOutToFrom As label:
             Align: =Align.Center
@@ -1322,7 +1324,7 @@ Dashboard As screen:
             Width: =lblMonth.Width + lblDay.Width
             X: =lblMonth.X
             Y: =lblYear.Y + lblYear.Height + 5
-            ZIndex: =7
+            ZIndex: =6
 
         lblYear As label:
             Align: =Align.Center
@@ -1345,7 +1347,7 @@ Dashboard As screen:
             X: =lblMonth.X
             Y: |
                 =lblMonth.Y + lblMonth.Height - 10
-            ZIndex: =8
+            ZIndex: =7
 
         lblDay As label:
             Align: =Align.Center
@@ -1374,7 +1376,7 @@ Dashboard As screen:
             Width: =42
             X: =lblMonth.X + lblMonth.Width
             Y: =lblMonth.Y
-            ZIndex: =9
+            ZIndex: =8
 
         lblMonth As label:
             Align: =Align.Center
@@ -1394,7 +1396,7 @@ Dashboard As screen:
             Width: =60
             X: =3
             Y: =3
-            ZIndex: =10
+            ZIndex: =9
 
         btnSelector As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -1431,7 +1433,7 @@ Dashboard As screen:
             Width: =Parent.TemplateWidth - 6
             X: =3
             Y: =3
-            ZIndex: =11
+            ZIndex: =10
 
     btnViewMoreReservations As button:
         BorderColor: =RGBA(9, 33, 98, 0)
@@ -1652,6 +1654,8 @@ Dashboard As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
@@ -2272,6 +2276,8 @@ Dashboard As screen:
                 LayoutGridColumns: =6
                 LayoutGridRowMinHeight: =0
                 LayoutGridRows: =6
+                maximumHeight: =11360
+                maximumWidth: =640
                 RadiusBottomLeft: =4
                 RadiusBottomRight: =4
                 RadiusTopLeft: =4
@@ -2332,8 +2338,11 @@ Dashboard As screen:
 
                 btnDashboard_Admin_1 As modernButton:
                     Appearance: =ButtonAppearance.Transparent
+                    BorderStyle: =""
+                    Font: =""
                     Height: =lblDashboard_Admin_1b.Height + lblDashboard_Admin_1c.Height
                     OnSelect: =Select(lblDashboard_Admin_1c)
+                    Size: =24
                     Text: =
                     Tooltip: ="Open the Hines EHRM SharePoint site..."
                     Width: =lblDashboard_Admin_1b.Width

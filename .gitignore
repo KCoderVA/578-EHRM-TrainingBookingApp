@@ -82,6 +82,13 @@ __pycache__/
 venv/
 .env/
 .ipynb_checkpoints/
+# Root Node package manifests here are local tooling scaffolding (pac
+# CLI wrappers), NOT a tracked application package — keep them local.
+# (To track them later, delete these two lines.)
+/package.json
+/package-lock.json
+# Local-only developer Python scripts (ad-hoc automation, not public).
+/src/scripts/.py/
 
 # ------------------------------------------------------------
 # 7. Backup, log & swap files
@@ -137,13 +144,12 @@ src/**/.zip/**
 *.ods
 
 # ------------------------------------------------------------
-# 10. Raw TMS extracts — deny-all, publish only docs & shortcuts
-#     src/analytics/tms/ holds raw TMS data exports (PII), so the
-#     entire subtree is ignored by default. The only PUBLISHED
-#     files are the component README and the Power BI / SharePoint
-#     .url shortcuts. The parent dir is re-included first because
-#     Git cannot re-include a file beneath an excluded directory.
+# 10. TMS area — FULL deny-all (work-in-progress, NOT for public
+#     release yet). src/analytics/tms/ holds raw TMS data exports
+#     (PII) plus WIP reporting artifacts that are not ready for the
+#     public mirror. The ENTIRE subtree is excluded — including the
+#     README and .url shortcuts — until the area is organized for a
+#     future release. When ready to publish, re-add negations here
+#     (e.g. !/src/analytics/tms/README.md) and run `git add -f`.
 # ------------------------------------------------------------
 /src/analytics/tms/**
-!/src/analytics/tms/README.md
-!/src/analytics/tms/lists/*.url
