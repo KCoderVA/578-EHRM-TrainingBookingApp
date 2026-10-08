@@ -1,10 +1,21 @@
 ManageDesks As screen:
+    ContentLanguage: =""
     Fill: =RGBA(236, 236, 236, 1)
     Height: =Max(App.Height, App.DesignHeight)
     LoadingSpinnerColor: =App.Theme.Colors.Primary
     OnVisible: |-
         =UpdateContext({prevSelected:false});UpdateContext({upSelected:true});
     Width: =Max(App.Width, App.DesignWidth)
+
+    Rectangle5 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =App.Theme.Colors.Primary
+        Height: =263
+        Visible: =varShowConfirmDelete
+        Width: =973
+        X: =101
+        Y: =63
+        ZIndex: =2
 
     Image2_6 As image:
         BorderColor: =App.Theme.Colors.Darker40
@@ -14,7 +25,7 @@ ManageDesks As screen:
         Image: =abstractBackground
         ImagePosition: =ImagePosition.Fill
         Width: =Parent.Width
-        ZIndex: =2
+        ZIndex: =3
 
     lblTitle_ManageDesks As label:
         Align: =Align.Center
@@ -28,7 +39,7 @@ ManageDesks As screen:
         Text: ="Manage Desks"
         Width: =501
         X: =301
-        ZIndex: =3
+        ZIndex: =4
 
     lblNoRes_1 As label:
         Align: =Align.Center
@@ -64,7 +75,7 @@ ManageDesks As screen:
         Width: =galActive.Width
         X: =galActive.X
         Y: =galActive.Y
-        ZIndex: =4
+        ZIndex: =5
 
     rectSeperator_1 As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
@@ -73,9 +84,9 @@ ManageDesks As screen:
         Width: =Parent.Width / 1.9
         X: =5
         Y: =rectUpSel_1.Y + rectUpSel_1.Height + 3
-        ZIndex: =5
+        ZIndex: =6
 
-    iconAddDesk As icon.Add:
+    iconAddDesk As icon:
         AccessibleLabel: ="Add Desk"
         BorderColor: =RGBA(255, 255, 255, 0)
         BorderThickness: =5
@@ -97,7 +108,7 @@ ManageDesks As screen:
         Width: =50
         X: =Image2_6.Width - Self.Width - 5
         Y: =Image2_6.Y + Image2_6.Height + 5
-        ZIndex: =6
+        ZIndex: =7
 
     rectPrevSel_1 As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
@@ -107,7 +118,7 @@ ManageDesks As screen:
         Width: =rectUpSel_1.Width
         X: =rectUpSel_1.X + rectUpSel_1.Width
         Y: =rectUpSel_1.Y
-        ZIndex: =7
+        ZIndex: =8
 
     lblTabInactive As label:
         Align: =Align.Center
@@ -128,7 +139,7 @@ ManageDesks As screen:
         Width: =220
         X: =367
         Y: =167
-        ZIndex: =8
+        ZIndex: =9
 
     rectUpSel_1 As rectangle:
         BorderColor: =App.Theme.Colors.Darker40
@@ -138,7 +149,7 @@ ManageDesks As screen:
         Width: =rectSeperator_1.Width / 2
         X: =rectSeperator_1.X
         Y: =lblTabActive.Y + lblTabActive.Height
-        ZIndex: =9
+        ZIndex: =10
 
     lblTabActive As label:
         Align: =Align.Center
@@ -156,13 +167,13 @@ ManageDesks As screen:
         Text: ="ACTIVE (" & CountRows(galActive.AllItems) & ")"
         Width: =220
         Y: =Image2_6.Y + Image2_6.Height
-        ZIndex: =10
+        ZIndex: =11
 
     Tabs_7 As Tabs:
         Height: =112
         X: =252
         Y: =52
-        ZIndex: =11
+        ZIndex: =12
 
     "galNonActive As gallery.'BrowseLayout_Vertical_OneTextVariant_ver4.0'":
         '#CopilotOverlayLabel': ="Filtered"
@@ -188,7 +199,7 @@ ManageDesks As screen:
         Width: =Parent.Width - (Self.X * 2)
         X: =galActive.X
         Y: =rectSeperator_1.Y + rectSeperator_1.Height + 2
-        ZIndex: =12
+        ZIndex: =13
 
         Separator2_5 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
@@ -376,7 +387,7 @@ ManageDesks As screen:
         Width: =Parent.Width - (Self.X * 2)
         X: =10
         Y: =rectSeperator_1.Y + rectSeperator_1.Height + 2
-        ZIndex: =13
+        ZIndex: =14
 
         Separator2_3 As rectangle:
             BorderColor: =App.Theme.Colors.Darker40
@@ -385,7 +396,7 @@ ManageDesks As screen:
             OnSelect: =Select(Parent)
             Width: =Parent.TemplateWidth
             Y: =Parent.TemplateHeight - 1
-            ZIndex: =2
+            ZIndex: =1
 
         btnDeactivate As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -422,7 +433,7 @@ ManageDesks As screen:
             Text: ="⛔  DEACTIVATE"
             X: =Parent.TemplateWidth - Self.Width - 15
             Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
-            ZIndex: =3
+            ZIndex: =2
 
         btnEdit As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -453,7 +464,7 @@ ManageDesks As screen:
             Width: =btnDeactivate.Width
             X: =btnDeactivate.X - Self.Width - 5
             Y: =btnDeactivate.Y
-            ZIndex: =4
+            ZIndex: =3
 
         btnDelete As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -483,7 +494,7 @@ ManageDesks As screen:
             Width: =btnEdit.Width
             X: =btnEdit.X - btnEdit.Width - 5
             Y: =btnEdit.Y
-            ZIndex: =5
+            ZIndex: =4
 
         lblName As label:
             Color: =RGBA(0, 0, 0, 1)
@@ -502,7 +513,7 @@ ManageDesks As screen:
             Width: =btnDelete.X - 5
             X: =lblType.X
             Y: =lblType.Y + lblType.Height
-            ZIndex: =6
+            ZIndex: =5
 
         lblLastModified As label:
             Color: =RGBA(0, 0, 0, 1)
@@ -522,7 +533,7 @@ ManageDesks As screen:
             Width: =btnDelete.X - Self.X - 5
             X: =lblType.X + lblType.Width
             Y: =lblType.Y
-            ZIndex: =7
+            ZIndex: =6
 
         lblType As label:
             Color: =RGBA(0, 0, 0, 1)
@@ -541,7 +552,104 @@ ManageDesks As screen:
                 ="Type:   " & ThisItem.ItemType_choice.Value
             Width: =250
             X: =2
-            ZIndex: =8
+            ZIndex: =7
+
+    Rectangle3_2 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(116, 116, 116, 0.85)
+        Height: =640
+        Visible: =varShowConfirmDelete
+        Width: =1136
+        ZIndex: =15
+
+    bgRounded_9 As htmlViewer:
+        Height: =293
+        HtmlText: |-
+            =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+            "<div style='border:1px gray;border-radius:10%;height:275px;width:100%;background-color:#FCFCFC'></div>"
+        Size: =24
+        Visible: =varShowConfirmDelete
+        Width: =722
+        X: =207
+        Y: =84
+        ZIndex: =16
+
+    Label1 As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =121
+        Size: =24
+        Text: ="Confirm Deletion?"
+        Visible: =varShowConfirmDelete
+        Width: =695
+        X: =220
+        Y: =113
+        ZIndex: =17
+
+    btnConfirmCancel As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(128, 128, 128, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =60
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =UpdateContext({varShowConfirmDelete:false})
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        RadiusBottomLeft: =20
+        RadiusBottomRight: =20
+        RadiusTopLeft: =20
+        RadiusTopRight: =20
+        Size: =14
+        Text: ="CANCEL"
+        Visible: =varShowConfirmDelete
+        Width: =293
+        X: =239
+        Y: =257
+        ZIndex: =18
+
+    btnConfirmDelete As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(184, 0, 0, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =60
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =Remove(Desks,varDeskToDelete);UpdateContext({varShowConfirmDelete:false})
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        RadiusBottomLeft: =20
+        RadiusBottomRight: =20
+        RadiusTopLeft: =20
+        RadiusTopRight: =20
+        Size: =14
+        Text: =" 🗑️   DELETE"
+        Visible: =varShowConfirmDelete
+        Width: =293
+        X: =604
+        Y: =257
+        ZIndex: =19
 
     Dropdown3 As dropdown:
         BorderColor: =App.Theme.Colors.Darker40
@@ -581,118 +689,5 @@ ManageDesks As screen:
         Width: =150
         X: =iconAddDesk.X - Self.Width - 25
         Y: =iconAddDesk.Y + (iconAddDesk.Height / 8)
-        ZIndex: =19
-
-    grpConfirmDelete As group:
-        Height: =5
-        Width: =5
-        X: =40
-        Y: =40
-        ZIndex: =19
-
-        Rectangle5 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =App.Theme.Colors.Primary
-            Height: =263
-            Visible: =varShowConfirmDelete
-            Width: =973
-            X: =101
-            Y: =63
-            ZIndex: =1
-
-        Rectangle3_2 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =640
-            Visible: =varShowConfirmDelete
-            Width: =1136
-            ZIndex: =14
-
-        bgRounded_9 As htmlViewer:
-            Height: =293
-            HtmlText: |-
-                =//"<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
-                "<div style='border:1px gray;border-radius:10%;height:275px;width:100%;background-color:#FCFCFC'></div>"
-            Visible: =varShowConfirmDelete
-            Width: =722
-            X: =207
-            Y: =84
-            ZIndex: =15
-
-        Label1 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =121
-            Size: =24
-            Text: ="Confirm Deletion?"
-            Visible: =varShowConfirmDelete
-            Width: =695
-            X: =220
-            Y: =113
-            ZIndex: =16
-
-        btnConfirmCancel As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(128, 128, 128, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =60
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =UpdateContext({varShowConfirmDelete:false})
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="CANCEL"
-            Visible: =varShowConfirmDelete
-            Width: =293
-            X: =239
-            Y: =257
-            ZIndex: =17
-
-        btnConfirmDelete As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(184, 0, 0, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =60
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =Remove(Desks,varDeskToDelete);UpdateContext({varShowConfirmDelete:false})
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: =" 🗑️   DELETE"
-            Visible: =varShowConfirmDelete
-            Width: =293
-            X: =604
-            Y: =257
-            ZIndex: =18
+        ZIndex: =20
 

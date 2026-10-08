@@ -59,6 +59,12 @@
   - Assist with pac commands for export/unpack/pack.
   - Keep root tidy; prefer `src/` (unpacked artifacts), `config/` (runbooks/templates/tools), `docs/` (documentation), `archive/` (local backup copies), `assets/` (images, screenshots, icons, videos), and `.github/` (repo management, actions/workflows, documentation templates).
 
+## `.unpacked` Canvas App Source — Edit Restriction (Required)
+
+  - **NEVER edit, create, or delete any file inside any `.unpacked` subfolder** (e.g. `src/powerApps/.unpacked/**`, `archive/**/.unpacked/**`) unless the user **explicitly** tells the agent to modify something in that specific `.unpacked` path in that same request.
+  - When a user asks for help with a Canvas App control/property/formula issue found in an `.unpacked` file, default to **read-only research**: inspect the file, explain the root cause, and propose the corrected formula/property in chat — do not apply the edit.
+  - This applies even if the user previously approved a similar edit in the conversation; each `.unpacked` edit requires its own explicit go-ahead.
+
 ## PowerShell Terminal Rule (Required)
 
   **Status**: Temporary workaround for VS Code Copilot Chat issue

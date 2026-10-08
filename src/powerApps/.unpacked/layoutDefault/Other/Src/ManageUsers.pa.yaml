@@ -326,7 +326,7 @@ Screens:
                   RadiusTopRight: =20
                   Size: =14
                   Text: ="⟳  RENEW"
-                  Width: |+
+                  Width: |
                     =130
                   X: =Parent.TemplateWidth - Self.Width - 15
                   Y: =(Parent.TemplateHeight / 2) - (Self.Height / 2)
@@ -679,7 +679,7 @@ Screens:
                 Variant: ManualLayout
                 Properties:
                   DropShadow: =DropShadow.None
-                  Height: |+
+                  Height: |
                     =50
                   RadiusBottomLeft: =0
                   RadiusBottomRight: =0
@@ -699,7 +699,7 @@ Screens:
                               FontWeight.Bold,
                               FontWeight.Normal
                           )
-                        Height: |+
+                        Height: |
                           =Parent.Height / 1.4
                         Italic: |-
                           =If(
@@ -1120,7 +1120,7 @@ Screens:
                         VerticalAlign: =VerticalAlign.Bottom
                         Width: =200
                         X: =15
-                        Y: |+
+                        Y: |
                           =5
                   - rectSeperator_2:
                       Control: Rectangle@2.3.0
@@ -1129,7 +1129,7 @@ Screens:
                         FocusedBorderThickness: =
                         Height: =4
                         Width: =Parent.Width + 20
-                        X: |+
+                        X: |
                           =-10
                         Y: =Parent.Height - Self.Height
             - lblTitle_ManageDesks_1:
@@ -1170,7 +1170,6 @@ Screens:
                     )
       - Rectangle3_9:
           Control: Rectangle@2.3.0
-          Group: Group2
           Properties:
             Fill: =RGBA(116, 116, 116, 0.85)
             Height: =541
@@ -1179,7 +1178,6 @@ Screens:
             Y: =98
       - bgRounded_19:
           Control: HtmlViewer@2.1.0
-          Group: Group2
           Properties:
             DisabledBorderColor: =RGBA(56, 56, 56, 1)
             Font: =Font.'Open Sans'
@@ -1194,7 +1192,6 @@ Screens:
             Y: =246
       - Label1_7:
           Control: Label@2.5.1
-          Group: Group2
           Properties:
             Align: =Align.Center
             FontWeight: =FontWeight.Semibold
@@ -1213,7 +1210,6 @@ Screens:
             Y: =bgRounded_19.Y + 10
       - btnConfirmCancel_7:
           Control: Classic/Button@2.2.0
-          Group: Group2
           Properties:
             BorderThickness: =0
             Color: =RGBA(255, 255, 255, 1)
@@ -1235,7 +1231,6 @@ Screens:
             Y: =Dropdown4.Y + Dropdown4.Height + 25
       - btnConfirmDelete_7:
           Control: Classic/Button@2.2.0
-          Group: Group2
           Properties:
             BorderThickness: =0
             Fill: =RGBA(184, 0, 0, 1)
@@ -1328,7 +1323,6 @@ Screens:
             Y: =Dropdown4.Y + Dropdown4.Height + 25
       - Dropdown4:
           Control: Classic/DropDown@2.3.1
-          Group: Group2
           Properties:
             Default: =varUserToEdit.AccessLevel_Choice.Value
             Items: |-
@@ -1360,7 +1354,6 @@ Screens:
             Y: =Label1_7.Y + Label1_7.Height + 10
       - Rectangle3_6:
           Control: Rectangle@2.3.0
-          Group: grpConfirmDelete_1
           Properties:
             Fill: =RGBA(116, 116, 116, 0.85)
             Height: =542
@@ -1369,7 +1362,6 @@ Screens:
             Y: =98
       - bgRounded_14:
           Control: HtmlViewer@2.1.0
-          Group: grpConfirmDelete_1
           Properties:
             DisabledBorderColor: =RGBA(56, 56, 56, 1)
             Font: =Font.'Open Sans'
@@ -1384,7 +1376,6 @@ Screens:
             Y: =169
       - Label1_6:
           Control: Label@2.5.1
-          Group: grpConfirmDelete_1
           Properties:
             Align: =Align.Center
             FontWeight: =FontWeight.Semibold
@@ -1397,7 +1388,6 @@ Screens:
             Y: =194
       - btnConfirmCancel_5:
           Control: Classic/Button@2.2.0
-          Group: grpConfirmDelete_1
           Properties:
             BorderThickness: =0
             Color: =RGBA(255, 255, 255, 1)
@@ -1417,7 +1407,6 @@ Screens:
             Y: =343
       - btnConfirmDelete_5:
           Control: Classic/Button@2.2.0
-          Group: grpConfirmDelete_1
           Properties:
             BorderThickness: =0
             Fill: =RGBA(184, 0, 0, 1)
@@ -2110,8 +2099,7 @@ Screens:
                                             ).value
                                           OnChange: =Set(varNewEmailToAdd, Self.Selected.Mail);
                                           OnSelect: =Set(varNewEmailToAdd, Self.Selected.Mail);
-                                          SearchFields: |+
-                                            =["DisplayName","Mail", "Surname", "GivenName"]
+                                          SearchFields: =["DisplayName","Mail","Surname","GivenName"]
                                           SelectMultiple: =false
                                           X: =DataCardKey42.X + 25
                                           Y: =DataCardValue35.Y + DataCardValue35.Height

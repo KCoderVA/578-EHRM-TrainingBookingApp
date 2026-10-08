@@ -1,4 +1,5 @@
 scrn_WeeklyCal As screen:
+    ContentLanguage: =""
     Fill: =Color.White
     LoadingSpinnerColor: =App.Theme.Colors.Primary
     OnVisible: |
@@ -78,13 +79,15 @@ scrn_WeeklyCal As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
         RadiusTopRight: =4
         Width: =1061
         X: =75
-        ZIndex: =1
+        ZIndex: =2
 
         Gallery2_1 As gallery.galleryHorizontal:
             '#CopilotOverlayLabel': ="Filtered"
@@ -248,24 +251,36 @@ scrn_WeeklyCal As screen:
                         
                         //&& Text(DateTimeValue(ThisItem.'Check Out From Text'), DateTimeFormat.ShortTime) & " to " & Text(DateTimeValue(ThisItem.'Check Out To Text'), DateTimeFormat.ShortTime)
                     Visible: =false
-                    ZIndex: =2
+                    ZIndex: =1
 
                 DeskTextlbl As Text:
+                    Align: ="Start"
                     AutoHeight: =false
                     BorderColor: =
+                    BorderStyle: =""
+                    ContentLanguage: =""
                     DisplayMode: =DisplayMode.Edit
                     Fill: =
+                    Font: =""
                     FontColor: =
+                    FontItalic: =false
+                    FontStrikethrough: =false
+                    FontUnderline: =false
                     Height: =43
                     Size: =12
+                    TabIndex: =0
                     Text: |-
                         =Concatenate(ThisItem.Title," " & "to " & Text(ThisItem.'Check Out To', "hh:mm AM/PM"))
                         //ThisItem.Title
+                    Tooltip: =""
+                    VerticalAlign: =""
+                    Visible: =true
                     Weight: ='TextCanvas.Weight'.Bold
                     Width: =150
+                    Wrap: =true
                     X: =0
                     Y: =0
-                    ZIndex: =3
+                    ZIndex: =2
 
                 Button2 As button:
                     BorderColor: =App.Theme.Colors.Primary
@@ -294,9 +309,9 @@ scrn_WeeklyCal As screen:
                     Size: =10
                     Text: =""
                     Width: =150
-                    ZIndex: =4
+                    ZIndex: =3
 
-        Icon5_1 As icon.ChevronRight:
+        Icon5_1 As icon:
             BorderColor: =App.Theme.Colors.Darker40
             Color: =App.Theme.Colors.Darker30
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -310,7 +325,7 @@ scrn_WeeklyCal As screen:
             Y: =23
             ZIndex: =6
 
-        Icon7_1 As icon.ChevronLeft:
+        Icon7_1 As icon:
             BorderColor: =App.Theme.Colors.Darker40
             Color: =App.Theme.Colors.Darker30
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -347,7 +362,7 @@ scrn_WeeklyCal As screen:
             Y: =53
             ZIndex: =8
 
-        Icon4 As icon.Print:
+        Icon4 As icon:
             BorderColor: =App.Theme.Colors.Darker40
             Color: =App.Theme.Colors.Darker30
             DisabledBorderColor: =RGBA(166, 166, 166, 1)
@@ -432,9 +447,9 @@ scrn_WeeklyCal As screen:
         Fill: =App.Theme.Colors.Primary
         Height: =640
         Width: =75
-        ZIndex: =2
+        ZIndex: =3
 
-    Icon3_1 As icon.Home:
+    Icon3_1 As icon:
         BorderColor: =RGBA(255, 255, 255, 1)
         BorderThickness: =5
         Color: =RGBA(0, 63, 114, 1)
@@ -448,7 +463,7 @@ scrn_WeeklyCal As screen:
         Width: =48
         X: =13
         Y: =14
-        ZIndex: =3
+        ZIndex: =4
 
     Container3 As groupContainer.manualLayoutContainer:
         DropShadow: =DropShadow.Light
@@ -458,6 +473,8 @@ scrn_WeeklyCal As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
@@ -466,7 +483,7 @@ scrn_WeeklyCal As screen:
         Width: =1022
         X: =75
         Y: =186
-        ZIndex: =4
+        ZIndex: =5
 
         bgRounded_15 As htmlViewer:
             DisplayMode: |-
@@ -479,8 +496,9 @@ scrn_WeeklyCal As screen:
             Height: =322
             HtmlText: |-
                 ="<div style='border:1px gray;border-radius:10%;height:870px;width:100%;background-color:#FCFCFC'></div>"
+            Size: =24
             Width: =1010
-            ZIndex: =1
+            ZIndex: =2
 
         lblNameDesk_3 As label:
             BorderColor: =App.Theme.Colors.Darker40
@@ -493,7 +511,7 @@ scrn_WeeklyCal As screen:
             Text: ="Conference Room"
             Width: =560
             Y: =98
-            ZIndex: =2
+            ZIndex: =3
 
         tbNameDesk_3 As text:
             AccessibleLabel: ="Desk Name Input"
@@ -506,6 +524,7 @@ scrn_WeeklyCal As screen:
             FocusedBorderThickness: =4
             Font: =Font.'Segoe UI'
             Height: =70
+            HintText: =""
             HoverBorderColor: =App.Theme.Colors.Darker40
             HoverColor: =RGBA(0, 0, 0, 1)
             HoverFill: =App.Theme.Colors.Lighter70
@@ -513,7 +532,7 @@ scrn_WeeklyCal As screen:
             Width: =331
             X: =181
             Y: =156
-            ZIndex: =3
+            ZIndex: =4
 
         lblFloorDesk_4 As label:
             BorderColor: =App.Theme.Colors.Darker40
@@ -526,7 +545,7 @@ scrn_WeeklyCal As screen:
             Text: ="Floor/Room"
             Width: =290
             Y: =156
-            ZIndex: =4
+            ZIndex: =5
 
         tbFloorDesk_4 As text:
             AccessibleLabel: ="Floor Input"
@@ -540,6 +559,7 @@ scrn_WeeklyCal As screen:
             FocusedBorderThickness: =4
             Font: =Font.'Segoe UI'
             Height: =47
+            HintText: =""
             HoverBorderColor: =App.Theme.Colors.Darker40
             HoverColor: =RGBA(0, 0, 0, 1)
             HoverFill: =App.Theme.Colors.Lighter70
@@ -547,7 +567,7 @@ scrn_WeeklyCal As screen:
             Width: =343
             X: =217
             Y: =108
-            ZIndex: =5
+            ZIndex: =6
 
         lblMapDesk_4 As label:
             BorderColor: =App.Theme.Colors.Darker40
@@ -560,7 +580,7 @@ scrn_WeeklyCal As screen:
             Text: ="From"
             Width: =250
             X: =61
-            ZIndex: =6
+            ZIndex: =7
 
         tbMapDesk_3 As text:
             AccessibleLabel: ="Map Link Input"
@@ -573,13 +593,14 @@ scrn_WeeklyCal As screen:
             FocusedBorderThickness: =4
             Font: =Font.'Segoe UI'
             Height: =70
+            HintText: =""
             HoverBorderColor: =App.Theme.Colors.Darker40
             HoverColor: =RGBA(0, 0, 0, 1)
             HoverFill: =App.Theme.Colors.Lighter70
             Size: =18
             Width: =250
             X: =145
-            ZIndex: =7
+            ZIndex: =8
 
         lblDescrDesk_3 As label:
             BorderColor: =App.Theme.Colors.Darker40
@@ -592,7 +613,7 @@ scrn_WeeklyCal As screen:
             Text: ="Description"
             Width: =290
             Y: =223
-            ZIndex: =8
+            ZIndex: =9
 
         tbDescrDesk_3 As text:
             AccessibleLabel: ="Desk Description Input"
@@ -609,6 +630,7 @@ scrn_WeeklyCal As screen:
             FocusedBorderThickness: =4
             Font: =Font.'Segoe UI'
             Height: =111
+            HintText: =""
             HoverBorderColor: =App.Theme.Colors.Darker40
             HoverColor: =RGBA(0, 0, 0, 1)
             HoverFill: =App.Theme.Colors.Lighter70
@@ -617,7 +639,7 @@ scrn_WeeklyCal As screen:
             Width: =493
             X: =181
             Y: =234
-            ZIndex: =9
+            ZIndex: =10
 
         btnUpdate_2 As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -643,7 +665,7 @@ scrn_WeeklyCal As screen:
             Width: =260
             X: =512
             Y: =345
-            ZIndex: =10
+            ZIndex: =11
 
         btnBackDeskEdit_3 As button:
             BorderColor: =App.Theme.Colors.Primary
@@ -672,7 +694,7 @@ scrn_WeeklyCal As screen:
             Width: =200
             X: =130
             Y: =345
-            ZIndex: =11
+            ZIndex: =12
 
         lblToRes_1 As label:
             BorderColor: =App.Theme.Colors.Darker40
@@ -698,6 +720,7 @@ scrn_WeeklyCal As screen:
             FocusedBorderThickness: =4
             Font: =Font.'Segoe UI'
             Height: =70
+            HintText: =""
             HoverBorderColor: =App.Theme.Colors.Darker40
             HoverColor: =RGBA(0, 0, 0, 1)
             HoverFill: =App.Theme.Colors.Lighter70
@@ -732,6 +755,7 @@ scrn_WeeklyCal As screen:
             FocusedBorderThickness: =4
             Font: =Font.'Segoe UI'
             Height: =38
+            HintText: =""
             HoverBorderColor: =App.Theme.Colors.Darker40
             HoverColor: =RGBA(0, 0, 0, 1)
             HoverFill: =App.Theme.Colors.Lighter70
@@ -741,187 +765,199 @@ scrn_WeeklyCal As screen:
             Y: =70
             ZIndex: =16
 
-        grpMap_8 As group:
-            Height: =5
-            Width: =5
-            X: =60
-            Y: =-66
-            ZIndex: =20
+        Rectangle3_13 As rectangle:
+            BorderColor: =App.Theme.Colors.Darker40
+            Fill: =RGBA(116, 116, 116, 0.85)
+            Height: =415
+            Visible: =showMap
+            Width: =1022
+            ZIndex: =17
 
-            Rectangle3_13 As rectangle:
-                BorderColor: =App.Theme.Colors.Darker40
-                Fill: =RGBA(116, 116, 116, 0.85)
-                Height: =415
-                Visible: =showMap
-                Width: =1022
-                ZIndex: =17
+        Image5_10 As image:
+            BorderColor: =App.Theme.Colors.Darker40
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledFill: =RGBA(244, 244, 244, 1)
+            Height: =415
+            Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomName_choice.Value
+            ImagePosition: =ImagePosition.Stretch
+            Visible: =showMap
+            Width: =1022
+            ZIndex: =18
 
-            Image5_10 As image:
-                BorderColor: =App.Theme.Colors.Darker40
-                DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                DisabledFill: =RGBA(244, 244, 244, 1)
-                Height: =415
-                Image: =LookUp(Desks,ItemID_title = varSelectedReservation.DeskText).RoomName_choice.Value
-                ImagePosition: =ImagePosition.Stretch
-                Visible: =showMap
-                Width: =1022
-                ZIndex: =18
+        Icon1_10 As icon:
+            AccessibleLabel: ="Close Map"
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisabledColor: =RGBA(244, 244, 244, 1)
+            Height: =84
+            Icon: =Icon.Cancel
+            OnSelect: |-
+                =UpdateContext({showMap:!showMap})
+            TabIndex: =11
+            Visible: =showMap
+            Width: =60
+            X: =962
+            ZIndex: =19
 
-            Icon1_10 As icon.Cancel:
-                AccessibleLabel: ="Close Map"
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =RGBA(255, 255, 255, 1)
-                DisabledBorderColor: =RGBA(166, 166, 166, 1)
-                DisabledColor: =RGBA(244, 244, 244, 1)
-                Height: =84
-                Icon: =Icon.Cancel
-                OnSelect: |-
-                    =UpdateContext({showMap:!showMap})
-                TabIndex: =11
-                Visible: =showMap
-                Width: =60
-                X: =962
-                ZIndex: =19
+    Rectangle3_14 As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =RGBA(116, 116, 116, 0.85)
+        Height: =292
+        Visible: =varConfirmCancel
+        Width: =804
+        Y: =118
+        ZIndex: =6
+
+    bgRounded_16 As htmlViewer:
+        Height: =490
+        HtmlText: |-
+            ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
+        Size: =24
+        Visible: =varConfirmCancel
+        Width: =720
+        X: =236
+        Y: =150
+        ZIndex: =7
+
+    Label1_3 As label:
+        Align: =Align.Center
+        BorderColor: =App.Theme.Colors.Darker40
+        Color: =RGBA(0, 0, 0, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =93
+        Size: =24
+        Text: ="Confirm Cancellation"
+        Visible: =varConfirmCancel
+        Width: =688
+        X: =242
+        Y: =262
+        ZIndex: =8
+
+    btnConfirmCancel_3 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(128, 128, 128, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =72
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |-
+            =UpdateContext({varConfirmCancel:false})
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        RadiusBottomLeft: =20
+        RadiusBottomRight: =20
+        RadiusTopLeft: =20
+        RadiusTopRight: =20
+        Size: =14
+        Text: ="NEVERMIND"
+        Visible: =varConfirmCancel
+        Width: =234
+        X: =305
+        Y: =505
+        ZIndex: =9
+
+    btnConfirmDelete_3 As button:
+        BorderColor: =App.Theme.Colors.Primary
+        BorderThickness: =0
+        Color: =App.Theme.Colors.PrimaryForeground
+        DisabledBorderColor: =RGBA(244, 244, 244, 1)
+        DisabledColor: =RGBA(166, 166, 166, 1)
+        DisabledFill: =RGBA(244, 244, 244, 1)
+        Fill: =RGBA(184, 0, 0, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Height: =72
+        HoverBorderColor: =App.Theme.Colors.Darker10
+        HoverColor: =App.Theme.Colors.PrimaryForeground
+        HoverFill: =ColorFade(Self.Fill, -20%)
+        OnSelect: |
+            =//Remove('Desk Reservations',varSelectedReservation);UpdateContext({varConfirmCancel:false});Back()
+            // OnSelect property for the Confirm button
+            If(
+                RadioGroupCanvas1.Selected.Value = "Series",
+                RemoveIf(
+                    'Desk Reservations',
+                    RecurrenceID = varSelectedReservation.RecurrenceID
+                ),
+                Remove(
+                    'Desk Reservations',
+                    varSelectedReservation
+                )
+            );
+            UpdateContext({varConfirmCancel: false});
+        PressedBorderColor: =App.Theme.Colors.Darker40
+        PressedColor: =Self.Color
+        PressedFill: =App.Theme.Colors.Darker40
+        RadiusBottomLeft: =20
+        RadiusBottomRight: =20
+        RadiusTopLeft: =20
+        RadiusTopRight: =20
+        Size: =14
+        Text: ="CONFIRM"
+        Visible: =varConfirmCancel
+        Width: =258
+        X: =672
+        Y: =505
+        ZIndex: =10
 
     RadioGroupCanvas1 As Radio.pcfdataset:
+        AccessibleLabel: =""
+        ContentLanguage: =""
         DisplayMode: =DisplayMode.Edit
+        Font: =""
+        FontItalic: =false
+        FontSize: =0
+        FontStrikethrough: =false
+        FontUnderline: =false
+        FontWeight: =""
         Height: =80
         Items: =["This Reservation", "Series"]
+        Layout: ="Vertical"
+        OnChange: =false
+        RadioSize: =16
+        Required: =false
+        TabIndex: =0
+        Tooltip: =""
         Visible: =varConfirmCancel
         Width: =320
         X: =436
         Y: =343
-        ZIndex: =10
-
-    grpConfirmCancel_2 As group:
-        Height: =5
-        Width: =5
-        X: =40
-        Y: =40
-        ZIndex: =10
-
-        Rectangle3_14 As rectangle:
-            BorderColor: =App.Theme.Colors.Darker40
-            Fill: =RGBA(116, 116, 116, 0.85)
-            Height: =292
-            Visible: =varConfirmCancel
-            Width: =804
-            Y: =118
-            ZIndex: =5
-
-        bgRounded_16 As htmlViewer:
-            Height: =490
-            HtmlText: |-
-                ="<div style='border:1px gray;border-radius:10%;height:450px;width:100%;background-color:#FCFCFC'></div>"
-            Visible: =varConfirmCancel
-            Width: =720
-            X: =236
-            Y: =150
-            ZIndex: =6
-
-        Label1_3 As label:
-            Align: =Align.Center
-            BorderColor: =App.Theme.Colors.Darker40
-            Color: =RGBA(0, 0, 0, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =93
-            Size: =24
-            Text: ="Confirm Cancellation"
-            Visible: =varConfirmCancel
-            Width: =688
-            X: =242
-            Y: =262
-            ZIndex: =7
-
-        btnConfirmCancel_3 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(128, 128, 128, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =72
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |-
-                =UpdateContext({varConfirmCancel:false})
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="NEVERMIND"
-            Visible: =varConfirmCancel
-            Width: =234
-            X: =305
-            Y: =505
-            ZIndex: =8
-
-        btnConfirmDelete_3 As button:
-            BorderColor: =App.Theme.Colors.Primary
-            BorderThickness: =0
-            Color: =App.Theme.Colors.PrimaryForeground
-            DisabledBorderColor: =RGBA(244, 244, 244, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            DisabledFill: =RGBA(244, 244, 244, 1)
-            Fill: =RGBA(184, 0, 0, 1)
-            Font: =App.Theme.Font
-            FontWeight: =FontWeight.Semibold
-            Height: =72
-            HoverBorderColor: =App.Theme.Colors.Darker10
-            HoverColor: =App.Theme.Colors.PrimaryForeground
-            HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |
-                =//Remove('Desk Reservations',varSelectedReservation);UpdateContext({varConfirmCancel:false});Back()
-                // OnSelect property for the Confirm button
-                If(
-                    RadioGroupCanvas1.Selected.Value = "Series",
-                    RemoveIf(
-                        'Desk Reservations',
-                        RecurrenceID = varSelectedReservation.RecurrenceID
-                    ),
-                    Remove(
-                        'Desk Reservations',
-                        varSelectedReservation
-                    )
-                );
-                UpdateContext({varConfirmCancel: false});
-            PressedBorderColor: =App.Theme.Colors.Darker40
-            PressedColor: =Self.Color
-            PressedFill: =App.Theme.Colors.Darker40
-            RadiusBottomLeft: =20
-            RadiusBottomRight: =20
-            RadiusTopLeft: =20
-            RadiusTopRight: =20
-            Size: =14
-            Text: ="CONFIRM"
-            Visible: =varConfirmCancel
-            Width: =258
-            X: =672
-            Y: =505
-            ZIndex: =9
+        ZIndex: =11
 
     TextCanvas1 As Text:
+        Align: ="Start"
         AutoHeight: =false
         BorderColor: =
+        BorderStyle: =""
+        ContentLanguage: =""
         DisplayMode: =DisplayMode.Edit
         Fill: =
+        Font: =""
         FontColor: =RGBA(255, 255, 255, 1)
+        FontItalic: =false
+        FontStrikethrough: =false
+        FontUnderline: =false
         Height: =36
         Size: =16
+        TabIndex: =0
         Text: ="Select Calendar View"
+        Tooltip: =""
         VerticalAlign: =VerticalAlign.Middle
+        Visible: =true
         Weight: ='TextCanvas.Weight'.Semibold
         Width: =154
+        Wrap: =true
         X: =802
         Y: =22
-        ZIndex: =11
+        ZIndex: =12
 

@@ -96,14 +96,12 @@ Screens:
     Children:
       - Rectangle2_11:
           Control: Rectangle@2.3.0
-          Group: grpHeader_11
           Properties:
             Fill: =RGBA(135, 78, 181, 0.65)
             Height: =ctn_PopUp_ClassPicker_Header.Height
             Width: =Parent.Width
       - Image2_12:
           Control: Image@2.2.3
-          Group: grpHeader_11
           Properties:
             Height: =ctn_PopUp_ClassPicker_Header.Height
             Image: =abstractBackground
@@ -230,7 +228,7 @@ Screens:
                 Variant: ClassicComboBoxEdit
                 Properties:
                   DataField: ="ReservedBy"
-                  Default: =ThisItem.'Reserved By'
+                  Default: =DataCardValue3.Selected
                   DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,'Reserved By')
                   Height: =95
                   Required: =true
@@ -302,18 +300,174 @@ Screens:
                       Control: Classic/ComboBox@2.4.0
                       Properties:
                         DefaultSelectedItems: |-
-                          ={
-                              Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).UserPrincipalName, //Office365Users.MyProfileV2().userPrincipalName,
-                              DisplayName: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).DisplayName,
-                              Email: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).Mail,
-                              ID: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).Id
-                          }
-                        DisplayFields: =["DisplayName","Email","Picture","ID"]
+                          =With(
+                              {
+                                  // Step 1: Get the manager profile based on the email of the user selected in the first dropdown.
+                                  targetProfile: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value)
+                              },
+                              // Step 2: If a manager is found, build the record in the format your combobox expects.
+                              If(
+                                  !IsBlank(targetProfile),
+                                  {
+                                      Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).UserPrincipalName,
+                                      DisplayName: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).DisplayName,
+                                      Email: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).Mail,
+                                      Department: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).Department,
+                                      JobTitle: First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value).JobTitle,
+                                      Picture: Blank()
+                                  },
+                                  IsBlank(targetProfile),
+                                  {
+                                      Claims: "i:0#.f|membership|" & First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText), top:(25)}).value).UserPrincipalName,
+                                      DisplayName: First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText), top:(25)}).value).DisplayName,
+                                      Email: First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText), top:(25)}).value).Mail,
+                                      Department: First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText), top:(25)}).value).Department,
+                                      JobTitle: First(Office365Users.SearchUserV2({searchTerm:(DataCardValue3.SearchText), top:(25)}).value).JobTitle,
+                                      Picture: Blank()
+                                  }
+                                  )
+                              )
+                        DisplayFields: =["Email","DisplayName","Picture"]
                         DisplayMode: =Parent.DisplayMode
                         FontWeight: =FontWeight.Bold
                         Height: =45
                         InputTextPlaceholder: ="Find people..."
-                        Items: =Choices([@'Desk Reservations'].'Reserved By')
+                        IsSearchable: =false
+                        Items: |-
+                          =//Office365Users.SearchUser({searchTerm: Self.SearchText, top: 25}),
+                          //////ATTN KYLE!  AS OF 09/23/2026:  Testing alternative formula
+                          /*  
+                          If(
+                              IsBlank(Trim(Self.SelectedItems)),
+                              Office365Users.SearchUser(
+                                  {
+                                      searchTerm: Trim(Self.SearchText),
+                                      top: 40
+                                  }
+                              )
+                          )
+                          */
+                          ////////////////
+                          With(
+                              {
+                                  // Step 1: Get the manager profile based on the email of the user selected in the first dropdown.
+                                  targetProfile: If(
+                                      IsBlankOrError(Self.SearchText) || Self.SearchText = "" || Self.SearchText = Blank(),
+                                      Office365Users.MyProfile(),
+                                      Blank()
+                                      //Office365Users.SearchUserV2(
+                                      //    {
+                                      //        searchTerm: ( Self.SearchText ),
+                                      //        top: (100)
+                                      //    }
+                                      //)
+                                  )
+                                      //If(!IsBlank(varTargetEmail), First(Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(1)}).value), Office365Users.SearchUserV2({searchTerm:(varTargetEmail), top:(50)}))
+                              },
+                              // Step 2: If a manager is found, build the record in the format your combobox expects.
+                              If(
+                                  !IsBlank(targetProfile),
+                                  {
+                                      Claims: "i:0#.f|membership|" & First(
+                                          Office365Users.SearchUserV2(
+                                              {
+                                                  searchTerm: varTargetEmail,
+                                                  top: (1)
+                                              }
+                                          ).value
+                                      ).UserPrincipalName,
+                                      DisplayName: First(
+                                          Office365Users.SearchUserV2(
+                                              {
+                                                  searchTerm: varTargetEmail,
+                                                  top: (1)
+                                              }
+                                          ).value
+                                      ).DisplayName,
+                                      Email: First(
+                                          Office365Users.SearchUserV2(
+                                              {
+                                                  searchTerm: varTargetEmail,
+                                                  top: (1)
+                                              }
+                                          ).value
+                                      ).Mail,
+                                      Department: First(
+                                          Office365Users.SearchUserV2(
+                                              {
+                                                  searchTerm: varTargetEmail,
+                                                  top: (1)
+                                              }
+                                          ).value
+                                      ).Department,
+                                      JobTitle: First(
+                                          Office365Users.SearchUserV2(
+                                              {
+                                                  searchTerm: varTargetEmail,
+                                                  top: (1)
+                                              }
+                                          ).value
+                                      ).JobTitle,
+                                      Picture: If(
+                                          Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto = true,
+                                          Office365Users.UserPhoto(varTargetEntraID),
+                                          Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto = false,
+                                          icon_silhouetteExecutives,
+                                          Blank()
+                                      )
+                                  },
+                                  IsBlank(targetProfile),
+                                  {
+                                      Claims: "i:0#.f|membership|" & First(
+                                          Office365Users.SearchUserV2(
+                                              {
+                                                  searchTerm: (DataCardValue3.SearchText),
+                                                  top: (50)
+                                              }
+                                          ).value
+                                      ).UserPrincipalName,
+                                      DisplayName: First(
+                                          Office365Users.SearchUserV2(
+                                              {
+                                                  searchTerm: (DataCardValue3.SearchText),
+                                                  top: (50)
+                                              }
+                                          ).value
+                                      ).DisplayName,
+                                      Email: First(
+                                          Office365Users.SearchUserV2(
+                                              {
+                                                  searchTerm: (DataCardValue3.SearchText),
+                                                  top: (50)
+                                              }
+                                          ).value
+                                      ).Mail,
+                                      Department: First(
+                                          Office365Users.SearchUserV2(
+                                              {
+                                                  searchTerm: (DataCardValue3.SearchText),
+                                                  top: (50)
+                                              }
+                                          ).value
+                                      ).Department,
+                                      JobTitle: First(
+                                          Office365Users.SearchUserV2(
+                                              {
+                                                  searchTerm: (DataCardValue3.SearchText),
+                                                  top: (50)
+                                              }
+                                          ).value
+                                      ).JobTitle,
+                                      Picture: If(
+                                          Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto = true,
+                                          Office365Users.UserPhoto(varTargetEntraID),
+                                          Office365Users.UserPhotoMetadata(varTargetEntraID).HasPhoto = false,
+                                          icon_silhouetteExecutives,
+                                          Blank()
+                                      )
+                                  }
+                              )
+                          )
                         OnChange: |-
                           =Set(var_Attendees, Self.Selected.Email);
                           Set(_selectedUser, First(Office365Users.SearchUserV2({searchTerm: Self.Selected.Email}).value));
@@ -380,7 +534,7 @@ Screens:
                         PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                         PaddingRight: =5
                         PaddingTop: =5
-                        SearchFields: =["Claims"]
+                        SearchFields: =["Email"]
                         SelectMultiple: =false
                         Size: =14
                         Tooltip: =Parent.DisplayName
@@ -441,17 +595,26 @@ Screens:
                                   }
                               )
                           )
-                        DisplayFields: =["DisplayName","Email","Picture"]
+                        DisplayFields: =["Email"]
                         DisplayMode: =Parent.DisplayMode
                         FontWeight: =FontWeight.Bold
                         Height: =DataCardValue3.Height
                         InputTextPlaceholder: ="Last Name, First Name "
-                        Items: =Choices([@'Desk Reservations'].Manager)
+                        Items: |-
+                          =ForAll(
+                              Office365Users.SearchUserV2({searchTerm: DataCardValue3.SearchText, top: 25}).value,
+                              {
+                                  //Claims: "i:0#.f|membership|" & UserPrincipalName,
+                                  //DisplayName: DisplayName,
+                                  Email: UserPrincipalName
+                                  //ID: Id
+                              }
+                          )
                         PaddingBottom: =5
                         PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                         PaddingRight: =5
                         PaddingTop: =5
-                        SearchFields: =["DisplayName"]
+                        SearchFields: =["Email"]
                         SelectMultiple: =false
                         Size: =14
                         Tooltip: =Parent.DisplayName
@@ -630,6 +793,9 @@ Screens:
                 Variant: ClassicComboBoxEdit
                 Properties:
                   DataField: ="MeetingCatagory"
+                  Default: |-
+                    =DropdownCanvas1.Selected
+                    //%QUALIFIED_DATACARD_FIELD_VALUE.ID%
                   DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName)
                   Height: =85
                   Required: =true
@@ -903,7 +1069,7 @@ Screens:
                   DataField: ="reservationDescription_multilinetext" // "Description"
                   Default: =ThisItem.reservationDescription_multilinetext //ThisItem.Description
                   DisplayName: =DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,reservationDescription_multilinetext) //DataSourceInfo([@'Desk Reservations'],DataSourceInfo.DisplayName,Description)
-                  Height: |+
+                  Height: |
                     =DataCardKey14.Height + HtmlText4.Height + 10 //247 // 303
                   MaxLength: =DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, reservationDescription_multilinetext) //DataSourceInfo([@'Desk Reservations'], DataSourceInfo.MaxLength, Description)
                   Required: =false
@@ -1888,7 +2054,7 @@ Screens:
 
               Navigate(DebuggingScreen);
             Text: ="RESET"
-            Visible: |+
+            Visible: |
               =//false
               If(
                   Lower(varRealEmail) = Lower("kyle.coder@va.gov") && user_isAdmin = true,
@@ -2119,15 +2285,16 @@ Screens:
                                   Sort(
                                       Distinct(
                                           Filter(
-                                              MasterScheduleList,
-                                              RoleName_text = dropdown_RolePicker.Selected.Value,
-                                              ScenarioName_text = dropdown_ScenarioPicker.Selected.Value,
-                                              TrainingCombinedDateTime_text = dropdown_DateTimePicker.Selected.Value
+                                              col_MasterSchedule,
+                                              ThisRecord.RoleName_text = dropdown_RolePicker.Selected.Value,
+                                              ThisRecord.ScenarioName_text = dropdown_ScenarioPicker.Selected.Value,
+                                              ThisRecord.TrainingCombinedDateTime_text = dropdown_DateTimePicker.Selected.Value,
+                                              (IsBlank(ThisRecord.sessionActive_text) || ThisRecord.sessionActive_text <> "false")
 
                                           ),
-                                          LocationCombined_text
+                                          ThisRecord.LocationCombined_text
                                       ),
-                                      Value
+                                      ThisRecord.Value
                                   )
                               )
                           )
@@ -2257,25 +2424,29 @@ Screens:
                         Items: |-
                           =If(
                               dropdown_ScenarioPicker.Selected.Value = "MY SCENARIO IS NOT LISTED!",
-                              Table(
-                                  ["MY SCENARIO IS NOT LISTED!"]
-                              ),
+                                  Table(
+                                      ["MY SCENARIO IS NOT LISTED!"]
+                                  ),
                               dropdown_ScenarioPicker.Selected.Value <> "MY SCENARIO IS NOT LISTED!",
-                              Table(
-                                  Sort(
-                                      Distinct(
-                                          Filter(
-                                              col_MasterSchedule, //col_nationalEHRMLearningLabSessions,
-                                              dropdown_RolePicker.Selected.Value = RoleName_text,
-                                              dropdown_ScenarioPicker.Selected.Value = ScenarioName_text,
-                                              (IsBlank(ThisRecord.sessionActive_text) || ThisRecord.sessionActive_text <> "false")
+                                  Table(
+                                      Sort(
+                                          Distinct(
+                                              Filter(
+                                                  //'Learning Lab Sessions',
+                                                  //col_nationalEHRMLearningLabSessions,
+                                                  col_MasterSchedule,
+                                                  ThisRecord.RoleName_text = dropdown_RolePicker.Selected.Value,
+                                                  ThisRecord.ScenarioName_text = dropdown_ScenarioPicker.Selected.Value,
+                                                  //Role.Value = dropdown_RolePicker.Selected.Value,
+                                                  //Title = dropdown_ScenarioPicker.Selected.Value
+                                                  (IsBlank(ThisRecord.sessionActive_text) || ThisRecord.sessionActive_text <> "false")
+                                              ),
+                                              //EndDate
+                                              ThisRecord.TrainingCombinedDateTime_text
                                           ),
-                                          TrainingCombinedDateTime_text
-                                          //StartDate
-                                      ),
-                                      ThisRecord.Value
+                                          ThisRecord.Value
+                                      )
                                   )
-                              )
                           )
 
                           /*
@@ -3322,7 +3493,7 @@ Screens:
                         HoverColor: =RGBA(255, 255, 255, 1)
                         HoverFill: =RGBA(9, 33, 98, 1)
                         Italic: =true
-                        OnSelect: =Select(HtmlText8_2)
+                        OnSelect: =Select(HtmlText8_2);
                         PressedBorderColor: =
                         RadiusBottomLeft: =15
                         RadiusBottomRight: =15
@@ -3343,33 +3514,49 @@ Screens:
                           =If(
                               dropdown_RolePicker.Selected.Value = "MY ROLE IS NOT LISTED!",
                               Table(
-                                  //Sort(
-                                  //    Distinct(
-                                  //        Filter(
-                                  //            col_nationalEHRMLearningLabSessions,
-                                  //            dropdown_RolePicker.Selected.Value = Role.Value
-                                  //        ),
-                                  //        Title
-                                  //    ),
-                                  //    ThisRecord.Value
-                                  //),
                                   ["MY SCENARIO IS NOT LISTED!"]
                               ),
-                              Table(
+                              //Table(
                                   Sort(
                                       Distinct(
-                                          Filter(
-                                              col_nationalEHRMLearningLabSessions,
-                                              dropdown_RolePicker.Selected.Value = Role.Value
+                                          Filter(col_MasterSchedule,
+                                              ThisRecord.RoleName_text = dropdown_RolePicker.Selected.Value,
+                                              (IsBlank(ThisRecord.sessionActive_text) || ThisRecord.sessionActive_text <> "false")
+                                              //'Learning Lab Sessions',
+                                              //col_nationalEHRMLearningLabSessions,
+                                              //Role.Value = dropdown_RolePicker.Selected.Value
+                                              //dropdown_RolePicker.Selected.Value = Role.Value
                                           ),
-                                          Title
+                                          //Title
+                                          ThisRecord.ScenarioName_text
                                       ),
                                       ThisRecord.Value
-                                  ),
-                                  ["MY SCENARIO IS NOT LISTED!"]
-                              )
+                                  )
+                              //    ,["MY SCENARIO IS NOT LISTED!"]
+                              //)
                           )
 
+
+
+                          /*
+                          Table(
+                              Sort(  
+                                  Distinct(
+                                      Filter(
+                                          //'Learning Lab Sessions',
+                                          //col_nationalEHRMLearningLabSessions,
+                                          col_MasterSchedule,
+                                          //Facility.Value = "Hines"
+                                          ThisRecord.sessionActive_text <> "false"
+                                      ),
+                                      //ThisRecord.Role.Value
+                                      ThisRecord.RoleName_text
+                                  ),
+                                  Value
+                              ),
+                              ["MY ROLE IS NOT LISTED!"]
+                          )
+                          */
 
                           /*
                           If(
@@ -3412,29 +3599,100 @@ Screens:
                               Value
                           )
                           */
-                        OnChange: |-
+                        OnChange: |
                           =Set(
                               var_scenarioSession_record,
                               First(
                                   Filter(
-                                      'Learning Lab Sessions',
-                                      ThisRecord.Facility.Value = "Hines"
-                                      && dropdown_RolePicker.Selected.Value = ThisRecord.Role.Value
-                                      && dropdown_ScenarioPicker.Selected.Value = ThisRecord.Title
-                                      && Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(dropdown_ScenarioPicker.Selected.Value, " - Day 1", ""), " - Day 2", ""), " - Day 3", ""), "Scenario 1 - ", ""), "Scenario 2 - ", ""), "Scenario 3 - ", "") in ThisRecord.Title
+                                      //'Learning Lab Sessions',
+                                      MasterScheduleList,
+                                      ThisRecord.RoleName_text = dropdown_RolePicker.Selected.Value 
+                                      //&& ThisRecord.ScenarioName_text = dropdown_ScenarioPicker.Selected.Value
+                          //&& Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(dropdown_ScenarioPicker.Selected.Value, " - Day 1", ""), " - Day 2", ""), " - Day 3", ""), "Scenario 1 - ", ""), "Scenario 2 - ", ""), "Scenario 3 - ", "") in ThisRecord.ScenarioName_text
+                          && Substitute(
+                                          Substitute(
+                                              Substitute(
+                                                  Substitute(
+                                                      Substitute(
+                                                          Substitute(
+                                                              Substitute(
+                                                                  Substitute(
+                                                                      Substitute(
+                                                                          dropdown_ScenarioPicker.Selected.Value,
+                                                                          "Residential Rehabilitation Treatment Program Admission",
+                                                                          "RRTP Admission"
+                                                                      ),
+                                                                      "Revenue Utilization Review",
+                                                                      "RUR"
+                                                                  ),
+                                                                  "  ",
+                                                                  ""
+                                                              ),
+                                                              " - Day 1",
+                                                              ""
+                                                          ),
+                                                          " - Day 2",
+                                                          ""
+                                                      ),
+                                                      " - Day 3",
+                                                      ""
+                                                  ),
+                                                  "Scenario 1 - ",
+                                                  ""
+                                              ),
+                                              "Scenario 2 - ",
+                                              ""
+                                          ),
+                                          "Scenario 3 - ",
+                                          ""
+                                      ) in ThisRecord.ScenarioName_text
                                   )
-                              ) //.Name
+                              )//.Name
                           );
                           Set(
                               var_scenarioDocument_record,
                               First(
                                   Filter(
                                       'Learning Labs Library',
-                                      ThisRecord.'Type of Content'.Value = "Workbook"
-                                      && "_Sandbox_WB.docx" in ThisRecord.'File name with extension'
-                                      && Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(dropdown_ScenarioPicker.Selected.Value, "Residential Rehabilitation Treatment Program Admission", "RRTP Admission"), "Revenue Utilization Review", "RUR"), "  ", ""), " - Day 1", ""), " - Day 2", ""), " - Day 3", ""), "Scenario 1 - ", ""), "Scenario 2 - ", ""), "Scenario 3 - ", "") in ThisRecord.Scenario.Value
+                                      ThisRecord.'Type of Content'.Value = "Workbook" && "_Sandbox_WB.docx" in ThisRecord.'File name with extension' && Substitute(
+                                          Substitute(
+                                              Substitute(
+                                                  Substitute(
+                                                      Substitute(
+                                                          Substitute(
+                                                              Substitute(
+                                                                  Substitute(
+                                                                      Substitute(
+                                                                          dropdown_ScenarioPicker.Selected.Value,
+                                                                          "Residential Rehabilitation Treatment Program Admission",
+                                                                          "RRTP Admission"
+                                                                      ),
+                                                                      "Revenue Utilization Review",
+                                                                      "RUR"
+                                                                  ),
+                                                                  "  ",
+                                                                  ""
+                                                              ),
+                                                              " - Day 1",
+                                                              ""
+                                                          ),
+                                                          " - Day 2",
+                                                          ""
+                                                      ),
+                                                      " - Day 3",
+                                                      ""
+                                                  ),
+                                                  "Scenario 1 - ",
+                                                  ""
+                                              ),
+                                              "Scenario 2 - ",
+                                              ""
+                                          ),
+                                          "Scenario 3 - ",
+                                          ""
+                                      ) in ThisRecord.Scenario.Value
                                   )
-                              ) //.'File name with extension'
+                              )//.'File name with extension'
                           );
                           Set(
                               var_scenarioDocumentName_text,
@@ -3444,22 +3702,42 @@ Screens:
                               var_scenarioDocumentLink_text,
                               var_scenarioDocument_record.'Link to item'
                           );
-                          Set(varPopUp_ClassPicker_scenarioName, Self.Selected.Value);
-                          Set(varPopUp_ClassPicker_scenarioSplit, Substitute(Text(Self.Selected.Value), " ", "%20"));
-                          Set(var_reservationScenario, Self.Selected.Value);
+                          Set(
+                              varPopUp_ClassPicker_scenarioName,
+                              Self.Selected.Value
+                          );
+                          Set(
+                              varPopUp_ClassPicker_scenarioSplit,
+                              Substitute(
+                                  Text(Self.Selected.Value),
+                                  " ",
+                                  "%20"
+                              )
+                          );
+                          Set(
+                              var_reservationScenario,
+                              Self.Selected.Value
+                          );
                           If(
                               (IsBlankOrError(dropdown_ScenarioPicker.Selected) || dropdown_ScenarioPicker.Selected.Value = Blank()),
-                                  Set(var_scenarioTrainingMaterialsURL, "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"),
-                                  Set(var_scenarioTrainingMaterialsURL, 
-                                      Concatenate(
-                                          "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=",
-                                          var_reservationScenario,
-                                          "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603"
-                                      )
+                              Set(
+                                  var_scenarioTrainingMaterialsURL,
+                                  "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx"
+                              ),
+                              Set(
+                                  var_scenarioTrainingMaterialsURL,
+                                  Concatenate(
+                                      "https://dvagov.sharepoint.com/sites/vacoehrmioeue/Sandbox/LearningLabsDocs/Forms/AllItems.aspx?FilterField1=Doc%5Fx0020%5FType&FilterValue1=Workbook&FilterType1=Choice&FilterField2=Scenario&FilterValue2=",
+                                      var_reservationScenario,
+                                      "&FilterType2=Lookup&viewid=ed6d1443%2D71a4%2D4766%2D9b9d%2D1c0314570603"
                                   )
+                              )
                           );
+
                           Reset(dropdown_LocationPicker);
                           Reset(dropdown_DateTimePicker);
+
+                          Select(btn_patchMasterScheduleList_scenarioDescription_multitext);
                         Width: =Parent.Width - Self.X - 10
                         X: =HtmlText7.X + 10
                         Y: =HtmlText7.Y + HtmlText7.Height
@@ -3467,7 +3745,7 @@ Screens:
                       Control: HtmlViewer@2.1.0
                       Properties:
                         AutoHeight: =true
-                        HtmlText: |+
+                        HtmlText: |
                           ="<i>Pick a training <b>SCENARIO</b> for <b>" & _selectedUser.GivenName & "'s</b> Learning Lab:"
                         Size: =14
                         Width: =Parent.Width - Self.X
@@ -3492,6 +3770,48 @@ Screens:
                               33,
                               0
                           )
+                  - btn_patchMasterScheduleList_scenarioDescription_multitext:
+                      Control: ModernButton@1.0.0
+                      Properties:
+                        OnSelect: |-
+                          =If(
+                              !IsBlank(dropdown_ScenarioPicker.Selected.Value) && dropdown_ScenarioPicker.Selected.Value <> "MY SCENARIO IS NOT LISTED!",
+                              With(
+                                  {
+                                      _desc: LookUp(
+                                          'Learning Lab Sessions',
+                                          ThisRecord.Title = dropdown_ScenarioPicker.Selected.Value
+                                      ).Description
+                                  },
+                                  If(
+                                      !IsBlank(_desc),
+                                      ClearCollect(
+                                          col_scenarioRowsToPatch,
+                                          Filter(
+                                              MasterScheduleList,
+                                              ScenarioName_text = dropdown_ScenarioPicker.Selected.Value,
+                                              // only keep rows that are blank OR don't already match
+                                              Or(
+                                                  IsBlank(scenarioDescription_multitext),
+                                                  scenarioDescription_multitext <> _desc
+                                              )
+                                          )
+                                      );
+                                      ForAll(
+                                          col_scenarioRowsToPatch,
+                                          Patch(
+                                              MasterScheduleList,
+                                              ThisRecord,
+                                              {scenarioDescription_multitext: _desc}
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                        Text: ="patch(MasterScheduleList_scenarioDescription_multitext)"
+                        Visible: =false
+                        X: =340
+                        Y: =95
             - ctn_PopUp_ClassPicker_Role:
                 Control: GroupContainer@1.5.0
                 Variant: ManualLayout
@@ -3519,19 +3839,23 @@ Screens:
                         Height: =48
                         ItemDisplayText: =ThisItem.Value
                         Items: |-
-                          =Table(
+                          =//Table(
                               Sort(  
                                   Distinct(
                                       Filter(
-                                          col_nationalEHRMLearningLabSessions,
-                                          Facility.Value = "Hines"
+                                          //'Learning Lab Sessions',
+                                          //col_nationalEHRMLearningLabSessions,
+                                          col_MasterSchedule,
+                                          //Facility.Value = "Hines"
+                                          (IsBlank(ThisRecord.sessionActive_text) || ThisRecord.sessionActive_text <> "false")
                                       ),
-                                      ThisRecord.Role.Value //ScenarioName_text
+                                      //ThisRecord.Role.Value
+                                      ThisRecord.RoleName_text
                                   ),
-                                  Value
-                              ),
-                              ["MY ROLE IS NOT LISTED!"]
-                          )
+                                  ThisRecord.Value
+                              )
+                          //    ,["MY ROLE IS NOT LISTED!"]
+                          //)
 
 
                           /*
@@ -3908,8 +4232,11 @@ Screens:
                   Size: =18
                   Text: |-
                     =LookUp(
+                        //MasterScheduleList,
                         col_nationalEHRMLearningLabSessions,
-                        var_reservationScenario = ThisRecord.Title,
+                        ThisRecord.Title = var_reservationScenario,
+                        //ThisRecord.ScenarioName_text = var_reservationScenario,
+                        //ThisRecord.RoleName_text & " --- " & ThisRecord.ScenarioName_text & " --- " & ThisRecord.TrainingCombinedDateTime_text
                         ThisRecord.Description
                     )
                   VerticalAlign: =VerticalAlign.Top
@@ -3921,7 +4248,7 @@ Screens:
                 Properties:
                   BorderColor: =RGBA(255, 255, 255, 0)
                   BorderThickness: =3
-                  Height: |+
+                  Height: |
                     =50
                   HoverBorderColor: =RGBA(9, 33, 98, 1)
                   HoverColor: =RGBA(255, 255, 255, 1)
@@ -3932,7 +4259,7 @@ Screens:
                         var_ViewScenarioDescription = true,
                         Set(var_ViewScenarioDescription, false),
                         Set(var_ViewScenarioDescription, true)
-                    )
+                    );
                   PaddingBottom: =3
                   PaddingLeft: =3
                   PaddingRight: =3
@@ -4170,7 +4497,6 @@ Screens:
                   Y: =Text1_1.Y + 3
             - Text10:
                 Control: ModernText@1.0.0
-                Group: Group1
                 Properties:
                   Align: =Align.Center
                   FontWeight: =FontWeight.Semibold
@@ -4184,7 +4510,6 @@ Screens:
                   Y: =Button6_2.Height - Self.Height
             - Icon7:
                 Control: Classic/Icon@2.5.0
-                Group: Group1
                 Properties:
                   Height: =Text10.Height
                   Icon: =Icon.OpenInNewWindow
@@ -4208,7 +4533,7 @@ Screens:
             Fill: =RGBA(0, 0, 0, 0)
             Height: =Gallery2.Height
             ShowControls: =true
-            Visible: |+
+            Visible: |
               =If(
                   var_timerPopUP_ScenarioPDF = true,
                   true,
@@ -4221,7 +4546,7 @@ Screens:
           Control: Classic/Icon@2.5.0
           Properties:
             Color: =RGBA(255, 255, 255, 1)
-            Height: |+
+            Height: |
               =58
             Icon: =Icon.Print
             OnSelect: |-
@@ -4248,7 +4573,7 @@ Screens:
             PaddingTop: =12
             Visible: =false
             Width: =Self.Height
-            X: |+
+            X: |
               =PdfViewer2.X + PdfViewer2.Width - 215
             Y: =PdfViewer2.Y
       - Button12:

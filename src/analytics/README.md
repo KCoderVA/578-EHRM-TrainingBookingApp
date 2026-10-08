@@ -3,8 +3,9 @@
 This folder holds the reporting and data-analysis components for the 578 EHRM Training App: Power BI
 reports/dashboards, supporting SQL, and staged VA **TMS** (Talent Management System) completion data.
 
-**Status @ v1.2.7:** actively developed. The TMS reporting area now has an automated Outlook-to-SharePoint
-ingestion flow that maintains the canonical CSV used by the internal 578 EHRM Training Details report.
+**Status @ v1.3.5:** actively developed (analytics components unchanged since v1.2.7). The TMS reporting
+area (`tms/`) is **local-only and excluded from the public repo** for now, pending organization for a
+future release; locally it maintains the canonical CSV used by the internal 578 EHRM Training Details report.
 
 ## Structure
 
@@ -14,15 +15,15 @@ src/analytics/
 │   ├── .pbit/       — Power BI template(s) (tracked source-of-truth: "Signup Tool.pbit")
 │   ├── .pbix/       — Power BI report binaries (git-ignored): "Signup Tool.pbix", "SuperUserDashboard-Final.pbix"
 │   └── local/       — local-only templates/scratch (git-ignored)
-├── tms/
-│   ├── lists/       — staged VA TMS completion exports (.xlsx) + Power BI links (.url) (git-ignored data)
-│   └── powerBI/     — local/internal TMS-specific Power BI reports (git-ignored)
+├── tms/             — LOCAL-ONLY / excluded from public repo (WIP; see .gitignore §10)
+│   ├── lists/       — staged VA TMS completion exports (.xlsx) + Power BI links (.url) (local-only)
+│   └── powerBI/     — local/internal TMS-specific Power BI reports (local-only)
 └── sql/
     ├── queries/     — reporting queries
     └── local/       — local-only staging/scratch (git-ignored)
 ```
 
-See [`powerBI/README.md`](powerBI/README.md) and [`tms/README.md`](tms/README.md) for details.
+See [`powerBI/README.md`](powerBI/README.md) for details. *(The `tms/` reporting area is local-only and not published to the public repo yet.)*
 
 ## Power BI (summary)
 

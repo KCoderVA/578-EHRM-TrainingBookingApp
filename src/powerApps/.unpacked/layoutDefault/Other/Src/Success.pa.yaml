@@ -11,28 +11,7 @@ Screens:
     Properties:
       Fill: =RGBA(236, 236, 236, 1)
       Height: =Max(App.Height, App.DesignHeight)
-      OnVisible: |-
-        =// ═══════════════════════════════════════════════════════════════
-        // SUCCESS SCREEN  —  property-by-property formulas
-        // ═══════════════════════════════════════════════════════════════
-
-        // ───────────────────────────────────────────────────────────────
-        // SCREEN.OnVisible
-        // ───────────────────────────────────────────────────────────────
-        // Decide once whether everything succeeded. Only start the auto-
-        // redirect timer when it did; otherwise the user stays here to read
-        // the warning and must dismiss manually.
-
-        //TEMP: KYLE - Remove after testing: 
-            Set(varShowRedirect, true);
-
-
-        If(
-            (varCalendarOK = true && (varMainOK = true || varMainSimpleOK = true) && (varBackupOK = true || varBackupSimpleOK = true)),
-            Set(varAllOK, true) && Set(varShowRedirect, varAllOK),
-            (varCalendarOK <> true && (varMainOK <> true || varMainSimpleOK <> true) && (varBackupOK <> true || varBackupSimpleOK <> true)),
-            Set(varAllOK, false) && Set(varShowRedirect, varAllOK)
-        )
+      OnVisible: "=// ═══════════════════════════════════════════════════════════════\r\n// SUCCESS SCREEN  —  property-by-property formulas\r\n// ═══════════════════════════════════════════════════════════════\r\n\r\n// ───────────────────────────────────────────────────────────────\r\n// SCREEN.OnVisible\r\n// ───────────────────────────────────────────────────────────────\r\n// Decide once whether everything succeeded. Only start the auto-\r\n// redirect timer when it did; otherwise the user stays here to read\r\n// the warning and must dismiss manually.\r\n\r\n//TEMP: KYLE - Remove after testing: \r\n    Set(varShowRedirect, true);\r\n\r\n\r\nIf(\r\n    varCalendarOK = true\r\n        && (varDetailedOK = true || varMainSimpleOK = true)\r\n        && (varFallbackOK = true || varSimpleListPatchOK = true),\r\n    Set(varAllOK, true) && Set(varShowRedirect, varAllOK),\r\n    \r\n    varCalendarOK <> true\r\n        && (varDetailedOK <> true || varMainSimpleOK <> true)\r\n        && (varFallbackOK <> true || varSimpleListPatchOK <> true),\r\n    Set(varAllOK, false) && Set(varShowRedirect, varAllOK)\r\n)"
       Width: =Max(App.Width, App.DesignWidth)
     Children:
       - Image2_3:
@@ -58,7 +37,7 @@ Screens:
           Properties:
             Color: =RGBA(255, 255, 255, 1)
             Height: =iconCircle1.Height
-            Icon: |+
+            Icon: |
               =//"Your training is booked!"
               // ───────────────────────────────────────────────────────────────
               // LblSuccessMsg1.Text   (main heading/message label)
@@ -75,7 +54,7 @@ Screens:
             PressedFill: =RGBA(255, 255, 255, 0.3)
             Width: =iconCircle1.Width
             X: =(Parent.Width - Self.Width) / 2
-            Y: |+
+            Y: |
               =lblSuccess.Y + lblSuccess.Height + (Self.Height / 2) - 10
       - LblSuccessMsg1:
           Control: Label@2.5.1
@@ -84,7 +63,7 @@ Screens:
             FontWeight: =FontWeight.Bold
             Height: =50
             Size: =28
-            Text: |+
+            Text: |
               =//"Your training is booked!"
               // ───────────────────────────────────────────────────────────────
               // LblSuccessMsg1.Text   (main heading/message label)
@@ -274,7 +253,7 @@ Screens:
                       Text(DateAdd(Self.Duration, - (Time(0,0,0, Self.Value)), TimeUnit.Milliseconds), "sfff"),
                   ""
               )
-            Width: |+
+            Width: |
               =250
             X: =(Parent.Width / 2) - (Self.Width / 2)
             Y: =Parent.Height - Self.Height
@@ -283,7 +262,7 @@ Screens:
           Properties:
             Align: =Align.Center
             AutoHeight: =true
-            Height: |+
+            Height: |
               =100
             Italic: =true
             Size: =18
@@ -294,9 +273,11 @@ Screens:
                   "You now have a Outlook calendar invite for the date/time you selected, which contains more important details about your upcoming training event/class!"
                       & Char(10) &
                       If(varDetailedOK = true, "• Main (detailed) reservation list = SUCCESS" & Char(10), varDetailedOK = false, "• Main (detailed) reservation list = FAILED" & Char(10)) &
-                      If(varFallbackOK = true, "• Fallback (simple) reservation list = SUCCESS" & Char(10), varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10)) &
+                      //If(varFallbackOK = true, "• Fallback (simple) reservation list = SUCCESS" & Char(10), varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10)) &
+                      If(varDetailedOK = false, If(varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10), Blank()), Char(10), Blank()) &
                       If(varEmailOK = true, "• Email Sent = SUCCESS" & Char(10), varEmailOK = false, "• Email sent = FAILED" & Char(10)) &
-                      If(varPatchSuperUsersOK = true, "• SuperUser list patched = SUCCESS" & Char(10), varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10)) &
+                      //If(varPatchSuperUsersOK = true, "• SuperUser list patched = SUCCESS" & Char(10), varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10)) &
+                      If(user_IsSuperUser = true, If(varPatchSuperUsersOK = true, "• SuperUser list patched = SUCCESS" & Char(10), varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10), Blank()), Char(10), Blank()) &
                       If(varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10), varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10)),
                   varAllOK = true && user_isAdmin = false,
                       "You now have a Outlook calendar invite for the date/time you selected, which contains more important details about your upcoming training event/class!"
@@ -309,10 +290,11 @@ Screens:
                       //If(varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10), varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10)),
                   varAllOK = false && user_isAdmin = true,
                   "The following did NOT complete successfully:" & Char(10) &
-                      If(varMainOK = false, "• Main reservation list = FAILED" & Char(10), varMainOK = true, "• Main reservation list = SUCCESS" & Char(10)) &
+                      If(varDetailedListPatchOK = false, "• Main reservation list = FAILED" & Char(10), varDetailedListPatchOK = true, "• Main reservation list = SUCCESS" & Char(10)) &
                       If(varMainSimpleOK = false, "• Main (simple) reservation list = FAILED" & Char(10), varMainSimpleOK = true, "• Main (simple) reservation list = SUCCESS" & Char(10)) &
-                      If(varBackupOK = false, "• Backup reservation list = FAILED" & Char(10), varBackupOK = true, "• Backup reservation list = SUCCESS" & Char(10)) &
-                      If(varBackupSimpleOK = false, "• Backup (simple) reservation list = FAILED" & Char(10), varBackupSimpleOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10)) &
+                      If(varFallbackOK = false, "• Backup reservation list = FAILED" & Char(10), varFallbackOK = true, "• Backup reservation list = SUCCESS" & Char(10)) &
+                      If(varSimpleListPatchOK = false, "• Backup (simple) reservation list = FAILED" & Char(10), varSimpleListPatchOK = true, "• Backup (simple) reservation list = SUCCESS" & Char(10)) &
+                      If(varEmailOK = false, "• Email notification sent = FAILED" & Char(10), varSimpleListPatchOK = true, "• Email notification sent  = SUCCESS" & Char(10)) &
                       If(varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10), varCalendarOK = true, "• Outlook calendar invite = SUCCESS" & Char(10))
                       & "
                       Please refresh the app's webpage & submit again. If this error message continues to appear after refreshing, please contact the app admins via:
@@ -320,9 +302,10 @@ Screens:
                   varAllOK = false && user_isAdmin = false,
                   "The following did NOT complete successfully:" & Char(10) &
                       If(varDetailedOK = false, "• Main (detailed) reservation list = FAILED" & Char(10), Blank()) &
-                      If(varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10), Blank()) &
+                      If(varDetailedOK = false, If(varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10), Blank()), Char(10), Blank()) & 
+                      //If(varFallbackOK = false, "• Fallback (simple) reservation list = FAILED" & Char(10), Blank()) &
                       If(varEmailOK = false, "• Email sent = FAILED" & Char(10), Blank()) &
-                      If(varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10), Blank()) &
+                      If(user_IsSuperUser = true, If(varPatchSuperUsersOK = false, "• SuperUser list patched  = FAILED" & Char(10), Blank()), Char(10), Blank()) &
                       If(varCalendarOK = false, "• Outlook calendar invite = FAILED" & Char(10), Blank())
                       & Char(10) & "
                       Please refresh the app's webpage & submit again. If this error message continues to appear after refreshing, please contact the app admins via:

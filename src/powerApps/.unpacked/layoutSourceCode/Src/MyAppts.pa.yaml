@@ -104,7 +104,7 @@ Screens:
             TemplateSize: =gallUpcoming.TemplateHeight
             Visible: =prevSelected
             Width: =Parent.Width - (Self.X * 2)
-            X: |+
+            X: |
               =10
             Y: =rectSeperator.Y
           Children:
@@ -220,7 +220,7 @@ Screens:
                   Text: =Upper(Text(DateTimeValue(ThisItem.'Check Out From'),"[$-en-US]yyyy"))
                   Width: =lbl_Month2.Width + lbl_Day2.Width
                   X: =lbl_Month2.X
-                  Y: |+
+                  Y: |
                     =lbl_Month2.Y + lbl_Month2.Height - 5
             - lbl_Day2:
                 Control: Label@2.5.1
@@ -339,7 +339,7 @@ Screens:
             TemplateSize: =91
             Visible: =upSelected
             Width: =Parent.Width - (Self.X * 2)
-            X: |+
+            X: |
               =10
             Y: =rectSeperator.Y
           Children:
@@ -518,7 +518,7 @@ Screens:
                   Visible: =lbl_Month1.Visible
                   Width: =lbl_Month1.Width + lbl_Day1.Width
                   X: =lbl_Month1.X
-                  Y: |+
+                  Y: |
                     =lbl_Month1.Y + lbl_Month1.Height - 5
             - lbl_Day1:
                 Control: Label@2.5.1
@@ -827,7 +827,7 @@ Screens:
             Height: =3
             Width: =lblPrev.X + lblPrev.Width + lblUpcoming.X
             X: =1
-            Y: |+
+            Y: |
               =rectUpSel.Y + rectUpSel.Height - 1
       - rectPrevSel:
           Control: Rectangle@2.3.0

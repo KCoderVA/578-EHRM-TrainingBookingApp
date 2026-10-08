@@ -16,7 +16,6 @@ Screens:
     Children:
       - Image2_9:
           Control: Image@2.2.3
-          Group: grpHeader_8
           Properties:
             Height: =lblMyAppointments_3.Height + 5
             Image: =abstractBackground
@@ -24,7 +23,6 @@ Screens:
             Width: =Parent.Width
       - Rectangle2_8:
           Control: Rectangle@2.3.0
-          Group: grpHeader_8
           Properties:
             Fill: =RGBA(135, 78, 181, 0.65)
             Height: =lblMyAppointments_3.Height + 5
@@ -109,7 +107,7 @@ Screens:
             Height: =80
             LineHeight: =1
             Mode: =TextMode.MultiLine
-            Size: |+
+            Size: |
               =If(
                   Len(Self.Text) > 100,
                   12,
@@ -406,7 +404,6 @@ Screens:
             Y: =lblFloorDesk_1.Y + lblFloorDesk_1.Height
       - Rectangle3_4:
           Control: Rectangle@2.3.0
-          Group: grpMap_2
           Properties:
             AccessibleLabel: =
             Fill: =RGBA(116, 116, 116, 0.85)
@@ -416,7 +413,6 @@ Screens:
             Y: =150
       - Image5_2:
           Control: Image@2.2.3
-          Group: grpMap_2
           Properties:
             AccessibleLabel: =
             Height: =490
@@ -428,7 +424,6 @@ Screens:
             Y: =150
       - Icon1_2:
           Control: Classic/Icon@2.5.0
-          Group: grpMap_2
           Properties:
             AccessibleLabel: =
             Color: =RGBA(255, 255, 255, 1)
@@ -623,7 +618,7 @@ Screens:
               Refresh('Desk Reservations');
               Set(varSelectedReservation, Blank());
               Navigate(MyAppts);
-            ToggleSize: |+
+            ToggleSize: |
               =70
             Width: =tbTo_5.Width
             X: =tbTo_5.X
@@ -855,5 +850,5 @@ Screens:
               )
             Width: =Parent.Width - Self.X
             X: =lblToRes_5.X
-            Y: |+
+            Y: |
               =Toggle1.Y - 2

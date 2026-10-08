@@ -1,4 +1,5 @@
 DebuggingScreen As screen:
+    ContentLanguage: =""
     Fill: =Color.LightGray
     Height: =App.Height
     LoadingSpinnerColor: =App.Theme.Colors.Primary
@@ -19,13 +20,15 @@ DebuggingScreen As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
         RadiusTopRight: =4
         Width: =Parent.Width
         Y: =ctnDebugScreen_header.Y + ctnDebugScreen_header.Height
-        ZIndex: =5
+        ZIndex: =1
 
         Container4 As groupContainer.manualLayoutContainer:
             BorderColor: =RGBA(9, 33, 98, 1)
@@ -36,6 +39,8 @@ DebuggingScreen As screen:
             LayoutGridColumns: =6
             LayoutGridRowMinHeight: =0
             LayoutGridRows: =6
+            maximumHeight: =11360
+            maximumWidth: =640
             RadiusBottomLeft: =4
             RadiusBottomRight: =4
             RadiusTopLeft: =4
@@ -1344,7 +1349,7 @@ DebuggingScreen As screen:
                 Width: =(Parent.Width / 2)
                 ZIndex: =6
 
-            NextArrow1 As icon.ChevronRight:
+            NextArrow1 As icon:
                 AccessibleLabel: =Self.Tooltip
                 BorderColor: =App.Theme.Colors.Darker40
                 Color: =App.Theme.Colors.Darker30
@@ -1378,22 +1383,37 @@ DebuggingScreen As screen:
             ZIndex: =3
 
             AccessLevel_Choice_DataCard1 As typedDataCard.modernComboBoxEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="AccessLevel_Choice"
                 Default: =ThisItem.AccessLevel_Choice
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,AccessLevel_Choice)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =true
                 Update: =DataCardValue14.Selected
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =0
                 ZIndex: =4
 
                 DataCardKey15 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -1409,11 +1429,16 @@ DebuggingScreen As screen:
                 DataCardValue14 As modernCombobox:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     DefaultSelectedItems: =[Parent.Default]
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
+                    InputTextPlaceholder: ="Find items"
                     ItemDisplayText: =ThisItem.Value
                     Items: =Choices([@DeskAccessControl].AccessLevel_Choice)
+                    Required: =false
                     SelectMultiple: =false
+                    Size: =24
                     ValidationState: =ValidationState.None
                     Width: =Parent.Width - 48
                     X: =24
@@ -1421,6 +1446,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage17 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -1432,10 +1459,13 @@ DebuggingScreen As screen:
 
                 StarVisible17 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey15.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -1443,23 +1473,38 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             Email_Text_DataCard1 As typedDataCard.modernTextualEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="Email_Text"
                 Default: =ThisItem.Email_Text
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,Email_Text)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
                 MaxLength: =DataSourceInfo([@DeskAccessControl], DataSourceInfo.MaxLength, Email_Text)
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =true
                 Update: =DataCardValue15.Text
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =1
                 ZIndex: =4
 
                 DataCardKey16 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -1475,11 +1520,14 @@ DebuggingScreen As screen:
                 DataCardValue15 As modernTextInput:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     Default: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
                     MaxLength: =Parent.MaxLength
                     Placeholder: ="Enter text"
                     Required: =Parent.Required
+                    Size: =24
                     TriggerOutput: =TriggerOutput.Keypress
                     ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
                     Width: =Parent.Width - 48
@@ -1488,6 +1536,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage21 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -1499,10 +1549,13 @@ DebuggingScreen As screen:
 
                 StarVisible21 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey16.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -1510,17 +1563,30 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             AccessStart_dateTime_DataCard1 As typedDataCard.dateTimeEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="AccessStart_dateTime"
                 Default: =ThisItem.AccessStart_dateTime
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,AccessStart_dateTime)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =50
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =If(Not IsBlank(DateValue3.SelectedDate), DateTime(Year(DateValue3.SelectedDate), Month(DateValue3.SelectedDate), Day(DateValue3.SelectedDate), Value(HourValue3.Selected.Value), Value(MinuteValue3.Selected.Value), 0))
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =2
                 ZIndex: =4
@@ -1555,6 +1621,8 @@ DebuggingScreen As screen:
                     IconBackground: =App.Theme.Colors.Primary
                     IconFill: =App.Theme.Colors.PrimaryForeground
                     IsEditable: =true
+                    maximumHeight: =1136
+                    maximumWidth: =640
                     PaddingBottom: =0
                     PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                     SelectedDateFill: =App.Theme.Colors.Primary
@@ -1688,17 +1756,30 @@ DebuggingScreen As screen:
                     ZIndex: =7
 
             AccessStop_dateTime_DataCard1 As typedDataCard.dateTimeEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="AccessStop_dateTime"
                 Default: =ThisItem.AccessStop_dateTime
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,AccessStop_dateTime)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =50
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =If(Not IsBlank(DateValue4.SelectedDate), DateTime(Year(DateValue4.SelectedDate), Month(DateValue4.SelectedDate), Day(DateValue4.SelectedDate), Value(HourValue4.Selected.Value), Value(MinuteValue4.Selected.Value), 0))
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =3
                 ZIndex: =4
@@ -1733,6 +1814,8 @@ DebuggingScreen As screen:
                     IconBackground: =App.Theme.Colors.Primary
                     IconFill: =App.Theme.Colors.PrimaryForeground
                     IsEditable: =true
+                    maximumHeight: =1136
+                    maximumWidth: =640
                     PaddingBottom: =0
                     PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
                     SelectedDateFill: =App.Theme.Colors.Primary
@@ -1866,22 +1949,37 @@ DebuggingScreen As screen:
                     ZIndex: =7
 
             Approver_Email_Person_DataCard1 As typedDataCard.modernComboBoxEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="Approver_Email_Person"
                 Default: =ThisItem.Approver_Email_Person
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,Approver_Email_Person)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue18.Selected
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =4
                 ZIndex: =4
 
                 DataCardKey25 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -1897,11 +1995,16 @@ DebuggingScreen As screen:
                 DataCardValue18 As modernCombobox:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     DefaultSelectedItems: =[Parent.Default]
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
+                    InputTextPlaceholder: ="Find items"
                     ItemDisplayText: =ThisItem.Claims
                     Items: =Choices([@DeskAccessControl].Approver_Email_Person)
+                    Required: =false
                     SelectMultiple: =false
+                    Size: =24
                     ValidationState: =ValidationState.None
                     Width: =Parent.Width - 48
                     X: =24
@@ -1909,6 +2012,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage26 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -1920,10 +2025,13 @@ DebuggingScreen As screen:
 
                 StarVisible26 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey25.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -1931,23 +2039,38 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             AboutMe_Text_DataCard1 As typedDataCard.modernTextualEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="AboutMe_Text"
                 Default: =ThisItem.AboutMe_Text
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,AboutMe_Text)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
                 MaxLength: =DataSourceInfo([@DeskAccessControl], DataSourceInfo.MaxLength, AboutMe_Text)
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue20.Text
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =5
                 ZIndex: =4
 
                 DataCardKey27 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -1963,11 +2086,14 @@ DebuggingScreen As screen:
                 DataCardValue20 As modernTextInput:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     Default: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
                     MaxLength: =Parent.MaxLength
                     Placeholder: ="Enter text"
                     Required: =Parent.Required
+                    Size: =24
                     TriggerOutput: =TriggerOutput.Keypress
                     ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
                     Width: =Parent.Width - 48
@@ -1976,6 +2102,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage27 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -1987,10 +2115,13 @@ DebuggingScreen As screen:
 
                 StarVisible27 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey27.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -1998,23 +2129,38 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             Department_Text_DataCard1 As typedDataCard.modernTextualEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="Department_Text"
                 Default: =ThisItem.Department_Text
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,Department_Text)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
                 MaxLength: =DataSourceInfo([@DeskAccessControl], DataSourceInfo.MaxLength, Department_Text)
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue22.Text
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =6
                 ZIndex: =4
 
                 DataCardKey28 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -2030,11 +2176,14 @@ DebuggingScreen As screen:
                 DataCardValue22 As modernTextInput:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     Default: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
                     MaxLength: =Parent.MaxLength
                     Placeholder: ="Enter text"
                     Required: =Parent.Required
+                    Size: =24
                     TriggerOutput: =TriggerOutput.Keypress
                     ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
                     Width: =Parent.Width - 48
@@ -2043,6 +2192,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage28 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -2054,10 +2205,13 @@ DebuggingScreen As screen:
 
                 StarVisible28 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey28.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -2065,23 +2219,38 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             JobTitle_Text_DataCard1 As typedDataCard.modernTextualEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="JobTitle_Text"
                 Default: =ThisItem.JobTitle_Text
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@DeskAccessControl],DataSourceInfo.DisplayName,JobTitle_Text)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
                 MaxLength: =DataSourceInfo([@DeskAccessControl], DataSourceInfo.MaxLength, JobTitle_Text)
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue24.Text
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =7
                 ZIndex: =4
 
                 DataCardKey29 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -2097,11 +2266,14 @@ DebuggingScreen As screen:
                 DataCardValue24 As modernTextInput:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     Default: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
                     MaxLength: =Parent.MaxLength
                     Placeholder: ="Enter text"
                     Required: =Parent.Required
+                    Size: =24
                     TriggerOutput: =TriggerOutput.Keypress
                     ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
                     Width: =Parent.Width - 48
@@ -2110,6 +2282,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage29 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -2121,10 +2295,13 @@ DebuggingScreen As screen:
 
                 StarVisible29 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey29.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -2132,10 +2309,12 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
         form_EditDesks As form.ModernForm:
+            AcceptsFocus: =false
             BorderColor: =App.Theme.Colors.Darker40
             BorderThickness: =1
             DataSource: =Desks
             Height: =Parent.Height - Self.Y
+            NumberOfColumns: =1
             Visible: |
                 =If(
                     var_DebuggingScreen = true,
@@ -2149,23 +2328,38 @@ DebuggingScreen As screen:
             ZIndex: =4
 
             DeskName_text_DataCard1 As typedDataCard.modernTextualEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="DeskName_text"
                 Default: =ThisItem.DeskName_text
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,DeskName_text)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
                 MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, DeskName_text)
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue2.Text
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =0
                 ZIndex: =4
 
                 DataCardKey2 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -2181,11 +2375,14 @@ DebuggingScreen As screen:
                 DataCardValue2 As modernTextInput:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     Default: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
                     MaxLength: =Parent.MaxLength
                     Placeholder: ="Enter text"
                     Required: =Parent.Required
+                    Size: =24
                     TriggerOutput: =TriggerOutput.Keypress
                     ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
                     Width: =Parent.Width - 48
@@ -2194,6 +2391,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage2 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -2205,10 +2404,13 @@ DebuggingScreen As screen:
 
                 StarVisible2 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey2.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -2216,24 +2418,39 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             DeskNumber_number_DataCard1 As typedDataCard.modernNumberEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="DeskNumber_number"
                 Default: =ThisItem.DeskNumber_number
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,DeskNumber_number)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
                 Max: =DataSourceInfo([@Desks], DataSourceInfo.MaxValue, DeskNumber_number)
+                maximumHeight: =11360
+                maximumWidth: =640
                 Min: =DataSourceInfo([@Desks], DataSourceInfo.MinValue, DeskNumber_number)
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue4.Value
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =1
                 ZIndex: =4
 
                 DataCardKey4 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -2250,6 +2467,8 @@ DebuggingScreen As screen:
                     AccessibleLabel: =Parent.DisplayName
                     Default: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
+                    HintText: =""
                     Max: =Parent.Max
                     Min: =Parent.Min
                     Size: =24
@@ -2260,6 +2479,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage4 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -2271,10 +2492,13 @@ DebuggingScreen As screen:
 
                 StarVisible4 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey4.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -2282,23 +2506,38 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             Description_multilinePlainText_DataCard1 As typedDataCard.modernTextualEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="Description_multilineText"
                 Default: =ThisItem.Description_multilinePlainText
                 DisplayMode: =Parent.DisplayMode
-                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Description_multilineText)
+                DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Description_multilinePlainText)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
-                MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Description_multilineText)
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
+                MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, Description_multilinePlainText)
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue5.Text
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =2
                 ZIndex: =4
 
                 DataCardKey5 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -2314,11 +2553,14 @@ DebuggingScreen As screen:
                 DataCardValue5 As modernTextInput:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     Default: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
                     MaxLength: =Parent.MaxLength
                     Placeholder: ="Enter text"
                     Required: =Parent.Required
+                    Size: =24
                     TriggerOutput: =TriggerOutput.Keypress
                     ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
                     Width: =Parent.Width - 48
@@ -2327,6 +2569,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage5 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -2338,10 +2582,13 @@ DebuggingScreen As screen:
 
                 StarVisible5 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey5.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -2349,22 +2596,37 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             RoomName_choice_DataCard1 As typedDataCard.modernComboBoxEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="RoomName_choice"
                 Default: =ThisItem.RoomName_choice
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,RoomName_choice)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue6.Selected
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =3
                 ZIndex: =4
 
                 DataCardKey6 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -2380,11 +2642,16 @@ DebuggingScreen As screen:
                 DataCardValue6 As modernCombobox:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     DefaultSelectedItems: =[Parent.Default]
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
+                    InputTextPlaceholder: ="Find items"
                     ItemDisplayText: =ThisItem.Value
                     Items: =Choices([@Desks].RoomName_choice)
+                    Required: =false
                     SelectMultiple: =false
+                    Size: =24
                     ValidationState: =ValidationState.None
                     Width: =Parent.Width - 48
                     X: =24
@@ -2392,6 +2659,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage6 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -2403,10 +2672,13 @@ DebuggingScreen As screen:
 
                 StarVisible6 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey6.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -2414,23 +2686,38 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             FloorName_text_DataCard1 As typedDataCard.modernTextualEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="FloorName_text"
                 Default: =ThisItem.FloorName_text
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,FloorName_text)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
                 MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, FloorName_text)
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue9.Text
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =4
                 ZIndex: =4
 
                 DataCardKey7 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -2446,11 +2733,14 @@ DebuggingScreen As screen:
                 DataCardValue9 As modernTextInput:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     Default: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
                     MaxLength: =Parent.MaxLength
                     Placeholder: ="Enter text"
                     Required: =Parent.Required
+                    Size: =24
                     TriggerOutput: =TriggerOutput.Keypress
                     ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
                     Width: =Parent.Width - 48
@@ -2459,6 +2749,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage7 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -2470,10 +2762,13 @@ DebuggingScreen As screen:
 
                 StarVisible7 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey7.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -2481,23 +2776,38 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             BuildingName_text_DataCard1 As typedDataCard.modernTextualEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="BuildingName_text"
                 Default: =ThisItem.BuildingName_text
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,BuildingName_text)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
                 MaxLength: =DataSourceInfo([@Desks], DataSourceInfo.MaxLength, BuildingName_text)
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue10.Text
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =5
                 ZIndex: =4
 
                 DataCardKey8 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -2513,11 +2823,14 @@ DebuggingScreen As screen:
                 DataCardValue10 As modernTextInput:
                     AccessibleLabel: =Parent.DisplayName
                     Appearance: =Appearance.FilledDarker
+                    BorderStyle: =""
                     Default: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
                     MaxLength: =Parent.MaxLength
                     Placeholder: ="Enter text"
                     Required: =Parent.Required
+                    Size: =24
                     TriggerOutput: =TriggerOutput.Keypress
                     ValidationState: =If(IsBlank(Parent.Error), ValidationState.None, ValidationState.Error)
                     Width: =Parent.Width - 48
@@ -2526,6 +2839,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage8 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -2537,10 +2852,13 @@ DebuggingScreen As screen:
 
                 StarVisible8 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey8.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -2548,24 +2866,39 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             Capacity_number_DataCard1 As typedDataCard.modernNumberEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="Capacity_number"
                 Default: =ThisItem.Capacity_number
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Capacity_number)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =70
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
                 Max: =DataSourceInfo([@Desks], DataSourceInfo.MaxValue, Capacity_number)
+                maximumHeight: =11360
+                maximumWidth: =640
                 Min: =DataSourceInfo([@Desks], DataSourceInfo.MinValue, Capacity_number)
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue11.Value
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =6
                 ZIndex: =4
 
                 DataCardKey11 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -2582,6 +2915,8 @@ DebuggingScreen As screen:
                     AccessibleLabel: =Parent.DisplayName
                     Default: =Parent.Default
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
+                    HintText: =""
                     Max: =Parent.Max
                     Min: =Parent.Min
                     Size: =24
@@ -2592,6 +2927,8 @@ DebuggingScreen As screen:
                     ZIndex: =2
 
                 ErrorMessage11 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -2603,10 +2940,13 @@ DebuggingScreen As screen:
 
                 StarVisible11 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey11.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -2614,22 +2954,37 @@ DebuggingScreen As screen:
                     ZIndex: =4
 
             Active_boolean_DataCard1 As typedDataCard.modernToggleEditCard:
+                AutoHeight: =true
                 BorderColor: =App.Theme.Colors.Darker40
                 BorderStyle: =BorderStyle.Solid
+                BorderThickness: =0
+                ContentLanguage: =""
                 DataField: ="Active_boolean"
                 Default: =ThisItem.Active_boolean
                 DisplayMode: =Parent.DisplayMode
                 DisplayName: =DataSourceInfo([@Desks],DataSourceInfo.DisplayName,Active_boolean)
                 Fill: =RGBA(0, 0, 0, 0)
                 Height: =80
+                LayoutHeight: =0
+                LayoutWidth: =0
+                LayoutX: =0
+                LayoutY: =0
+                maximumHeight: =11360
+                maximumWidth: =640
+                minimumHeight: =20
+                minimumWidth: =20
                 Required: =false
                 Update: =DataCardValue12.Checked
+                Visible: =true
                 Width: =377
+                WidthFit: =false
                 X: =0
                 Y: =7
                 ZIndex: =4
 
                 DataCardKey12 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     FontWeight: =FontWeight.Semibold
                     Height: =22
                     PaddingBottom: =0
@@ -2646,19 +3001,33 @@ DebuggingScreen As screen:
                     AccessibleLabel: =If(Parent.Required, Substitute("{0}. Required.", "{0}", Parent.DisplayName), Parent.DisplayName)
                     BasePaletteColor: =
                     Checked: =Parent.Default
+                    ContentLanguage: =""
                     DisplayMode: =Parent.DisplayMode
+                    Font: =""
                     FontColor: =
+                    FontItalic: =false
+                    FontSize: =0
+                    FontStrikethrough: =false
+                    FontUnderline: =false
+                    FontWeight: =""
                     Height: =32
                     Label: =""
+                    LabelPosition: ="After"
                     OnCheck: =false
+                    OnSelect: =false
                     OnUncheck: =false
-                    Tooltip: =Parent.DisplayName
+                    TabIndex: =0
+                    ToggleSize: =40
+                    Tooltip: =""
+                    Visible: =true
                     Width: =113
                     X: =24
                     Y: =DataCardKey12.Y + DataCardKey12.Height + 4
                     ZIndex: =2
 
                 ErrorMessage12 As modernText:
+                    BorderStyle: =""
+                    Font: =""
                     Height: =30
                     Size: =14
                     Text: =Parent.Error
@@ -2670,10 +3039,13 @@ DebuggingScreen As screen:
 
                 StarVisible12 As modernText:
                     Align: =Align.Center
+                    BorderStyle: =""
                     Color: =Color.Red
+                    Font: =""
                     Height: =DataCardKey12.Height
                     PaddingBottom: =0
                     PaddingTop: =0
+                    Size: =26
                     Text: ="*"
                     Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
                     Width: =30
@@ -2705,6 +3077,8 @@ DebuggingScreen As screen:
             ZIndex: =5
 
         btnSwitchForms As modernButton:
+            BorderStyle: =""
+            Font: =""
             Height: =21
             OnSelect: |-
                 =If(
@@ -2733,12 +3107,14 @@ DebuggingScreen As screen:
         LayoutGridColumns: =6
         LayoutGridRowMinHeight: =0
         LayoutGridRows: =6
+        maximumHeight: =11360
+        maximumWidth: =640
         RadiusBottomLeft: =4
         RadiusBottomRight: =4
         RadiusTopLeft: =4
         RadiusTopRight: =4
         Width: =Parent.Width
-        ZIndex: =6
+        ZIndex: =2
 
         Tabs_5 As Tabs:
             Height: =106.66666666666667
@@ -2746,6 +3122,8 @@ DebuggingScreen As screen:
             ZIndex: =1
 
         Text2 As modernText:
+            BorderStyle: =""
+            Font: =""
             FontWeight: =FontWeight.Bold
             Height: =Parent.Height
             Size: =40

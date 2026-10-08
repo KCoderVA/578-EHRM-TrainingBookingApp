@@ -81,7 +81,6 @@ Screens:
     Children:
       - Rectangle3_15:
           Control: Rectangle@2.3.0
-          Group: grpConfirmCancel_3
           Properties:
             Fill: =RGBA(116, 116, 116, 0.85)
             Height: =292
@@ -90,7 +89,6 @@ Screens:
             Y: =118
       - bgRounded_17:
           Control: HtmlViewer@2.1.0
-          Group: grpConfirmCancel_3
           Properties:
             DisabledBorderColor: =RGBA(56, 56, 56, 1)
             Font: =Font.'Open Sans'
@@ -103,7 +101,6 @@ Screens:
             Y: =150
       - Label1_4:
           Control: Label@2.5.1
-          Group: grpConfirmCancel_3
           Properties:
             Align: =Align.Center
             FontWeight: =FontWeight.Semibold
@@ -124,7 +121,6 @@ Screens:
             Y: =343
       - btnConfirmCancel_4:
           Control: Classic/Button@2.2.0
-          Group: grpConfirmCancel_3
           Properties:
             BorderThickness: =0
             Color: =RGBA(255, 255, 255, 1)
@@ -144,13 +140,12 @@ Screens:
             Y: =505
       - btnConfirmDelete_4:
           Control: Classic/Button@2.2.0
-          Group: grpConfirmCancel_3
           Properties:
             BorderThickness: =0
             Fill: =RGBA(184, 0, 0, 1)
             Height: =72
             HoverFill: =ColorFade(Self.Fill, -20%)
-            OnSelect: |+
+            OnSelect: |
               =//Remove('Desk Reservations',varSelectedReservation);UpdateContext({varConfirmCancel:false});Back()
               // OnSelect property for the Confirm button
               If(
@@ -222,7 +217,7 @@ Screens:
                             DisplayMode.Disabled
                     )
                   Height: =Parent.Height - Self.Y
-                  Items: |+
+                  Items: |
                     =If(
                         (userAccessLevel_text = "AppAdmin"),
                             If(
@@ -363,7 +358,7 @@ Screens:
                         Size: =12
                         Text: =ThisItem.studentName_text & " (" & ThisItem.studentEmail_text & ") - " & ThisItem.DeskText
                         Width: =lbl_DailyCal_body_header_title.Width
-                        X: |+
+                        X: |
                           =lbl_DailyCal_body_header_title.X
                   - lbl_reservationID:
                       Control: Label@2.5.1
@@ -397,7 +392,7 @@ Screens:
                         Color: =RGBA(9, 33, 98, 1)
                         DisabledBorderColor: =RGBA(56, 56, 56, 1)
                         DisabledColor: =RGBA(119, 119, 119, 1)
-                        DisplayMode: |+
+                        DisplayMode: |
                           =DisplayMode.Edit
                           //Admin.Email = varUser_details.Email
                         Fill: =RGBA(255, 255, 255, 1)
@@ -472,7 +467,7 @@ Screens:
                       Control: Text@0.0.51
                       Properties:
                         Align: ='TextCanvas.Align'.Center
-                        Height: |+
+                        Height: |
                           =Parent.Height
                         PaddingBottom: =0
                         PaddingLeft: =0
@@ -630,7 +625,7 @@ Screens:
                   Items.Value: =Value
                   Size: =18
                   Visible: =!hideForPDF
-                  Width: |+
+                  Width: |
                     =200
                   X: =icon_DailyCal_body_header_previous.X + icon_DailyCal_body_header_previous.Width
                   Y: =Parent.Height - Self.Height - 10 //(Parent.Height / 2) - (Self.Height / 2)
@@ -805,7 +800,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =3
-                        Size: |+
+                        Size: |
                           =20
                         Width: =Parent.Width - Self.X
                         X: =lbl_DailyCal_popUp_foreground_Description.X + lbl_DailyCal_popUp_foreground_Description.Width
@@ -837,7 +832,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =3
-                        Size: |+
+                        Size: |
                           =20
                         Width: =Parent.Width - Self.X
                         X: =lbl_DailyCal_popUp_foreground_Location.X + lbl_DailyCal_popUp_foreground_Location.Width
@@ -868,7 +863,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =3
-                        Size: |+
+                        Size: |
                           =20
                         Width: =Parent.Width - Self.X
                         X: =lbl_DailyCal_popUp_foreground_EndDatetime.X + lbl_DailyCal_popUp_foreground_EndDatetime.Width
@@ -900,7 +895,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =3
-                        Size: |+
+                        Size: |
                           =20
                         Width: =Parent.Width - Self.X
                         X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
@@ -932,7 +927,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =3
-                        Size: |+
+                        Size: |
                           =20
                         Width: =Parent.Width - Self.X
                         X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
@@ -964,7 +959,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =3
-                        Size: |+
+                        Size: |
                           =20
                         Width: =Parent.Width - Self.X
                         X: =lbl_DailyCal_popUp_foreground_startDatetime.X + lbl_DailyCal_popUp_foreground_startDatetime.Width
@@ -1027,7 +1022,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Size: |+
+                        Size: |
                           =20
                         Width: =Parent.Width - Self.X - icon_DailyCal_popUp_foreground_close.Width - (Parent.BorderThickness * 2)
                         X: =lbl_DailyCal_popUp_foreground_Submitted.X + lbl_DailyCal_popUp_foreground_Submitted.Width
@@ -1059,7 +1054,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Size: |+
+                        Size: |
                           =20
                         Width: =lbl_DailyCal_popUp_foreground_ID.Width + 50
                         X: =lbl_DailyCal_popUp_foreground_ID.X + lbl_DailyCal_popUp_foreground_ID.Width - 15
