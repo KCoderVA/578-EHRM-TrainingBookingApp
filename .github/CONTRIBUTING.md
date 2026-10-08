@@ -13,11 +13,11 @@ This repository contains **unpacked (source-controlled)** Microsoft Power Platfo
 ## Repository layout
 
 - [src/](../src/) — unpacked Power Platform artifacts (Canvas app, flows, SharePoint samples, scripts)
-- [config/](../config/) — architecture/runbooks + environment templates + helper tooling
+- `config/` — architecture/runbooks + environment templates + helper tooling *(git-ignored, local-only)*
 - [docs/](../docs/) — public documentation (status, release drafts/templates, contributors)
 - [assets/](../assets/) — branding/images used by docs
 
-Local-only (git-ignored): `dist/`, `tmp/`, `archive/`, and `docs/local/`.
+Local-only (git-ignored): `dist/`, `tmp/`, `archive/`, `config/`, and `docs/local/`.
 
 ## Development workflow (Power Platform)
 

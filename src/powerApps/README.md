@@ -11,7 +11,7 @@ Power BI reporting documented elsewhere in this repository.
 > [`v1.3.5_changeSummary.md`](v1.3.5_changeSummary.md) (functional),
 > [`v1.3.5_knownIssues.md`](v1.3.5_knownIssues.md), and
 > [`v1.3.5_recommendations.md`](v1.3.5_recommendations.md). The prior `v1.1.20_*` analysis set is retained
-> as history under [`archive/src/powerApps/v1.1.x/v1.1.20/`](../../archive/src/powerApps/v1.1.x/v1.1.20/).
+> as history under `archive/src/powerApps/v1.1.x/v1.1.20/` *(local-only, not published)*.
 > The packaged export lives in [`.msapp/`](.msapp/) (`v1.3.5_578EHRMTrainingApp.msapp`).
 >
 > ℹ️ **Version note:** the app is internally consistent at `v1.3.5` — `varRepoVersion`, manifest
@@ -87,7 +87,7 @@ src/powerApps/
 Screen logic lives in `.unpacked/layoutDefault/Src/*.fx.yaml`; shared components (nav `Tabs`/`Tabs_3`,
 `Calendar`, `Preloader`) in `.unpacked/layoutDefault/Src/Components/`; data-source bindings in
 `.unpacked/layoutDefault/DataSources/`. The prior-cycle `v1.1.20_*` analysis docs are archived under
-[`archive/src/powerApps/v1.1.x/v1.1.20/`](../../archive/src/powerApps/v1.1.x/v1.1.20/).
+`archive/src/powerApps/v1.1.x/v1.1.20/` *(local-only, not published)*.
 
 ---
 
@@ -144,7 +144,7 @@ data loads.
 | Component version | Project release | Highlights |
 |---|---|---|
 | **v1.3.5** | v1.3.5 | Supervisor scheduling (`POCSUPERVISOR`) re-based from `Learning Lab Sessions` onto `MasterScheduleList` (new `scenarioDescription_multitext` column + in-app back-fill button); `Success` binding errors corrected (`BindingErrorCount` 24 → 3, closing v1.1.20 KI-02); richer Entra/Graph user + manager capture on `ManageUsers`; live Graph people-pickers; Microsoft Teams connector removed (KI-03 closed); `Screen1` Power BI dashboard re-pointed & re-enabled; app-wide classic → modern control migration (accessibility backlog noted). See [`v1.3.5_knownIssues.md`](v1.3.5_knownIssues.md). |
-| v1.1.20 | v1.1.20 | Booking-commit refactor on `Confirm` (orchestrator + verification timer + both-lists fallback cascade); rebuilt Help screen; class picker re-pointed to Hines-scoped collections with `sessionActive_text` filter; control renames. Follow-ups: `BindingErrorCount` `0 → 24` on `Success` (fixed in v1.3.5); Teams placeholder (removed in v1.3.5). Archived under [`archive/src/powerApps/v1.1.x/v1.1.20/`](../../archive/src/powerApps/v1.1.x/v1.1.20/). |
+| v1.1.20 | v1.1.20 | Booking-commit refactor on `Confirm` (orchestrator + verification timer + both-lists fallback cascade); rebuilt Help screen; class picker re-pointed to Hines-scoped collections with `sessionActive_text` filter; control renames. Follow-ups: `BindingErrorCount` `0 → 24` on `Success` (fixed in v1.3.5); Teams placeholder (removed in v1.3.5). Archived under `archive/src/powerApps/v1.1.x/v1.1.20/` *(local-only)*. |
 | v1.0.12 | v1.0.12 | Removed impersonation backdoor; RBAC default-to-`User`; single-student proxy registration; Learning Labs Library picker; binding errors 120 → 0; removed dead `CreateMeeting`/`Screen3`. |
 
 ## License

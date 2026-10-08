@@ -19,6 +19,34 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 
 ---
 
+## [1.3.6] - 2026-10-07
+
+> **Documentation release — GitHub Pages project overview.** Adds a self-contained, graphical `docs/index.html` landing page that presents the solution to two audiences: VA executives evaluating adoption at their facility (executive summary, KPI tiles, charts, value cards, screenshots) and the developers/analysts who would perform the import (architecture, component inventory, data model, flows, connectors, step-by-step import QuickStart, ALM/CI, known issues, roadmap). No Canvas app, flow, SharePoint, or analytics source changes.
+
+### Added
+
+- **`docs/index.html`** — GitHub Pages project overview, organized into three collapsible chapters (Executive Overview; Technical Implementation Guide; Roadmap, Governance & Evaluation) with a generated side navigation, high-contrast toggle, mobile drawer, and print/PDF mode. Includes 8 KPI tiles, 4 pure-CSS charts (App Checker binding errors by release 329 → 3, releases per month, repository composition, solution footprint), a 6-image screenshot gallery, and tables for the 20-screen inventory, 8-tier RBAC, SharePoint data model, 4 flows, and connectors. Self-contained (no external JS/CSS/CDN); images and repo links resolve to the public mirror (`github.com/KCoderVA/578-EHRM-TrainingBookingApp`) so the page works when Pages serves only `/docs`.
+- **`docs/.nojekyll`** — empty marker so GitHub Pages serves `/docs` as static files (skips Jekyll/Liquid processing of Markdown that contains `{{…}}` template placeholders).
+
+### Changed
+
+- **`VERSION`** — advanced `1.3.5 → 1.3.6`.
+- **`README.md`** — release badge and current versions → v1.3.6; added the project overview page to the Documentation section.
+- **`docs/PROJECT_STATUS.md`** — v1.3.6 status summary and release-history row; overview page listed under repository contents.
+- **Release drafts** — rotated `v1.3.5_* → v1.3.6_*` (`docs/release-notes/v1.3.6_{commitMessage,pullRequest,releaseNotes}.md`).
+
+### Fixed
+
+- **Dead documentation links** — references to git-ignored/archived targets in `src/powerApps/README.md`, `src/powerApps/v1.3.5_diffAnalysis.md`, `src/sharePoint/v1.0.12_differenceAnalysis.md`, and `.github/CONTRIBUTING.md` (`archive/`, `config/`) are now plain local-only text instead of broken links.
+
+### Notes
+
+- Release type: Patch (documentation only).
+- Component versions unchanged: Canvas app v1.3.5; flows `AppUserList` v0.1.1, `SendReminders` v0.2.0, `CreateBackups` v0.1.0, `parseTMSReportsToSharePoint` v1.0.0; SharePoint v1.0.12; `src/solution.xml` stays v1.3.5 (no solution components changed).
+- **Post-merge action:** enable GitHub Pages on the public mirror (*Settings → Pages → Deploy from a branch → `main` / `/docs`*); expected URL `https://kcoderva.github.io/578-EHRM-TrainingBookingApp/`.
+
+---
+
 ## [1.3.5] - 2026-09-29
 
 > **Canvas-app data-source-modernization & reliability release.** Canvas app v1.1.20 → v1.3.5: supervisor scheduling re-based from the national `Learning Lab Sessions` list onto the app-owned `MasterScheduleList` (new `scenarioDescription_multitext` column + in-app back-fill); the `Success`-screen binding errors were fixed (`BindingErrorCount` 24 → 3, closing v1.1.20 KI-02); `ManageUsers` gained rich Entra/Graph profile + manager-chain capture; the unused Microsoft Teams connector was removed (KI-03); the `Screen1` Power BI dashboard was re-pointed & re-enabled; and the classic → modern control migration completed app-wide. Project `VERSION` advances `1.2.8 → 1.3.5` to align with the Canvas component (the interim 1.2.8 bump was never released).
@@ -99,7 +127,6 @@ Component versions (Canvas app, each flow, SharePoint assets, etc.) are tracked 
 - **Canvas app `DebuggingScreen.Height`** — changed the screen formula from `App.Height` to `App.Height + 1` as a controlled live-coauthoring proof of concept.
 - **Canvas app `App.OnStart`** — advanced the active `varRepoVersion` assignment from `"1.2.4"` to `"1.2.6"` to match the latest project version selected during the release.
 - **`VERSION`** — advanced the project release version from `1.1.20` to `1.2.6` to align repository release documentation with the connected Canvas app.
-- **`README.md`** — updated the release badge and current-version summary to v1.2.6.
 - **Autonomous Canvas release protocol** — now verifies a live change through `sync_canvas` → YAML edit → `compile_canvas` → fresh `sync_canvas`, then delegates branch, commit, PR, merge, tag, release, archival, and mirror operations to the existing enterprise release script.
 
 ### Notes
