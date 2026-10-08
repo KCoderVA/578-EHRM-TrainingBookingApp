@@ -1,6 +1,8 @@
 # 578 EHRM Training App (Station 578)
 
-[![Release](https://img.shields.io/badge/release-v1.3.5-blue)](CHANGELOG.md)
+[![Release](https://img.shields.io/badge/release-v1.3.6-blue)](CHANGELOG.md)
+
+> 🌐 **Project overview page (executive summary, KPIs, architecture, import guide):** [docs/index.html](docs/index.html) — published via GitHub Pages at <https://kcoderva.github.io/578-EHRM-TrainingBookingApp/>
 
 
 This repository contains the **unpacked (source-controlled)** Microsoft Power Platform assets, documentation, and ALM helpers for the 578 EHRM Training App used at Edward Hines Jr. VA Hospital (Station #578), VISN12.
@@ -26,8 +28,8 @@ This repository contains the **unpacked (source-controlled)** Microsoft Power Pl
 
 ## Current versions
 
-- **Project release (repo)**: v1.3.5 (2026-09-29) — Canvas app data-source modernization + reliability release (supervisor scheduling re-based on `MasterScheduleList`, `Success` binding errors 24 → 3, richer user capture, Microsoft Teams connector removed) — see [CHANGELOG.md](CHANGELOG.md)
-- **Canvas app (component)**: v1.3.5 — v1.1.20 → v1.3.5; documented in [src/powerApps/README.md](src/powerApps/README.md) and the `v1.3.5_*` analysis docs ([diff](src/powerApps/v1.3.5_diffAnalysis.md), [summary](src/powerApps/v1.3.5_changeSummary.md), [known issues](src/powerApps/v1.3.5_knownIssues.md), [roadmap](src/powerApps/v1.3.5_recommendations.md)).
+- **Project release (repo)**: v1.3.6 (2026-10-07) — documentation release adding the GitHub Pages project overview ([docs/index.html](docs/index.html)); no app/flow/data changes. Previous: v1.3.5 (2026-09-29) — Canvas app data-source modernization + reliability release (supervisor scheduling re-based on `MasterScheduleList`, `Success` binding errors 24 → 3, richer user capture, Microsoft Teams connector removed) — see [CHANGELOG.md](CHANGELOG.md)
+- **Canvas app (component)**: v1.3.5 (*unchanged in v1.3.6*) — v1.1.20 → v1.3.5; documented in [src/powerApps/README.md](src/powerApps/README.md) and the `v1.3.5_*` analysis docs ([diff](src/powerApps/v1.3.5_diffAnalysis.md), [summary](src/powerApps/v1.3.5_changeSummary.md), [known issues](src/powerApps/v1.3.5_knownIssues.md), [roadmap](src/powerApps/v1.3.5_recommendations.md)).
 - **Power Automate (component)**: `AppUserList` + `SendReminders` + `CreateBackups` + `parseTMSReportsToSharePoint` — *unchanged this cycle* — see [src/powerAutomate/README.md](src/powerAutomate/README.md)
 - **SharePoint**: app lists + national EHRM **Sandbox Resource Center** reference lists/library — *the app now uses a new `MasterScheduleList.scenarioDescription_multitext` column (plus the existing `sessionActive_text` flag); the SharePoint list-schema extraction under `src/sharePoint/` is deferred to a future patch* — see [src/sharePoint/README.md](src/sharePoint/README.md)
 - **Analytics**: Power BI `Signup Tool` + `SuperUserDashboard-Final` (WIP) + TMS reporting, including the internal `578 EHRM Training Details Reports.pbix` fed by the flow-managed SharePoint CSV — see [src/analytics/README.md](src/analytics/README.md)
@@ -66,6 +68,7 @@ VS Code tasks are defined in [.vscode/tasks.json](.vscode/tasks.json).
 
 ## Documentation
 
+- Project overview (leadership + developer landing page, GitHub Pages): [docs/index.html](docs/index.html)
 - Project status / release readiness: [docs/PROJECT_STATUS.md](docs/PROJECT_STATUS.md)
 - Architecture overview: `config/architecture/ARCHITECTURE.md` *(local-only; git-ignored as of v0.3.6)*
 - ALM runbook: `config/runbooks/ALM-RUNBOOK.md` *(local-only; git-ignored as of v0.3.6)*

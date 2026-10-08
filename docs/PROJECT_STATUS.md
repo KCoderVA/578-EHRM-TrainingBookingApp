@@ -2,7 +2,13 @@
 
 This document describes the current public state of the 578 EHRM Training App repository and what is included/excluded as of the latest release.
 
-## Status summary (v1.3.5)
+## Status summary (v1.3.6)
+
+- **Release type (v1.3.6)**: Patch / Documentation — adds the GitHub Pages project overview [`docs/index.html`](index.html) (executive summary, KPI tiles, charts, screenshots, architecture, data model, flows, import QuickStart, roadmap) plus a `docs/.nojekyll` marker. No Canvas app, flow, SharePoint, or analytics changes; all component versions below are unchanged from v1.3.5.
+- **Project release**: v1.3.6 (2026-10-07)
+- **Post-merge action**: enable GitHub Pages on the public mirror (*Settings → Pages → `main` / `/docs`*).
+
+### Previous release (v1.3.5)
 
 - **Release type (v1.3.5)**: Feature / Minor — Canvas app data-source-modernization and reliability release (v1.1.20 → v1.3.5). Aligns the project-wide `VERSION` to the Canvas component version.
 - **Highlights**: supervisor scheduling (`POCSUPERVISOR`) re-based from the national `Learning Lab Sessions` list onto the app-owned `MasterScheduleList` (new `scenarioDescription_multitext` column + in-app back-fill); the `Success` screen was corrected (`BindingErrorCount` 24 → 3, closing v1.1.20 KI-02); `ManageUsers` captures richer Entra/Graph profile + manager-chain data; live Graph people-pickers; the unused Microsoft Teams connector was removed (closing KI-03); the `Screen1` Power BI dashboard was re-pointed and re-enabled; and an app-wide classic → modern control migration completed (raising an accessibility backlog tracked in the v1.3.5 known-issues doc).
@@ -17,6 +23,7 @@ This document describes the current public state of the 578 EHRM Training App re
 
 | Version | Date | Type |
 |---------|------|------|
+| v1.3.6 | 2026-10-07 | Patch (documentation) — added the GitHub Pages project overview `docs/index.html` (leadership KPIs/charts + developer architecture/import guide) and `docs/.nojekyll`; no component changes |
 | v1.3.5 | 2026-09-29 | Minor (Canvas app) — v1.1.20 → v1.3.5: supervisor scheduling re-based from `Learning Lab Sessions` onto `MasterScheduleList` (new `scenarioDescription_multitext` column + in-app back-fill); `Success` binding errors 24 → 3 (KI-02 closed); richer Entra/Graph user + manager capture on `ManageUsers`; live Graph people-pickers; Microsoft Teams connector removed (KI-03 closed); `Screen1` Power BI re-pointed & re-enabled; app-wide classic → modern control migration (accessibility backlog noted). Project `VERSION` aligned 1.2.8 → 1.3.5 |
 | v1.2.7 | 2026-09-16 | Minor (Power Automate / analytics) — added recurring TMS report email ingestion, canonical SharePoint CSV replacement, archive copies, Power BI lineage documentation, and source-level flow analysis/hardening guidance |
 | v1.2.6 | 2026-09-11 | Patch (Canvas coauthoring proof of concept) — updated `DebuggingScreen.Height`, aligned the live app version, and validated coauthoring propagation |
@@ -46,6 +53,7 @@ See the root [CHANGELOG.md](../CHANGELOG.md) and [docs/release-notes/](release-n
 ## What is in this repository
 
 - **Unpacked sources** (for code review/diffing) for the Power Apps Canvas app and Power Automate flows; also includes `src/solution.xml` (Power Platform solution manifest, corrected in v0.3.4 to reflect 578 EHRM Training App identity and components).
+- **Project overview page**: [`docs/index.html`](index.html) — self-contained GitHub Pages landing page for executives and implementing developers (added v1.3.6).
 - **Documentation & runbooks**: `config/architecture/ARCHITECTURE.md`, `config/runbooks/ALM-RUNBOOK.md` (local-only; git-ignored; folder relocated to `archive/src/config/` as of v0.3.8), component-level READMEs under `src/`, and release notes under `docs/release-notes/`.
 - **VS Code workspace configuration**: task definitions for common PAC CLI operations (canvas pack/unpack, solution export/unpack), recommended extensions, editor settings.
 - **Scripts & hooks**: PowerShell dev-profile bootstrap (`Ensure-DevProfile.ps1`), Power Apps web helper (`powerapps-web.ps1`), workspace backup (`backupProject.ps1`), pre-commit/pre-push hooks.
