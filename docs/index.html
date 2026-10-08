@@ -1,0 +1,2531 @@
+<!DOCTYPE html>
+<!--
+   Copyright 2026-10-07 Coder, Kyle J. (github.com/KCoderVA)
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+-->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="578 EHRM Training App v1.3.6 – a VA Power Platform solution (Canvas app, SharePoint, Power Automate, Power BI) for registering staff into EHRM Learning Lab training sessions, with 8-tier role-based access, proxy registration, Outlook invites, automated reminders/backups, and TMS completion reporting.">
+    <meta name="keywords"
+        content="VA Healthcare, EHRM, Electronic Health Record Modernization, Federal EHR, Learning Lab, Training Scheduling, Power Apps, Power Automate, SharePoint, Power BI, TMS, Hines VA, VISN 12">
+    <meta name="author" content="Kyle J. Coder - Edward Hines Jr. VA Hospital (VISN 12)">
+    <meta property="og:title" content="578 EHRM Training App v1.3.6 – Enterprise Deployment Overview">
+    <meta property="og:description"
+        content="Executive summary, KPIs, architecture, data model, and step-by-step import guide for the 578 EHRM Training App Power Platform solution.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kcoderva.github.io/578-EHRM-TrainingBookingApp/">
+    <title>578 EHRM Training App v1.3.6 | Enterprise Deployment Overview</title>
+    <link rel="canonical" href="https://kcoderva.github.io/578-EHRM-TrainingBookingApp/">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23112e51'/><text x='50%' y='55%' font-size='32' text-anchor='middle' fill='white' font-family='Arial'>VA</text></svg>">
+    <style>
+        :root {
+            --va-primary-navy: #112e51;
+            --va-secondary-blue: #1a4480;
+            --va-accent-gold: #fdb81e;
+            --va-cool-gray: #f1f5f9;
+            --va-focus: #3e8acc;
+            --va-gray-200: #e2e8f0;
+            --c-green: #2e8540;
+            --c-teal: #0e7c86;
+            --c-purple: #6b3fa0;
+            --c-red: #c0392b;
+            --c-orange: #e67e22;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #222;
+            background: #f5f7fa;
+            font-size: 16px;
+        }
+
+        a {
+            color: var(--va-secondary-blue);
+        }
+
+        code {
+            background: #eef2f7;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: .88em;
+        }
+
+        pre {
+            background: #0d253f;
+            color: #e6edf5;
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: .82em;
+            line-height: 1.5;
+            margin: 12px 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 10px;
+            background: #112e51;
+            color: #fff;
+            padding: 8px 12px;
+            z-index: 2000;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: top .2s;
+        }
+
+        .skip-link:focus {
+            top: 10px;
+        }
+
+        /* Masthead */
+        .site-header {
+            background: #0c1f33;
+            color: #fff;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+            position: relative;
+        }
+
+        .masthead-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px 26px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .masthead-inner h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            letter-spacing: .5px;
+        }
+
+        .masthead-inner .subtitle {
+            font-size: 1.12rem;
+            margin-bottom: 20px;
+            max-width: 900px;
+            opacity: .92;
+        }
+
+        .masthead-inner img {
+            max-height: 150px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, .25);
+        }
+
+        .header-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .header-links a {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, .12));
+            color: #fff;
+            font-size: .78rem;
+            font-weight: 600;
+            letter-spacing: .045em;
+            text-decoration: none;
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, .38);
+            border-radius: 6px;
+            transition: background .2s, transform .15s;
+        }
+
+        .header-links a:hover,
+        .header-links a:focus {
+            background: rgba(255, 255, 255, .34);
+            transform: translateY(-2px);
+            outline: 2px solid var(--va-focus);
+            outline-offset: 2px;
+        }
+
+        .release-bar {
+            background: #102b4a;
+            font-size: .8rem;
+            letter-spacing: .03em;
+            padding: 8px 24px;
+            border-top: 1px solid #1a365d;
+            border-bottom: 1px solid #1a365d;
+        }
+
+        .release-bar code {
+            background: rgba(255, 255, 255, .12);
+            color: #fff;
+        }
+
+        .release-bar a {
+            color: #90cdf4;
+        }
+
+        /* Layout */
+        .layout-shell {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 32px;
+            max-width: 1400px;
+            margin: 32px auto 48px;
+            padding: 0 24px;
+        }
+
+        .side-nav {
+            position: sticky;
+            top: 24px;
+            align-self: start;
+            background: #fff;
+            border: 2px solid var(--va-primary-navy);
+            border-radius: 8px;
+            padding: 16px 16px 24px;
+            box-shadow: 0 6px 18px rgba(17, 46, 81, .15);
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+        }
+
+        .side-nav h2 {
+            font-size: 1.05em;
+            margin-bottom: 12px;
+            color: var(--va-secondary-blue);
+        }
+
+        .side-nav nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .side-nav nav a {
+            text-decoration: none;
+            font-size: .8em;
+            font-weight: 600;
+            padding: 6px 10px;
+            border: 1px solid var(--va-gray-200);
+            border-radius: 6px;
+            background: var(--va-cool-gray);
+            color: #1a1a1a;
+        }
+
+        .side-nav nav a.chapter-link {
+            background: var(--va-primary-navy);
+            color: #fff;
+            margin-top: 10px;
+        }
+
+        .side-nav nav a:hover,
+        .side-nav nav a:focus {
+            outline: 2px solid var(--va-focus);
+        }
+
+        .side-nav nav a.active {
+            border-color: var(--va-secondary-blue);
+            color: var(--va-secondary-blue);
+            background: #fff;
+        }
+
+        .side-nav .nav-actions {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .side-nav button {
+            cursor: pointer;
+            font-size: .72em;
+            font-weight: 700;
+            letter-spacing: .05em;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--va-secondary-blue);
+            background: var(--va-primary-navy);
+            color: #fff;
+        }
+
+        .side-nav button:hover,
+        .side-nav button:focus {
+            outline: 2px solid var(--va-focus);
+            background: var(--va-secondary-blue);
+        }
+
+        .nav-toggle-btn {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            background: #1a4480;
+            color: #fff;
+            border: 1px solid #275f9f;
+            padding: 8px 12px;
+            font-size: .75rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .55);
+            z-index: 2500;
+            display: none;
+        }
+
+        .drawer-overlay.active {
+            display: block;
+        }
+
+        @media (max-width: 1100px) {
+            .layout-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-toggle-btn {
+                display: inline-block;
+            }
+
+            .side-nav {
+                display: none;
+            }
+
+            .side-nav.drawer-active {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                max-height: none;
+                width: 300px;
+                z-index: 3000;
+            }
+
+            body.drawer-open {
+                overflow: hidden;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .masthead-inner {
+                grid-template-columns: 1fr;
+                padding: 26px 16px 20px;
+            }
+
+            .masthead-inner h1 {
+                font-size: 1.9rem;
+            }
+
+            .masthead-inner img {
+                display: none;
+            }
+
+            body {
+                font-size: 15px;
+            }
+        }
+
+        /* Chapters & sections */
+        details.chapter {
+            border: 2px solid var(--va-primary-navy);
+            border-radius: 10px;
+            background: #fff;
+            margin-bottom: 28px;
+        }
+
+        details.chapter>summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 18px 56px 18px 22px;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #112e51, #1a4480);
+            border-radius: 8px;
+            position: relative;
+            min-height: 44px;
+        }
+
+        details.chapter>summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details.chapter>summary::after {
+            content: '+';
+            position: absolute;
+            right: 22px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.6rem;
+        }
+
+        details.chapter[open]>summary::after {
+            content: '−';
+        }
+
+        details.chapter[open]>summary {
+            border-radius: 8px 8px 0 0;
+        }
+
+        details.chapter>summary small {
+            display: block;
+            font-size: .8rem;
+            font-weight: 400;
+            opacity: .85;
+        }
+
+        .chapter-body {
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 28px;
+            padding: 24px;
+            background: #fff;
+            border-radius: 8px;
+            border-left: 4px solid var(--va-secondary-blue);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, .06);
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section h2 {
+            color: var(--va-secondary-blue);
+            border-bottom: 3px solid var(--va-secondary-blue);
+            padding-bottom: 10px;
+            margin-bottom: 18px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .section h3 {
+            color: #112e51;
+            margin: 18px 0 10px;
+            font-size: 1.2em;
+        }
+
+        .section p {
+            margin-bottom: 12px;
+        }
+
+        .audience {
+            display: inline-block;
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .audience.exec {
+            background: #fff3cd;
+            color: #7a5a00;
+            border: 1px solid #f0d27a;
+        }
+
+        .audience.dev {
+            background: #e1effa;
+            color: #164a7a;
+            border: 1px solid #a9cdec;
+        }
+
+        ul.bullets {
+            list-style: none;
+        }
+
+        ul.bullets li {
+            margin-bottom: 8px;
+            padding-left: 18px;
+            position: relative;
+        }
+
+        ul.bullets li::before {
+            content: "▶";
+            color: var(--va-secondary-blue);
+            position: absolute;
+            left: 0;
+            font-size: .8em;
+            top: 3px;
+        }
+
+        ol.steps {
+            padding-left: 22px;
+        }
+
+        ol.steps li {
+            margin-bottom: 10px;
+        }
+
+        /* Metric tiles */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .metric {
+            border-radius: 10px;
+            padding: 16px;
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .12);
+        }
+
+        .metric h4 {
+            font-size: .66rem;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            opacity: .9;
+            margin-bottom: 4px;
+        }
+
+        .metric p {
+            font-size: 1.9rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin: 0;
+        }
+
+        .metric p small {
+            display: block;
+            font-size: .7rem;
+            font-weight: 500;
+            opacity: .9;
+            margin-top: 6px;
+        }
+
+        .m1 {
+            background: linear-gradient(135deg, #112e51, #1a4480);
+        }
+
+        .m2 {
+            background: linear-gradient(135deg, #0e7c86, #14a3a3);
+        }
+
+        .m3 {
+            background: linear-gradient(135deg, #2e8540, #4aa564);
+        }
+
+        .m4 {
+            background: linear-gradient(135deg, #6b3fa0, #8e62c4);
+        }
+
+        .m5 {
+            background: linear-gradient(135deg, #c05621, #e67e22);
+        }
+
+        .m6 {
+            background: linear-gradient(135deg, #a61e4d, #d6336c);
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 12px 0;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-left: 5px solid var(--va-secondary-blue);
+            padding: 18px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .06);
+        }
+
+        .card h4 {
+            color: var(--va-secondary-blue);
+            margin-bottom: 8px;
+            font-size: 1.08em;
+        }
+
+        .card.gold {
+            border-left-color: var(--va-accent-gold);
+            background: #fffaf0;
+        }
+
+        .card.green {
+            border-left-color: var(--c-green);
+            background: #f2faf4;
+        }
+
+        .card.red {
+            border-left-color: var(--c-red);
+            background: #fdf3f2;
+        }
+
+        .card.teal {
+            border-left-color: var(--c-teal);
+            background: #effafa;
+        }
+
+        .callout {
+            background: #fff9eb;
+            border-left: 5px solid var(--va-accent-gold);
+            padding: 14px 18px;
+            border-radius: 6px;
+            margin: 14px 0;
+        }
+
+        .callout.info {
+            background: #eef6fc;
+            border-left-color: var(--va-focus);
+        }
+
+        /* Tables */
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .08);
+        }
+
+        th,
+        td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: top;
+        }
+
+        th {
+            background: #112e51;
+            color: #fff;
+            font-weight: 600;
+            font-size: .92em;
+        }
+
+        td {
+            font-size: .92em;
+        }
+
+        tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        .pill {
+            display: inline-block;
+            font-size: .7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .pill.ok {
+            background: var(--c-green);
+        }
+
+        .pill.wip {
+            background: var(--c-orange);
+        }
+
+        .pill.ro {
+            background: var(--c-teal);
+        }
+
+        .pill.rw {
+            background: var(--va-secondary-blue);
+        }
+
+        .pill.risk {
+            background: var(--c-red);
+        }
+
+        /* Charts (pure CSS – no external libraries) */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 20px;
+            margin-top: 12px;
+        }
+
+        .chart {
+            background: #fff;
+            border: 1px solid #d1d9e3;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+        }
+
+        .chart h3 {
+            margin-top: 0;
+            font-size: 1.05em;
+        }
+
+        .chart .caption {
+            font-size: .8em;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .hbar {
+            display: grid;
+            grid-template-columns: 90px 1fr 44px;
+            gap: 8px;
+            align-items: center;
+            margin: 8px 0;
+            font-size: .85em;
+        }
+
+        .hbar .track {
+            background: #edf1f6;
+            border-radius: 6px;
+            height: 22px;
+            overflow: hidden;
+        }
+
+        .hbar .fill {
+            height: 100%;
+            border-radius: 6px;
+        }
+
+        .hbar .val {
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .vbars {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            height: 190px;
+            padding: 0 4px;
+            border-bottom: 2px solid #c7d1dc;
+        }
+
+        .vbars .col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
+        }
+
+        .vbars .bar {
+            width: 100%;
+            border-radius: 6px 6px 0 0;
+            background: linear-gradient(180deg, #3e8acc, #1a4480);
+            position: relative;
+        }
+
+        .vbars .bar span {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-weight: 700;
+            font-size: .8em;
+            color: #112e51;
+        }
+
+        .vlabels {
+            display: flex;
+            gap: 10px;
+            padding: 6px 4px 0;
+        }
+
+        .vlabels span {
+            flex: 1;
+            text-align: center;
+            font-size: .72em;
+            color: #444;
+        }
+
+        .donut-wrap {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .donut {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .donut::after {
+            content: attr(data-center);
+            position: absolute;
+            inset: 32px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: .9em;
+            color: #112e51;
+            text-align: center;
+            white-space: pre-line;
+        }
+
+        .legend {
+            list-style: none;
+            font-size: .84em;
+        }
+
+        .legend li {
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend i {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        /* Architecture diagram */
+        .arch {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin: 12px 0;
+        }
+
+        .arch .node {
+            border-radius: 10px;
+            padding: 14px;
+            color: #fff;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, .12);
+        }
+
+        .arch .node strong {
+            color: #fff;
+            display: block;
+            font-size: 1.05em;
+            margin-bottom: 4px;
+        }
+
+        .arch .node span {
+            font-size: .8em;
+            opacity: .92;
+        }
+
+        .arrow-row {
+            text-align: center;
+            font-size: 1.4em;
+            color: #1a4480;
+            margin: 2px 0;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 14px 0 0 10px;
+            padding-left: 22px;
+            border-left: 3px solid #c7d1dc;
+        }
+
+        .timeline .t {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .timeline .t::before {
+            content: '';
+            position: absolute;
+            left: -31px;
+            top: 5px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #1a4480;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 2px #1a4480;
+        }
+
+        .timeline .t.major::before {
+            background: var(--va-accent-gold);
+            box-shadow: 0 0 0 2px #b8860b;
+        }
+
+        .timeline .t b {
+            color: #112e51;
+        }
+
+        .timeline .t small {
+            color: #555;
+            display: block;
+        }
+
+        /* Screenshot gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .shot {
+            background: #fff;
+            border: 1px solid #d1d9e3;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+        }
+
+        .shot img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            object-position: top;
+            border-radius: 4px;
+            border: 1px solid #c7d1dc;
+            background: #eef2f7;
+        }
+
+        .shot h5 {
+            margin: 8px 0 2px;
+            font-size: .74rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: #1a4480;
+        }
+
+        .shot p {
+            font-size: .76rem;
+            color: #2d3748;
+            margin: 0;
+        }
+
+        .back-to-top {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: .66rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            font-weight: 700;
+            color: #1a4480;
+            text-decoration: none;
+            background: #f1f5f9;
+            padding: 5px 10px;
+            border: 1px solid #d1d9e3;
+            border-radius: 4px;
+        }
+
+        .footer {
+            background: #112e51;
+            color: #fff;
+            padding: 32px 24px;
+            text-align: center;
+            border-top: 4px solid var(--va-secondary-blue);
+        }
+
+        .footer a {
+            color: #90cdf4;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .footer p {
+            margin: 6px 0;
+            font-size: .92em;
+        }
+
+        /* High contrast */
+        body.high-contrast {
+            background: #000 !important;
+            color: #fff !important;
+        }
+
+        body.high-contrast .section,
+        body.high-contrast details.chapter,
+        body.high-contrast .chart,
+        body.high-contrast .card,
+        body.high-contrast .shot,
+        body.high-contrast table,
+        body.high-contrast td,
+        body.high-contrast .side-nav {
+            background: #000 !important;
+            color: #fff !important;
+            border-color: #ffff00 !important;
+        }
+
+        body.high-contrast h2,
+        body.high-contrast h3,
+        body.high-contrast h4,
+        body.high-contrast .card h4,
+        body.high-contrast a,
+        body.high-contrast strong {
+            color: #ffff00 !important;
+        }
+
+        body.high-contrast code {
+            background: #222;
+            color: #fff;
+        }
+
+        body.high-contrast .side-nav nav a {
+            background: #111 !important;
+            color: #fff !important;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .header-links a {
+                transition: none;
+                transform: none !important;
+            }
+        }
+
+        @page {
+            size: 8.5in 11in;
+            margin: .6in .5in;
+        }
+
+        @media print {
+
+            .side-nav,
+            .nav-toggle-btn,
+            .back-to-top,
+            .header-links {
+                display: none !important;
+            }
+
+            .layout-shell {
+                display: block;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background: #fff;
+                font-size: 11pt;
+            }
+
+            .section,
+            .chart,
+            .card {
+                break-inside: avoid;
+                box-shadow: none;
+            }
+
+            .site-header,
+            .metric,
+            th,
+            .fill,
+            .bar,
+            .donut,
+            .arch .node,
+            details.chapter>summary {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header" role="banner">
+        <div class="masthead-inner">
+            <div>
+                <h1>578 EHRM Training App</h1>
+                <p class="subtitle">A ready-to-import Microsoft Power Platform solution that lets VA staff self-register
+                    (or be
+                    registered by a supervisor) for EHRM "Learning Lab" training, books the sessions on Outlook
+                    calendars,
+                    automates reminders and backups, and feeds leadership reporting — built and in production at Edward
+                    Hines
+                    Jr. VA Hospital (Station 578, VISN 12).</p>
+                <div class="header-links" aria-label="Quick links">
+                    <a href="#section-executive-summary">Executive Overview</a>
+                    <a href="#chapter-technical">Technical Guide</a>
+                    <a href="#section-deployment">How to Import</a>
+                    <a href="#chapter-governance">Roadmap &amp; Governance</a>
+                    <a href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp">Source Repository</a>
+                    <a
+                        href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/CHANGELOG.md">Changelog</a>
+                </div>
+            </div>
+            <img src="https://raw.githubusercontent.com/KCoderVA/578-EHRM-TrainingBookingApp/main/assets/images/logos/23715-Hines-Site-Theme-DASH-cheetah_14x9-SCREEN.png"
+                alt="Hines VA 578 EHRM Training App banner">
+        </div>
+        <div class="release-bar">Repository release <strong>v1.3.6</strong> (October 7, 2026) adds this project overview
+            page. Current Canvas app <strong>v1.3.5</strong> (September 29, 2026): supervisor scheduling re-based onto
+            the
+            app-owned <code>MasterScheduleList</code>, App Checker binding errors reduced <strong>24 → 3</strong>,
+            richer
+            Entra/Graph user capture, unused Teams connector removed, embedded Power BI re-enabled, and app-wide
+            modern-control migration.
+        </div>
+    </header>
+
+    <button class="nav-toggle-btn" type="button" aria-controls="side-navigation" aria-expanded="false">Menu</button>
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <main id="main-content" tabindex="-1">
+        <div class="layout-shell">
+            <aside class="side-nav" id="side-navigation" aria-label="Page navigation">
+                <h2>On this page</h2>
+                <nav id="dynamic-nav" aria-label="Section links"></nav>
+                <div class="nav-actions">
+                    <button type="button" id="collapseAllBtn">Collapse All</button>
+                    <button type="button" id="expandAllBtn">Expand All</button>
+                    <button type="button" id="contrastToggleBtn">High Contrast</button>
+                    <button type="button" id="printBtn">Print / Save PDF</button>
+                </div>
+            </aside>
+
+            <div class="content">
+
+                <!-- ================= CHAPTER 1: EXECUTIVE ================= -->
+                <details class="chapter" id="chapter-executive" open>
+                    <summary>Executive Overview<small>For directors, chiefs, and leadership evaluating adoption at their
+                            facility</small></summary>
+                    <div class="chapter-body">
+
+                        <section class="section" id="section-executive-summary">
+                            <h2>Executive At-a-Glance</h2>
+                            <span class="audience exec">Leadership</span>
+                            <p>The <strong>Electronic Health Record Modernization (EHRM)</strong> transition requires
+                                every VA facility
+                                to train large numbers of clinical and administrative staff on the new Federal EHR — on
+                                a tight schedule,
+                                in limited Learning Lab seats, with supervisors coordinating on behalf of their teams.
+                                Hines VA replaced
+                                ad-hoc email, spreadsheet, and sign-up-sheet scheduling with this <strong>single,
+                                    secure, mobile-friendly
+                                    app</strong> that runs entirely inside the VA's existing Microsoft 365 / Power
+                                Platform (GCC High)
+                                tenant — <strong>no new licenses, servers, or contracts required</strong>.</p>
+                            <div class="metrics" role="list" aria-label="Key project indicators">
+                                <div class="metric m1" role="listitem">
+                                    <h4>Current Release</h4>
+                                    <p>v1.3.6<small>Canvas app v1.3.5 · live since v1.0.12 (Aug 2026)</small></p>
+                                </div>
+                                <div class="metric m2" role="listitem">
+                                    <h4>App Screens</h4>
+                                    <p>20<small>Booking, calendars, admin, reports</small></p>
+                                </div>
+                                <div class="metric m3" role="listitem">
+                                    <h4>Automated Flows</h4>
+                                    <p>4<small>Onboarding, reminders, backups, TMS</small></p>
+                                </div>
+                                <div class="metric m4" role="listitem">
+                                    <h4>Access Tiers</h4>
+                                    <p>8<small>Role-based security levels</small></p>
+                                </div>
+                                <div class="metric m5" role="listitem">
+                                    <h4>Releases Shipped</h4>
+                                    <p>24<small>Dec 2025 → Oct 2026</small></p>
+                                </div>
+                                <div class="metric m6" role="listitem">
+                                    <h4>App Checker Errors</h4>
+                                    <p>329 → 3<small>99% reduction since v0.9.26</small></p>
+                                </div>
+                                <div class="metric m1" role="listitem">
+                                    <h4>SharePoint Lists</h4>
+                                    <p>6 + 7<small>App-owned + national EHRM reference</small></p>
+                                </div>
+                                <div class="metric m2" role="listitem">
+                                    <h4>Tracked Files</h4>
+                                    <p>561<small>Source, docs, assets (76 commits)</small></p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-value">
+                            <h2>The Problem It Solves &amp; the Value Delivered</h2>
+                            <span class="audience exec">Leadership</span>
+                            <div class="cards">
+                                <div class="card red">
+                                    <h4>Before: manual, fragmented scheduling</h4>
+                                    <ul class="bullets">
+                                        <li>Training sign-ups tracked in emails, spreadsheets, and paper lists.</li>
+                                        <li>Supervisors could not easily register staff on their behalf.</li>
+                                        <li>No single view of who is booked, where, and when.</li>
+                                        <li>Completion data in TMS was disconnected from scheduling.</li>
+                                    </ul>
+                                </div>
+                                <div class="card green">
+                                    <h4>After: one self-service app</h4>
+                                    <ul class="bullets">
+                                        <li>Staff book themselves from phone or desktop in a few taps.</li>
+                                        <li>Supervisors/POCs register students in a guided flow.</li>
+                                        <li>Outlook calendar invites and confirmation emails sent automatically.</li>
+                                        <li>Leadership sees bookings and TMS completions in Power BI.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <h3>Benefits for your facility</h3>
+                            <div class="cards">
+                                <div class="card">
+                                    <h4>💲 Zero new cost</h4>
+                                    <p>Uses only standard Microsoft 365 connectors (SharePoint, Outlook, Office 365
+                                        Users) already licensed for VA staff. No premium connectors, databases, or
+                                        vendor contracts.</p>
+                                </div>
+                                <div class="card teal">
+                                    <h4>🔐 Secure by design</h4>
+                                    <p>Runs inside the VA tenant under each user's own identity. 8 access tiers control
+                                        who can view, book, manage rooms, or manage users. No PHI is stored.</p>
+                                </div>
+                                <div class="card gold">
+                                    <h4>⏱️ Saves coordinator time</h4>
+                                    <p>Automatic invites, reminders, new-user onboarding, and backup records replace
+                                        manual email chasing and spreadsheet reconciliation.</p>
+                                </div>
+                                <div class="card green">
+                                    <h4>📊 Leadership visibility</h4>
+                                    <p>Embedded Power BI dashboards and an automated TMS completion feed show training
+                                        progress toward go-live readiness.</p>
+                                </div>
+                                <div class="card">
+                                    <h4>📱 Mobile-first</h4>
+                                    <p>Responsive Canvas app works on phones, tablets, and desktops — staff can book
+                                        from the floor.</p>
+                                </div>
+                                <div class="card teal">
+                                    <h4>🔁 Proven &amp; portable</h4>
+                                    <p>24 documented releases, full source control, and a step-by-step import guide make
+                                        it straightforward to duplicate at another VA facility.</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-kpis">
+                            <h2>Key Metrics &amp; Quality Trends</h2>
+                            <span class="audience exec">Leadership</span>
+                            <p>All figures below are derived directly from the source repository (release history, the
+                                Canvas app
+                                manifest, and Git history). They measure solution maturity and quality rather than
+                                patient outcomes.</p>
+                            <div class="chart-grid">
+                                <div class="chart" role="img"
+                                    aria-label="App Checker binding errors by release: v0.9.26 329, v0.12.2 120, v1.0.12 0, v1.1.20 24, v1.3.5 3">
+                                    <h3>📉 App Checker binding errors by release</h3>
+                                    <div class="hbar"><span>v0.9.26</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:100%;background:#c0392b"></div>
+                                        </div><span class="val">329</span>
+                                    </div>
+                                    <div class="hbar"><span>v0.12.2</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:36.5%;background:#e67e22"></div>
+                                        </div><span class="val">120</span>
+                                    </div>
+                                    <div class="hbar"><span>v1.0.12</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:0.6%;background:#2e8540"></div>
+                                        </div><span class="val">0</span>
+                                    </div>
+                                    <div class="hbar"><span>v1.1.20</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:7.3%;background:#fdb81e"></div>
+                                        </div><span class="val">24</span>
+                                    </div>
+                                    <div class="hbar"><span>v1.3.5</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:1%;background:#2e8540"></div>
+                                        </div><span class="val">3</span>
+                                    </div>
+                                    <p class="caption">Lower is better. Source:
+                                        <code>CanvasManifest.json → BindingErrorCount</code> per release.
+                                    </p>
+                                </div>
+                                <div class="chart" role="img"
+                                    aria-label="Releases per month: Dec 2025 1, Jan 1, May 2, Jul 11, Aug 4, Sep 4, Oct 1">
+                                    <h3>🚀 Releases shipped per month</h3>
+                                    <div class="vbars">
+                                        <div class="col">
+                                            <div class="bar" style="height:9%"><span>1</span></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="bar" style="height:9%"><span>1</span></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="bar" style="height:18%"><span>2</span></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="bar"
+                                                style="height:100%;background:linear-gradient(180deg,#fdb81e,#c08a00)">
+                                                <span>11</span>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="bar" style="height:36%"><span>4</span></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="bar" style="height:36%"><span>4</span></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="bar" style="height:9%"><span>1</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="vlabels"><span>Dec '25</span><span>Jan
+                                            '26</span><span>May</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span>
+                                    </div>
+                                    <p class="caption">24 releases total. July 2026 = ALM/CI-CD build-out and RBAC;
+                                        Aug–Sep = production go-live and hardening.</p>
+                                </div>
+                                <div class="chart" role="img" aria-label="Repository composition by file type">
+                                    <h3>🗂️ Repository composition (561 tracked files)</h3>
+                                    <div class="donut-wrap">
+                                        <div class="donut" data-center="561&#10;files"
+                                            style="background:conic-gradient(#1a4480 0 41%,#0e7c86 41% 59.4%,#2e8540 59.4% 75.3%,#6b3fa0 75.3% 88%,#e67e22 88% 93.5%,#a0aec0 93.5% 100%)">
+                                        </div>
+                                        <ul class="legend">
+                                            <li><i style="background:#1a4480"></i>Images &amp; guides — 230 (41%)</li>
+                                            <li><i style="background:#0e7c86"></i>JSON (flows, data sources) — 103</li>
+                                            <li><i style="background:#2e8540"></i>YAML (Power Fx screens, CI) — 89</li>
+                                            <li><i style="background:#6b3fa0"></i>Markdown docs — 71</li>
+                                            <li><i style="background:#e67e22"></i>XML (connectors, solution) — 31</li>
+                                            <li><i style="background:#a0aec0"></i>Scripts &amp; other — 37</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="chart" role="img" aria-label="Solution footprint by component">
+                                    <h3>🧩 Solution footprint</h3>
+                                    <div class="hbar"><span>Screens</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:100%;background:#1a4480"></div>
+                                        </div><span class="val">20</span>
+                                    </div>
+                                    <div class="hbar"><span>Data sources</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:50%;background:#0e7c86"></div>
+                                        </div><span class="val">10</span>
+                                    </div>
+                                    <div class="hbar"><span>Ref. lists</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:35%;background:#6b3fa0"></div>
+                                        </div><span class="val">7</span>
+                                    </div>
+                                    <div class="hbar"><span>App lists</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:30%;background:#2e8540"></div>
+                                        </div><span class="val">6</span>
+                                    </div>
+                                    <div class="hbar"><span>CI workflows</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:40%;background:#e67e22"></div>
+                                        </div><span class="val">8</span>
+                                    </div>
+                                    <div class="hbar"><span>Flows</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:20%;background:#a61e4d"></div>
+                                        </div><span class="val">4</span>
+                                    </div>
+                                    <div class="hbar"><span>Connectors</span>
+                                        <div class="track">
+                                            <div class="fill" style="width:15%;background:#fdb81e"></div>
+                                        </div><span class="val">3</span>
+                                    </div>
+                                    <p class="caption">Data sources = live SharePoint lists/library + Outlook + Office
+                                        365 Users bound in the Canvas app.</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-whats-new">
+                            <h2>✨ What's New in v1.3.5 (September 29, 2026)</h2>
+                            <div class="cards">
+                                <div class="card">
+                                    <h4>🗓️ App-owned scheduling data</h4>
+                                    <p>Supervisor scheduling (<code>POCSUPERVISOR</code>) now reads the
+                                        facility-controlled <code>MasterScheduleList</code> instead of the national
+                                        <code>Learning Lab Sessions</code> list, with a new
+                                        <code>scenarioDescription_multitext</code> column and in-app back-fill.
+                                    </p>
+                                </div>
+                                <div class="card green">
+                                    <h4>✅ Reliability fix</h4>
+                                    <p>The <code>Success</code> confirmation screen was rewritten to a tier-flag model,
+                                        cutting App Checker binding errors from <strong>24 → 3</strong>.</p>
+                                </div>
+                                <div class="card teal">
+                                    <h4>👤 Richer user profiles</h4>
+                                    <p><code>ManageUsers</code> captures department, job title, hire date, address, and
+                                        full manager chain from Entra/Graph; live Graph people-pickers.</p>
+                                </div>
+                                <div class="card gold">
+                                    <h4>📊 Power BI re-enabled</h4>
+                                    <p>The printable <code>Screen1</code> dashboard was re-pointed to a new report and
+                                        turned back on.</p>
+                                </div>
+                                <div class="card">
+                                    <h4>🧹 Leaner connectors</h4>
+                                    <p>The never-used Microsoft Teams connector was removed from the app, reducing
+                                        permissions prompts.</p>
+                                </div>
+                                <div class="card teal">
+                                    <h4>🎨 Modern controls</h4>
+                                    <p>App-wide migration from classic to modern Power Apps controls (accessibility
+                                        follow-ups tracked).</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-user-journey">
+                            <h2>How Staff Use It (User Journey)</h2>
+                            <span class="audience exec">Leadership</span>
+                            <div class="arch">
+                                <div class="node" style="background:#1a4480"><strong>1. Open
+                                        app</strong><span>Role-aware dashboard loads; new users auto-provisioned with
+                                        "User" access</span></div>
+                                <div class="node" style="background:#0e7c86"><strong>2. Pick
+                                        training</strong><span>Choose role, scenario, date/time, and location from the
+                                        master schedule</span></div>
+                                <div class="node" style="background:#6b3fa0"><strong>3. Book (self or
+                                        proxy)</strong><span>Register yourself or a student; optional weekly
+                                        recurrence</span></div>
+                                <div class="node" style="background:#2e8540"><strong>4. Confirm</strong><span>SharePoint
+                                        record + Outlook invite + confirmation email</span></div>
+                                <div class="node" style="background:#c05621"><strong>5. Automate</strong><span>Reminder,
+                                        backup record, and admin notifications via flows</span></div>
+                                <div class="node" style="background:#a61e4d"><strong>6. Report</strong><span>Bookings +
+                                        TMS completions roll up into Power BI</span></div>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-gallery">
+                            <h2>Screenshot Gallery</h2>
+                            <p>Representative screens from the in-app user guide (captured at v0.13.11; layout refined
+                                since).</p>
+                            <div class="gallery">
+                                <div class="shot"><img loading="lazy"
+                                        src="https://raw.githubusercontent.com/KCoderVA/578-EHRM-TrainingBookingApp/main/assets/images/screenshots/v0.13.11_appGuide/v0.13.11_screen1_Dashboard.png"
+                                        alt="Dashboard screen">
+                                    <h5>Dashboard</h5>
+                                    <p>Role-aware home menu.</p>
+                                </div>
+                                <div class="shot"><img loading="lazy"
+                                        src="https://raw.githubusercontent.com/KCoderVA/578-EHRM-TrainingBookingApp/main/assets/images/screenshots/v0.13.11_appGuide/v0.13.11_screen2a_POCSUPERVISOR.png"
+                                        alt="Supervisor scheduling screen">
+                                    <h5>Schedule training</h5>
+                                    <p>Role / scenario / session pickers.</p>
+                                </div>
+                                <div class="shot"><img loading="lazy"
+                                        src="https://raw.githubusercontent.com/KCoderVA/578-EHRM-TrainingBookingApp/main/assets/images/screenshots/v0.13.11_appGuide/v0.13.11_screen2d_POCSUPERVISOR.png"
+                                        alt="Proxy registration step">
+                                    <h5>Proxy registration</h5>
+                                    <p>Supervisor books on behalf of a student.</p>
+                                </div>
+                                <div class="shot"><img loading="lazy"
+                                        src="https://raw.githubusercontent.com/KCoderVA/578-EHRM-TrainingBookingApp/main/assets/images/screenshots/v0.13.11_appGuide/v0.13.11_screen4a%28F2F%29_Confirm.png"
+                                        alt="Confirm booking screen">
+                                    <h5>Confirm</h5>
+                                    <p>Review details before commit.</p>
+                                </div>
+                                <div class="shot"><img loading="lazy"
+                                        src="https://raw.githubusercontent.com/KCoderVA/578-EHRM-TrainingBookingApp/main/assets/images/screenshots/v0.13.11_appGuide/v0.13.11_screen5_Success.png"
+                                        alt="Success screen">
+                                    <h5>Success</h5>
+                                    <p>Status of SharePoint, email, and invite.</p>
+                                </div>
+                                <div class="shot"><img loading="lazy"
+                                        src="https://raw.githubusercontent.com/KCoderVA/578-EHRM-TrainingBookingApp/main/assets/images/screenshots/v0.9.17_NewUserAccessNotification_chatbot.png"
+                                        alt="New user access notification adaptive card">
+                                    <h5>Admin notification</h5>
+                                    <p>Adaptive card from the onboarding flow.</p>
+                                </div>
+                            </div>
+                            <a class="back-to-top" href="#main-content">Back to top</a>
+                        </section>
+
+                    </div>
+                </details>
+
+                <!-- ================= CHAPTER 2: TECHNICAL ================= -->
+                <details class="chapter" id="chapter-technical" open>
+                    <summary>Technical Implementation Guide<small>For developers, analysts, and SMEs assigned to import
+                            and operate the solution</small></summary>
+                    <div class="chapter-body">
+
+                        <section class="section" id="section-architecture">
+                            <h2>Solution Architecture</h2>
+                            <span class="audience dev">Developers</span>
+                            <p>A Power Apps <strong>Canvas app</strong> is the user-facing front end. It reads/writes
+                                <strong>SharePoint
+                                    Online</strong> lists on two sites, uses <strong>Office 365 Users</strong> and
+                                <strong>Office 365 Outlook</strong>
+                                connectors, and embeds <strong>Power BI (GCC)</strong>. Four <strong>Power
+                                    Automate</strong> cloud flows run
+                                independently on SharePoint/Outlook triggers — the app never calls a flow directly; they
+                                are linked by data
+                                and email.
+                            </p>
+                            <div class="arch">
+                                <div class="node" style="background:#1a4480"><strong>Canvas App</strong><span>20 screens
+                                        · Power Fx · RBAC · recurrence engine</span></div>
+                                <div class="node" style="background:#2e8540"><strong>SharePoint (app
+                                        site)</strong><span>6 read/write lists · <code
+                                            style="background:rgba(255,255,255,.15);color:#fff">578_EHRM_TrainingApp</code></span>
+                                </div>
+                                <div class="node" style="background:#0e7c86"><strong>SharePoint
+                                        (national)</strong><span>7 read-only EHRM Sandbox lists/library</span></div>
+                                <div class="node" style="background:#6b3fa0"><strong>M365
+                                        Connectors</strong><span>Office 365 Users · Office 365 Outlook</span></div>
+                                <div class="node" style="background:#c05621"><strong>Power
+                                        Automate</strong><span>AppUserList · SendReminders · CreateBackups ·
+                                        parseTMSReports</span></div>
+                                <div class="node" style="background:#a61e4d"><strong>Power BI (Gov)</strong><span>Signup
+                                        Tool · SuperUser Dashboard · TMS Training Details</span></div>
+                            </div>
+                            <pre><code>Canvas app (Confirm screen)
+   │  Patch → Desk Reservations ─────────────► SendReminders flow ──► email + Teams card
+   │  Office365Outlook.V4CalendarPostItem ───► attendee calendar invite
+   │  SendEmailV2 "[REGISTERED] EHRM Learning Lab Training - …"
+   ▼
+CreateBackups flow (Outlook trigger) ──► backupList_DeskReservations
+
+Admin edits DeskAccessControl ──► AppUserList flow ──► M365 profile enrichment + admin adaptive cards/email
+
+TMS report email (~every 6 h) ──► parseTMSReportsToSharePoint flow
+   ──► TMS_Reports/TMSProgramCompletion_DetailedReport.csv (+ dated archive) ──► Power BI refresh</code></pre>
+                        </section>
+
+                        <section class="section" id="section-components">
+                            <h2>Component Inventory &amp; Versions</h2>
+                            <span class="audience dev">Developers</span>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Component</th>
+                                            <th>Repo path</th>
+                                            <th>Version</th>
+                                            <th>Purpose</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Canvas app <code>578-EHRM-Training-App</code></td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/tree/main/src/powerApps"><code>src/powerApps/</code></a>
+                                            </td>
+                                            <td><span class="pill ok">v1.3.5</span></td>
+                                            <td>User-facing booking, calendars, admin. Packaged <code>.msapp</code> +
+                                                unpacked source.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Flow — <code>AppUserList</code></td>
+                                            <td><code>src/powerAutomate/AppUserList/</code></td>
+                                            <td><span class="pill ok">v0.1.1</span></td>
+                                            <td>New-user enrichment + RBAC provisioning notifications.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Flow — <code>SendReminders</code></td>
+                                            <td><code>src/powerAutomate/SendReminders/</code></td>
+                                            <td><span class="pill ok">v0.2.0</span></td>
+                                            <td>"You are scheduled for EHRM Learning Lab training!" email + Teams card.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Flow — <code>CreateBackups</code></td>
+                                            <td><code>src/powerAutomate/CreateBackups/</code></td>
+                                            <td><span class="pill ok">v0.1.0</span></td>
+                                            <td>Parses confirmation email → redundant backup record.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Flow — <code>parseTMSReportsToSharePoint</code></td>
+                                            <td><code>src/powerAutomate/parseTMSReportsToSharePoint/</code></td>
+                                            <td><span class="pill ok">v1.0.0</span></td>
+                                            <td>TMS completion CSV → canonical SharePoint file for Power BI.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>SharePoint lists &amp; reference data</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/tree/main/src/sharePoint"><code>src/sharePoint/</code></a>
+                                            </td>
+                                            <td><span class="pill ok">v1.0.12</span></td>
+                                            <td>List structure docs + national list shortcuts (data is local-only).</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Power BI / SQL / TMS</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/tree/main/src/analytics"><code>src/analytics/</code></a>
+                                            </td>
+                                            <td><span class="pill wip">Active</span></td>
+                                            <td><code>Signup Tool.pbit</code> (tracked), SuperUser dashboard (WIP),
+                                                reporting SQL.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Power Platform solution manifest</td>
+                                            <td><code>src/solution.xml</code></td>
+                                            <td><span class="pill ok">v1.3.5</span></td>
+                                            <td>Publisher prefix <code>vah</code>; env vars
+                                                <code>vah_SharePointSiteUrl</code>,
+                                                <code>vah_NotificationEmailFrom</code>,
+                                                <code>vah_BookingHorizonDays</code>.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dev / ALM scripts</td>
+                                            <td><code>src/scripts/</code></td>
+                                            <td>—</td>
+                                            <td>Dev-profile bootstrap, Power Apps web helper, backups, Git hooks.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-repo-structure">
+                            <h2>Repository Structure</h2>
+                            <span class="audience dev">Developers</span>
+                            <pre><code>578-EHRM-TrainingSchedulerApp/
+├── README.md · CHANGELOG.md · VERSION · LICENSE (Apache 2.0)
+├── .github/                 CI workflows, PR/issue templates, CODEOWNERS, SECURITY, Copilot instructions
+├── .vscode/                 Preconfigured pac tasks (canvas pack/unpack, solution export/unpack)
+├── assets/images/           logos · icons · graphics · screenshots/appGuide (in-app user guide images)
+├── docs/                    index.html (this page) · PROJECT_STATUS.md · SECURITY.md · CONTRIBUTORS.md
+│   ├── release-notes/       v{VERSION}_{commitMessage,pullRequest,releaseNotes}.md
+│   └── userGuides/          provider user guide (PDF)
+└── src/
+    ├── solution.xml         Power Platform solution manifest (publisher "vah")
+    ├── powerApps/
+    │   ├── .msapp/          v1.3.5_578EHRMTrainingApp.msapp   ← import this
+    │   ├── .unpacked/       layoutDefault/ (Src/*.fx.yaml, DataSources/, pkgs/, CanvasManifest.json)
+    │   │                    layoutSourceCode/ (source-code layout + .msapr)
+    │   └── v1.3.5_{diffAnalysis,changeSummary,knownIssues,recommendations}.md
+    ├── powerAutomate/       AppUserList/ · SendReminders/ · CreateBackups/ · parseTMSReportsToSharePoint/
+    │                        (each: README.md + .unpacked/ flow definition; .zip legacy export is local-only)
+    ├── sharePoint/          list/ (6 app lists + nationalEHRM/sandbox/*.url) · library/ · searchConfig/
+    ├── analytics/           powerBI/.pbit · sql/queries · tms/ (local-only)
+    └── scripts/             pwsh/ (Ensure-DevProfile, powerapps-web, backupProject) · hooks/ (pre-commit, pre-push)
+
+Local-only / git-ignored: archive/ · config/ · dist/ · tmp/ · any */local/ · data files (.csv/.xlsx) · .zip</code></pre>
+                        </section>
+
+                        <section class="section" id="section-screens">
+                            <h2>Canvas App Screen Inventory (20 screens)</h2>
+                            <span class="audience dev">Developers</span>
+                            <p>Screen logic lives in <code>src/powerApps/.unpacked/layoutDefault/Src/*.fx.yaml</code>;
+                                shared components
+                                (<code>Tabs</code> nav, <code>Calendar</code>, <code>Preloader</code>) in
+                                <code>Src/Components/</code>.
+                            </p>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Area</th>
+                                            <th>Screens</th>
+                                            <th>Purpose</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Home</td>
+                                            <td><code>Dashboard</code></td>
+                                            <td>Role-aware menu, session audit, quick links.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Booking</td>
+                                            <td><code>POCSUPERVISOR</code>, <code>chkWeekDays</code>,
+                                                <code>DeskSelect</code>, <code>Reservation</code>, <code>Confirm</code>,
+                                                <code>Success</code>
+                                            </td>
+                                            <td>Training selection, self/proxy registration, recurrence, desk choice,
+                                                commit orchestrator with verification + fallback cascade, status
+                                                summary.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>My items</td>
+                                            <td><code>MyAppts</code></td>
+                                            <td>Upcoming/past bookings per user.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Calendars</td>
+                                            <td><code>scrn_DailyCal</code>, <code>scrn_WeeklyCal</code>,
+                                                <code>scrn_MoCalendar</code>, <code>PDFScreen</code>
+                                            </td>
+                                            <td>Day/week/month views with drill-in and printable PDF.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Asset admin</td>
+                                            <td><code>ManageDesks</code>, <code>NewDesk</code>,
+                                                <code>NewEditDesk</code>, <code>SuccessDeskMod</code>
+                                            </td>
+                                            <td>Manage bookable desks/rooms/floors/buildings.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>User admin</td>
+                                            <td><code>ManageUsers</code></td>
+                                            <td><code>DeskAccessControl</code> management, Entra/Graph capture, Super
+                                                User bulk sync.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Reporting</td>
+                                            <td><code>Screen1</code></td>
+                                            <td>Printable embedded Power BI (Gov) dashboard.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Support</td>
+                                            <td><code>ReleaseNotes</code>, <code>DebuggingScreen</code></td>
+                                            <td>Help / Quick-Start guide + admin changelog; admin diagnostics.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-rbac">
+                            <h2>Role-Based Access Control (8 tiers)</h2>
+                            <span class="audience dev">Developers</span>
+                            <p><code>App.OnStart</code> resolves the signed-in user against
+                                <code>DeskAccessControl.AccessLevel_Text</code>.
+                                Anyone with network access defaults to <code>User</code> and is self-provisioned a
+                                6-month access row; the
+                                <code>colMenu</code> collection then builds the navigation.
+                            </p>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Role</th>
+                                            <th>Home</th>
+                                            <th>My Items</th>
+                                            <th>Manage Desks</th>
+                                            <th>Manage Users</th>
+                                            <th>Help</th>
+                                            <th>Register</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>AppAdmin</code> / <code>Manager</code> / <code>ServiceChief</code>
+                                            </td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>ProjectLeader</code></td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                            <td>—</td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>User</code> / <code>SuperUser</code></td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>View-Only</code></td>
+                                            <td>✅</td>
+                                            <td>✅</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td>✅</td>
+                                            <td>—</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AccessDenied</code></td>
+                                            <td>✅</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td>✅</td>
+                                            <td>—</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-data-model">
+                            <h2>Data Model (SharePoint)</h2>
+                            <span class="audience dev">Developers</span>
+                            <p>Column naming convention: PascalCase/camelCase with a type suffix (e.g.
+                                <code>AccessLevel_Text</code>,
+                                <code>AccessStart_dateTime</code>, <code>scenarioDescription_multitext</code>). Column
+                                definitions for each
+                                list are captured in local <code>ListSchema</code> exports — request them from the
+                                maintainer, or recreate
+                                from the Canvas app's <code>DataSources/*.json</code>.
+                            </p>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>List / library</th>
+                                            <th>Site</th>
+                                            <th>Access</th>
+                                            <th>Role in solution</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>Desk Reservations</code></td>
+                                            <td>App site</td>
+                                            <td><span class="pill rw">R/W</span></td>
+                                            <td>Primary registration record (~40 columns: submitter*, student*,
+                                                reservation*, trainer*, reminder* families; recurrence ID).</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>DeskAccessControl</code></td>
+                                            <td>App site</td>
+                                            <td><span class="pill rw">R/W</span></td>
+                                            <td>RBAC: <code>AccessLevel_Text/Choice</code>, access window, approver,
+                                                Entra profile + manager chain.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>Desks</code></td>
+                                            <td>App site</td>
+                                            <td><span class="pill rw">R/W</span></td>
+                                            <td>Bookable desk/room/floor/building inventory.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>MasterScheduleList</code></td>
+                                            <td>App site</td>
+                                            <td><span class="pill rw">R/W</span></td>
+                                            <td>Master training schedule: <code>RoleName_text</code>,
+                                                <code>ScenarioName_text</code>,
+                                                <code>TrainingCombinedDateTime_text</code>,
+                                                <code>LocationCombined_text</code>, <code>sessionActive_text</code>,
+                                                <code>scenarioDescription_multitext</code>.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>SuperUserList</code></td>
+                                            <td>App site</td>
+                                            <td><span class="pill rw">R/W</span></td>
+                                            <td>Super User roster, bulk-synced into <code>DeskAccessControl</code>.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>backupList_DeskReservations</code></td>
+                                            <td>App site</td>
+                                            <td><span class="pill rw">R/W</span></td>
+                                            <td>Redundant reservation records (Confirm fallback +
+                                                <code>CreateBackups</code> flow).
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>Learning Labs Library</code></td>
+                                            <td>National Sandbox</td>
+                                            <td><span class="pill ro">Read</span></td>
+                                            <td>Scenario/class materials (document library).</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>Learning Lab Sessions</code></td>
+                                            <td>National Sandbox</td>
+                                            <td><span class="pill ro">Read</span></td>
+                                            <td>Legacy session source — being deprecated in favor of
+                                                <code>MasterScheduleList</code>.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>EHRM Roles · Scenario · Service Line · Learning Lab Signups · Scenario
+                                                Workflows</td>
+                                            <td>National Sandbox</td>
+                                            <td><span class="pill ro">Read</span></td>
+                                            <td>Reference data for pickers and Power BI.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>TMS_Reports/TMSProgramCompletion_DetailedReport.csv</code></td>
+                                            <td>Secured library</td>
+                                            <td><span class="pill rw">Flow-written</span></td>
+                                            <td>Canonical TMS completion file for the Training Details Power BI report.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-flows">
+                            <h2>Power Automate Flow Ecosystem</h2>
+                            <span class="audience dev">Developers</span>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Flow</th>
+                                            <th>Trigger</th>
+                                            <th>What it does</th>
+                                            <th>Connectors</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>AppUserList</code></td>
+                                            <td>SharePoint: new/changed <code>DeskAccessControl</code> item (5-min poll)
+                                            </td>
+                                            <td>Enriches user with M365 profile/manager; notifies admins via adaptive
+                                                cards + email per access level.</td>
+                                            <td>SharePoint, Office 365 Users, Outlook, Teams</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>SendReminders</code></td>
+                                            <td>SharePoint: new reservation item (5-min poll)</td>
+                                            <td>Sends training reminder as email and Teams adaptive card.</td>
+                                            <td>SharePoint, Outlook, Teams</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>CreateBackups</code></td>
+                                            <td>Outlook: subject <code>[REGISTERED] EHRM Learning Lab Training -</code>
+                                            </td>
+                                            <td>Parses confirmation email → creates backup reservation item.</td>
+                                            <td>Outlook, Office 365 Users, SharePoint</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>parseTMSReportsToSharePoint</code></td>
+                                            <td>Outlook: TMS sender with attachments</td>
+                                            <td>Overwrites canonical SharePoint CSV + dated archive copy for Power BI.
+                                            </td>
+                                            <td>Outlook, SharePoint</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="callout info">Flows ship as <strong>legacy export packages</strong> (local
+                                <code>.zip</code>) plus unpacked
+                                definitions under each <code>.unpacked/</code> folder. Import via <em>Power Automate →
+                                    My flows → Import → Import
+                                    Package (Legacy)</em>, then map connections and re-point SharePoint
+                                <code>dataset</code>/<code>table</code> values.
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-connectors">
+                            <h2>Integration &amp; Connector Matrix</h2>
+                            <span class="audience dev">Developers</span>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Connector / service</th>
+                                            <th>Tier</th>
+                                            <th>Used by</th>
+                                            <th>Key operations</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>SharePoint Online</td>
+                                            <td>Standard</td>
+                                            <td>App + all flows</td>
+                                            <td>List CRUD, file create/update (TMS CSV).</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Office 365 Users</td>
+                                            <td>Standard</td>
+                                            <td>App, AppUserList, CreateBackups</td>
+                                            <td><code>MyProfileV2</code>, <code>UserProfileV2</code>,
+                                                <code>ManagerV2</code>, people search, photo.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Office 365 Outlook</td>
+                                            <td>Standard</td>
+                                            <td>App + flows</td>
+                                            <td><code>V4CalendarPostItem</code>, <code>SendEmailV2</code>, new-email
+                                                triggers.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Microsoft Teams</td>
+                                            <td>Standard</td>
+                                            <td>Flows only</td>
+                                            <td>Adaptive-card posts (removed from the Canvas app in v1.3.5).</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Power BI (Gov)</td>
+                                            <td>Embedded tile</td>
+                                            <td>App <code>Screen1</code></td>
+                                            <td>Workspace/dashboard/tile IDs must be re-pointed per facility.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p><strong>No premium connectors</strong> are required — standard Microsoft 365 licensing is
+                                sufficient.</p>
+                        </section>
+
+                        <section class="section" id="section-deployment">
+                            <h2>Deployment QuickStart — Import Into Your Facility</h2>
+                            <span class="audience dev">Developers</span>
+                            <h3>Prerequisites</h3>
+                            <ul class="bullets">
+                                <li>Power Platform environment in the <strong>US Gov (GCC High)</strong> cloud with
+                                    Power Apps + Power Automate.</li>
+                                <li>A SharePoint Online site you own for the app lists (and read access to the national
+                                    EHRM Sandbox site, if reusing reference data).</li>
+                                <li>Connections for SharePoint, Office 365 Users, Office 365 Outlook (and Teams for flow
+                                    cards).</li>
+                                <li>Optional: VS Code + Power Platform CLI (<code>pac</code>) for source-controlled ALM.
+                                </li>
+                            </ul>
+                            <h3>Steps</h3>
+                            <ol class="steps">
+                                <li><strong>Get the source</strong> — clone or download the
+                                    <a href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp">public
+                                        repository</a>.
+                                </li>
+                                <li><strong>Create the SharePoint lists</strong> — <code>Desk Reservations</code>,
+                                    <code>DeskAccessControl</code>,
+                                    <code>Desks</code>, <code>MasterScheduleList</code> (including the
+                                    <code>_text</code> scheduling columns and
+                                    <code>scenarioDescription_multitext</code>), <code>SuperUserList</code>,
+                                    <code>backupList_DeskReservations</code>.
+                                </li>
+                                <li><strong>Import the Canvas app</strong> — Power Apps → <em>Apps → Import canvas
+                                        app</em> →
+                                    <code>src/powerApps/.msapp/v1.3.5_578EHRMTrainingApp.msapp</code>.
+                                </li>
+                                <li><strong>Re-point data sources</strong> — replace every
+                                    <code>dvagov.sharepoint.com/sites/…</code> URL, list GUID,
+                                    and tenant/environment GUID with your own; re-point the <code>Screen1</code> Power
+                                    BI embed.
+                                </li>
+                                <li><strong>Seed access</strong> — add yourself to <code>DeskAccessControl</code> with
+                                    <code>AccessLevel_Text = "AppAdmin"</code>, then manage others from the in-app Users
+                                    screen.
+                                </li>
+                                <li><strong>Import the flows</strong> — import each legacy package, map connections,
+                                    update site/list references,
+                                    sender filters, and notification recipients; turn on.</li>
+                                <li><strong>Optional analytics</strong> — open
+                                    <code>src/analytics/powerBI/.pbit/Signup Tool.pbit</code>, point to your
+                                    lists, publish to your Gov workspace, and share with app users.
+                                </li>
+                                <li><strong>Sanitize &amp; test</strong> — remove Hines-specific emails/comments, run a
+                                    test booking end-to-end
+                                    (record, invite, email, reminder, backup), then publish.</li>
+                            </ol>
+                            <h3>Source-control loop (pac CLI)</h3>
+                            <pre><code># Unpack a newly exported .msapp into reviewable source
+pac canvas unpack --msapp dist/release/578EHRMTrainingApp.msapp --sources src/powerApps/.unpacked --force
+
+# Re-pack source into an importable .msapp
+pac canvas pack --msapp dist/release/578EHRMTrainingApp.msapp --sources src/powerApps/.unpacked/layoutDefault
+
+# Export and unpack the solution
+pac solution export --name "EHRMTrainingBooking" --path dist/release/EHRMTrainingBooking_Solution.zip --managed false
+pac solution unpack --zipfile dist/release/EHRMTrainingBooking_Solution.zip --folder config/solutions/EHRMTrainingBooking --overwrite true</code></pre>
+                            <div class="callout">⚠️ <strong>Environment-specific values:</strong> unpacked source
+                                contains Hines site URLs,
+                                tenant/environment GUIDs, Power BI embed IDs, and some VA email addresses in comments.
+                                These require VA
+                                authentication and are not secrets, but <strong>must be replaced</strong> for your
+                                facility.</div>
+                        </section>
+
+                        <section class="section" id="section-alm">
+                            <h2>ALM, CI/CD &amp; Repository Automation</h2>
+                            <span class="audience dev">Developers</span>
+                            <div class="cards">
+                                <div class="card">
+                                    <h4>Versioning</h4>
+                                    <p>Hybrid SemVer: one project-wide <code>VERSION</code> plus component versions in
+                                        file-name prefixes (e.g. <code>v1.3.5_…</code>). Keep-a-Changelog format.</p>
+                                </div>
+                                <div class="card teal">
+                                    <h4>Branching &amp; hosting</h4>
+                                    <p>Primary repo on VA GitHub Enterprise (<code>va.ghe.com/software</code>); public
+                                        mirror on GitHub.com synced by PR after each release.</p>
+                                </div>
+                                <div class="card green">
+                                    <h4>Archive policy</h4>
+                                    <p>Every modified artifact is snapshotted to a git-ignored <code>archive/</code>
+                                        tree before change for local long-term retention.</p>
+                                </div>
+                            </div>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Workflow (<code>.github/workflows/</code>)</th>
+                                            <th>Purpose</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>powerplatform-ci.yml</code></td>
+                                            <td>Power Platform source validation.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>pr-security-scan.yml</code></td>
+                                            <td>Scans PRs for secrets/sensitive values.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>pr-auto-setup.yml</code> · <code>label.yml</code></td>
+                                            <td>Auto-labels and prepares pull requests by changed area.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>repo-lint.yml</code></td>
+                                            <td>Checks structure (component READMEs, etc.).</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>version-bump.yml</code> · <code>release.yml</code></td>
+                                            <td>Version bump and tag-driven release creation.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>stale.yml</code></td>
+                                            <td>Issue/PR hygiene.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-security">
+                            <h2>Security, Privacy &amp; Compliance Snapshot</h2>
+                            <span class="audience dev">Developers</span>
+                            <ul class="bullets">
+                                <li><strong>Identity:</strong> all access via the user's own Entra ID sign-in; no
+                                    service accounts in the app; impersonation backdoor removed in v1.0.12.</li>
+                                <li><strong>Data:</strong> training scheduling and staff directory data only — no
+                                    PHI/PII beyond VA work profile fields.</li>
+                                <li><strong>Least privilege:</strong> 8-tier RBAC; national reference lists are
+                                    read-only.</li>
+                                <li><strong>Repo hygiene:</strong> data files (<code>.csv/.xlsx</code>), exports
+                                    (<code>.zip</code>), and any <code>local/</code> folder are git-ignored; PR security
+                                    scan workflow.</li>
+                                <li><strong>Licensing:</strong> Apache 2.0; every source file carries the license
+                                    header.</li>
+                                <li>See <a
+                                        href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/docs/SECURITY.md">SECURITY.md</a>
+                                    for reporting and sanitization guidance.</li>
+                            </ul>
+                            <a class="back-to-top" href="#main-content">Back to top</a>
+                        </section>
+
+                    </div>
+                </details>
+
+                <!-- ================= CHAPTER 3: GOVERNANCE ================= -->
+                <details class="chapter" id="chapter-governance" open>
+                    <summary>Roadmap, Governance &amp; Evaluation<small>Timeline, open items, adoption checklist, and
+                            references</small></summary>
+                    <div class="chapter-body">
+
+                        <section class="section" id="section-timeline">
+                            <h2>Development Timeline</h2>
+                            <div class="timeline">
+                                <div class="t"><b>Dec 2025 — v0.0.1</b><small>Baseline: template Canvas app, AppUserList
+                                        flow, SharePoint samples unpacked into source control.</small></div>
+                                <div class="t"><b>Jan – May 2026 — v0.0.2 → v0.1.1</b><small>SharePoint binding fixes,
+                                        release templates, architecture &amp; ALM runbooks.</small></div>
+                                <div class="t"><b>Jul 2026 — v0.2.0 → v0.3.8</b><small>Moved to VA GitHub Enterprise;
+                                        CI/CD workflows, automated release scripts, RBAC &amp; smart scheduling
+                                        (v0.3.4).</small></div>
+                                <div class="t"><b>Jul – Aug 2026 — v0.8.16 → v0.12.3</b><small>App-wide RBAC engine,
+                                        training Class/Session picker, ~40-column reservation schema, ManageUsers,
+                                        SendReminders flow.</small></div>
+                                <div class="t major"><b>Aug 25, 2026 — v1.0.12 Production go-live</b><small>Hardened
+                                        RBAC, proxy registration, Learning Labs Library picker, binding errors 120 → 0,
+                                        CreateBackups flow, national EHRM reference lists.</small></div>
+                                <div class="t"><b>Sep 2026 — v1.1.20 → v1.2.7</b><small>Booking-commit orchestrator with
+                                        fallback cascade, rebuilt Help, live co-authoring proof, TMS report ingestion
+                                        flow.</small></div>
+                                <div class="t major"><b>Sep 29, 2026 — v1.3.5 (current Canvas
+                                        app)</b><small>MasterScheduleList
+                                        re-base, binding errors 24 → 3, Entra/Graph capture, Teams connector removed,
+                                        modern controls.</small></div>
+                                <div class="t"><b>Oct 7, 2026 — v1.3.6</b><small>Documentation release: this GitHub
+                                        Pages project overview for leadership and implementing developers.</small></div>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-known-issues">
+                            <h2>Known Issues (v1.3.5)</h2>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Issue</th>
+                                            <th>Impact</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>KI-01</td>
+                                            <td>3 residual App Checker binding errors.</td>
+                                            <td><span class="pill wip">Low</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>KI-02</td>
+                                            <td>Accessibility findings increased with modern-control migration.</td>
+                                            <td><span class="pill wip">Medium</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>KI-03</td>
+                                            <td>Commented impersonation-test email in <code>App.OnStart</code> — remove
+                                                before reuse.</td>
+                                            <td><span class="pill risk">Sanitize</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>KI-08</td>
+                                            <td>SharePoint schema extraction for new <code>MasterScheduleList</code>
+                                                columns deferred.</td>
+                                            <td><span class="pill wip">Docs</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>KI-09</td>
+                                            <td>Debug tier writes "DEBUG …" rows to production lists.</td>
+                                            <td><span class="pill wip">Medium</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>KI-11</td>
+                                            <td><code>Screen1</code> Power BI not yet linked from the menu.</td>
+                                            <td><span class="pill wip">Low</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>KI-12</td>
+                                            <td><code>MyAppts</code> self-cancellation not implemented.</td>
+                                            <td><span class="pill wip">Medium</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p>Full detail: <a
+                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/src/powerApps/v1.3.5_knownIssues.md"><code>src/powerApps/v1.3.5_knownIssues.md</code></a>.
+                            </p>
+                        </section>
+
+                        <section class="section" id="section-roadmap">
+                            <h2>Roadmap</h2>
+                            <div class="cards">
+                                <div class="card gold">
+                                    <h4>Near term</h4>
+                                    <ul class="bullets">
+                                        <li>Self-service cancellation in <code>MyAppts</code>.</li>
+                                        <li>Accessibility burn-down and remaining binding errors.</li>
+                                        <li>Commit refreshed SharePoint schema extraction.</li>
+                                    </ul>
+                                </div>
+                                <div class="card teal">
+                                    <h4>Automation</h4>
+                                    <ul class="bullets">
+                                        <li>Trainer-approval flow.</li>
+                                        <li>Harden TMS ingestion (failure alerts, edge-case tests, archive retention).
+                                        </li>
+                                        <li>Validate reminder wiring end-to-end.</li>
+                                    </ul>
+                                </div>
+                                <div class="card green">
+                                    <h4>Portability</h4>
+                                    <ul class="bullets">
+                                        <li>Solution-aware re-export of all flows for managed-solution deployment.</li>
+                                        <li>Environment variables for site URL, sender, and booking horizon.</li>
+                                        <li>Replace legacy "desk" terminology with training-centric labels.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-checklist">
+                            <h2>New Facility Evaluation Checklist</h2>
+                            <span class="audience exec">Leadership</span> <span class="audience dev">Developers</span>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Question</th>
+                                            <th>What you need</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Do we have a sponsor and an app owner?</td>
+                                            <td>An EHRM training lead plus a Power Platform maker/admin.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Do we have the platform?</td>
+                                            <td>VA GCC High Power Platform environment + SharePoint site (standard M365
+                                                licensing).</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Who maintains the schedule?</td>
+                                            <td>Coordinator(s) to populate <code>MasterScheduleList</code> and
+                                                <code>Desks</code>.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Who gets which access?</td>
+                                            <td>Initial <code>DeskAccessControl</code> roster (AppAdmins, Managers,
+                                                Super Users).</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Do we want automated reminders/backups?</td>
+                                            <td>Import the 4 flows and map connections.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Do we want TMS completion reporting?</td>
+                                            <td>TMS scheduled report email + secured SharePoint library + Power BI Gov
+                                                workspace.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Change management?</td>
+                                            <td>Share the in-app Quick-Start guide and the provider user guide with
+                                                staff.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-glossary">
+                            <h2>Glossary</h2>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Term</th>
+                                            <th>Meaning</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>EHRM</td>
+                                            <td>Electronic Health Record Modernization — VA's transition to the Federal
+                                                EHR.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Learning Lab</td>
+                                            <td>Hands-on EHRM training session delivered in a lab/classroom or
+                                                virtually.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>POC / Supervisor</td>
+                                            <td>Point of contact who registers students on their behalf (proxy
+                                                registration).</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Super User</td>
+                                            <td>Staff member designated as a peer EHRM expert; synced from
+                                                <code>SuperUserList</code>.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>TMS</td>
+                                            <td>VA Talent Management System — source of training completion records.
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>RBAC</td>
+                                            <td>Role-based access control — what each user can see and do.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Canvas app / <code>.msapp</code></td>
+                                            <td>Power Apps application and its packaged file format.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>pac</code></td>
+                                            <td>Power Platform CLI used to pack/unpack and export solutions.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Binding error</td>
+                                            <td>App Checker formula/data-binding error counted in the app manifest.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>GCC High / UsGov</td>
+                                            <td>Microsoft US Government cloud used by VA.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+
+                        <section class="section" id="section-references">
+                            <h2>References &amp; Evidence Map</h2>
+                            <div class="table-wrap">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Topic</th>
+                                            <th>Source</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Project overview &amp; layout</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/README.md">README.md</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status, release history, data model</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/docs/PROJECT_STATUS.md">docs/PROJECT_STATUS.md</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Full change history</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/CHANGELOG.md">CHANGELOG.md</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Canvas app import guide &amp; RBAC</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/src/powerApps/README.md">src/powerApps/README.md</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>v1.3.5 diff / summary / roadmap</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/src/powerApps/v1.3.5_diffAnalysis.md">diffAnalysis</a>
+                                                · <a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/src/powerApps/v1.3.5_changeSummary.md">changeSummary</a>
+                                                · <a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/src/powerApps/v1.3.5_recommendations.md">recommendations</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Flows</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/src/powerAutomate/README.md">src/powerAutomate/README.md</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>SharePoint lists</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/src/sharePoint/README.md">src/sharePoint/README.md</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Analytics</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/src/analytics/README.md">src/analytics/README.md</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Binding error counts</td>
+                                            <td><code>src/powerApps/.unpacked/layoutDefault/CanvasManifest.json</code>
+                                                (current = 3)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Contributors &amp; provenance</td>
+                                            <td><a
+                                                    href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/docs/CONTRIBUTORS.md">docs/CONTRIBUTORS.md</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <a class="back-to-top" href="#main-content">Back to top</a>
+                        </section>
+
+                    </div>
+                </details>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p><strong>578 EHRM Training App</strong> · Edward Hines Jr. VA Hospital (Station 578) · VISN 12</p>
+        <p>Maintainer: Kyle J. Coder, Health Informatics ·
+            <a href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp">Public repository</a> ·
+            <a href="https://github.com/KCoderVA/578-EHRM-TrainingBookingApp/blob/main/LICENSE">Apache 2.0 License</a>
+        </p>
+        <p style="font-size:.8em;opacity:.8">Page reflects release v1.3.6 (Canvas app v1.3.5) · Last updated October 7,
+            2026</p>
+    </footer>
+
+    <script>
+        (function () {
+            const nav = document.getElementById('dynamic-nav');
+            document.querySelectorAll('details.chapter').forEach(ch => {
+                const a = document.createElement('a');
+                a.href = '#' + ch.id;
+                a.className = 'chapter-link';
+                a.textContent = ch.querySelector('summary').firstChild.textContent.trim();
+                nav.appendChild(a);
+                ch.querySelectorAll('section.section').forEach(sec => {
+                    const s = document.createElement('a');
+                    s.href = '#' + sec.id;
+                    s.textContent = sec.querySelector('h2').textContent.trim();
+                    nav.appendChild(s);
+                });
+            });
+
+            // Opening a collapsed chapter when navigating to a section inside it
+            nav.addEventListener('click', e => {
+                const id = e.target.getAttribute && e.target.getAttribute('href');
+                if (!id) return;
+                const target = document.querySelector(id);
+                const chapter = target && target.closest('details.chapter');
+                if (chapter) chapter.open = true;
+                closeDrawer();
+            });
+
+            const chapters = () => document.querySelectorAll('details.chapter');
+            document.getElementById('collapseAllBtn').addEventListener('click', () => chapters().forEach(d => d.open = false));
+            document.getElementById('expandAllBtn').addEventListener('click', () => chapters().forEach(d => d.open = true));
+            document.getElementById('contrastToggleBtn').addEventListener('click', () => document.body.classList.toggle('high-contrast'));
+            document.getElementById('printBtn').addEventListener('click', () => { chapters().forEach(d => d.open = true); window.print(); });
+
+            const toggle = document.querySelector('.nav-toggle-btn');
+            const side = document.getElementById('side-navigation');
+            const overlay = document.getElementById('drawerOverlay');
+            function openDrawer() { side.classList.add('drawer-active'); document.body.classList.add('drawer-open'); overlay.classList.add('active'); toggle.setAttribute('aria-expanded', 'true'); }
+            function closeDrawer() { side.classList.remove('drawer-active'); document.body.classList.remove('drawer-open'); overlay.classList.remove('active'); toggle.setAttribute('aria-expanded', 'false'); }
+            toggle.addEventListener('click', () => side.classList.contains('drawer-active') ? closeDrawer() : openDrawer());
+            overlay.addEventListener('click', closeDrawer);
+
+            const links = () => Array.from(nav.querySelectorAll('a'));
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        links().forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id));
+                    }
+                });
+            }, { rootMargin: '-40% 0px -55% 0px' });
+            document.querySelectorAll('section.section').forEach(s => observer.observe(s));
+        })();
+    </script>
+</body>
+
+</html>
